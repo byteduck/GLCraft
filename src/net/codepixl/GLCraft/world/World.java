@@ -161,10 +161,10 @@ public class World extends Screen{
 	public void render3D(){
 		// TODO Auto-generated method stub
 		glCullFace(GL_FRONT);
-		glViewport(0,0,Display.getWidth(),Display.getHeight());
+		glViewport(0,0,Constants.WIDTH,Constants.HEIGHT);
 		glMatrixMode(GL_PROJECTION);
 		glLoadIdentity();
-		gluPerspective(67f,Constants.WIDTH/Constants.HEIGHT,0.0001f, 1000f);
+		gluPerspective(67f,(float)Constants.WIDTH/(float)Constants.HEIGHT,0.0001f, 1000f);
 		glMatrixMode(GL_MODELVIEW);
 		glEnable(GL_DEPTH_TEST);
 	}

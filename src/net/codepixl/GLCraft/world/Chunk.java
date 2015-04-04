@@ -16,6 +16,7 @@ import net.codepixl.GLCraft.render.Shape;
 import net.codepixl.GLCraft.util.Constants;
 import net.codepixl.GLCraft.world.tile.Tile;
 
+import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL20;
 import org.lwjgl.util.vector.Vector3f;
 
@@ -100,6 +101,7 @@ public class Chunk {
 			shader.use();
 			int texLoc = GL20.glGetUniformLocation(shader.getProgram(), "u_texture");
 			GL20.glUniform1i(texLoc, 0);
+			GL11.glPolygonOffset(1.0f,1.0f);
 			glCallList(vcID);
 			shader.release();
 		}
