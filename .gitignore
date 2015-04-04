@@ -47,6 +47,7 @@ Temporary Items
 bin/
 .settings/
 world/
+.db
 .project
 .classpath
 

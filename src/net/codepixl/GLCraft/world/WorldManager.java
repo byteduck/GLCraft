@@ -66,7 +66,6 @@ public class WorldManager {
 		Spritesheet.tiles.bind();
 		getMobManager().getPlayer().getCamera().applyTranslations();
 		Vector3f pos = getMobManager().getPlayer().getCamera().getPos();
-		System.out.println(getChunk((int)pos.x,(int)pos.y,(int)pos.z));
 		if(getTileAtPos((int)pos.x,(int)pos.y,(int)pos.z) == 0 || getTileAtPos((int)pos.x,(int)pos.y,(int)pos.z) == -1){
 			for(int i = 0; i < activeChunks.size(); i++){
 				if(Frustum.getFrustum().cubeInFrustum(activeChunks.get(i).getPos().getX(), activeChunks.get(i).getPos().getY(), activeChunks.get(i).getPos().getZ(), activeChunks.get(i).getPos().getX() + Constants.CHUNKSIZE, activeChunks.get(i).getPos().getY() + Constants.CHUNKSIZE, activeChunks.get(i).getPos().getZ() + Constants.CHUNKSIZE)){

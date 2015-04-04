@@ -21,6 +21,7 @@ import static org.lwjgl.opengl.GL11.glViewport;
 import static org.lwjgl.util.glu.GLU.gluPerspective;
 
 import java.awt.Font;
+import java.nio.FloatBuffer;
 
 import net.codepixl.GLCraft.render.Shape;
 import net.codepixl.GLCraft.util.Constants;
@@ -31,6 +32,7 @@ import net.codepixl.GLCraft.world.entity.Camera;
 import net.codepixl.GLCraft.world.entity.mob.MobManager;
 import net.codepixl.GLCraft.world.tile.Tile;
 
+import org.lwjgl.BufferUtils;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.Display;
@@ -42,6 +44,7 @@ import org.newdawn.slick.opengl.TextureImpl;
 import com.nishu.utils.Color4f;
 import com.nishu.utils.GameLoop;
 import com.nishu.utils.Screen;
+import com.nishu.utils.Time;
 
 public class World extends Screen{
 
@@ -114,9 +117,9 @@ public class World extends Screen{
 						Shape.createCube((int)r.pos.x-0.05f, (int)r.pos.y+0.05f, (int)r.pos.z-0.05f, new Color4f(1,1,1,0.1f), new float[]{Spritesheet.tiles.uniformSize()*7,0}, 1.1f);
 					GL11.glEnd();
 					worldManager.selectedBlock = new Vector3f((int)r.pos.x, (int)r.pos.y, (int)r.pos.z);
-					if(Mouse.isButtonDown(1)){
-						System.out.println("break");
+					if(Mouse.isButtonDown(0) && worldManager.getMobManager().getPlayer().getBreakCooldown() == 0f){
 						worldManager.setTileAtPos((int)r.pos.x, (int)r.pos.y, (int)r.pos.z, (byte)0);
+						worldManager.getMobManager().getPlayer().setBreakCooldown(0.2f);
 					}
 					r.distance = 11;
 				}
@@ -174,5 +177,12 @@ public class World extends Screen{
 	
 	public MobManager getMobManager(){
 		return worldManager.getMobManager();
+	}
+	
+	public static FloatBuffer floatBuffer(float f, float s, float t, float l){
+		FloatBuffer buf  = BufferUtils.createFloatBuffer(4);
+		buf.put(new float[]{f,s,t,l});
+		buf.flip();
+		return buf;
 	}
 }
