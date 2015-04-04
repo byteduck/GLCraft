@@ -136,7 +136,7 @@ public class WorldManager {
 		while(i.hasNext()){
 			Chunk c = i.next();
 			if(x < c.getPos().getX() || x > c.getPos().getX() + Constants.CHUNKSIZE || y < c.getPos().getY() || y > c.getPos().getY() + Constants.CHUNKSIZE || z < c.getPos().getZ() || z > c.getPos().getZ() + Constants.CHUNKSIZE){
-				
+				//return c.getTileAtCoord(x, y, z);
 			}else{
 				return c.vcID;
 			}
