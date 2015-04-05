@@ -37,6 +37,7 @@ import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.Display;
 import org.lwjgl.opengl.GL11;
+import org.lwjgl.util.glu.GLU;
 import org.lwjgl.util.vector.Vector3f;
 import org.newdawn.slick.TrueTypeFont;
 import org.newdawn.slick.opengl.TextureImpl;
@@ -114,7 +115,7 @@ public class World extends Screen{
 				}else{
 					tile = worldManager.getTileAtPos((int)r.pos.x, (int)r.pos.y, (int)r.pos.z);
 					GL11.glBegin(GL11.GL_QUADS);
-						Shape.createCube((int)r.pos.x-0.05f, (int)r.pos.y+0.05f, (int)r.pos.z-0.05f, new Color4f(1,1,1,0.1f), new float[]{Spritesheet.tiles.uniformSize()*7,0}, 1.1f);
+						Shape.createCube((int)r.pos.x-0.0005f, (int)r.pos.y-0.0005f, (int)r.pos.z-0.0005f, new Color4f(1,1,1,0.1f), new float[]{Spritesheet.tiles.uniformSize()*7,0}, 1.001f);
 					GL11.glEnd();
 					worldManager.selectedBlock = new Vector3f((int)r.pos.x, (int)r.pos.y, (int)r.pos.z);
 					if(Mouse.isButtonDown(0) && worldManager.getMobManager().getPlayer().getBreakCooldown() == 0f){
@@ -131,7 +132,7 @@ public class World extends Screen{
 	private void renderText(){
 		render2D();
 		glColor3f(1f,1f,1f);
-		font.drawString(10, 10, "GLCraft Alpha 0.0.2");
+		font.drawString(10, 10, "GLCraft Alpha 0.0.3");
 		if(currentBlock != -1){
 			String toolTip = "Block: "+Tile.getTile((byte)currentBlock).getName();
 			font.drawString(Constants.WIDTH/2-font.getWidth(toolTip)/2, 10, toolTip);
@@ -164,7 +165,7 @@ public class World extends Screen{
 		glViewport(0,0,Constants.WIDTH,Constants.HEIGHT);
 		glMatrixMode(GL_PROJECTION);
 		glLoadIdentity();
-		gluPerspective(67f,(float)Constants.WIDTH/(float)Constants.HEIGHT,0.0001f, 1000f);
+		gluPerspective(67f,(float)Constants.WIDTH/(float)Constants.HEIGHT,0.5f, 1000f);
 		glMatrixMode(GL_MODELVIEW);
 		glEnable(GL_DEPTH_TEST);
 	}
