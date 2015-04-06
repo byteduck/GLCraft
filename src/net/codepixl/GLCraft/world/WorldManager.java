@@ -1,5 +1,8 @@
 package net.codepixl.GLCraft.world;
 
+import static org.lwjgl.opengl.GL11.glColor3f;
+import static org.lwjgl.opengl.GL11.glLoadIdentity;
+
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
@@ -8,10 +11,13 @@ import java.util.ArrayList;
 import java.util.Iterator;
 
 import org.lwjgl.util.vector.Vector3f;
+import org.newdawn.slick.opengl.TextureImpl;
 
+import net.codepixl.GLCraft.Splash;
 import net.codepixl.GLCraft.util.Constants;
 import net.codepixl.GLCraft.util.Frustum;
 import net.codepixl.GLCraft.util.PerlinNoise;
+import net.codepixl.GLCraft.util.Ray;
 import net.codepixl.GLCraft.util.Spritesheet;
 import net.codepixl.GLCraft.util.Texture;
 import net.codepixl.GLCraft.world.entity.mob.MobManager;
@@ -20,14 +26,17 @@ import com.nishu.utils.Shader;
 import com.nishu.utils.ShaderProgram;
 
 public class WorldManager {
+	public Splash s;
 	public static float[][] noise;
 	public boolean doneGenerating = false;
 	private MobManager mobManager;
 	private ArrayList<Chunk> activeChunks;
 	private ShaderProgram shader;
 	public static Vector3f selectedBlock = new Vector3f(0,0,0);
+	public World world;
 	
-	public WorldManager(){
+	public WorldManager(World w){
+		this.world = w;
 		initGL();
 		init();
 		createWorld();
@@ -45,6 +54,7 @@ public class WorldManager {
 	
 	private void createWorld(){
 		System.out.println("Creating Chunks...");
+		s = new Splash();
 		noise = PerlinNoise.generateSmoothNoise(PerlinNoise.generateWhiteNoise(Constants.viewDistance*Constants.CHUNKSIZE, Constants.viewDistance*Constants.CHUNKSIZE), 100);
 		for(int x = 0; x < Constants.viewDistance; x++){
 			for(int y = 0; y < Constants.viewDistance; y++){
@@ -55,11 +65,24 @@ public class WorldManager {
 			}
 		}
 		Iterator<Chunk> i = activeChunks.iterator();
+		System.out.println("Populating World...");
 		while(i.hasNext()){
 			i.next().populateChunk();
 		}
+		s.getSplash().splashOff();
+		setPlayerPos();
 		System.out.println("Done!");
 		doneGenerating = true;
+	}
+	
+	private void setPlayerPos(){
+		int x = (int)mobManager.getPlayer().getPos().x;
+		int y = (int)mobManager.getPlayer().getPos().y;
+		int z = (int)mobManager.getPlayer().getPos().z;
+		while(getTileAtPos(x,y,z) == 0 || getTileAtPos(x,y,z) == -1){
+			y-=1;
+		}
+		mobManager.getPlayer().getCamera().setPos(new Vector3f(x,y+3,z));
 	}
 	
 	public void update(){

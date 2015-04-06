@@ -64,6 +64,9 @@ public class Chunk {
 	}
 	
 	private void createChunk(){
+		worldManager.s.addCurrentChunk(1);
+		int progress = (int)(((float)worldManager.s.currentChunk()/(float)worldManager.s.total)*50);
+		worldManager.s.getSplash().setProgress(progress,"Generating chunks "+progress+"%");
 		if(type == World.AIRCHUNK){
 			for(int x = (int) pos.getX(); x < sizeX; x++){
 				for(int y = (int) pos.getY(); y < sizeY; y++){
@@ -91,6 +94,9 @@ public class Chunk {
 	}
 	
 	void populateChunk(){
+		worldManager.s.addCurrentChunk(1);
+		int progress = (int)(((float)worldManager.s.currentChunk()/(float)worldManager.s.total)*50);
+		worldManager.s.getSplash().setProgress(progress,"Populating chunks "+progress+"%");
 		for(int x = (int) pos.getX(); x < sizeX; x++){
 			for(int y = (int) pos.getY(); y < sizeY; y++){
 				for(int z = (int) pos.getZ(); z < sizeZ; z++){
@@ -108,6 +114,9 @@ public class Chunk {
 						int rand = Constants.rand.nextInt(100);
 						if(rand == 1){
 							createTree(x,y+1,z);
+						}
+						if(rand > 1 && rand <= 11){
+							worldManager.setTileAtPos(x, y+1, z, Tile.TallGrass.getId());
 						}
 					}
 				}
@@ -177,8 +186,12 @@ public class Chunk {
 			for(int x = (int) pos.getX(); x < sizeX; x++){
 				for(int y = (int) pos.getY(); y < sizeY; y++){
 					for(int z = (int) pos.getZ(); z < sizeZ; z++){
-						if(tiles[x][y][z] != 0 && !checkTileNotInView(x,y,z) && worldManager.selectedBlock != new Vector3f((int)x, (int)y, (int)z)){
-							Shape.createCube(x, y, z, Tile.getTile(tiles[x][y][z]).getColor(), Tile.getTile(tiles[x][y][z]).getTexCoords(), 1);
+						if(tiles[x][y][z] != 0 && !checkTileNotInView(x,y,z)){
+							if(tiles[x][y][z] != Tile.TallGrass.getId()){
+								Shape.createCube(x, y, z, Tile.getTile(tiles[x][y][z]).getColor(), Tile.getTile(tiles[x][y][z]).getTexCoords(), 1);
+							}else{
+								Shape.createCross(x, y, z, Tile.getTile(tiles[x][y][z]).getColor(), Tile.getTile(tiles[x][y][z]).getTexCoords(), 1);
+							}
 						}
 					}
 				}

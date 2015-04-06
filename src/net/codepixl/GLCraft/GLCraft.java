@@ -4,6 +4,9 @@ import static org.lwjgl.opengl.GL11.*;
 import static org.lwjgl.util.glu.GLU.gluPerspective;
 
 import java.io.IOException;
+import java.io.InputStream;
+import java.net.URL;
+import java.nio.ByteBuffer;
 import java.nio.FloatBuffer;
 
 import net.codepixl.GLCraft.util.Constants;
@@ -12,6 +15,7 @@ import net.codepixl.GLCraft.world.World;
 import org.lwjgl.BufferUtils;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.opengl.Display;
+import org.newdawn.slick.opengl.PNGDecoder;
 
 import com.nishu.utils.GameLoop;
 import com.nishu.utils.Screen;
@@ -83,8 +87,25 @@ public class GLCraft extends Screen{
 	}
 	
 	public static void main(String[] args) throws IOException{
+		Display.setIcon(new ByteBuffer[] {
+	        loadIcon(GLCraft.class.getResource("/textures/icons/icon16.png")),
+	        loadIcon(GLCraft.class.getResource("/textures/icons/icon32.png")),
+		});
 		Window.createWindow(Constants.WIDTH, Constants.HEIGHT, "GLCraft", false);
 		new GLCraft();
 	}
+	
+	private static ByteBuffer loadIcon(URL url) throws IOException {
+        InputStream is = url.openStream();
+        try {
+            PNGDecoder decoder = new PNGDecoder(is);
+            ByteBuffer bb = ByteBuffer.allocateDirect(decoder.getWidth()*decoder.getHeight()*4);
+            decoder.decode(bb, decoder.getWidth()*4, PNGDecoder.RGBA);
+            bb.flip();
+            return bb;
+        } finally {
+            is.close();
+        }
+    }
 
 }

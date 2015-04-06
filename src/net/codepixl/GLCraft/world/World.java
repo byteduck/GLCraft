@@ -4,6 +4,9 @@ import static org.lwjgl.opengl.GL11.*;
 import static org.lwjgl.util.glu.GLU.gluPerspective;
 
 import java.awt.Font;
+import java.awt.FontFormatException;
+import java.awt.GraphicsEnvironment;
+import java.io.IOException;
 import java.nio.FloatBuffer;
 
 import net.codepixl.GLCraft.render.Shape;
@@ -33,7 +36,7 @@ import com.nishu.utils.Time;
 public class World extends Screen{
 
 	private boolean renderDebug = false;
-	private TrueTypeFont font;
+	TrueTypeFont font;
 	private WorldManager worldManager;
 	private int currentBlock;
 	
@@ -53,8 +56,16 @@ public class World extends Screen{
 	@Override
 	public void init() {
 		Spritesheet.tiles.bind();
-		font = new TrueTypeFont(new Font("Minecraftia",Font.PLAIN,16), true);
-		worldManager = new WorldManager();
+		GraphicsEnvironment ge = 
+		GraphicsEnvironment.getLocalGraphicsEnvironment();
+		try {
+			ge.registerFont(Font.createFont(Font.TRUETYPE_FONT, getClass().getResourceAsStream("/font/GLCraft.ttf")));
+		} catch (FontFormatException | IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		font = new TrueTypeFont(new Font("GLCraft",Font.PLAIN,16), true);
+		worldManager = new WorldManager(this);
 	}
 
 	@Override
@@ -97,9 +108,15 @@ public class World extends Screen{
 					r.next();
 				}else{
 					tile = worldManager.getTileAtPos((int)r.pos.x, (int)r.pos.y, (int)r.pos.z);
-					GL11.glBegin(GL11.GL_QUADS);
-						Shape.createCube((int)r.pos.x-0.0005f, (int)r.pos.y-0.0005f, (int)r.pos.z-0.0005f, new Color4f(1,1,1,0.1f), new float[]{Spritesheet.tiles.uniformSize()*7,0}, 1.001f);
-					GL11.glEnd();
+					if(tile != Tile.TallGrass.getId()){
+						GL11.glBegin(GL11.GL_QUADS);
+							Shape.createCube((int)r.pos.x-0.0005f, (int)r.pos.y-0.0005f, (int)r.pos.z-0.0005f, new Color4f(1,1,1,0.1f), new float[]{Spritesheet.tiles.uniformSize()*7,0}, 1.001f);
+						GL11.glEnd();
+					}else{
+						GL11.glBegin(GL11.GL_QUADS);
+							Shape.createCross((int)r.pos.x-0.0005f, (int)r.pos.y-0.0005f, (int)r.pos.z-0.0005f, new Color4f(1,1,1,0.1f), new float[]{Spritesheet.tiles.uniformSize()*7,0}, 1.001f);
+						GL11.glEnd();
+					}
 					worldManager.selectedBlock = new Vector3f((int)r.pos.x, (int)r.pos.y, (int)r.pos.z);
 					if(Mouse.isButtonDown(0) && worldManager.getMobManager().getPlayer().getBreakCooldown() == 0f){
 						worldManager.setTileAtPos((int)r.pos.x, (int)r.pos.y, (int)r.pos.z, (byte)0);
@@ -112,10 +129,10 @@ public class World extends Screen{
 		return tile;
 	}
 
-	private void renderText(){
+	void renderText(){
 		render2D();
 		glColor3f(1f,1f,1f);
-		font.drawString(10, 10, "GLCraft Alpha 0.0.4");
+		font.drawString(10, 10, "GLCraft Alpha 0.0.5");
 		if(currentBlock != -1){
 			String toolTip = "Block: "+Tile.getTile((byte)currentBlock).getName();
 			font.drawString(Constants.WIDTH/2-font.getWidth(toolTip)/2, 10, toolTip);

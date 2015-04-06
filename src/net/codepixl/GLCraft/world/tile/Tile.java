@@ -20,6 +20,7 @@ public abstract class Tile {
 	public static Tile GoldOre = new TileGold();
 	public static Tile Log = new TileLog();
 	public static Tile Leaf = new TileLeaf();
+	public static Tile TallGrass = new TileTallGrass();
 	//TILES
 	
 	public abstract String getName();

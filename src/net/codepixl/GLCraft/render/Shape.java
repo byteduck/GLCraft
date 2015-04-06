@@ -153,5 +153,47 @@ public class Shape {
                                          glTexCoord2f(texCoords[10], texCoords[11] - Spritesheet.tiles.uniformSize());
                                          glVertex3f(x, y + size, z + size);
          }
- }
+	 }
+	 
+	 public static void createCross(float x, float y, float z, Color4f color, float[] texCoords, float size){
+		 //face 1
+		 glTexCoord2f(texCoords[0], texCoords[1]);
+         glVertex3f(x+size, y+size, z + size);
+         glTexCoord2f(texCoords[0], texCoords[1] + Spritesheet.tiles.uniformSize());
+         glVertex3f(x+size,y,z+size);
+         glTexCoord2f(texCoords[0] + Spritesheet.tiles.uniformSize(), texCoords[1]+Spritesheet.tiles.uniformSize());
+         glVertex3f(x,y,z);
+         glTexCoord2f(texCoords[0] + Spritesheet.tiles.uniformSize(), texCoords[1]);
+         glVertex3f(x,y+size,z);
+         
+         //face 1 reversed
+         glTexCoord2f(texCoords[0], texCoords[1]);
+         glVertex3f(x,y+size,z);
+         glTexCoord2f(texCoords[0], texCoords[1]+Spritesheet.tiles.uniformSize());
+         glVertex3f(x,y,z);
+         glTexCoord2f(texCoords[0] + Spritesheet.tiles.uniformSize(), texCoords[1] + Spritesheet.tiles.uniformSize());
+         glVertex3f(x+size,y,z+size);
+         glTexCoord2f(texCoords[0] + Spritesheet.tiles.uniformSize(), texCoords[1]);
+         glVertex3f(x+size, y+size, z + size);
+         
+         //face 2
+         glTexCoord2f(texCoords[0], texCoords[1]);
+         glVertex3f(x+size, y+size, z);
+         glTexCoord2f(texCoords[0], texCoords[1] + Spritesheet.tiles.uniformSize());
+         glVertex3f(x+size,y,z);
+         glTexCoord2f(texCoords[0] + Spritesheet.tiles.uniformSize(), texCoords[1]+Spritesheet.tiles.uniformSize());
+         glVertex3f(x,y,z+size);
+         glTexCoord2f(texCoords[0] + Spritesheet.tiles.uniformSize(), texCoords[1]);
+         glVertex3f(x,y+size,z+size);
+         
+         //face 2 reversed
+         glTexCoord2f(texCoords[0], texCoords[1]);
+         glVertex3f(x,y+size,z+size);
+         glTexCoord2f(texCoords[0], texCoords[1]+Spritesheet.tiles.uniformSize());
+         glVertex3f(x,y,z+size);
+         glTexCoord2f(texCoords[0]+Spritesheet.tiles.uniformSize(), texCoords[1]+Spritesheet.tiles.uniformSize());
+         glVertex3f(x+size,y,z);
+         glTexCoord2f(texCoords[0]+Spritesheet.tiles.uniformSize(), texCoords[1]);
+         glVertex3f(x+size, y+size, z);
+	 }
 }
