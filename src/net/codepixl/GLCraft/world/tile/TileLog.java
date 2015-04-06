@@ -4,18 +4,18 @@ import net.codepixl.GLCraft.util.Spritesheet;
 
 import com.nishu.utils.Color4f;
 
-public class TileGlass extends Tile{
+public class TileLog extends Tile{
 
 	@Override
 	public String getName() {
 		// TODO Auto-generated method stub
-		return "Glass";
+		return "Log";
 	}
 
 	@Override
 	public byte getId() {
 		// TODO Auto-generated method stub
-		return 4;
+		return 8;
 	}
 
 	@Override
@@ -27,13 +27,20 @@ public class TileGlass extends Tile{
 	@Override
 	public float[] getTexCoords() {
 		// TODO Auto-generated method stub
-		return new float[]{Spritesheet.tiles.uniformSize()*6,0};
+		return new float[]{
+				Spritesheet.tiles.uniformSize()*12, Spritesheet.tiles.uniformSize(),
+				Spritesheet.tiles.uniformSize()*12, Spritesheet.tiles.uniformSize(),
+				Spritesheet.tiles.uniformSize()*11, Spritesheet.tiles.uniformSize(),
+				Spritesheet.tiles.uniformSize()*11, 0,
+				Spritesheet.tiles.uniformSize()*11, Spritesheet.tiles.uniformSize(),
+				Spritesheet.tiles.uniformSize()*11, Spritesheet.tiles.uniformSize()
+			};
 	}
 
 	@Override
 	public boolean isTransparent() {
 		// TODO Auto-generated method stub
-		return true;
+		return false;
 	}
 
 }

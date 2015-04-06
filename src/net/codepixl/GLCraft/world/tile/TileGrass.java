@@ -37,4 +37,10 @@ public class TileGrass extends Tile{
 		return "Grass";
 	}
 
+	@Override
+	public boolean isTransparent() {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
 }

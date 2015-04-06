@@ -46,7 +46,6 @@ Temporary Items
 #JAVA FILES
 bin/
 .settings/
-world/
 .db
 .project
 .classpath

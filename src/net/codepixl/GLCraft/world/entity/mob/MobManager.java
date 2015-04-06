@@ -7,22 +7,25 @@ import static org.lwjgl.opengl.GL11.glGenLists;
 import java.util.ArrayList;
 
 import net.codepixl.GLCraft.util.GameObj;
+import net.codepixl.GLCraft.world.WorldManager;
 import net.codepixl.GLCraft.world.entity.Camera;
 
 public class MobManager implements GameObj{
 	
 	private ArrayList<Mob> mobs;
 	private Player player;
+	private WorldManager w;
 	
 	private int mobRenderID;
 	
-	public MobManager(){
+	public MobManager(WorldManager w){
+		this.w = w;
 		init();
 	}
 	
 	public void init(){
 		mobs = new ArrayList<Mob>();
-		player = new Player(new Camera(10f,84f,10f,1f,90f,-90f,1),0);
+		player = new Player(new Camera(10f,84f,10f,1f,90f,-90f,1,w),0);
 		initGL();
 	}
 	

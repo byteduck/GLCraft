@@ -1,28 +1,34 @@
 package net.codepixl.GLCraft.world.entity;
 
+import net.codepixl.GLCraft.world.WorldManager;
+
 import org.lwjgl.util.vector.Vector3f;
 
 public class Entity {
 	private Vector3f pos, rot;
 	private int id;
 	private Camera camera;
+	public WorldManager worldManager;
 	
-	public Entity(float x, float y, float z, int id){
+	public Entity(float x, float y, float z, int id, WorldManager worldManager){
 		this.pos = new Vector3f(x,y,z);
 		this.rot = new Vector3f(0,0,0);
 		this.id = id;
+		this.worldManager = worldManager;
 	}
 	
-	public Entity(float x, float y, float z, float rx, float ry, float rz, int id){
+	public Entity(float x, float y, float z, float rx, float ry, float rz, int id, WorldManager worldManager){
 		this.pos = new Vector3f(x,y,z);
 		this.rot = new Vector3f(rx,ry,rz);
 		this.id = id;
+		this.worldManager = worldManager;
 	}
 	
-	public Entity(Vector3f pos, Vector3f rot, int id){
+	public Entity(Vector3f pos, Vector3f rot, int id, WorldManager worldManager){
 		this.pos = pos;
 		this.rot = rot;
 		this.id = id;
+		this.worldManager = worldManager;
 	}
 	
 	public Entity(Camera camera, int id){
@@ -30,6 +36,7 @@ public class Entity {
 		this.rot = new Vector3f(camera.getPitch(),camera.getYaw(),camera.getRoll());
 		this.id = id;
 		this.setCamera(camera);
+		this.worldManager = camera.worldManager;
 	}
 	
 	public int getID(){

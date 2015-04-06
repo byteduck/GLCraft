@@ -15,12 +15,18 @@ public abstract class Tile {
 	public static Tile Stone = new TileStone();
 	public static Tile Water = new TileWater();
 	public static Tile Glass = new TileGlass();
+	public static Tile CoalOre = new TileCoal();
+	public static Tile IronOre = new TileIron();
+	public static Tile GoldOre = new TileGold();
+	public static Tile Log = new TileLog();
+	public static Tile Leaf = new TileLeaf();
 	//TILES
 	
 	public abstract String getName();
 	public abstract byte getId();
 	public abstract Color4f getColor();
 	public abstract float[] getTexCoords();
+	public abstract boolean isTransparent();
 	
 	public static Tile getTile(byte id){
 		return tileMap.get(id);

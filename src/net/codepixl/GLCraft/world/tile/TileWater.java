@@ -30,4 +30,10 @@ public class TileWater extends Tile{
 		return new float[]{Spritesheet.tiles.uniformSize()*5,0};
 	}
 
+	@Override
+	public boolean isTransparent() {
+		// TODO Auto-generated method stub
+		return true;
+	}
+
 }

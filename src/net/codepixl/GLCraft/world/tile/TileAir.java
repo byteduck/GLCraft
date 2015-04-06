@@ -28,4 +28,10 @@ public class TileAir extends Tile{
 		return "Air";
 	}
 
+	@Override
+	public boolean isTransparent() {
+		// TODO Auto-generated method stub
+		return true;
+	}
+
 }

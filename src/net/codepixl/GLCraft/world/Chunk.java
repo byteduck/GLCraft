@@ -40,7 +40,7 @@ public class Chunk {
 		this.shader = shader;
 		this.type = type;
 		this.worldManager = w;
-		initGL();
+		initGL(false);
 		init();
 	}
 	
@@ -49,7 +49,17 @@ public class Chunk {
 		this.pos = pos;
 		this.shader = shader;
 		this.type = type;
-		initGL();
+		initGL(false);
+		init();
+	}
+	
+	public Chunk(ShaderProgram shader, int type, Vector3f pos, WorldManager w, byte[][][] tiles, boolean genChunk){
+		this.worldManager = w;
+		this.pos = pos;
+		this.shader = shader;
+		this.type = type;
+		this.tiles = tiles;
+		initGL(genChunk);
 		init();
 	}
 	
@@ -80,15 +90,64 @@ public class Chunk {
 		}
 	}
 	
-	public void initGL(){
+	void populateChunk(){
+		for(int x = (int) pos.getX(); x < sizeX; x++){
+			for(int y = (int) pos.getY(); y < sizeY; y++){
+				for(int z = (int) pos.getZ(); z < sizeZ; z++){
+					if(tiles[x][y][z] == Tile.Stone.getId()){
+						int rand = Constants.rand.nextInt(10000);
+						
+						if(rand <= 100){
+							tiles[x][y][z] = Tile.CoalOre.getId();
+						}else if(rand > 100 && rand <= 150){
+							tiles[x][y][z] = Tile.IronOre.getId();
+						}else if(rand > 150 && rand <= 160){
+							tiles[x][y][z] = Tile.GoldOre.getId();
+						}
+					}else if(tiles[x][y][z] == Tile.Grass.getId()){
+						int rand = Constants.rand.nextInt(100);
+						if(rand == 1){
+							createTree(x,y+1,z);
+						}
+					}
+				}
+			}
+		}
+	}
+	
+	private void createTree(int x, int y, int z){
+		for(int i = 0; i < 5; i++){
+			worldManager.setTileAtPos(x, y+i, z, Tile.Log.getId());
+		}
+		worldManager.setTileAtPos(x, y+3, z+1, Tile.Leaf.getId());
+		worldManager.setTileAtPos(x+1, y+3, z+1, Tile.Leaf.getId());
+		worldManager.setTileAtPos(x-1, y+3, z+1, Tile.Leaf.getId());
+		
+		worldManager.setTileAtPos(x, y+3, z-1, Tile.Leaf.getId());
+		worldManager.setTileAtPos(x+1, y+3, z-1, Tile.Leaf.getId());
+		worldManager.setTileAtPos(x-1, y+3, z-1, Tile.Leaf.getId());
+		
+		worldManager.setTileAtPos(x-1, y+3, z, Tile.Leaf.getId());
+		worldManager.setTileAtPos(x+1, y+3, z, Tile.Leaf.getId());
+		
+		worldManager.setTileAtPos(x, y+4, z+1, Tile.Leaf.getId());
+		worldManager.setTileAtPos(x, y+4, z-1, Tile.Leaf.getId());
+		worldManager.setTileAtPos(x+1, y+4, z, Tile.Leaf.getId());
+		worldManager.setTileAtPos(x-1, y+4, z, Tile.Leaf.getId());
+		
+		worldManager.setTileAtPos(x, y+5, z, Tile.Leaf.getId());
+	}
+	
+	public void initGL(boolean genChunk){
 		sizeX = (int)pos.getX()+Constants.CHUNKSIZE;
 		sizeY = (int)pos.getY()+Constants.CHUNKSIZE;
 		sizeZ = (int)pos.getZ()+Constants.CHUNKSIZE;
 		vcID = glGenLists(1);
 		
-		tiles = new byte[sizeX][sizeY][sizeZ];
-		
-		createChunk();
+		if(!genChunk){
+			tiles = new byte[sizeX][sizeY][sizeZ];
+			createChunk();
+		}
 		rebuild();
 	}
 	
@@ -130,7 +189,7 @@ public class Chunk {
 	}
 	
 	private boolean checkTileNotInView(int x, int y, int z){
-		boolean facesHidden[] = new boolean[6];
+		/*boolean facesHidden[] = new boolean[6];
 		if(x > pos.getX()){
 			if(tiles[x-1][y][z] != 0) facesHidden[0] = true;
 			else facesHidden[0] = false;
@@ -168,7 +227,8 @@ public class Chunk {
 			facesHidden[5] = false;
 		}
 		
-		return facesHidden[0] && facesHidden[1] && facesHidden[2] && facesHidden[3] && facesHidden[4] && facesHidden[5];
+		return facesHidden[0] && facesHidden[1] && facesHidden[2] && facesHidden[3] && facesHidden[4] && facesHidden[5];*/
+		return false;
 	}
 	
 	public byte getTileID(int x, int y, int z){

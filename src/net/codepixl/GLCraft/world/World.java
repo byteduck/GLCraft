@@ -1,23 +1,6 @@
 package net.codepixl.GLCraft.world;
 
-import static org.lwjgl.opengl.GL11.GL_BACK;
-import static org.lwjgl.opengl.GL11.GL_CULL_FACE;
-import static org.lwjgl.opengl.GL11.GL_DEPTH_TEST;
-import static org.lwjgl.opengl.GL11.GL_FRONT;
-import static org.lwjgl.opengl.GL11.GL_MODELVIEW;
-import static org.lwjgl.opengl.GL11.GL_MODULATE;
-import static org.lwjgl.opengl.GL11.GL_PROJECTION;
-import static org.lwjgl.opengl.GL11.GL_TEXTURE_ENV;
-import static org.lwjgl.opengl.GL11.GL_TEXTURE_ENV_MODE;
-import static org.lwjgl.opengl.GL11.glClearDepth;
-import static org.lwjgl.opengl.GL11.glColor3f;
-import static org.lwjgl.opengl.GL11.glCullFace;
-import static org.lwjgl.opengl.GL11.glEnable;
-import static org.lwjgl.opengl.GL11.glLoadIdentity;
-import static org.lwjgl.opengl.GL11.glMatrixMode;
-import static org.lwjgl.opengl.GL11.glOrtho;
-import static org.lwjgl.opengl.GL11.glTexEnvi;
-import static org.lwjgl.opengl.GL11.glViewport;
+import static org.lwjgl.opengl.GL11.*;
 import static org.lwjgl.util.glu.GLU.gluPerspective;
 
 import java.awt.Font;
@@ -132,7 +115,7 @@ public class World extends Screen{
 	private void renderText(){
 		render2D();
 		glColor3f(1f,1f,1f);
-		font.drawString(10, 10, "GLCraft Alpha 0.0.3");
+		font.drawString(10, 10, "GLCraft Alpha 0.0.4");
 		if(currentBlock != -1){
 			String toolTip = "Block: "+Tile.getTile((byte)currentBlock).getName();
 			font.drawString(Constants.WIDTH/2-font.getWidth(toolTip)/2, 10, toolTip);
@@ -161,6 +144,7 @@ public class World extends Screen{
 	
 	public void render3D(){
 		// TODO Auto-generated method stub
+		glClearColor(0.0f,0.749019608f,1.0f,0.0f);
 		glCullFace(GL_FRONT);
 		glViewport(0,0,Constants.WIDTH,Constants.HEIGHT);
 		glMatrixMode(GL_PROJECTION);

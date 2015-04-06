@@ -13,6 +13,7 @@ import net.codepixl.GLCraft.util.Constants;
 import net.codepixl.GLCraft.util.Frustum;
 import net.codepixl.GLCraft.util.PerlinNoise;
 import net.codepixl.GLCraft.util.Spritesheet;
+import net.codepixl.GLCraft.util.Texture;
 import net.codepixl.GLCraft.world.entity.mob.MobManager;
 
 import com.nishu.utils.Shader;
@@ -38,7 +39,7 @@ public class WorldManager {
 	}
 	
 	private void init(){
-		mobManager = new MobManager();
+		mobManager = new MobManager(this);
 		activeChunks = new ArrayList<Chunk>();
 	}
 	
@@ -49,9 +50,13 @@ public class WorldManager {
 			for(int y = 0; y < Constants.viewDistance; y++){
 				for(int z = 0; z < Constants.viewDistance; z++){
 					activeChunks.add(new Chunk(shader, 1, x * Constants.CHUNKSIZE, y * Constants.CHUNKSIZE, z * Constants.CHUNKSIZE, this));
-					saveChunk(activeChunks.get(activeChunks.size() - 1));
+					//saveChunk(activeChunks.get(activeChunks.size() - 1));
 				}
 			}
+		}
+		Iterator<Chunk> i = activeChunks.iterator();
+		while(i.hasNext()){
+			i.next().populateChunk();
 		}
 		System.out.println("Done!");
 		doneGenerating = true;
@@ -66,10 +71,11 @@ public class WorldManager {
 		Spritesheet.tiles.bind();
 		getMobManager().getPlayer().getCamera().applyTranslations();
 		Vector3f pos = getMobManager().getPlayer().getCamera().getPos();
-		if(getTileAtPos((int)pos.x,(int)pos.y,(int)pos.z) == 0 || getTileAtPos((int)pos.x,(int)pos.y,(int)pos.z) == -1){
+		if(getTileAtPos((int)pos.x,(int)pos.y,(int)pos.z) == 0 || getTileAtPos((int)pos.x,(int)pos.y,(int)pos.z) == -1 || getTileAtPos((int)pos.x,(int)pos.y,(int)pos.z) == 9 || getTileAtPos((int)pos.x,(int)pos.y,(int)pos.z) == 4){
 			for(int i = 0; i < activeChunks.size(); i++){
 				if(Frustum.getFrustum().cubeInFrustum(activeChunks.get(i).getPos().getX(), activeChunks.get(i).getPos().getY(), activeChunks.get(i).getPos().getZ(), activeChunks.get(i).getPos().getX() + Constants.CHUNKSIZE, activeChunks.get(i).getPos().getY() + Constants.CHUNKSIZE, activeChunks.get(i).getPos().getZ() + Constants.CHUNKSIZE)){
-					if(Math.abs(activeChunks.get(i).getCenter().getX() - (int) mobManager.getPlayer().getX()) < 64){
+					float distance=(float) Math.sqrt(Math.pow(activeChunks.get(i).getCenter().getX()-mobManager.getPlayer().getX(),2) + Math.pow(activeChunks.get(i).getCenter().getY()-mobManager.getPlayer().getY(),2) + Math.pow(activeChunks.get(i).getCenter().getZ()-mobManager.getPlayer().getZ(),2));
+					if(distance < 10*Constants.CHUNKSIZE){
 						activeChunks.get(i).render();
 					}
 				}
