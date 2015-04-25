@@ -196,4 +196,45 @@ public class Shape {
          glTexCoord2f(texCoords[0]+Spritesheet.tiles.uniformSize(), texCoords[1]);
          glVertex3f(x+size, y+size, z);
 	 }
+	 
+	 public static void createTexturelessCube(float x, float y, float z, Color4f color, float size){
+         glColor4f(color.r, color.g, color.b, color.a);
+		 // bottom face
+         glVertex3f(x, y, z + size);
+         glVertex3f(x + size, y, z + size);
+         glVertex3f(x + size, y, z);
+         glVertex3f(x, y, z);
+
+         // top face
+         glVertex3f(x, y + size, z);
+         glVertex3f(x + size, y + size, z);
+         glVertex3f(x + size, y + size, z + size);
+         glVertex3f(x, y + size, z + size);
+
+         // front face
+         glVertex3f(x, y, z);
+         glVertex3f(x + size, y, z);
+         glVertex3f(x + size, y + size, z);
+         glVertex3f(x, y + size, z);
+
+         // back face
+         glVertex3f(x, y + size, z + size);
+         glVertex3f(x + size, y + size, z + size);
+         glVertex3f(x + size, y, z + size);
+         glVertex3f(x, y, z + size);
+
+         // left face
+         glVertex3f(x + size, y, z);
+         glVertex3f(x + size, y, z + size);
+         glVertex3f(x + size, y + size, z + size);
+         glVertex3f(x + size, y + size, z);
+
+         // right face
+         glVertex3f(x, y, z + size);
+         glVertex3f(x, y, z);
+         glVertex3f(x, y + size, z);
+         glVertex3f(x, y + size, z + size);
+         
+         glColor4f(1,1,1,1);
+	 }
 }

@@ -32,8 +32,17 @@ public class Chunk {
 	private int sizeX;
 	private int sizeY;
 	private int sizeZ;
-	private int type;
+	int type;
 	private boolean isActive;
+	
+	public Chunk(ShaderProgram shader, int type, float x, float y, float z,WorldManager w, boolean fromBuf){
+		this.pos = new Vector3f(x,y,z);
+		this.shader = shader;
+		this.type = type;
+		this.worldManager = w;
+		initGL(fromBuf);
+		init();
+	}
 	
 	public Chunk(ShaderProgram shader, int type, float x, float y, float z,WorldManager w){
 		this.pos = new Vector3f(x,y,z);
@@ -53,16 +62,6 @@ public class Chunk {
 		init();
 	}
 	
-	public Chunk(ShaderProgram shader, int type, Vector3f pos, WorldManager w, byte[][][] tiles, boolean genChunk){
-		this.worldManager = w;
-		this.pos = pos;
-		this.shader = shader;
-		this.type = type;
-		this.tiles = tiles;
-		initGL(genChunk);
-		init();
-	}
-	
 	private void createChunk(){
 		worldManager.s.addCurrentChunk(1);
 		int progress = (int)(((float)worldManager.s.currentChunk()/(float)worldManager.s.total)*50);
@@ -76,13 +75,16 @@ public class Chunk {
 				}
 			}
 		}else{
-			Random r = new Random();
-			for(int x = (int) pos.getX(); x < sizeX; x++){
-				for(int y = (int) pos.getY(); y < sizeY; y++){
-					for(int z = (int) pos.getZ(); z < sizeZ; z++){
-						if(y < worldManager.noise[x][z]*Constants.CHUNKSIZE*Constants.viewDistance){
+			for(int x = 0; x < sizeX; x++){
+				for(int y = 0; y < sizeY; y++){
+					for(int z = 0; z < sizeZ; z++){
+						int posX = (int)pos.x+x;
+						int posY = (int)pos.y+y;
+						int posZ = (int)pos.z+z;
+						//System.out.println(posX+","+posZ);
+						if(posY < worldManager.noise[posX][posZ]*Constants.CHUNKSIZE*Constants.viewDistance){
 							tiles[x][y][z] = Tile.Stone.getId();
-						}else if(y-1 <= worldManager.noise[x][z]*Constants.CHUNKSIZE*Constants.viewDistance){
+						}else if(posY-1 <= worldManager.noise[posX][posZ]*Constants.CHUNKSIZE*Constants.viewDistance){
 							tiles[x][y][z] = Tile.Grass.getId();
 						}else{
 							tiles[x][y][z] = Tile.Air.getId();
@@ -97,9 +99,9 @@ public class Chunk {
 		worldManager.s.addCurrentChunk(1);
 		int progress = (int)(((float)worldManager.s.currentChunk()/(float)worldManager.s.total)*50);
 		worldManager.s.getSplash().setProgress(progress,"Populating chunks "+progress+"%");
-		for(int x = (int) pos.getX(); x < sizeX; x++){
-			for(int y = (int) pos.getY(); y < sizeY; y++){
-				for(int z = (int) pos.getZ(); z < sizeZ; z++){
+		for(int x = 0; x < sizeX; x++){
+			for(int y = 0; y < sizeY; y++){
+				for(int z = 0; z < sizeZ; z++){
 					if(tiles[x][y][z] == Tile.Stone.getId()){
 						int rand = Constants.rand.nextInt(10000);
 						
@@ -147,19 +149,36 @@ public class Chunk {
 		worldManager.setTileAtPos(x, y+5, z, Tile.Leaf.getId());
 	}
 	
-	public void initGL(boolean genChunk){
-		sizeX = (int)pos.getX()+Constants.CHUNKSIZE;
-		sizeY = (int)pos.getY()+Constants.CHUNKSIZE;
-		sizeZ = (int)pos.getZ()+Constants.CHUNKSIZE;
+	public void initGL(boolean bufChunk){
+		sizeX = Constants.CHUNKSIZE;
+		sizeY = Constants.CHUNKSIZE;
+		sizeZ = Constants.CHUNKSIZE;
 		vcID = glGenLists(1);
-		
-		if(!genChunk){
-			tiles = new byte[sizeX][sizeY][sizeZ];
+		tiles = new byte[sizeX][sizeY][sizeZ];
+		if(!bufChunk){
 			createChunk();
+		}else{
+			createBufChunk();
 		}
 		rebuild();
 	}
 	
+	private void createBufChunk() {
+		worldManager.s.addCurrentChunk(1);
+		worldManager.s.getSplash().setProgress((int)(((float)worldManager.s.currentChunk()/(float)Math.pow(Constants.viewDistance,3))*(float)100), "Transferring World...");
+		for(int x = 0; x < sizeX; x++){
+			for(int y = 0; y < sizeY; y++){
+				for(int z = 0; z < sizeZ; z++){
+					int posX = (int)pos.x+x;
+					int posY = (int)pos.y+y;
+					int posZ = (int)pos.z+z;
+					tiles[x][y][z] = Constants.worldBuf[posX][posY][posZ];
+					//System.out.println("Setting tile "+posX+","+posY+","+posZ+" tile: "+Tile.getTile(Constants.worldBuf[posX][posY][posZ]).getName());
+				}
+			}
+		}
+	}
+
 	public void init(){
 		
 	}
@@ -183,15 +202,24 @@ public class Chunk {
 		if(type != World.AIRCHUNK){
 			glNewList(vcID, GL_COMPILE);
 			glBegin(GL_QUADS);
-			for(int x = (int) pos.getX(); x < sizeX; x++){
-				for(int y = (int) pos.getY(); y < sizeY; y++){
-					for(int z = (int) pos.getZ(); z < sizeZ; z++){
+			for(int x = 0; x < sizeX; x++){
+				for(int y = 0; y < sizeY; y++){
+					for(int z = 0; z < sizeZ; z++){
 						if(tiles[x][y][z] != 0 && !checkTileNotInView(x,y,z)){
 							if(tiles[x][y][z] != Tile.TallGrass.getId()){
-								Shape.createCube(x, y, z, Tile.getTile(tiles[x][y][z]).getColor(), Tile.getTile(tiles[x][y][z]).getTexCoords(), 1);
+								//System.out.println(Tile.getTile(tiles[x][y][z]).getName());
+								//System.out.println(pos);
+								Shape.createCube(pos.x+x, pos.y+y, pos.z+z, Tile.getTile(tiles[x][y][z]).getColor(), Tile.getTile(tiles[x][y][z]).getTexCoords(), 1);
+								//System.out.println("Creating "+Tile.getTile(tiles[x][y][z]).getName()+" at "+pos.x+x+","+pos.y+y+","+pos.z+z);
 							}else{
-								Shape.createCross(x, y, z, Tile.getTile(tiles[x][y][z]).getColor(), Tile.getTile(tiles[x][y][z]).getTexCoords(), 1);
+								Shape.createCross(pos.x+x, pos.y+y, pos.z+z, Tile.getTile(tiles[x][y][z]).getColor(), Tile.getTile(tiles[x][y][z]).getTexCoords(), 1);
 							}
+						}else{
+							/**int posX = (int)pos.x+x;
+							int posY = (int)pos.y+y;
+							int posZ = (int)pos.z+z;
+							
+							System.out.println("AIR "+posX+","+posY+","+posZ);**/
 						}
 					}
 				}
@@ -256,26 +284,21 @@ public class Chunk {
 		boolean inBoundsTwo = (y >= 0) && (y < tiles[0].length);
 		boolean inBoundsThree = (z >= 0) && (z < tiles[0][0].length);
 		boolean inBounds = inBoundsOne && inBoundsTwo && inBoundsThree;
-	
-		if(x < pos.getX() || x > pos.getX() + Constants.CHUNKSIZE || y < pos.getY() || y > pos.getY() + Constants.CHUNKSIZE || z < pos.getZ() || z > pos.getZ() + Constants.CHUNKSIZE || !inBounds){
-			return -1;
+		if(inBounds){
+			return tiles[x][y][z];
 		}
-		
-		//System.out.println(x+","+y+","+z+" is at "+tX+","+tY+","+tZ+" and is "+Tile.getTile(tiles[x][y][z]).getName()+" in chunk "+vcID);
-		return tiles[x][y][z];
+		return -1;
 	}
 	
-	public boolean setTileAtPos(int x, int y, int z, byte tile){
+	public void setTileAtPos(int x, int y, int z, byte tile){
 		boolean inBoundsOne = (x >= 0) && (x < tiles.length);
 		boolean inBoundsTwo = (y >= 0) && (y < tiles[0].length);
 		boolean inBoundsThree = (z >= 0) && (z < tiles[0][0].length);
 		boolean inBounds = inBoundsOne && inBoundsTwo && inBoundsThree;
 		if(inBounds){
 			tiles[x][y][z] = tile;
-			return true;
-		}else{
-			return false;
 		}
+		rebuild();
 	}
 	
 	public void dispose(){

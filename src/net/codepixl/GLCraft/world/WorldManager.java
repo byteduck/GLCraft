@@ -13,6 +13,7 @@ import java.util.Iterator;
 import org.lwjgl.util.vector.Vector3f;
 import org.newdawn.slick.opengl.TextureImpl;
 
+import net.codepixl.GLCraft.CustomSplash;
 import net.codepixl.GLCraft.Splash;
 import net.codepixl.GLCraft.util.Constants;
 import net.codepixl.GLCraft.util.Frustum;
@@ -29,7 +30,7 @@ public class WorldManager {
 	public Splash s;
 	public static float[][] noise;
 	public boolean doneGenerating = false;
-	private MobManager mobManager;
+	public MobManager mobManager;
 	private ArrayList<Chunk> activeChunks;
 	private ShaderProgram shader;
 	public static Vector3f selectedBlock = new Vector3f(0,0,0);
@@ -39,7 +40,7 @@ public class WorldManager {
 		this.world = w;
 		initGL();
 		init();
-		createWorld();
+		//createWorld();
 	}
 	
 	private void initGL(){
@@ -52,10 +53,10 @@ public class WorldManager {
 		activeChunks = new ArrayList<Chunk>();
 	}
 	
-	private void createWorld(){
+	public void createWorld(){
 		System.out.println("Creating Chunks...");
 		s = new Splash();
-		noise = PerlinNoise.generateSmoothNoise(PerlinNoise.generateWhiteNoise(Constants.viewDistance*Constants.CHUNKSIZE, Constants.viewDistance*Constants.CHUNKSIZE), 100);
+		noise = PerlinNoise.generateSmoothNoise(PerlinNoise.generateWhiteNoise(Constants.viewDistance*Constants.CHUNKSIZE, Constants.viewDistance*Constants.CHUNKSIZE), 101);
 		for(int x = 0; x < Constants.viewDistance; x++){
 			for(int y = 0; y < Constants.viewDistance; y++){
 				for(int z = 0; z < Constants.viewDistance; z++){
@@ -67,11 +68,25 @@ public class WorldManager {
 		Iterator<Chunk> i = activeChunks.iterator();
 		System.out.println("Populating World...");
 		while(i.hasNext()){
-			i.next().populateChunk();
+			i.next();
 		}
 		s.getSplash().splashOff();
 		setPlayerPos();
 		System.out.println("Done!");
+		doneGenerating = true;
+	}
+	
+	public void worldFromBuf(){
+		s = new Splash();
+		for(int x = 0; x < Constants.viewDistance; x++){
+			for(int y = 0; y < Constants.viewDistance; y++){
+				for(int z = 0; z < Constants.viewDistance; z++){
+					Chunk c = new Chunk(shader, World.MIXEDCHUNK, x * Constants.CHUNKSIZE, y * Constants.CHUNKSIZE, z * Constants.CHUNKSIZE, this, true);
+					activeChunks.add(c);
+				}
+			}
+		}
+		s.getSplash().splashOff();
 		doneGenerating = true;
 	}
 	
@@ -136,13 +151,8 @@ public class WorldManager {
 		Iterator<Chunk> i = activeChunks.iterator();
 		while(i.hasNext()){
 			Chunk c = i.next();
-			/**if(x < c.getPos().getX() || x > c.getPos().getX() + Constants.CHUNKSIZE || y < c.getPos().getY() || y > c.getPos().getY() + Constants.CHUNKSIZE || z < c.getPos().getZ() || z > c.getPos().getZ() + Constants.CHUNKSIZE){
-				//return c.getTileAtCoord(x, y, z);
-			}else{
-				return c.getTileAtCoord(x, y, z);
-			}**/
-			if(c.getTileAtCoord(x, y, z) != -1){
-				return c.getTileAtCoord(x, y, z);
+			if(x >= c.getPos().x && y >= c.getPos().y && z >= c.getPos().z && x <= c.getPos().x + 15 && y <= c.getPos().y + 15 && z <= c.getPos().z + 15){
+				return c.getTileAtCoord(x-(int)c.getPos().x, y-(int)c.getPos().y, z-(int)c.getPos().z);
 			}
 		}
 		return -1;
@@ -152,23 +162,21 @@ public class WorldManager {
 		Iterator<Chunk> i = activeChunks.iterator();
 		while(i.hasNext()){
 			Chunk c = i.next();
-			if(c.setTileAtPos(x, y, z,tile)){
-				c.rebuild();
+			if(x >= c.getPos().x && y >= c.getPos().y && z >= c.getPos().z && x <= c.getPos().x + 15 && y <= c.getPos().y + 15 && z <= c.getPos().z + 15){
+				c.setTileAtPos(x-(int)c.getPos().x, y-(int)c.getPos().y, z-(int)c.getPos().z,tile);
 				return;
 			}
 		}
 	}
 	
-	public int getChunk(int x, int y, int z){
+	public Chunk getChunk(int x, int y, int z){
 		Iterator<Chunk> i = activeChunks.iterator();
 		while(i.hasNext()){
 			Chunk c = i.next();
-			if(x < c.getPos().getX() || x > c.getPos().getX() + Constants.CHUNKSIZE || y < c.getPos().getY() || y > c.getPos().getY() + Constants.CHUNKSIZE || z < c.getPos().getZ() || z > c.getPos().getZ() + Constants.CHUNKSIZE){
-				//return c.getTileAtCoord(x, y, z);
-			}else{
-				return c.vcID;
+			if(c.getPos().x >= x && c.getPos().y >= y && c.getPos().z >= z){
+				return c;
 			}
 		}
-		return -1;
+		return null;
 	}
 }

@@ -1,14 +1,40 @@
 package net.codepixl.GLCraft.world;
 
-import static org.lwjgl.opengl.GL11.*;
+import static org.lwjgl.opengl.GL11.GL_BACK;
+import static org.lwjgl.opengl.GL11.GL_CULL_FACE;
+import static org.lwjgl.opengl.GL11.GL_DEPTH_TEST;
+import static org.lwjgl.opengl.GL11.GL_FRONT;
+import static org.lwjgl.opengl.GL11.GL_MODELVIEW;
+import static org.lwjgl.opengl.GL11.GL_MODULATE;
+import static org.lwjgl.opengl.GL11.GL_PROJECTION;
+import static org.lwjgl.opengl.GL11.GL_TEXTURE_2D;
+import static org.lwjgl.opengl.GL11.GL_TEXTURE_ENV;
+import static org.lwjgl.opengl.GL11.GL_TEXTURE_ENV_MODE;
+import static org.lwjgl.opengl.GL11.glClearColor;
+import static org.lwjgl.opengl.GL11.glClearDepth;
+import static org.lwjgl.opengl.GL11.glColor3f;
+import static org.lwjgl.opengl.GL11.glCullFace;
+import static org.lwjgl.opengl.GL11.glDisable;
+import static org.lwjgl.opengl.GL11.glEnable;
+import static org.lwjgl.opengl.GL11.glLoadIdentity;
+import static org.lwjgl.opengl.GL11.glMatrixMode;
+import static org.lwjgl.opengl.GL11.glOrtho;
+import static org.lwjgl.opengl.GL11.glTexEnvi;
+import static org.lwjgl.opengl.GL11.glViewport;
 import static org.lwjgl.util.glu.GLU.gluPerspective;
 
 import java.awt.Font;
 import java.awt.FontFormatException;
 import java.awt.GraphicsEnvironment;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.PipedInputStream;
 import java.nio.FloatBuffer;
+import java.util.ArrayList;
+import java.util.Iterator;
 
+import net.codepixl.GLCraft.GUI.GUIServer;
+import net.codepixl.GLCraft.GUI.GUIStartScreen;
 import net.codepixl.GLCraft.render.Shape;
 import net.codepixl.GLCraft.util.Constants;
 import net.codepixl.GLCraft.util.Ray;
@@ -18,12 +44,12 @@ import net.codepixl.GLCraft.world.entity.Camera;
 import net.codepixl.GLCraft.world.entity.mob.MobManager;
 import net.codepixl.GLCraft.world.tile.Tile;
 
+import org.apache.commons.io.IOUtils;
 import org.lwjgl.BufferUtils;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.Display;
 import org.lwjgl.opengl.GL11;
-import org.lwjgl.util.glu.GLU;
 import org.lwjgl.util.vector.Vector3f;
 import org.newdawn.slick.TrueTypeFont;
 import org.newdawn.slick.opengl.TextureImpl;
@@ -31,7 +57,6 @@ import org.newdawn.slick.opengl.TextureImpl;
 import com.nishu.utils.Color4f;
 import com.nishu.utils.GameLoop;
 import com.nishu.utils.Screen;
-import com.nishu.utils.Time;
 
 public class World extends Screen{
 
@@ -39,6 +64,7 @@ public class World extends Screen{
 	TrueTypeFont font;
 	private WorldManager worldManager;
 	private int currentBlock;
+	private PipedInputStream actionsToDo = new PipedInputStream();
 	
 	public static final int AIRCHUNK = 0, MIXEDCHUNK = 1;
 
@@ -55,16 +81,21 @@ public class World extends Screen{
 
 	@Override
 	public void init() {
+		try {
+			actionsToDo.connect(Constants.actionsToDo);
+		} catch (IOException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+		Constants.setWorld(this);
 		Spritesheet.tiles.bind();
-		GraphicsEnvironment ge = 
-		GraphicsEnvironment.getLocalGraphicsEnvironment();
+		GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
 		try {
 			ge.registerFont(Font.createFont(Font.TRUETYPE_FONT, getClass().getResourceAsStream("/font/GLCraft.ttf")));
 		} catch (FontFormatException | IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		font = new TrueTypeFont(new Font("GLCraft",Font.PLAIN,16), true);
 		worldManager = new WorldManager(this);
 	}
 
@@ -77,8 +108,10 @@ public class World extends Screen{
 	}
 
 	private void input(){
-		if(Mouse.isButtonDown(0)){
+		if(Mouse.isButtonDown(0) && Constants.GAME_STATE == Constants.GAME){
 			Mouse.setGrabbed(true);
+		}else if(Constants.GAME_STATE == Constants.START_SCREEN){
+			GUIStartScreen.input();
 		}
 		while(Keyboard.next()){
 			if(Keyboard.getEventKeyState()){
@@ -91,11 +124,76 @@ public class World extends Screen{
 	
 	@Override
 	public void render() {
-		render3D();
-		worldManager.render();
-		currentBlock = raycast();
-		glLoadIdentity();
-		renderText();
+		try {
+			while(actionsToDo.available() > 0){
+				byte ByteBuf[] = new byte[1500];
+				actionsToDo.read(ByteBuf);
+				ByteBuf = Constants.trim(ByteBuf);
+				String str = new String(ByteBuf);
+				String[] strs = str.split(";");
+				for(int i = 0; i < strs.length; i++){
+					String s = strs[i];
+					if(s.contains("GLCRAFT_CHANGEBLOCK")){
+						if(s.split("\\|\\|").length >= 3){
+							String pos = s.split("\\|\\|")[1];
+							byte tile = (byte)Integer.parseInt(s.split("\\|\\|")[2]);
+							int x = Integer.parseInt(pos.split(",")[0]);
+							int y = Integer.parseInt(pos.split(",")[1]);
+							int z = Integer.parseInt(pos.split(",")[2]);
+							getWorldManager().setTileAtPos(x, y, z, tile);
+						}
+					}
+					if(s.contains("GLCRAFT_MOVE_PLAYER")){
+						if(s.split("\\|\\|").length >= 2){
+							String pos = s.split("\\|\\|")[1];
+								if(pos.split(",").length >= 3){
+									float x = Float.parseFloat(pos.split(",")[0]);
+									float y = Float.parseFloat(pos.split(",")[1]);
+									float z = Float.parseFloat(pos.split(",")[2]);
+									worldManager.mobManager.getPlayerMP().setPos(new Vector3f(x,y,z));
+								}
+						}
+					}
+					if(s.contains("GLCRAFT_ROT_PLAYER")){
+						if(s.split("\\|\\|").length >= 2){
+							String pos = s.split("\\|\\|")[1];
+								if(pos.split(",").length >= 3){
+									float yaw = Float.parseFloat(pos.split(",")[0]);
+									float pitch = Float.parseFloat(pos.split(",")[1]);
+									float roll = Float.parseFloat(pos.split(",")[2]);
+									worldManager.mobManager.getPlayerMP().setRot(new Vector3f(yaw,pitch,roll));
+								}
+						}
+					}
+				}
+			}
+		} catch (NumberFormatException | IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		if(Constants.downloadedWorld && !Constants.transferredWorld){
+			int size = Constants.CHUNKSIZE * Constants.viewDistance;
+			int total = size*size*size;
+			int cPos = 0;
+			System.out.println("transferringworld");
+			worldManager.worldFromBuf();
+			Constants.transferredWorld = true;
+		}
+		if(Constants.GAME_STATE == Constants.GAME){
+			render3D();
+			worldManager.render();
+			currentBlock = raycast();
+			glLoadIdentity();
+			renderText();
+		}else if(Constants.GAME_STATE == Constants.START_SCREEN){
+			render2D();
+			GUIStartScreen.render();
+			glDisable(GL_TEXTURE_2D);
+		}else if(Constants.GAME_STATE == Constants.SERVER){
+			render2D();
+			GUIServer.render();
+			glDisable(GL_TEXTURE_2D);
+		}
 	}
 	
 	private int raycast(){
@@ -104,9 +202,9 @@ public class World extends Screen{
 		while(r.distance < 10 ){
 			if(worldManager.doneGenerating){
 				if(worldManager.getTileAtPos((int)r.pos.x, (int)r.pos.y, (int)r.pos.z) == -1 || worldManager.getTileAtPos((int)r.pos.x, (int)r.pos.y, (int)r.pos.z) == 0){
-					//System.out.println(worldManager.getTileAtPos((int)r.pos.x, (int)r.pos.y, (int)r.pos.z));
 					r.next();
 				}else{
+					//System.out.println(worldManager.getTileAtPos((int)r.pos.x, (int)r.pos.y, (int)r.pos.z));
 					tile = worldManager.getTileAtPos((int)r.pos.x, (int)r.pos.y, (int)r.pos.z);
 					if(tile != Tile.TallGrass.getId()){
 						GL11.glBegin(GL11.GL_QUADS);
@@ -120,10 +218,20 @@ public class World extends Screen{
 					worldManager.selectedBlock = new Vector3f((int)r.pos.x, (int)r.pos.y, (int)r.pos.z);
 					if(Mouse.isButtonDown(0) && worldManager.getMobManager().getPlayer().getBreakCooldown() == 0f){
 						worldManager.setTileAtPos((int)r.pos.x, (int)r.pos.y, (int)r.pos.z, (byte)0);
+						try {
+							if(Constants.isMultiplayer){
+								Constants.packetsToSend.write(new String("GLCRAFT_CHANGEBLOCK||"+(int)r.pos.x+","+(int)r.pos.y+","+(int)r.pos.z+"||0;").getBytes());
+							}
+						} catch (IOException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
 						worldManager.getMobManager().getPlayer().setBreakCooldown(0.2f);
 					}
 					r.distance = 11;
 				}
+			}else{
+				return -1;
 			}
 		}
 		return tile;
@@ -132,17 +240,17 @@ public class World extends Screen{
 	void renderText(){
 		render2D();
 		glColor3f(1f,1f,1f);
-		font.drawString(10, 10, "GLCraft Alpha 0.0.5");
+		Constants.FONT.drawString(10, 10, "GLCraft Alpha 0.0.5");
 		if(currentBlock != -1){
 			String toolTip = "Block: "+Tile.getTile((byte)currentBlock).getName();
-			font.drawString(Constants.WIDTH/2-font.getWidth(toolTip)/2, 10, toolTip);
+			Constants.FONT.drawString(Constants.WIDTH/2-Constants.FONT.getWidth(toolTip)/2, 10, toolTip);
 		}
-		font.drawString(Constants.WIDTH/2, Constants.HEIGHT/2, "+");
+		Constants.FONT.drawString(Constants.WIDTH/2, Constants.HEIGHT/2, "+");
 		if(renderDebug){
 			Camera c = getMobManager().getPlayer().getCamera();
-			font.drawString(10,font.getLineHeight()+10, "X:"+(int)c.getX()+" Y:"+(int)c.getY()+" Z:"+(int)c.getZ());
-			font.drawString(10,font.getLineHeight()*2+10, "RotX:"+(int)c.getPitch()+" RotY:"+(int)c.getYaw()+" RotZ:"+(int)c.getRoll());
-			font.drawString(10,font.getLineHeight()*3+10, "FPS:"+GameLoop.getFPS());
+			Constants.FONT.drawString(10,Constants.FONT.getLineHeight()+10, "X:"+(int)c.getX()+" Y:"+(int)c.getY()+" Z:"+(int)c.getZ());
+			Constants.FONT.drawString(10,Constants.FONT.getLineHeight()*2+10, "RotX:"+(int)c.getPitch()+" RotY:"+(int)c.getYaw()+" RotZ:"+(int)c.getRoll());
+			Constants.FONT.drawString(10,Constants.FONT.getLineHeight()*3+10, "FPS:"+GameLoop.getFPS());
 		}
 		
 		TextureImpl.unbind();
@@ -157,6 +265,7 @@ public class World extends Screen{
 		glOrtho(0,Constants.WIDTH,Constants.HEIGHT,0,-1,1);
 		glMatrixMode(GL_MODELVIEW);
 		glLoadIdentity();
+		glDisable(GL_DEPTH_TEST);
 	}
 	
 	public void render3D(){
@@ -173,7 +282,9 @@ public class World extends Screen{
 	
 	@Override
 	public void update() {
-		worldManager.update();
+		if(Constants.GAME_STATE == Constants.GAME){
+			worldManager.update();
+		}
 		input();
 	}
 	
@@ -186,5 +297,13 @@ public class World extends Screen{
 		buf.put(new float[]{f,s,t,l});
 		buf.flip();
 		return buf;
+	}
+	
+	public WorldManager getWorldManager(){
+		return worldManager;
+	}
+	
+	public void prepareForGame(){
+		getWorldManager().mobManager = new MobManager(getWorldManager());
 	}
 }

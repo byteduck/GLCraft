@@ -6,12 +6,17 @@ import static org.lwjgl.opengl.GL11.glPopAttrib;
 import static org.lwjgl.opengl.GL11.glPushAttrib;
 import static org.lwjgl.opengl.GL11.glRotatef;
 import static org.lwjgl.opengl.GL11.glTranslatef;
+
+import java.io.IOException;
+
 import net.codepixl.GLCraft.util.AABB;
+import net.codepixl.GLCraft.util.Constants;
 import net.codepixl.GLCraft.world.WorldManager;
 
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
 import org.lwjgl.util.vector.Vector3f;
+
 import com.nishu.utils.Time;
 
 public class Camera extends Entity {
@@ -55,6 +60,15 @@ public class Camera extends Entity {
             } else if (getPitch() - dy > maxU) {
                     setPitch(maxU);
             }
+            if((dx != 0 || dy != 0) && Constants.isMultiplayer){
+    			try {
+					Constants.packetsToSend.write(new String("GLCRAFT_ROT_PLAYER||"+getYaw()+","+getPitch()+","+getRoll()+";").getBytes());
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+            }
+            
     }
 
     public void updateKeyboard(float delay, float speed) {
@@ -103,7 +117,7 @@ public class Camera extends Entity {
     	float toY = (float) (getY() + (y * (float) Math.sin(Math.toRadians(getPitch() - 90)) + z * Math.sin(Math.toRadians(getPitch()))));
     	boolean canMove = false;
     	if(worldManager.getTileAtPos((int)toX,(int)toY,(int)toZ) != 0 && worldManager.getTileAtPos((int)toX,(int)toY,(int)toZ) != -1){
-    		System.out.println("AABB");
+    		//System.out.println("AABB");
     		AABB playerAABB = new AABB(1.5f,1.7f,1.5f);
         	playerAABB.update(new Vector3f(toX,toY,toZ));
         	AABB cubeAABB1 = new AABB(1,1,1);
@@ -121,6 +135,14 @@ public class Camera extends Entity {
     		setZ(toZ);
     		setX(toX);
     		setY(toY);
+    		try {
+    			if(Constants.isMultiplayer){
+    				Constants.packetsToSend.write(new String("GLCRAFT_MOVE_PLAYER||"+toX+","+toY+","+toZ+";").getBytes());
+    			}
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
     	}
     }
     
@@ -142,6 +164,14 @@ public class Camera extends Entity {
     	
     	if(!canMove){
     		setY(to);
+    		try {
+    			if(Constants.isMultiplayer){
+    				Constants.packetsToSend.write(new String("GLCRAFT_MOVE_PLAYER||"+getX()+","+to+","+getZ()+";").getBytes());
+    			}
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
     	}
     }
    

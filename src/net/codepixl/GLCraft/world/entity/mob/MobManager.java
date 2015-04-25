@@ -6,6 +6,7 @@ import static org.lwjgl.opengl.GL11.glGenLists;
 
 import java.util.ArrayList;
 
+import net.codepixl.GLCraft.util.Constants;
 import net.codepixl.GLCraft.util.GameObj;
 import net.codepixl.GLCraft.world.WorldManager;
 import net.codepixl.GLCraft.world.entity.Camera;
@@ -14,6 +15,7 @@ public class MobManager implements GameObj{
 	
 	private ArrayList<Mob> mobs;
 	private Player player;
+	private PlayerMP otherPlayer;
 	private WorldManager w;
 	
 	private int mobRenderID;
@@ -25,7 +27,12 @@ public class MobManager implements GameObj{
 	
 	public void init(){
 		mobs = new ArrayList<Mob>();
-		player = new Player(new Camera(10f,84f,10f,1f,90f,-90f,1,w),0);
+		player = new Player(new Camera(10f,84f,10f,1f,90f,-90f,0,w),0);
+		if(Constants.isMultiplayer){
+			System.out.println("<---IT IS MULTIPLAYER--->");
+			otherPlayer = new PlayerMP(new Camera(0,0,0,0,0,0,1,w),1,1);
+			mobs.add(otherPlayer);
+		}
 		initGL();
 	}
 	
@@ -61,6 +68,11 @@ public class MobManager implements GameObj{
 	
 	public Player getPlayer(){
 		return player;
+	}
+
+	public PlayerMP getPlayerMP() {
+		// TODO Auto-generated method stub
+		return this.otherPlayer;
 	}
 
 }
