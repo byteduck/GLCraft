@@ -1,8 +1,5 @@
 package net.codepixl.GLCraft.world;
 
-import static org.lwjgl.opengl.GL11.glColor3f;
-import static org.lwjgl.opengl.GL11.glLoadIdentity;
-
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
@@ -10,18 +7,14 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Iterator;
 
-import org.lwjgl.util.vector.Vector3f;
-import org.newdawn.slick.opengl.TextureImpl;
-
-import net.codepixl.GLCraft.CustomSplash;
 import net.codepixl.GLCraft.Splash;
 import net.codepixl.GLCraft.util.Constants;
 import net.codepixl.GLCraft.util.Frustum;
 import net.codepixl.GLCraft.util.PerlinNoise;
-import net.codepixl.GLCraft.util.Ray;
 import net.codepixl.GLCraft.util.Spritesheet;
-import net.codepixl.GLCraft.util.Texture;
 import net.codepixl.GLCraft.world.entity.mob.MobManager;
+
+import org.lwjgl.util.vector.Vector3f;
 
 import com.nishu.utils.Shader;
 import com.nishu.utils.ShaderProgram;
@@ -68,7 +61,7 @@ public class WorldManager {
 		Iterator<Chunk> i = activeChunks.iterator();
 		System.out.println("Populating World...");
 		while(i.hasNext()){
-			i.next();
+			i.next().populateChunk();
 		}
 		s.getSplash().splashOff();
 		setPlayerPos();

@@ -1,21 +1,22 @@
 package net.codepixl.GLCraft.GUI;
 
-import java.awt.Font;
-
-import org.lwjgl.input.Mouse;
-import org.lwjgl.opengl.GL20;
-import org.newdawn.slick.TrueTypeFont;
-
-import static org.lwjgl.opengl.GL11.*;
+import static org.lwjgl.opengl.GL11.GL_QUADS;
+import static org.lwjgl.opengl.GL11.GL_TEXTURE_2D;
+import static org.lwjgl.opengl.GL11.glBegin;
+import static org.lwjgl.opengl.GL11.glDisable;
+import static org.lwjgl.opengl.GL11.glEnable;
+import static org.lwjgl.opengl.GL11.glEnd;
+import static org.lwjgl.opengl.GL11.glTexCoord2f;
+import static org.lwjgl.opengl.GL11.glVertex2f;
 import net.codepixl.GLCraft.Network.Client.ServerDiscovery;
 import net.codepixl.GLCraft.Network.Server.ServerBroadcast;
 import net.codepixl.GLCraft.util.Constants;
 import net.codepixl.GLCraft.util.Spritesheet;
-import net.codepixl.GLCraft.util.Texture;
 import net.codepixl.GLCraft.world.entity.mob.MobManager;
 
+import org.lwjgl.input.Mouse;
+
 import com.nishu.utils.Color4f;
-import com.nishu.utils.Window;
 
 public class GUIStartScreen extends GUI{
 	

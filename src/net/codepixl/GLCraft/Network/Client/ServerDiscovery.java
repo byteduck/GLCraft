@@ -6,7 +6,6 @@ import java.net.DatagramSocket;
 import java.net.InetAddress;
 import java.net.InterfaceAddress;
 import java.net.NetworkInterface;
-import java.net.SocketException;
 import java.net.SocketTimeoutException;
 import java.util.Enumeration;
 
@@ -20,7 +19,7 @@ public class ServerDiscovery implements Runnable{
 	@Override
 	public void run(){
 		try{
-			// Find the server using UDP broadcast
+			// Find the server usisng UDP broadcast
 			// Open a random port to send the package
 			c = new DatagramSocket();
 			c.setBroadcast(true);

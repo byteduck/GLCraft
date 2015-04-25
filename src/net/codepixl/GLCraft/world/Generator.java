@@ -1,19 +1,9 @@
 package net.codepixl.GLCraft.world;
 
-import static org.lwjgl.opengl.GL11.glViewport;
-
 import java.util.ArrayList;
-
-import org.lwjgl.LWJGLException;
-import org.lwjgl.opengl.Display;
-import org.lwjgl.opengl.GLContext;
 
 import net.codepixl.GLCraft.util.Constants;
 import net.codepixl.GLCraft.util.PerlinNoise;
-import net.codepixl.GLCraft.world.tile.Tile;
-
-import com.nishu.utils.GameLoop;
-import com.nishu.utils.Screen;
 
 public class Generator implements Runnable{
 	

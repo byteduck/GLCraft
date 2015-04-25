@@ -7,13 +7,9 @@ import java.io.OutputStream;
 import java.io.PipedInputStream;
 import java.io.PrintWriter;
 import java.net.Socket;
-import java.util.ArrayList;
-import java.util.Iterator;
 
 import net.codepixl.GLCraft.Splash;
 import net.codepixl.GLCraft.util.Constants;
-
-import org.lwjgl.util.vector.Vector3f;
 
 public class Client implements Runnable{
 	

@@ -27,11 +27,8 @@ import java.awt.Font;
 import java.awt.FontFormatException;
 import java.awt.GraphicsEnvironment;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.PipedInputStream;
 import java.nio.FloatBuffer;
-import java.util.ArrayList;
-import java.util.Iterator;
 
 import net.codepixl.GLCraft.GUI.GUIServer;
 import net.codepixl.GLCraft.GUI.GUIStartScreen;
@@ -44,7 +41,6 @@ import net.codepixl.GLCraft.world.entity.Camera;
 import net.codepixl.GLCraft.world.entity.mob.MobManager;
 import net.codepixl.GLCraft.world.tile.Tile;
 
-import org.apache.commons.io.IOUtils;
 import org.lwjgl.BufferUtils;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;

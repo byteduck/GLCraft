@@ -3,18 +3,14 @@ package net.codepixl.GLCraft.GUI;
 import static org.lwjgl.opengl.GL11.GL_QUADS;
 import static org.lwjgl.opengl.GL11.GL_TEXTURE_2D;
 import static org.lwjgl.opengl.GL11.glBegin;
-import static org.lwjgl.opengl.GL11.glDisable;
 import static org.lwjgl.opengl.GL11.glEnable;
 import static org.lwjgl.opengl.GL11.glEnd;
 import static org.lwjgl.opengl.GL11.glTexCoord2f;
 import static org.lwjgl.opengl.GL11.glVertex2f;
-
-import org.newdawn.slick.opengl.TextureImpl;
-
 import net.codepixl.GLCraft.util.Constants;
 import net.codepixl.GLCraft.util.Spritesheet;
 
-import com.nishu.utils.Color4f;
+import org.newdawn.slick.opengl.TextureImpl;
 
 public class GUIServer extends GUI{
 	public static void render() {

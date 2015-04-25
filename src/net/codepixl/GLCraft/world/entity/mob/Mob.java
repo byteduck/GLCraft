@@ -4,8 +4,6 @@ import net.codepixl.GLCraft.util.GameObj;
 import net.codepixl.GLCraft.world.entity.Camera;
 import net.codepixl.GLCraft.world.entity.Entity;
 
-import org.lwjgl.util.vector.Vector3f;
-
 public class Mob extends Entity implements GameObj{
 
 	private int mobID;

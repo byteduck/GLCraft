@@ -1,16 +1,12 @@
 package net.codepixl.GLCraft.util;
 
 import java.awt.Font;
-import java.io.ByteArrayOutputStream;
-import java.io.OutputStream;
 import java.io.PipedOutputStream;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Random;
 
 import net.codepixl.GLCraft.world.World;
 
-import org.lwjgl.util.vector.Vector3f;
 import org.newdawn.slick.TrueTypeFont;
 
 public class Constants {

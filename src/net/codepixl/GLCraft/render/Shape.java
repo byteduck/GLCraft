@@ -1,12 +1,8 @@
 package net.codepixl.GLCraft.render;
-import static org.lwjgl.opengl.GL11.*;
-
-import java.nio.FloatBuffer;
-
-import org.lwjgl.opengl.GL11;
-
+import static org.lwjgl.opengl.GL11.glColor4f;
+import static org.lwjgl.opengl.GL11.glTexCoord2f;
+import static org.lwjgl.opengl.GL11.glVertex3f;
 import net.codepixl.GLCraft.util.Spritesheet;
-import net.codepixl.GLCraft.world.World;
 
 import com.nishu.utils.Color4f;
 

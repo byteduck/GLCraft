@@ -2,9 +2,6 @@ package net.codepixl.GLCraft;
 
 import java.awt.Color;
 
-import javax.swing.JFrame;
-import javax.swing.JOptionPane;
-
 import net.codepixl.GLCraft.util.Constants;
 
 import com.thehowtotutorial.splashscreen.JSplash;

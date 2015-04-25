@@ -9,9 +9,6 @@ import static org.lwjgl.opengl.GL11.glEnd;
 import static org.lwjgl.opengl.GL11.glEndList;
 import static org.lwjgl.opengl.GL11.glGenLists;
 import static org.lwjgl.opengl.GL11.glNewList;
-
-import java.util.Random;
-
 import net.codepixl.GLCraft.render.Shape;
 import net.codepixl.GLCraft.util.Constants;
 import net.codepixl.GLCraft.world.tile.Tile;
@@ -118,7 +115,7 @@ public class Chunk {
 							createTree(x,y+1,z);
 						}
 						if(rand > 1 && rand <= 11){
-							worldManager.setTileAtPos(x, y+1, z, Tile.TallGrass.getId());
+							worldManager.setTileAtPos(x+(int)pos.x, y+1+(int)pos.y, z+(int)pos.z, Tile.TallGrass.getId());
 						}
 					}
 				}
@@ -127,6 +124,9 @@ public class Chunk {
 	}
 	
 	private void createTree(int x, int y, int z){
+		x+=(int)pos.x;
+		y+=(int)pos.y;
+		z+=(int)pos.z;
 		for(int i = 0; i < 5; i++){
 			worldManager.setTileAtPos(x, y+i, z, Tile.Log.getId());
 		}

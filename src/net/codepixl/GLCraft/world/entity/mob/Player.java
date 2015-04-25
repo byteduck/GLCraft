@@ -1,9 +1,8 @@
 package net.codepixl.GLCraft.world.entity.mob;
 
-import com.nishu.utils.Time;
-
-import net.codepixl.GLCraft.util.Raytracer;
 import net.codepixl.GLCraft.world.entity.Camera;
+
+import com.nishu.utils.Time;
 
 
 public class Player extends Mob{

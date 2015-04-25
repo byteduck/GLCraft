@@ -10,6 +10,7 @@ import java.net.ServerSocket;
 import java.net.Socket;
 
 import net.codepixl.GLCraft.util.Constants;
+/** TODO MULTIPLAYER ADDED 1038 LINES OF CODE! (ABOUT 1/3 OF THE TOTAL CODE CHANGED!) **/
 
 public class Server implements Runnable{
 	
@@ -50,7 +51,6 @@ public class Server implements Runnable{
 				}
 			}
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
