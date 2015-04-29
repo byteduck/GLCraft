@@ -9,12 +9,19 @@ import static org.lwjgl.opengl.GL11.glEnd;
 import static org.lwjgl.opengl.GL11.glEndList;
 import static org.lwjgl.opengl.GL11.glGenLists;
 import static org.lwjgl.opengl.GL11.glNewList;
+
+import java.nio.FloatBuffer;
+import java.util.ArrayList;
+import java.util.Iterator;
+
 import net.codepixl.GLCraft.render.Shape;
 import net.codepixl.GLCraft.util.Constants;
+import net.codepixl.GLCraft.util.MathUtils;
 import net.codepixl.GLCraft.world.tile.Tile;
 
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL20;
+import org.lwjgl.util.vector.Matrix3f;
 import org.lwjgl.util.vector.Vector3f;
 
 import com.nishu.utils.ShaderProgram;
@@ -24,6 +31,7 @@ public class Chunk {
 	private WorldManager worldManager;
 	private Vector3f pos;
 	private byte [][][] tiles;
+	private int [][][] light;
 	private ShaderProgram shader;
 	public int vcID;
 	private int sizeX;
@@ -31,6 +39,9 @@ public class Chunk {
 	private int sizeZ;
 	int type;
 	private boolean isActive;
+	private int randomUpdateTick = 0;
+	private int randomUpdateInterval;
+	private boolean needsRebuild = false;
 	
 	public Chunk(ShaderProgram shader, int type, float x, float y, float z,WorldManager w, boolean fromBuf){
 		this.pos = new Vector3f(x,y,z);
@@ -61,7 +72,7 @@ public class Chunk {
 	
 	private void createChunk(){
 		worldManager.s.addCurrentChunk(1);
-		int progress = (int)(((float)worldManager.s.currentChunk()/(float)worldManager.s.total)*50);
+		int progress = (int)(((float)worldManager.s.currentChunk()/(float)worldManager.s.total)*33);
 		worldManager.s.getSplash().setProgress(progress,"Generating chunks "+progress+"%");
 		if(type == World.AIRCHUNK){
 			for(int x = (int) pos.getX(); x < sizeX; x++){
@@ -94,7 +105,7 @@ public class Chunk {
 	
 	void populateChunk(){
 		worldManager.s.addCurrentChunk(1);
-		int progress = (int)(((float)worldManager.s.currentChunk()/(float)worldManager.s.total)*50);
+		int progress = (int)(((float)worldManager.s.currentChunk()/(float)worldManager.s.total)*33);
 		worldManager.s.getSplash().setProgress(progress,"Populating chunks "+progress+"%");
 		for(int x = 0; x < sizeX; x++){
 			for(int y = 0; y < sizeY; y++){
@@ -115,7 +126,11 @@ public class Chunk {
 							createTree(x,y+1,z);
 						}
 						if(rand > 1 && rand <= 11){
-							worldManager.setTileAtPos(x+(int)pos.x, y+1+(int)pos.y, z+(int)pos.z, Tile.TallGrass.getId());
+							worldManager.setTileAtPos(x+(int)pos.x, y+1+(int)pos.y, z+(int)pos.z, Tile.TallGrass.getId(), false);
+						}
+						if(rand > 11 && rand <= 12){
+							worldManager.setTileAtPos(x+(int)pos.x, y+1+(int)pos.y, z+(int)pos.z, Tile.Light.getId(), false);
+							worldManager.lights.add(new Vector3f(x+(int)pos.x, y+1+(int)pos.y, z+(int)pos.z));
 						}
 					}
 				}
@@ -128,25 +143,25 @@ public class Chunk {
 		y+=(int)pos.y;
 		z+=(int)pos.z;
 		for(int i = 0; i < 5; i++){
-			worldManager.setTileAtPos(x, y+i, z, Tile.Log.getId());
+			worldManager.setTileAtPos(x, y+i, z, Tile.Log.getId(), false);
 		}
-		worldManager.setTileAtPos(x, y+3, z+1, Tile.Leaf.getId());
-		worldManager.setTileAtPos(x+1, y+3, z+1, Tile.Leaf.getId());
-		worldManager.setTileAtPos(x-1, y+3, z+1, Tile.Leaf.getId());
+		worldManager.setTileAtPos(x, y+3, z+1, Tile.Leaf.getId(), false);
+		worldManager.setTileAtPos(x+1, y+3, z+1, Tile.Leaf.getId(), false);
+		worldManager.setTileAtPos(x-1, y+3, z+1, Tile.Leaf.getId(), false);
 		
-		worldManager.setTileAtPos(x, y+3, z-1, Tile.Leaf.getId());
-		worldManager.setTileAtPos(x+1, y+3, z-1, Tile.Leaf.getId());
-		worldManager.setTileAtPos(x-1, y+3, z-1, Tile.Leaf.getId());
+		worldManager.setTileAtPos(x, y+3, z-1, Tile.Leaf.getId(), false);
+		worldManager.setTileAtPos(x+1, y+3, z-1, Tile.Leaf.getId(), false);
+		worldManager.setTileAtPos(x-1, y+3, z-1, Tile.Leaf.getId(), false);
 		
-		worldManager.setTileAtPos(x-1, y+3, z, Tile.Leaf.getId());
-		worldManager.setTileAtPos(x+1, y+3, z, Tile.Leaf.getId());
+		worldManager.setTileAtPos(x-1, y+3, z, Tile.Leaf.getId(), false);
+		worldManager.setTileAtPos(x+1, y+3, z, Tile.Leaf.getId(), false);
 		
-		worldManager.setTileAtPos(x, y+4, z+1, Tile.Leaf.getId());
-		worldManager.setTileAtPos(x, y+4, z-1, Tile.Leaf.getId());
-		worldManager.setTileAtPos(x+1, y+4, z, Tile.Leaf.getId());
-		worldManager.setTileAtPos(x-1, y+4, z, Tile.Leaf.getId());
+		worldManager.setTileAtPos(x, y+4, z+1, Tile.Leaf.getId(), false);
+		worldManager.setTileAtPos(x, y+4, z-1, Tile.Leaf.getId(), false);
+		worldManager.setTileAtPos(x+1, y+4, z, Tile.Leaf.getId(), false);
+		worldManager.setTileAtPos(x-1, y+4, z, Tile.Leaf.getId(), false);
 		
-		worldManager.setTileAtPos(x, y+5, z, Tile.Leaf.getId());
+		worldManager.setTileAtPos(x, y+5, z, Tile.Leaf.getId(), false);
 	}
 	
 	public void initGL(boolean bufChunk){
@@ -155,12 +170,12 @@ public class Chunk {
 		sizeZ = Constants.CHUNKSIZE;
 		vcID = glGenLists(1);
 		tiles = new byte[sizeX][sizeY][sizeZ];
+		light = new int[sizeX][sizeY][sizeZ];
 		if(!bufChunk){
 			createChunk();
 		}else{
 			createBufChunk();
 		}
-		rebuild();
 	}
 	
 	private void createBufChunk() {
@@ -187,7 +202,12 @@ public class Chunk {
 		if(type != World.AIRCHUNK){
 			shader.use();
 			int texLoc = GL20.glGetUniformLocation(shader.getProgram(), "u_texture");
+			int posLoc = GL20.glGetUniformLocation(shader.getProgram(), "lightpos");
+			int enLoc = GL20.glGetUniformLocation(shader.getProgram(), "lightingEnabled");
+			Vector3f pos = worldManager.getMobManager().getPlayer().getPos();
 			GL20.glUniform1i(texLoc, 0);
+			GL20.glUniform3f(posLoc, pos.x, pos.y, pos.z);
+			GL20.glUniform1i(enLoc, 1);
 			GL11.glPolygonOffset(1.0f,1.0f);
 			glCallList(vcID);
 			shader.release();
@@ -195,7 +215,10 @@ public class Chunk {
 	}
 	
 	public void update(){
-		
+		if(needsRebuild){
+			rebuild();
+			needsRebuild = false;
+		}
 	}
 	
 	public void rebuild(){
@@ -209,10 +232,10 @@ public class Chunk {
 							if(tiles[x][y][z] != Tile.TallGrass.getId()){
 								//System.out.println(Tile.getTile(tiles[x][y][z]).getName());
 								//System.out.println(pos);
-								Shape.createCube(pos.x+x, pos.y+y, pos.z+z, Tile.getTile(tiles[x][y][z]).getColor(), Tile.getTile(tiles[x][y][z]).getTexCoords(), 1);
+								Shape.createCube(pos.x+x, pos.y+y, pos.z+z, Tile.getTile(tiles[x][y][z]).getColor(), Tile.getTile(tiles[x][y][z]).getTexCoords(), 1, worldManager.lights);
 								//System.out.println("Creating "+Tile.getTile(tiles[x][y][z]).getName()+" at "+pos.x+x+","+pos.y+y+","+pos.z+z);
 							}else{
-								Shape.createCross(pos.x+x, pos.y+y, pos.z+z, Tile.getTile(tiles[x][y][z]).getColor(), Tile.getTile(tiles[x][y][z]).getTexCoords(), 1);
+								Shape.createCross(pos.x+x, pos.y+y, pos.z+z, Tile.getTile(tiles[x][y][z]).getColor(), Tile.getTile(tiles[x][y][z]).getTexCoords(), 1, worldManager.lights);
 							}
 						}else{
 							/**int posX = (int)pos.x+x;
@@ -290,17 +313,56 @@ public class Chunk {
 		return -1;
 	}
 	
-	public void setTileAtPos(int x, int y, int z, byte tile){
+	public void setTileAtPos(int x, int y, int z, byte tile, boolean rebuild){
 		boolean inBoundsOne = (x >= 0) && (x < tiles.length);
 		boolean inBoundsTwo = (y >= 0) && (y < tiles[0].length);
 		boolean inBoundsThree = (z >= 0) && (z < tiles[0][0].length);
 		boolean inBounds = inBoundsOne && inBoundsTwo && inBoundsThree;
 		if(inBounds){
+			if(tiles[x][y][z] == Tile.Light.getId()){
+				Iterator<Vector3f> i = worldManager.lights.iterator();
+				float ax = x+pos.x;
+				float ay = y+pos.y;
+				float az = z+pos.z;
+				while(i.hasNext()){
+					Vector3f lPos = i.next();
+					if(MathUtils.compare(new Vector3f(ax,ay,az),lPos)){
+						i.remove();
+						return;
+					}
+				}
+				if(rebuild){
+					worldManager.getChunkAtCoords(MathUtils.coordsToChunkPos((int)ax-7, (int)ay, (int)az)).queueRebuild();
+					worldManager.getChunkAtCoords(MathUtils.coordsToChunkPos((int)ax+7, (int)ay, (int)az)).queueRebuild();
+					worldManager.getChunkAtCoords(MathUtils.coordsToChunkPos((int)ax, (int)ay-7, (int)az)).queueRebuild();
+					worldManager.getChunkAtCoords(MathUtils.coordsToChunkPos((int)ax, (int)ay+7, (int)az)).queueRebuild();
+					worldManager.getChunkAtCoords(MathUtils.coordsToChunkPos((int)ax, (int)ay, (int)az-7)).queueRebuild();
+					worldManager.getChunkAtCoords(MathUtils.coordsToChunkPos((int)ax, (int)ay, (int)az+7)).queueRebuild();
+					worldManager.getChunkAtCoords(MathUtils.coordsToChunkPos((int)ax+7, (int)ay, (int)az+7)).queueRebuild();
+					worldManager.getChunkAtCoords(MathUtils.coordsToChunkPos((int)ax-7, (int)ay, (int)az+7)).queueRebuild();
+					worldManager.getChunkAtCoords(MathUtils.coordsToChunkPos((int)ax+7, (int)ay, (int)az-7)).queueRebuild();
+					worldManager.getChunkAtCoords(MathUtils.coordsToChunkPos((int)ax-7, (int)ay, (int)az-7)).queueRebuild();
+					worldManager.getChunkAtCoords(MathUtils.coordsToChunkPos((int)ax, (int)ay+7, (int)az+7)).queueRebuild();
+					worldManager.getChunkAtCoords(MathUtils.coordsToChunkPos((int)ax, (int)ay-7, (int)az+7)).queueRebuild();
+					worldManager.getChunkAtCoords(MathUtils.coordsToChunkPos((int)ax, (int)ay+7, (int)az-7)).queueRebuild();
+					worldManager.getChunkAtCoords(MathUtils.coordsToChunkPos((int)ax, (int)ay-7, (int)az-7)).queueRebuild();
+					worldManager.getChunkAtCoords(MathUtils.coordsToChunkPos((int)ax+7, (int)ay+7, (int)az)).queueRebuild();
+					worldManager.getChunkAtCoords(MathUtils.coordsToChunkPos((int)ax-7, (int)ay+7, (int)az)).queueRebuild();
+					worldManager.getChunkAtCoords(MathUtils.coordsToChunkPos((int)ax+7, (int)ay-7, (int)az)).queueRebuild();
+					worldManager.getChunkAtCoords(MathUtils.coordsToChunkPos((int)ax-7, (int)ay-7, (int)az)).queueRebuild();
+				}
+			}
 			tiles[x][y][z] = tile;
 		}
-		rebuild();
+		if(rebuild){
+			rebuild();
+		}
 	}
 	
+	private void queueRebuild() {
+		needsRebuild = true;
+	}
+
 	public void dispose(){
 		shader.dispose();
 		glDeleteLists(vcID,1);
@@ -324,5 +386,38 @@ public class Chunk {
 	
 	public Vector3f getPos(){
 		return pos;
+	}
+
+	public int getLight(Vector3f posi, boolean ChunkPos) {
+		if(ChunkPos){
+			return light[(int)posi.x][(int)posi.y][(int)posi.z];
+		}else{
+			return light[(int)posi.x-(int)pos.x][(int)posi.y-(int)pos.y][(int)posi.z-(int)pos.z];
+		}
+	}
+
+	public void setLight(Vector3f posi, int light, boolean ChunkPos) {
+		if(ChunkPos){
+			this.light[(int)posi.x][(int)posi.y][(int)posi.z] = light;
+		}else{
+			this.light[(int)posi.x-(int)pos.x][(int)posi.y-(int)pos.y][(int)posi.z-(int)pos.z] = light;
+		}
+	}
+
+	public void light() {
+		worldManager.s.addCurrentChunk(1);
+		int progress = (int)(((float)worldManager.s.currentChunk()/(float)worldManager.s.total)*33);
+		worldManager.s.getSplash().setProgress(progress,"Lighting chunks "+progress+"%");
+		for(int x = 0; x < sizeX; x++){
+			for(int y = 0; y < sizeY; y++){
+				for(int z = 0; z < sizeZ; z++){
+					if(tiles[x][y][z] == Tile.Light.getId()){
+						worldManager.putLight(x+(int)pos.x, y+(int)pos.y, z+(int)pos.z, 7);
+						worldManager.loop++;
+						System.out.println(worldManager.loop);
+					}
+				}
+			}
+		}
 	}
 }

@@ -7,6 +7,11 @@ import static org.lwjgl.opengl.GL11.glPopMatrix;
 import static org.lwjgl.opengl.GL11.glPushMatrix;
 import static org.lwjgl.opengl.GL11.glRotatef;
 import static org.lwjgl.opengl.GL11.glTranslatef;
+
+import java.util.ArrayList;
+
+import org.lwjgl.util.vector.Vector3f;
+
 import net.codepixl.GLCraft.render.Shape;
 import net.codepixl.GLCraft.util.Spritesheet;
 import net.codepixl.GLCraft.world.entity.Camera;
@@ -41,8 +46,8 @@ public class PlayerMP extends Mob{
 		glRotatef(getPitch(),1f,0,0);
 		glTranslatef(-getPos().x, -getPos().y+1, -getPos().z);
 		glBegin(GL_QUADS);
-			Shape.createCube(getPos().x-0.5f, getPos().y-2f, getPos().z-0.5f, new Color4f(1.0f,1.0f,1.0f,1.0f), this.bottomCoords, 1.0f);
-			Shape.createCube(getPos().x-0.5f, getPos().y-1f, getPos().z-0.5f, new Color4f(1.0f,1.0f,1.0f,1.0f), this.headCoords, 1.0f);
+			Shape.createCube(getPos().x-0.5f, getPos().y-2f, getPos().z-0.5f, new Color4f(1.0f,1.0f,1.0f,1.0f), this.bottomCoords, 1.0f, new ArrayList<Vector3f>());
+			Shape.createCube(getPos().x-0.5f, getPos().y-1f, getPos().z-0.5f, new Color4f(1.0f,1.0f,1.0f,1.0f), this.headCoords, 1.0f, new ArrayList<Vector3f>());
 		glEnd();
 		glPopMatrix();
 	}

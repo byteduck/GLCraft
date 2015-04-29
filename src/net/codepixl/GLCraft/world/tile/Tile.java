@@ -21,6 +21,7 @@ public abstract class Tile {
 	public static Tile Log = new TileLog();
 	public static Tile Leaf = new TileLeaf();
 	public static Tile TallGrass = new TileTallGrass();
+	public static Tile Light = new TileLight();
 	//TILES
 	
 	public abstract String getName();

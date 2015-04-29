@@ -1,26 +1,6 @@
 package net.codepixl.GLCraft.world;
 
-import static org.lwjgl.opengl.GL11.GL_BACK;
-import static org.lwjgl.opengl.GL11.GL_CULL_FACE;
-import static org.lwjgl.opengl.GL11.GL_DEPTH_TEST;
-import static org.lwjgl.opengl.GL11.GL_FRONT;
-import static org.lwjgl.opengl.GL11.GL_MODELVIEW;
-import static org.lwjgl.opengl.GL11.GL_MODULATE;
-import static org.lwjgl.opengl.GL11.GL_PROJECTION;
-import static org.lwjgl.opengl.GL11.GL_TEXTURE_2D;
-import static org.lwjgl.opengl.GL11.GL_TEXTURE_ENV;
-import static org.lwjgl.opengl.GL11.GL_TEXTURE_ENV_MODE;
-import static org.lwjgl.opengl.GL11.glClearColor;
-import static org.lwjgl.opengl.GL11.glClearDepth;
-import static org.lwjgl.opengl.GL11.glColor3f;
-import static org.lwjgl.opengl.GL11.glCullFace;
-import static org.lwjgl.opengl.GL11.glDisable;
-import static org.lwjgl.opengl.GL11.glEnable;
-import static org.lwjgl.opengl.GL11.glLoadIdentity;
-import static org.lwjgl.opengl.GL11.glMatrixMode;
-import static org.lwjgl.opengl.GL11.glOrtho;
-import static org.lwjgl.opengl.GL11.glTexEnvi;
-import static org.lwjgl.opengl.GL11.glViewport;
+import static org.lwjgl.opengl.GL11.*;
 import static org.lwjgl.util.glu.GLU.gluPerspective;
 
 import java.awt.Font;
@@ -28,12 +8,16 @@ import java.awt.FontFormatException;
 import java.awt.GraphicsEnvironment;
 import java.io.IOException;
 import java.io.PipedInputStream;
+import java.nio.ByteBuffer;
+import java.nio.ByteOrder;
 import java.nio.FloatBuffer;
+import java.util.ArrayList;
 
 import net.codepixl.GLCraft.GUI.GUIServer;
 import net.codepixl.GLCraft.GUI.GUIStartScreen;
 import net.codepixl.GLCraft.render.Shape;
 import net.codepixl.GLCraft.util.Constants;
+import net.codepixl.GLCraft.util.MathUtils;
 import net.codepixl.GLCraft.util.Ray;
 import net.codepixl.GLCraft.util.Raytracer;
 import net.codepixl.GLCraft.util.Spritesheet;
@@ -136,7 +120,7 @@ public class World extends Screen{
 							int x = Integer.parseInt(pos.split(",")[0]);
 							int y = Integer.parseInt(pos.split(",")[1]);
 							int z = Integer.parseInt(pos.split(",")[2]);
-							getWorldManager().setTileAtPos(x, y, z, tile);
+							getWorldManager().setTileAtPos(x, y, z, tile, true);
 						}
 					}
 					if(s.contains("GLCRAFT_MOVE_PLAYER")){
@@ -192,6 +176,7 @@ public class World extends Screen{
 		}
 	}
 	
+	@SuppressWarnings("static-access")
 	private int raycast(){
 		Ray r = Raytracer.getScreenCenterRay();
 		int tile = -1;
@@ -204,16 +189,16 @@ public class World extends Screen{
 					tile = worldManager.getTileAtPos((int)r.pos.x, (int)r.pos.y, (int)r.pos.z);
 					if(tile != Tile.TallGrass.getId()){
 						GL11.glBegin(GL11.GL_QUADS);
-							Shape.createCube((int)r.pos.x-0.0005f, (int)r.pos.y-0.0005f, (int)r.pos.z-0.0005f, new Color4f(1,1,1,0.1f), new float[]{Spritesheet.tiles.uniformSize()*7,0}, 1.001f);
+							Shape.createCube((int)r.pos.x-0.0005f, (int)r.pos.y-0.0005f, (int)r.pos.z-0.0005f, new Color4f(1,1,1,1f), new float[]{Spritesheet.tiles.uniformSize()*7,0}, 1.001f, new ArrayList<Vector3f>());
 						GL11.glEnd();
 					}else{
 						GL11.glBegin(GL11.GL_QUADS);
-							Shape.createCross((int)r.pos.x-0.0005f, (int)r.pos.y-0.0005f, (int)r.pos.z-0.0005f, new Color4f(1,1,1,0.1f), new float[]{Spritesheet.tiles.uniformSize()*7,0}, 1.001f);
+							Shape.createCross((int)r.pos.x-0.0005f, (int)r.pos.y-0.0005f, (int)r.pos.z-0.0005f, new Color4f(1,1,1,1f), new float[]{Spritesheet.tiles.uniformSize()*7,0}, 1.001f, new ArrayList<Vector3f>());
 						GL11.glEnd();
 					}
 					worldManager.selectedBlock = new Vector3f((int)r.pos.x, (int)r.pos.y, (int)r.pos.z);
 					if(Mouse.isButtonDown(0) && worldManager.getMobManager().getPlayer().getBreakCooldown() == 0f){
-						worldManager.setTileAtPos((int)r.pos.x, (int)r.pos.y, (int)r.pos.z, (byte)0);
+						worldManager.setTileAtPos((int)r.pos.x, (int)r.pos.y, (int)r.pos.z, (byte)0, true);
 						try {
 							if(Constants.isMultiplayer){
 								Constants.packetsToSend.write(new String("GLCRAFT_CHANGEBLOCK||"+(int)r.pos.x+","+(int)r.pos.y+","+(int)r.pos.z+"||0;").getBytes());
@@ -262,10 +247,12 @@ public class World extends Screen{
 		glMatrixMode(GL_MODELVIEW);
 		glLoadIdentity();
 		glDisable(GL_DEPTH_TEST);
+		glDisable(GL_LIGHTING);
 	}
 	
 	public void render3D(){
 		// TODO Auto-generated method stub
+		//setupLighting();
 		glClearColor(0.0f,0.749019608f,1.0f,0.0f);
 		glCullFace(GL_FRONT);
 		glViewport(0,0,Constants.WIDTH,Constants.HEIGHT);
@@ -274,6 +261,18 @@ public class World extends Screen{
 		gluPerspective(67f,(float)Constants.WIDTH/(float)Constants.HEIGHT,0.5f, 1000f);
 		glMatrixMode(GL_MODELVIEW);
 		glEnable(GL_DEPTH_TEST);
+	}
+	
+	private void setupLighting(){
+		glShadeModel(GL_SMOOTH);
+		ByteBuffer f = ByteBuffer.allocateDirect(16);
+	    glEnable(GL_DEPTH_TEST);
+	    glEnable(GL_LIGHTING);
+	    glEnable(GL_LIGHT0);
+	    glLightModel(GL_LIGHT_MODEL_AMBIENT, (FloatBuffer)f.asFloatBuffer().put(new float[]{0.05f, 0.05f, 0.05f, 1f}).asReadOnlyBuffer().flip());
+	    glLight(GL_LIGHT0, GL_POSITION, (FloatBuffer)f.asFloatBuffer().put(new float[]{0,0,0,1}).flip());
+	    glEnable(GL_COLOR_MATERIAL);
+	    glColorMaterial(GL_FRONT, GL_DIFFUSE);
 	}
 	
 	@Override
