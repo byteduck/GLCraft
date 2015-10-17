@@ -1,17 +1,17 @@
 package net.codepixl.GLCraft.util;
 
 import java.awt.Font;
-import java.io.PipedOutputStream;
 import java.util.Arrays;
 import java.util.Random;
 
-import net.codepixl.GLCraft.world.World;
-
 import org.newdawn.slick.TrueTypeFont;
+
+import net.codepixl.GLCraft.world.CentralManager;
 
 public class Constants {
 	public static Random rand = new Random();
 	public static int viewDistance = 5;
+	public static final int WORLDHEIGHT = 5;
 	public static final int HEIGHT = 700;
 	public static final int WIDTH = 1000;
 	public static final int CHUNKSIZE = 16;
@@ -23,16 +23,8 @@ public class Constants {
 	public static final int GAME = 1;
 	public static final int SERVER = 2;
 	public static int GAME_STATE = START_SCREEN;
-	public static World world;
-	public static String ConnIP = "null";
-	public static boolean connected = false;
-	public static boolean isMultiplayer = false;
-	public static boolean downloadedWorld = false;
-	public static boolean transferredWorld = false;
-	public static boolean isServer = false;
-	public static byte[][][] worldBuf;
-	public static PipedOutputStream packetsToSend = new PipedOutputStream();
-	public static PipedOutputStream actionsToDo = new PipedOutputStream();
+	public static CentralManager world;
+	public static int worldLength = CHUNKSIZE*viewDistance;
 	
 	public static void setDoneGenerating(boolean generating){
 		doneGenerating = generating;
@@ -42,27 +34,11 @@ public class Constants {
 		GAME_STATE = state;
 	}
 	
-	public static void setWorld(World w){
+	public static void setWorld(CentralManager w){
 		world = w;
 	}
 	
-	public static void setIP(String ip){
-		ConnIP = ip.replace("/", " ").trim();
-	}
-	
-	public static void connectedToServer(){
-		connected = true;
-	}
-	
-	public static void downloadedWorld(){
-		downloadedWorld = true;
-	}
-	
-	public static void setServer(boolean server){
-		isServer = server;
-	}
-	public static byte[] trim(byte[] bytes)
-	{
+	public static byte[] trim(byte[] bytes){
 	    int i = bytes.length - 1;
 	    while (i >= 0 && bytes[i] == 0)
 	    {

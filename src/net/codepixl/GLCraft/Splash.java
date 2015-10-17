@@ -2,9 +2,9 @@ package net.codepixl.GLCraft;
 
 import java.awt.Color;
 
-import net.codepixl.GLCraft.util.Constants;
-
 import com.thehowtotutorial.splashscreen.JSplash;
+
+import net.codepixl.GLCraft.util.Constants;
 
 public class Splash{
 	public int total  = (int)Math.pow(Constants.viewDistance,3);
@@ -33,7 +33,7 @@ public class Splash{
 	}
 	
 	public int currentTilePercentage(){
-		return (int) ((float)(((float)this.currentTile/(float)Math.pow(Constants.viewDistance*Constants.CHUNKSIZE,3))*(float)100));
+		return (int) ((float)(((float)this.currentTile/(float)Constants.CHUNKSIZE*Constants.CHUNKSIZE*Constants.CHUNKSIZE)*(float)100));
 	}
 	
 	public void addCurrentChunk(int add){

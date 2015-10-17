@@ -1,6 +1,24 @@
 package net.codepixl.GLCraft;
 
-import static org.lwjgl.opengl.GL11.*;
+import static org.lwjgl.opengl.GL11.GL_COLOR_BUFFER_BIT;
+import static org.lwjgl.opengl.GL11.GL_DEPTH_BUFFER_BIT;
+import static org.lwjgl.opengl.GL11.GL_DEPTH_TEST;
+import static org.lwjgl.opengl.GL11.GL_LIGHT0;
+import static org.lwjgl.opengl.GL11.GL_LINE_SMOOTH;
+import static org.lwjgl.opengl.GL11.GL_LINE_SMOOTH_HINT;
+import static org.lwjgl.opengl.GL11.GL_MODELVIEW;
+import static org.lwjgl.opengl.GL11.GL_NICEST;
+import static org.lwjgl.opengl.GL11.GL_PERSPECTIVE_CORRECTION_HINT;
+import static org.lwjgl.opengl.GL11.GL_POSITION;
+import static org.lwjgl.opengl.GL11.GL_PROJECTION;
+import static org.lwjgl.opengl.GL11.glClear;
+import static org.lwjgl.opengl.GL11.glClearColor;
+import static org.lwjgl.opengl.GL11.glEnable;
+import static org.lwjgl.opengl.GL11.glHint;
+import static org.lwjgl.opengl.GL11.glLight;
+import static org.lwjgl.opengl.GL11.glLoadIdentity;
+import static org.lwjgl.opengl.GL11.glMatrixMode;
+import static org.lwjgl.opengl.GL11.glViewport;
 import static org.lwjgl.util.glu.GLU.gluPerspective;
 
 import java.io.IOException;
@@ -9,11 +27,9 @@ import java.net.URL;
 import java.nio.ByteBuffer;
 import java.nio.FloatBuffer;
 
-import net.codepixl.GLCraft.util.Constants;
-import net.codepixl.GLCraft.world.World;
-
 import org.lwjgl.BufferUtils;
 import org.lwjgl.input.Keyboard;
+import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.Display;
 import org.newdawn.slick.opengl.PNGDecoder;
 
@@ -21,15 +37,18 @@ import com.nishu.utils.GameLoop;
 import com.nishu.utils.Screen;
 import com.nishu.utils.Window;
 
+import net.codepixl.GLCraft.util.Constants;
+import net.codepixl.GLCraft.world.CentralManager;
+
 public class GLCraft extends Screen{
-	private World world;
+	private CentralManager world;
 	private GameLoop gameLoop;
 	
 	public GLCraft(){
 		gameLoop = new GameLoop();
 		gameLoop.setScreen(this);
 		gameLoop.setDebugMode(false);
-		gameLoop.start(60);
+		gameLoop.start(120);
 	}
 	
 	@Override
@@ -37,7 +56,7 @@ public class GLCraft extends Screen{
 		// TODO Auto-generated method stub
 		initCamera();
 		
-		world = new World();
+		world = new CentralManager();
 	}
 	
 	private void initCamera(){
@@ -66,7 +85,7 @@ public class GLCraft extends Screen{
 	public void update() {
 		world.update();
 		if(Keyboard.isKeyDown(Keyboard.KEY_ESCAPE)){
-			dispose();
+			Mouse.setGrabbed(false);
 		}
 		// TODO Auto-generated method stub
 	}

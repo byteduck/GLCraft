@@ -2,12 +2,12 @@ package net.codepixl.GLCraft;
 
 import java.awt.Color;
 
-import net.codepixl.GLCraft.util.Constants;
-
 import com.thehowtotutorial.splashscreen.JSplash;
 
+import net.codepixl.GLCraft.util.Constants;
+
 public class CustomSplash {
-	public int total  = (int)Math.pow(Constants.viewDistance,3);
+	public int total  = (int)Math.pow(Constants.viewDistance,2);
 	private JSplash splash;
 	private int currentChunk = 0;
 	private boolean shouldPopulate;

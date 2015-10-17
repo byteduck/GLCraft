@@ -1,9 +1,9 @@
 package net.codepixl.GLCraft.world;
 
+import org.lwjgl.util.vector.Vector3f;
+
 import net.codepixl.GLCraft.util.Constants;
 import net.codepixl.GLCraft.world.tile.Tile;
-
-import org.lwjgl.util.vector.Vector3f;
 
 public class GenChunk {
 	
@@ -28,7 +28,7 @@ public class GenChunk {
 	}
 	
 	private void createChunk(){
-		if(type == World.AIRCHUNK){
+		if(type == CentralManager.AIRCHUNK){
 			for(int x = (int) pos.getX(); x < sizeX; x++){
 				for(int y = (int) pos.getY(); y < sizeY; y++){
 					for(int z = (int) pos.getZ(); z < sizeZ; z++){
@@ -40,9 +40,9 @@ public class GenChunk {
 			for(int x = (int) pos.getX(); x < sizeX; x++){
 				for(int y = (int) pos.getY(); y < sizeY; y++){
 					for(int z = (int) pos.getZ(); z < sizeZ; z++){
-						if(y < g.noise[x][z]*Constants.CHUNKSIZE*Constants.viewDistance){
+						if(y < g.noise[x][z]*Constants.CHUNKSIZE){
 							tiles[x][y][z] = Tile.Stone.getId();
-						}else if(y-1 <= g.noise[x][z]*Constants.CHUNKSIZE*Constants.viewDistance){
+						}else if(y-1 <= g.noise[x][z]*Constants.CHUNKSIZE){
 							tiles[x][y][z] = Tile.Grass.getId();
 						}else{
 							tiles[x][y][z] = Tile.Air.getId();

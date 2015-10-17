@@ -7,10 +7,11 @@ import static org.lwjgl.opengl.GL11.glEnable;
 import static org.lwjgl.opengl.GL11.glEnd;
 import static org.lwjgl.opengl.GL11.glTexCoord2f;
 import static org.lwjgl.opengl.GL11.glVertex2f;
-import net.codepixl.GLCraft.util.Constants;
-import net.codepixl.GLCraft.util.Spritesheet;
 
 import org.newdawn.slick.opengl.TextureImpl;
+
+import net.codepixl.GLCraft.util.Constants;
+import net.codepixl.GLCraft.util.Spritesheet;
 
 public class GUIServer extends GUI{
 	public static void render() {
@@ -19,8 +20,8 @@ public class GUIServer extends GUI{
 		drawBG();
 		//glClearColor(0.3f,0.1f,0.3f,1.0f);
 		Constants.FONT.drawString(Constants.WIDTH/2-Constants.FONT.getWidth("Running Server...")/2, Constants.HEIGHT/2-Constants.FONT.getHeight("Running Server...")/2, "Running Server...");
-		String ip = "Connected IP: "+Constants.ConnIP;
-		Constants.FONT.drawString(Constants.WIDTH/2-Constants.FONT.getWidth(ip)/2, (Constants.HEIGHT/2-Constants.FONT.getHeight(ip)/2) + 50, ip);
+		//String ip = "Connected IP: "+Constants.ConnIP;
+		//Constants.FONT.drawString(Constants.WIDTH/2-Constants.FONT.getWidth(ip)/2, (Constants.HEIGHT/2-Constants.FONT.getHeight(ip)/2) + 50, ip);
 		TextureImpl.unbind();
 	}
 	

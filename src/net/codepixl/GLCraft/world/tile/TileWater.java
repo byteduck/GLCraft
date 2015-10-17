@@ -1,8 +1,8 @@
 package net.codepixl.GLCraft.world.tile;
 
-import net.codepixl.GLCraft.util.Spritesheet;
-
 import com.nishu.utils.Color4f;
+
+import net.codepixl.GLCraft.util.Spritesheet;
 
 public class TileWater extends Tile{
 
@@ -32,6 +32,17 @@ public class TileWater extends Tile{
 
 	@Override
 	public boolean isTransparent() {
+		// TODO Auto-generated method stub
+		return true;
+	}
+	
+	@Override
+	public boolean isTranslucent(){
+		return true;
+	}
+
+	@Override
+	public boolean canPassThrough() {
 		// TODO Auto-generated method stub
 		return true;
 	}

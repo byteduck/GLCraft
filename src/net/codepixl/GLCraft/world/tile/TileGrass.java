@@ -1,8 +1,8 @@
 package net.codepixl.GLCraft.world.tile;
 
-import net.codepixl.GLCraft.util.Spritesheet;
-
 import com.nishu.utils.Color4f;
+
+import net.codepixl.GLCraft.util.Spritesheet;
 
 public class TileGrass extends Tile{
 
@@ -36,9 +36,20 @@ public class TileGrass extends Tile{
 		// TODO Auto-generated method stub
 		return "Grass";
 	}
-
+	
+	@Override
+	public float[] getIconCoords(){
+		return new float[]{Spritesheet.tiles.uniformSize()*3, 0};
+	}
+	
 	@Override
 	public boolean isTransparent() {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public boolean canPassThrough() {
 		// TODO Auto-generated method stub
 		return false;
 	}

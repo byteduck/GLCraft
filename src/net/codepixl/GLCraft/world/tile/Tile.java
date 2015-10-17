@@ -2,10 +2,19 @@ package net.codepixl.GLCraft.world.tile;
 
 import java.util.HashMap;
 
+import org.lwjgl.util.vector.Vector3f;
+
 import com.nishu.utils.Color4f;
 
-public abstract class Tile {
-	
+import net.codepixl.GLCraft.item.ItemStack;
+import net.codepixl.GLCraft.render.RenderType;
+import net.codepixl.GLCraft.util.AABB;
+import net.codepixl.GLCraft.world.Chunk;
+import net.codepixl.GLCraft.world.WorldManager;
+import net.codepixl.GLCraft.world.entity.EntityItem;
+
+public class Tile {
+
 	public static HashMap<Byte, Tile> tileMap = new HashMap<Byte, Tile>();
 	
 	//TILES
@@ -22,18 +31,80 @@ public abstract class Tile {
 	public static Tile Leaf = new TileLeaf();
 	public static Tile TallGrass = new TileTallGrass();
 	public static Tile Light = new TileLight();
+	public static Tile Fire = new TileFire();
+	public static Tile Bluestone = new TileBluestone();
+	public static Tile Tnt = new TileTnt();
 	//TILES
 	
-	public abstract String getName();
-	public abstract byte getId();
-	public abstract Color4f getColor();
-	public abstract float[] getTexCoords();
-	public abstract boolean isTransparent();
+	public String getName(){
+		return "Un-named block";
+	}
+	
+	public byte getId(){
+		return -1;
+	}
+	
+	public boolean customHitbox(){
+		return false;
+	}
+	
+	public AABB getAABB(){
+		return new AABB(1,1,1);
+	}
+	
+	public boolean needsConstantTick(){
+		return false;
+	}
+	
+	public Color4f getColor(){
+		return new Color4f(1,1,1,1);
+	}
+	
+	public float[] getTexCoords(){
+		return new float[]{0,0};
+	}
+	
+	public float[] getIconCoords(){
+		return this.getTexCoords();
+	}
+	
+	public boolean isTransparent(){
+		return false;
+	}
+	
+	public boolean canPassThrough(){
+		return false;
+	}
+	
+	public boolean isTranslucent(){
+		return false;
+	}
+	
+	public void onBreak(int x, int y, int z, WorldManager worldManager){
+		worldManager.spawnEntity(new EntityItem(new ItemStack(this),(float)x+0.5f,(float)y+0.5f,(float)z+0.5f,worldManager));
+	}
+	
+	public void randomTick(int x, int y, int z, WorldManager worldManager){
+		
+	}
+	
+	public void tick(int x, int y, int z, WorldManager worldManager){}
 	
 	public static Tile getTile(byte id){
 		return tileMap.get(id);
 	}
 	
+	public RenderType getRenderType(){
+		return RenderType.CUBE;
+	}
+	
+	public void customRender(float x, float y, float z, WorldManager w, Chunk c){
+		
+	}
+	
+	public float getHardness(){
+		return 0.4f;
+	}
 	
 	public void registerTile() {
 		// TODO Auto-generated method stub
@@ -41,9 +112,25 @@ public abstract class Tile {
 		Tile.tileMap.put(getId(), this);
 	}
 	
+	public void onPlace(int x, int y, int z, WorldManager w){
+		
+	}
+	
+	public boolean canPlace(int x, int y, int z, WorldManager w){
+		return true;
+	}
+	
 	public Tile(){
 		if(this.getClass() != Tile.class){
 			registerTile();
 		}
+	}
+
+	public void blockUpdate(int x, int y, int z, WorldManager worldManager) {
+		
+	}
+
+	public void renderHitbox(Vector3f pos) {
+		
 	}
 }

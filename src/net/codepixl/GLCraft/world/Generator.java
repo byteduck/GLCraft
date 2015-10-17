@@ -21,11 +21,9 @@ public class Generator implements Runnable{
 	public void run() {
     	this.noise = PerlinNoise.generateSmoothNoise(PerlinNoise.generateWhiteNoise(Constants.viewDistance*Constants.CHUNKSIZE, Constants.viewDistance*Constants.CHUNKSIZE), 100);
 		for(int x = 0; x < Constants.viewDistance; x++){
-			for(int y = 0; y < Constants.viewDistance; y++){
-				for(int z = 0; z < Constants.viewDistance; z++){
-					activeChunks.add(new GenChunk(this,World.MIXEDCHUNK,x,y,z));
-					//w.saveChunk(activeChunks.get(activeChunks.size() - 1));
-				}
+			for(int z = 0; z < Constants.viewDistance; z++){
+				activeChunks.add(new GenChunk(this,CentralManager.MIXEDCHUNK,x,0,z));
+				//w.saveChunk(activeChunks.get(activeChunks.size() - 1));
 			}
 		}
 		done = true;

@@ -8,15 +8,13 @@ import static org.lwjgl.opengl.GL11.glEnable;
 import static org.lwjgl.opengl.GL11.glEnd;
 import static org.lwjgl.opengl.GL11.glTexCoord2f;
 import static org.lwjgl.opengl.GL11.glVertex2f;
-import net.codepixl.GLCraft.Network.Client.ServerDiscovery;
-import net.codepixl.GLCraft.Network.Server.ServerBroadcast;
-import net.codepixl.GLCraft.util.Constants;
-import net.codepixl.GLCraft.util.Spritesheet;
-import net.codepixl.GLCraft.world.entity.mob.MobManager;
 
 import org.lwjgl.input.Mouse;
 
 import com.nishu.utils.Color4f;
+
+import net.codepixl.GLCraft.util.Constants;
+import net.codepixl.GLCraft.util.Spritesheet;
 
 public class GUIStartScreen extends GUI{
 	
@@ -32,9 +30,9 @@ public class GUIStartScreen extends GUI{
 		drawBG();
 		glDisable(GL_TEXTURE_2D);
 		//glClearColor(0.3f,0.1f,0.3f,1.0f);
-		GUI.createButton(MIDDLE,SINGLEPLAYERY,10,Constants.BTNHEIGHT,"Singleplayer",new Color4f(0f,0f,0f,1f));
-		GUI.createButton(MIDDLE,MULTIPLAYERY,10,Constants.BTNHEIGHT,"Multiplayer",new Color4f(0f,0f,0f,1f));
-		GUI.createButton(MIDDLE,SERVERY,10,Constants.BTNHEIGHT,"Server",new Color4f(0f,0f,0f,1f));
+		GUI.createButton(MIDDLE,SINGLEPLAYERY,10,Constants.BTNHEIGHT,"Singleplayer",new Color4f(0f,0f,0f,1f),new Color4f(1f,1f,1f,1f));
+		//GUI.createButton(MIDDLE,MULTIPLAYERY,10,Constants.BTNHEIGHT,"Multiplayer",new Color4f(0f,0f,0f,1f),new Color4f(0.5f,0.5f,0.5f,1f));
+		//GUI.createButton(MIDDLE,SERVERY,10,Constants.BTNHEIGHT,"Server",new Color4f(0f,0f,0f,1f),new Color4f(1f,1f,1f,1f));
 	}
 	
 	public static void drawBG(){
@@ -57,10 +55,9 @@ public class GUIStartScreen extends GUI{
 			if(GUI.testClick(Mouse.getX(),Mouse.getY(),MIDDLE,SINGLEPLAYERY,Constants.FONT.getWidth("Singleplayer")+20,Constants.BTNHEIGHT)){
 				Constants.setState(Constants.GAME);
 				Constants.world.getWorldManager().createWorld();
-				Constants.world.prepareForGame();
 				glDisable(GL_TEXTURE_2D);
 			}
-			if(GUI.testClick(Mouse.getX(),Mouse.getY(),MIDDLE,MULTIPLAYERY,Constants.FONT.getWidth("Multiplayer")+20,Constants.BTNHEIGHT)){
+			/**if(GUI.testClick(Mouse.getX(),Mouse.getY(),MIDDLE,MULTIPLAYERY,Constants.FONT.getWidth("Multiplayer")+20,Constants.BTNHEIGHT)){
 				Constants.isMultiplayer = true;
 				ServerDiscovery s = new ServerDiscovery();
 				Thread t = new Thread(s);
@@ -78,7 +75,7 @@ public class GUIStartScreen extends GUI{
 				ServerBroadcast s = new ServerBroadcast();
 				Thread t = new Thread(s);
 				t.start();
-			}
+			}**/
 		}
 	}
 	

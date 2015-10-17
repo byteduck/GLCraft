@@ -34,4 +34,10 @@ public class TileAir extends Tile{
 		return true;
 	}
 
+	@Override
+	public boolean canPassThrough() {
+		// TODO Auto-generated method stub
+		return true;
+	}
+
 }

@@ -1,8 +1,8 @@
 package net.codepixl.GLCraft.world.tile;
 
-import net.codepixl.GLCraft.util.Spritesheet;
-
 import com.nishu.utils.Color4f;
+
+import net.codepixl.GLCraft.util.Spritesheet;
 
 public class TileLog extends Tile{
 
@@ -23,6 +23,11 @@ public class TileLog extends Tile{
 		// TODO Auto-generated method stub
 		return Color4f.WHITE;
 	}
+	
+	@Override
+	public float getHardness(){
+		return 1.5f;
+	}
 
 	@Override
 	public float[] getTexCoords() {
@@ -41,6 +46,17 @@ public class TileLog extends Tile{
 	public boolean isTransparent() {
 		// TODO Auto-generated method stub
 		return false;
+	}
+
+	@Override
+	public boolean canPassThrough() {
+		// TODO Auto-generated method stub
+		return false;
+	}
+	
+	@Override
+	public float[] getIconCoords(){
+		return new float[]{Spritesheet.tiles.uniformSize()*12, 0f};
 	}
 
 }

@@ -1,42 +1,47 @@
 package net.codepixl.GLCraft.world.entity;
 
-import net.codepixl.GLCraft.world.WorldManager;
-
 import org.lwjgl.util.vector.Vector3f;
 
-public class Entity {
-	private Vector3f pos, rot;
-	private int id;
-	private Camera camera;
+import com.evilco.mc.nbt.tag.TagCompound;
+import com.evilco.mc.nbt.tag.TagFloat;
+import com.evilco.mc.nbt.tag.TagList;
+import com.evilco.mc.nbt.tag.TagLong;
+import com.evilco.mc.nbt.tag.TagString;
+import com.nishu.utils.Time;
+
+import net.codepixl.GLCraft.util.GameObj;
+import net.codepixl.GLCraft.util.MathUtils;
+import net.codepixl.GLCraft.world.WorldManager;
+
+public class Entity implements GameObj{
+	protected Vector3f pos, rot, vel;
+	protected int id;
 	public WorldManager worldManager;
+	protected boolean dead = false;
+	public long timeAlive = 0;
 	
-	public Entity(float x, float y, float z, int id, WorldManager worldManager){
+	public Entity(float x, float y, float z, WorldManager worldManager){
 		this.pos = new Vector3f(x,y,z);
 		this.rot = new Vector3f(0,0,0);
-		this.id = id;
+		this.setVelocity(new Vector3f(0,0,0));
+		this.id = worldManager.getEntityManager().getNewId();
 		this.worldManager = worldManager;
 	}
 	
-	public Entity(float x, float y, float z, float rx, float ry, float rz, int id, WorldManager worldManager){
+	public Entity(float x, float y, float z, float rx, float ry, float rz, WorldManager worldManager){
 		this.pos = new Vector3f(x,y,z);
 		this.rot = new Vector3f(rx,ry,rz);
-		this.id = id;
+		this.setVelocity(new Vector3f(0,0,0));
+		this.id = worldManager.getEntityManager().getNewId();
 		this.worldManager = worldManager;
 	}
 	
-	public Entity(Vector3f pos, Vector3f rot, int id, WorldManager worldManager){
+	public Entity(Vector3f pos, Vector3f rot, Vector3f vel, WorldManager worldManager){
 		this.pos = pos;
 		this.rot = rot;
-		this.id = id;
+		this.setVelocity(vel);
+		this.id = worldManager.getEntityManager().getNewId();
 		this.worldManager = worldManager;
-	}
-	
-	public Entity(Camera camera, int id){
-		this.pos = new Vector3f(camera.getX(),camera.getY(),camera.getZ());
-		this.rot = new Vector3f(camera.getPitch(),camera.getYaw(),camera.getRoll());
-		this.id = id;
-		this.setCamera(camera);
-		this.worldManager = camera.worldManager;
 	}
 	
 	public int getID(){
@@ -55,32 +60,14 @@ public class Entity {
 		this.pos = pos;
 	}
 	
+	public void setPos(float x, float y, float z){
+		this.pos.x = x;
+		this.pos.y = y;
+		this.pos.z = z;
+	}
+	
 	public void setRot(Vector3f rot){
 		this.rot = rot;
-	}
-	
-	public float getPitch(){
-		return rot.y;
-	}
-	
-	public float getYaw(){
-		return rot.x;
-	}
-	
-	public float getRoll(){
-		return rot.z;
-	}
-	
-	public void setYaw(float yaw){
-		this.rot.x = yaw;
-	}
-	
-	public void setRoll(float roll){
-		this.rot.z = roll;
-	}
-	
-	public void setPitch(float pitch){
-		this.rot.y = pitch;
 	}
 	
 	public float getX(){
@@ -89,6 +76,18 @@ public class Entity {
 	
 	public float getY(){
 		return pos.y;
+	}
+	
+	public void setRotX(float r){
+		rot.x = r;
+	}
+	
+	public void setRotY(float r){
+		rot.y = r;
+	}
+	
+	public void setRotZ(float r){
+		rot.z = r;
 	}
 	
 	public float getZ(){
@@ -107,11 +106,72 @@ public class Entity {
 		pos.z = z;
 	}
 
-	public Camera getCamera() {
-		return camera;
+	public Vector3f getVelocity() {
+		return vel;
 	}
 
-	public void setCamera(Camera camera) {
-		this.camera = camera;
+	public void setVelocity(Vector3f vel) {
+		this.vel = vel;
+	}
+	
+	public final TagCompound mainWriteToNBT(){
+		TagCompound t = new TagCompound("");
+		TagList posList = new TagList("Pos");
+		posList.addTag(new TagFloat("",this.pos.x));
+		posList.addTag(new TagFloat("",this.pos.y));
+		posList.addTag(new TagFloat("",this.pos.z));
+		TagList rotList = new TagList("Rot");
+		rotList.addTag(new TagFloat("",this.rot.x));
+		rotList.addTag(new TagFloat("",this.rot.y));
+		rotList.addTag(new TagFloat("",this.rot.z));
+		TagList velList = new TagList("Vel");
+		velList.addTag(new TagFloat("",this.vel.x));
+		velList.addTag(new TagFloat("",this.vel.y));
+		velList.addTag(new TagFloat("",this.vel.z));
+		TagLong timeTag = new TagLong("TimeAlive",timeAlive);
+		TagString typeTag = new TagString("type",this.getClass().getSimpleName());
+		t.setTag(posList);
+		t.setTag(rotList);
+		t.setTag(velList);
+		t.setTag(timeTag);
+		t.setTag(typeTag);
+		writeToNBT(t);
+		return t;
+	}
+	
+	public void writeToNBT(TagCompound t){
+		
+	}
+
+	@Override
+	public void update() {
+		timeAlive+=(Time.getDelta()*1000f);
+		this.rot = MathUtils.modulus(this.rot, 360f);
+		voidHurt();
+	}
+
+	@Override
+	public void render() {
+		
+	}
+
+	@Override
+	public void dispose() {
+		
+	}
+
+	public boolean isDead() {
+		// TODO Auto-generated method stub
+		return dead;
+	}
+	
+	public void setDead(boolean isDead){
+		this.dead = isDead;
+	}
+
+	protected void voidHurt() {
+		if(this.getY() < -5){
+			this.setDead(true);
+		}
 	}
 }
