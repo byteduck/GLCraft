@@ -94,10 +94,6 @@ public class Tile {
 		return tileMap.get(id);
 	}
 	
-	public boolean canReplace(){
-		return false;
-	}
-	
 	public RenderType getRenderType(){
 		return RenderType.CUBE;
 	}

@@ -436,7 +436,6 @@ public class Chunk {
 				this.light[x][y][z] = 0;
 			}
 			tiles[x][y][z] = tile;
-			meta[x][y][z] = 0;
 			if(rebuild){
 				queueLight();
 				/**worldManager.getChunkAtCoords(MathUtils.coordsToChunkPos((int)ax-7, (int)ay, (int)az)).queueLight();

@@ -55,7 +55,7 @@ public class EntityPlayer extends Mob {
 	private final float speed, maxU, maxD;
 	private int selectedSlot;
 	private boolean qPressed, wasBreaking;
-	private Vector3f prevSelect,toHighlight;
+	private Vector3f prevSelect;
 	
 	public EntityPlayer(Vector3f pos, WorldManager w) {
 		super(pos, w);
@@ -68,7 +68,6 @@ public class EntityPlayer extends Mob {
 		selectedSlot = 0;
 		qPressed = false;
 		prevSelect = new Vector3f(-1, -1, -1);
-		toHighlight = new Vector3f();
 	}
 	
 	@Override
@@ -359,22 +358,7 @@ public class EntityPlayer extends Mob {
 	}
 	
 	public void render() {
-		byte tile = (byte) worldManager.getTileAtPos(toHighlight);
-		if(Tile.getTile((byte) tile).getRenderType() == RenderType.CUBE) {
-			glBegin(GL_QUADS);
-			Shape.createCube(toHighlight.x - 0.0005f, toHighlight.y - 0.0005f, toHighlight.z - 0.0005f, new Color4f(1, 1, 1, 1f), new float[] { Spritesheet.tiles.uniformSize() * 7, 0 }, 1.001f);
-			glEnd();
-		}else if(Tile.getTile((byte) tile).getRenderType() == RenderType.CROSS){
-			glBegin(GL_QUADS);
-			Shape.createCross(toHighlight.x - 0.0005f, toHighlight.y - 0.0005f, toHighlight.z - 0.0005f, new Color4f(1, 1, 1, 1f), new float[] { Spritesheet.tiles.uniformSize() * 7, 0 }, 1.001f);
-			glEnd();
-		}else if(Tile.getTile((byte) tile).getRenderType() == RenderType.FLAT){
-			glBegin(GL_QUADS);
-			Shape.createFlat(toHighlight.x - 0.0005f, toHighlight.y + 0.1f, toHighlight.z - 0.0005f, new Color4f(1, 1, 1, 1f), new float[] { Spritesheet.tiles.uniformSize() * 7, 0 }, 1.001f);
-			glEnd();
-		}else if(Tile.getTile((byte)tile).getRenderType() == RenderType.CUSTOM){
-			Tile.getTile((byte)tile).renderHitbox(toHighlight);
-		}
+	
 	}
 	
 	public void dispose() {
@@ -454,7 +438,6 @@ public class EntityPlayer extends Mob {
 			if(worldManager.doneGenerating) {
 				if(worldManager.getTileAtPos((int) r.pos.x, (int) r.pos.y, (int) r.pos.z) == -1 || worldManager.getTileAtPos((int) r.pos.x, (int) r.pos.y, (int) r.pos.z) == 0) {
 					r.next();
-					toHighlight = new Vector3f(-1,-1,-1);
 				}else{
 					tile = worldManager.getTileAtPos((int) r.pos.x, (int) r.pos.y, (int) r.pos.z);
 					if(Tile.getTile((byte)tile).customHitbox()){
@@ -469,7 +452,21 @@ public class EntityPlayer extends Mob {
 					}
 					// System.out.println(worldManager.getTileAtPos((int)r.pos.x,
 					// (int)r.pos.y, (int)r.pos.z));
-					toHighlight = new Vector3f((int)r.pos.x,(int)r.pos.y,(int)r.pos.z);
+					if(Tile.getTile((byte) tile).getRenderType() == RenderType.CUBE) {
+						glBegin(GL_QUADS);
+						Shape.createCube((int) r.pos.x - 0.0005f, (int) r.pos.y - 0.0005f, (int) r.pos.z - 0.0005f, new Color4f(1, 1, 1, 1f), new float[] { Spritesheet.tiles.uniformSize() * 7, 0 }, 1.001f);
+						glEnd();
+					}else if(Tile.getTile((byte) tile).getRenderType() == RenderType.CROSS){
+						glBegin(GL_QUADS);
+						Shape.createCross((int) r.pos.x - 0.0005f, (int) r.pos.y - 0.0005f, (int) r.pos.z - 0.0005f, new Color4f(1, 1, 1, 1f), new float[] { Spritesheet.tiles.uniformSize() * 7, 0 }, 1.001f);
+						glEnd();
+					}else if(Tile.getTile((byte) tile).getRenderType() == RenderType.FLAT){
+						glBegin(GL_QUADS);
+						Shape.createFlat((int) r.pos.x - 0.0005f, (int) r.pos.y + 0.1f, (int) r.pos.z - 0.0005f, new Color4f(1, 1, 1, 1f), new float[] { Spritesheet.tiles.uniformSize() * 7, 0 }, 1.001f);
+						glEnd();
+					}else if(Tile.getTile((byte)tile).getRenderType() == RenderType.CUSTOM){
+						Tile.getTile((byte)tile).renderHitbox(r.pos);
+					}
 					if(!this.prevSelect.equals(new Vector3f((int) r.pos.x, (int) r.pos.y, (int) r.pos.z))) {
 						this.breakProgress = 0f;
 					}
@@ -497,11 +494,11 @@ public class EntityPlayer extends Mob {
 					}else{
 						this.wasBreaking = false;
 					}
+					r.prev();
 					if(Mouse.isButtonDown(1) && worldManager.getEntityManager().getPlayer().getBuildCooldown() == 0f && worldManager.getEntityManager().getPlayer().getSelectedItemStack() != null && worldManager.getEntityManager().getPlayer().getSelectedItemStack().isTile()/** && worldManager.getTileAtPos(r.pos) == 0**/) {
-						r.prev();
 						AABB blockaabb = new AABB(1, 1, 1);
 						blockaabb.update(new Vector3f(((int) r.pos.x) + 0.5f, (int) r.pos.y, ((int) r.pos.z) + 0.5f));
-						if(!AABB.testAABB(blockaabb, getAABB()) && worldManager.getEntityManager().getPlayer().getSelectedItemStack().getTile().canPlace((int) r.pos.x, (int) r.pos.y, (int) r.pos.z, worldManager) && Tile.getTile((byte) worldManager.getTileAtPos((int) r.pos.x, (int) r.pos.y, (int) r.pos.z)).canReplace()) {
+						if(!AABB.testAABB(blockaabb, getAABB()) && worldManager.getEntityManager().getPlayer().getSelectedItemStack().getTile().canPlace((int) r.pos.x, (int) r.pos.y, (int) r.pos.z, worldManager)) {
 							worldManager.setTileAtPos((int) r.pos.x, (int) r.pos.y, (int) r.pos.z, worldManager.getEntityManager().getPlayer().getSelectedItemStack().getTile().getId(), true);
 							worldManager.getEntityManager().getPlayer().getSelectedItemStack().getTile().onPlace((int) r.pos.x, (int) r.pos.y, (int) r.pos.z, worldManager);
 							int sub = worldManager.getEntityManager().getPlayer().getSelectedItemStack().subFromStack(1);
@@ -513,6 +510,7 @@ public class EntityPlayer extends Mob {
 					}
 					r.distance = 11;
 				}
+				r.next();
 			}else{
 				return -1;
 			}
