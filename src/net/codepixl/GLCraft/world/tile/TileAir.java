@@ -39,5 +39,10 @@ public class TileAir extends Tile{
 		// TODO Auto-generated method stub
 		return true;
 	}
+	
+	@Override
+	public boolean canReplace(){
+		return true;
+	}
 
 }

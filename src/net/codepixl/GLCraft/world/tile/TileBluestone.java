@@ -61,7 +61,7 @@ public class TileBluestone extends Tile{
 		if(w.getTileAtPos(x, y, z-1) == Tile.Bluestone.getId() || w.getTileAtPos(x, y-1, z-1) == Tile.Bluestone.getId() || w.getTileAtPos(x, y+1, z-1) == Tile.Bluestone.getId()){
 			if(w.getTileAtPos(x, y-1, z-1) == Tile.Bluestone.getId()){
 				glPushMatrix();
-				glTranslatef(x,y,z-0.02f);
+				glTranslatef(x,y+0.015f,z-0.02f);
 				glRotatef(90f,1f,0,0);
 				glTranslatef(-x,-y,-z);
 				glBegin(GL_QUADS);
@@ -78,7 +78,7 @@ public class TileBluestone extends Tile{
 		if(w.getTileAtPos(x, y, z+1) == Tile.Bluestone.getId() || w.getTileAtPos(x, y-1, z+1) == Tile.Bluestone.getId() || w.getTileAtPos(x, y+1, z+1) == Tile.Bluestone.getId()){
 			if(w.getTileAtPos(x, y-1, z+1) == Tile.Bluestone.getId()){
 				glPushMatrix();
-				glTranslatef(x,y-1f,z+1.02f);
+				glTranslatef(x,y-0.985f,z+1.02f);
 				glRotatef(-90f,1f,0,0);
 				glTranslatef(-x,-y,-z);
 				glBegin(GL_QUADS);
@@ -96,6 +96,17 @@ public class TileBluestone extends Tile{
 			glPopMatrix();
 		}
 		if(w.getTileAtPos(x+1, y, z) == Tile.Bluestone.getId() || w.getTileAtPos(x+1, y-1, z) == Tile.Bluestone.getId() || w.getTileAtPos(x+1, y+1, z) == Tile.Bluestone.getId()){
+			if(w.getTileAtPos(x+1, y-1, z) == Tile.Bluestone.getId()){
+				glPushMatrix();
+				glTranslatef(x+1.002f,y+0.020f,z+1f);
+				glRotatef(90f,0f,1f,0f);
+				glRotatef(90f,1f,0f,0f);
+				glTranslatef(-x,-y,-z);
+				glBegin(GL_QUADS);
+				Shape.createFlat(x, y+0.01f, z, new Color4f(col,col,col,1f), new float[]{Spritesheet.tiles.uniformSize()*4,Spritesheet.tiles.uniformSize()*2}, 1);
+				glEnd();
+				glPopMatrix();
+			}
 			glPushMatrix();
 			glTranslatef(x+1f,y,z);
 			glRotatef(-90f,0,1f,0);
@@ -106,6 +117,17 @@ public class TileBluestone extends Tile{
 			glPopMatrix();
 		}
 		if(w.getTileAtPos(x-1, y, z) == Tile.Bluestone.getId() || w.getTileAtPos(x-1, y-1, z) == Tile.Bluestone.getId() || w.getTileAtPos(x-1, y+1, z) == Tile.Bluestone.getId()){
+			if(w.getTileAtPos(x-1, y-1, z) == Tile.Bluestone.getId()){
+				glPushMatrix();
+				glTranslatef(x-0.015f,y+0.020f,z+1f);
+				glRotatef(90f,0f,1f,0f);
+				glRotatef(90f,1f,0f,0f);
+				glTranslatef(-x,-y,-z);
+				glBegin(GL_QUADS);
+				Shape.createFlat(x, y+0.01f, z, new Color4f(col,col,col,1f), new float[]{Spritesheet.tiles.uniformSize()*4,Spritesheet.tiles.uniformSize()*2}, 1);
+				glEnd();
+				glPopMatrix();
+			}
 			glPushMatrix();
 			glTranslatef(x,y,z+1f);
 			glRotatef(90f,0,1f,0);
