@@ -42,3 +42,11 @@ Network Trash Folder
 Temporary Items
 .apdisk
 
+
+#JAVA FILES
+bin/
+.settings/
+.db
+.project
+.classpath
+
