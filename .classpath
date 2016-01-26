@@ -15,5 +15,6 @@
 	<classpathentry kind="lib" path="res/jar/commons-lang3-3.1.jar"/>
 	<classpathentry kind="lib" path="res/jar/guava-18.0.jar"/>
 	<classpathentry kind="lib" path="res/jar/nbt.jar"/>
+	<classpathentry kind="lib" path="res/jar/json-20151123.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
