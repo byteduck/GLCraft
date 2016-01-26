@@ -9,7 +9,7 @@ public class TileIron extends Tile{
 	@Override
 	public String getName() {
 		// TODO Auto-generated method stub
-		return "Gold Ore";
+		return "Iron Ore";
 	}
 
 	@Override
