@@ -1,4 +1,4 @@
-package net.codepixl.GLCrat.testthings;
+package net.codepixl.GLCraft.testthings;
 
 import net.codepixl.GLCraft.plugin.PluginManager;
 
