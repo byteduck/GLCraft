@@ -73,7 +73,7 @@ public class GLCraft extends Screen{
 		initCamera();
 		
 		world = new CentralManager();
-		String pluginsFolder = new JFileChooser().getFileSystemView().getDefaultDirectory().toString()+"/GLCraft/Plugins";
+		String pluginsFolder = System.getProperty("user.home")+"/GLCraft/Plugins";
 		new File(pluginsFolder).mkdirs();
 		pluginManager = new PluginManager(pluginsFolder);
 		pluginManager.loadPlugins();
