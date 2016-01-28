@@ -17,6 +17,7 @@ public class LoadedPlugin {
 	public String description;
 	public String mainClass;
 	ClassLoader loader;
+	Plugin plugin;
 	public LoadedPlugin(String path) throws IOException, ClassNotFoundException, InstantiationException, IllegalAccessException{
 		this.path = path;
 		byte[] data = Files.readAllBytes(new File(path+"/plugin.json").toPath());
@@ -27,8 +28,12 @@ public class LoadedPlugin {
 		this.description = json.getString("pluginDescription");
 		this.mainClass = json.getString("mainClass");
 		loader = new URLClassLoader(new URL[]{new File(path).toURL()});
-		Plugin p = (Plugin) loader.loadClass(mainClass).newInstance();
-		p.init();
+		plugin = (Plugin) loader.loadClass(mainClass).newInstance();
+		plugin.init();
 		System.out.println("Loaded \""+name+"\" version \""+version+"\" with description \""+description+"\"");
+	}
+	
+	public void update(){
+		plugin.update();
 	}
 }

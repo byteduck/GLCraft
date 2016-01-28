@@ -506,6 +506,7 @@ public class EntityPlayer extends Mob {
 						AABB blockaabb = new AABB(1, 1, 1);
 						blockaabb.update(new Vector3f(((int) r.pos.x) + 0.5f, (int) r.pos.y, ((int) r.pos.z) + 0.5f));
 						if(!AABB.testAABB(blockaabb, getAABB()) && worldManager.getEntityManager().getPlayer().getSelectedItemStack().getTile().canPlace((int) r.pos.x, (int) r.pos.y, (int) r.pos.z, worldManager)) {
+							r.prev();
 							worldManager.setTileAtPos((int) r.pos.x, (int) r.pos.y, (int) r.pos.z, worldManager.getEntityManager().getPlayer().getSelectedItemStack().getTile().getId(), true);
 							worldManager.getEntityManager().getPlayer().getSelectedItemStack().getTile().onPlace((int) r.pos.x, (int) r.pos.y, (int) r.pos.z, worldManager);
 							int sub = worldManager.getEntityManager().getPlayer().getSelectedItemStack().subFromStack(1);
@@ -513,6 +514,7 @@ public class EntityPlayer extends Mob {
 								worldManager.getEntityManager().getPlayer().getInventory()[worldManager.getEntityManager().getPlayer().getSelectedSlot()] = null;
 							}
 							setBuildCooldown(0.2f);
+							r.next();
 						}
 					}
 					r.distance = 11;

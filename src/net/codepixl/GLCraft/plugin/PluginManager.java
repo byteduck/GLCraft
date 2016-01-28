@@ -3,6 +3,7 @@ package net.codepixl.GLCraft.plugin;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Iterator;
 
 import net.codepixl.GLCraft.world.tile.PluginTile;
 import net.codepixl.GLCraft.world.tile.Tile;
@@ -22,6 +23,13 @@ public class PluginManager {
 		Tile.tileMap.put(currentTile, t);
 		System.out.println("Registered plugin tile "+t.getName()+" with ID "+currentTile);
 		currentTile++;
+	}
+	
+	public void update(){
+		Iterator<LoadedPlugin> it = plugins.iterator();
+		while(it.hasNext()){
+			it.next().update();
+		}
 	}
 	
 	public void loadPlugins(){
