@@ -21,11 +21,14 @@ import static org.lwjgl.opengl.GL11.glMatrixMode;
 import static org.lwjgl.opengl.GL11.glViewport;
 import static org.lwjgl.util.glu.GLU.gluPerspective;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
 import java.nio.ByteBuffer;
 import java.nio.FloatBuffer;
+
+import javax.swing.JFileChooser;
 
 import org.lwjgl.BufferUtils;
 import org.lwjgl.input.Keyboard;
@@ -37,14 +40,22 @@ import com.nishu.utils.GameLoop;
 import com.nishu.utils.Screen;
 import com.nishu.utils.Window;
 
+import net.codepixl.GLCraft.plugin.PluginManager;
 import net.codepixl.GLCraft.util.Constants;
 import net.codepixl.GLCraft.world.CentralManager;
 
 public class GLCraft extends Screen{
 	private CentralManager world;
 	private GameLoop gameLoop;
+	private PluginManager pluginManager;
+	private static GLCraft glcraft;
+	
+	public static GLCraft getGLCraft(){
+		return glcraft;
+	}
 	
 	public GLCraft() throws IOException{
+		glcraft = this;
 		Display.setIcon(new ByteBuffer[] {
 		        loadIcon(GLCraft.class.getResource("/textures/icons/icon16.png")),
 		        loadIcon(GLCraft.class.getResource("/textures/icons/icon32.png")),
@@ -62,10 +73,18 @@ public class GLCraft extends Screen{
 		initCamera();
 		
 		world = new CentralManager();
+		String pluginsFolder = new JFileChooser().getFileSystemView().getDefaultDirectory().toString()+"/GLCraft/Plugins";
+		new File(pluginsFolder).mkdirs();
+		pluginManager = new PluginManager(pluginsFolder);
+		pluginManager.loadPlugins();
 	}
 	
 	private void initCamera(){
 		
+	}
+	
+	public PluginManager getPluginManager(){
+		return pluginManager;
 	}
 
 	@Override
@@ -111,7 +130,7 @@ public class GLCraft extends Screen{
 	}
 	
 	public static void main(String[] args) throws IOException{
-		new GLCraft();
+		glcraft = new GLCraft();
 	}
 	
 	private static ByteBuffer loadIcon(URL url) throws IOException {

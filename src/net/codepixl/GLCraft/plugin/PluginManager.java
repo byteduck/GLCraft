@@ -4,13 +4,24 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 
+import net.codepixl.GLCraft.world.tile.PluginTile;
+import net.codepixl.GLCraft.world.tile.Tile;
+
 public class PluginManager {
 	
 	ArrayList<LoadedPlugin> plugins = new ArrayList<LoadedPlugin>();
 	String path;
+	byte currentTile = 0x64;
 	
 	public PluginManager(String pluginPath){
 		path = pluginPath;
+	}
+	
+	public void addTile(PluginTile t){
+		t.assignedID = currentTile;
+		Tile.tileMap.put(currentTile, t);
+		System.out.println("Registered plugin tile "+t.getName()+" with ID "+currentTile);
+		currentTile++;
 	}
 	
 	public void loadPlugins(){

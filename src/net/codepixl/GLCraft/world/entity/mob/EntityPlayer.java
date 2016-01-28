@@ -17,6 +17,8 @@ import java.io.IOException;
 import java.util.Iterator;
 import java.util.List;
 
+import javax.swing.JOptionPane;
+
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
 import org.lwjgl.util.vector.Vector3f;
@@ -259,6 +261,11 @@ public class EntityPlayer extends Mob {
 		}
 		if(Keyboard.isKeyDown(Keyboard.KEY_F)){
 			worldManager.setTileAtPos(pos, Tile.Fire.getId(), true);
+		}
+		if(Keyboard.isKeyDown(Keyboard.KEY_P)){
+			String id = JOptionPane.showInputDialog("Enter in the id of the tile you wish to place: ");
+			int tileid = Integer.parseInt(id);
+			worldManager.setTileAtPos(pos, (byte) tileid, true);
 		}
 		if(Keyboard.isKeyDown(Keyboard.KEY_B)){
 			worldManager.setTileAtPos(pos, Tile.Bluestone.getId(), true);
