@@ -13,7 +13,7 @@ void main(){
 	
 	vec4 texColor = texture2D(u_texture, gl_TexCoord[0].st);
 	
-	if(texColor.a <= 0.0f){
+	if(texColor.a <= float(0)){
 		discard;
 	}else{
 		/**if(pdistToCamera <= 1.0f && lightingEnabled == 1){

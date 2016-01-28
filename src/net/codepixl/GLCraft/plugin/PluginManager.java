@@ -20,7 +20,7 @@ public class PluginManager {
 			if(plugins[i].isDirectory()){
 				try {
 					this.plugins.add(new LoadedPlugin(plugins[i].getAbsolutePath()));
-				} catch (IOException e) {
+				} catch (IOException | ClassNotFoundException | InstantiationException | IllegalAccessException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}

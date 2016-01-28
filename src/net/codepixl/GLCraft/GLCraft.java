@@ -44,7 +44,12 @@ public class GLCraft extends Screen{
 	private CentralManager world;
 	private GameLoop gameLoop;
 	
-	public GLCraft(){
+	public GLCraft() throws IOException{
+		Display.setIcon(new ByteBuffer[] {
+		        loadIcon(GLCraft.class.getResource("/textures/icons/icon16.png")),
+		        loadIcon(GLCraft.class.getResource("/textures/icons/icon32.png")),
+			});
+			Window.createWindow(Constants.WIDTH, Constants.HEIGHT, "GLCraft", false);
 		gameLoop = new GameLoop();
 		gameLoop.setScreen(this);
 		gameLoop.setDebugMode(false);
@@ -106,11 +111,6 @@ public class GLCraft extends Screen{
 	}
 	
 	public static void main(String[] args) throws IOException{
-		Display.setIcon(new ByteBuffer[] {
-	        loadIcon(GLCraft.class.getResource("/textures/icons/icon16.png")),
-	        loadIcon(GLCraft.class.getResource("/textures/icons/icon32.png")),
-		});
-		Window.createWindow(Constants.WIDTH, Constants.HEIGHT, "GLCraft", false);
 		new GLCraft();
 	}
 	
