@@ -34,6 +34,7 @@ public class Tile {
 	public static Tile Fire = new TileFire();
 	public static Tile Bluestone = new TileBluestone();
 	public static Tile Tnt = new TileTnt();
+	public static Tile Lava = new TileLava();
 	//TILES
 	
 	public String getName(){
