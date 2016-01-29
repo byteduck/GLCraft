@@ -11,7 +11,7 @@ import net.codepixl.GLCraft.world.tile.Tile;
 public class PluginManager {
 	
 	ArrayList<LoadedPlugin> plugins = new ArrayList<LoadedPlugin>();
-	String path;
+	public static String path;
 	byte currentTile = 0x64;
 	
 	public PluginManager(String pluginPath){

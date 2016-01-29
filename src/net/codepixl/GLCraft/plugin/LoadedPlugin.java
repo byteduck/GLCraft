@@ -34,6 +34,10 @@ public class LoadedPlugin {
 	}
 	
 	public void update(){
-		plugin.update();
+		try{
+			plugin.update();
+		}catch(AbstractMethodError e){
+			
+		}
 	}
 }

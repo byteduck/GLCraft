@@ -13,6 +13,8 @@ import org.lwjgl.input.Mouse;
 
 import com.nishu.utils.Color4f;
 
+import net.codepixl.GLCraft.GLCraft;
+import net.codepixl.GLCraft.plugin.PluginManagerWindow;
 import net.codepixl.GLCraft.util.Constants;
 import net.codepixl.GLCraft.util.Spritesheet;
 
@@ -33,6 +35,7 @@ public class GUIStartScreen extends GUI{
 		GUI.createButton(MIDDLE,SINGLEPLAYERY,10,Constants.BTNHEIGHT,"Singleplayer",new Color4f(0f,0f,0f,1f),new Color4f(1f,1f,1f,1f));
 		//GUI.createButton(MIDDLE,MULTIPLAYERY,10,Constants.BTNHEIGHT,"Multiplayer",new Color4f(0f,0f,0f,1f),new Color4f(0.5f,0.5f,0.5f,1f));
 		//GUI.createButton(MIDDLE,SERVERY,10,Constants.BTNHEIGHT,"Server",new Color4f(0f,0f,0f,1f),new Color4f(1f,1f,1f,1f));
+		GUI.createButton(MIDDLE, SERVERY, 10, Constants.BTNHEIGHT, "Plugin Manager", new Color4f(0f,0f,0f,1f), new Color4f(1f,1f,1f,1f));
 	}
 	
 	public static void drawBG(){
@@ -76,6 +79,16 @@ public class GUIStartScreen extends GUI{
 				Thread t = new Thread(s);
 				t.start();
 			}**/
+			if(GUI.testClick(Mouse.getX(),Mouse.getY(),MIDDLE,SERVERY,Constants.FONT.getWidth("Server")+20,Constants.BTNHEIGHT)){
+				//Window.dispose();
+				new PluginManagerWindow(GLCraft.getGLCraft().getPluginManager()).setVisible(true);
+				try {
+					Thread.sleep(500);
+				} catch (InterruptedException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
 		}
 	}
 	
