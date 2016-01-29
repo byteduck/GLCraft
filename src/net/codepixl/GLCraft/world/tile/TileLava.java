@@ -2,10 +2,12 @@ package net.codepixl.GLCraft.world.tile;
 
 import com.nishu.utils.Color4f;
 
+import net.codepixl.GLCraft.util.Constants;
 import net.codepixl.GLCraft.util.Spritesheet;
+import net.codepixl.GLCraft.world.WorldManager;
 
 public class TileLava extends Tile{
-
+	int tick = 0;
 	@Override
 	public String getName() {
 		// TODO Auto-generated method stub
@@ -46,5 +48,21 @@ public class TileLava extends Tile{
 		// TODO Auto-generated method stub
 		return true;
 	}
-
+	public void tick(int x, int y, int z, WorldManager w){
+		tick++;
+		if(tick > 1){
+			int xx = Constants.randInt(-1,1);
+			int yy = Constants.randInt(-1,0);
+			int zz = Constants.randInt(-1,1);
+			if(w.getTileAtPos(x+xx, y+yy, z+zz) == Tile.Air.getId()){
+				w.setTileAtPos(x, y, z, Tile.Air.getId(), true);
+				w.setTileAtPos(x+xx, y+yy, z+zz, Tile.Lava.getId(), true);
+			}
+		tick = 0;
+		}
+	}
+	public boolean needsConstantTick(){
+		return true;
+	}
+	
 }
