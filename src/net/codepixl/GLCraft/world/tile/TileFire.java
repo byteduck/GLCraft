@@ -82,7 +82,8 @@ public class TileFire extends Tile{
 		}
 	}
 	public void onCollide(int x, int y, int z, WorldManager worldManager) {
-		worldManager.entityManager.getPlayer().hurt(0.1f);
+		worldManager.entityManager.getPlayer().hurt(2f,0.5f);
+		worldManager.entityManager.getPlayer().setFire(10);
 	}
 
 }

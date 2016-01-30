@@ -65,6 +65,7 @@ public class TileLava extends Tile{
 		return true;
 	}
 	public void onCollide(int x, int y, int z, WorldManager worldManager) {
-		worldManager.entityManager.getPlayer().hurt(0.1f);
+		worldManager.entityManager.getPlayer().hurt(2f,0.4f);
+		worldManager.entityManager.getPlayer().setFire(10);
 	}
 }
