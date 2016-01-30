@@ -50,7 +50,7 @@ public class TileLava extends Tile{
 	}
 	public void tick(int x, int y, int z, WorldManager w){
 		tick++;
-		if(tick > 1){
+		if(tick >= 1){
 			int xx = Constants.randInt(-1,1);
 			int yy = Constants.randInt(-1,0);
 			int zz = Constants.randInt(-1,1);
@@ -64,5 +64,7 @@ public class TileLava extends Tile{
 	public boolean needsConstantTick(){
 		return true;
 	}
-	
+	public void onCollide(int x, int y, int z, WorldManager worldManager) {
+		worldManager.entityManager.getPlayer().hurt(0.1f);
+	}
 }

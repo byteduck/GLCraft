@@ -108,6 +108,9 @@ public class EntityPlayer extends Mob {
 		}else{
 			this.breakProgress += Time.getDelta();
 		}
+		
+		Tile t = Tile.getTile((byte)worldManager.getTileAtPos(pos));
+		t.onCollide((int)pos.x, (int)pos.y, (int)pos.z, worldManager);
 	}
 	
 	public void respawn(){
