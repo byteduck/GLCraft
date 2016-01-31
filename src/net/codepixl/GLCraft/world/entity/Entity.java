@@ -12,6 +12,7 @@ import com.nishu.utils.Time;
 import net.codepixl.GLCraft.util.GameObj;
 import net.codepixl.GLCraft.util.MathUtils;
 import net.codepixl.GLCraft.world.WorldManager;
+import net.codepixl.GLCraft.world.tile.Tile;
 
 public class Entity implements GameObj{
 	protected Vector3f pos, rot, vel;
@@ -148,6 +149,13 @@ public class Entity implements GameObj{
 	public void update() {
 		timeAlive+=(Time.getDelta()*1000f);
 		this.rot = MathUtils.modulus(this.rot, 360f);
+		if(this.onFire>0f){
+			this.onFire-=Time.getDelta();
+		}else{
+			this.onFire = 0f;
+		}
+		Tile t = Tile.getTile((byte)worldManager.getTileAtPos(pos));
+		t.onCollide((int)pos.x, (int)pos.y, (int)pos.z, worldManager, this);
 		voidHurt();
 	}
 

@@ -5,6 +5,8 @@ import com.nishu.utils.Color4f;
 import net.codepixl.GLCraft.util.Constants;
 import net.codepixl.GLCraft.util.Spritesheet;
 import net.codepixl.GLCraft.world.WorldManager;
+import net.codepixl.GLCraft.world.entity.Entity;
+import net.codepixl.GLCraft.world.entity.mob.Mob;
 
 public class TileLava extends Tile{
 	int tick = 0;
@@ -48,6 +50,8 @@ public class TileLava extends Tile{
 		// TODO Auto-generated method stub
 		return true;
 	}
+	
+	@Override
 	public void tick(int x, int y, int z, WorldManager w){
 		tick++;
 		if(tick >= 1){
@@ -61,11 +65,17 @@ public class TileLava extends Tile{
 		tick = 0;
 		}
 	}
+	
+	@Override
 	public boolean needsConstantTick(){
 		return true;
 	}
-	public void onCollide(int x, int y, int z, WorldManager worldManager) {
-		worldManager.entityManager.getPlayer().hurt(2f,0.4f);
-		worldManager.entityManager.getPlayer().setFire(10);
+	
+	@Override
+	public void onCollide(int x, int y, int z, WorldManager worldManager, Entity e) {
+		if(e instanceof Mob){
+			((Mob) e).hurt(2f,0.4f);
+			((Mob) e).setFire(10);
+		}
 	}
 }

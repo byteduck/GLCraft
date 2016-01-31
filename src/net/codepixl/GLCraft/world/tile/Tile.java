@@ -11,6 +11,7 @@ import net.codepixl.GLCraft.render.RenderType;
 import net.codepixl.GLCraft.util.AABB;
 import net.codepixl.GLCraft.world.Chunk;
 import net.codepixl.GLCraft.world.WorldManager;
+import net.codepixl.GLCraft.world.entity.Entity;
 import net.codepixl.GLCraft.world.entity.EntityItem;
 
 public class Tile {
@@ -130,7 +131,7 @@ public class Tile {
 	public void blockUpdate(int x, int y, int z, WorldManager worldManager) {
 		
 	}
-	public void onCollide(int x, int y, int z, WorldManager worldManager) {
+	public void onCollide(int x, int y, int z, WorldManager worldManager, Entity e) {
 		
 	}
 

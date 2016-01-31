@@ -18,7 +18,7 @@ import net.codepixl.GLCraft.world.tile.Tile;
 public class Mob extends EntitySolid implements GameObj{
 	
 	protected ItemStack[] inventory;
-	public float health;
+	public float health, hurtTimer;
 	private float voidHurt = 0f;
 	protected float fallDistance = 0f;
 	protected float prevY = 0f;
@@ -30,6 +30,7 @@ public class Mob extends EntitySolid implements GameObj{
 			inventory[i] = null;
 		}
 		this.health = 20f;
+		this.hurtTimer = 0;
 	}
 	
 	@Override
@@ -62,6 +63,9 @@ public class Mob extends EntitySolid implements GameObj{
 	@Override
 	public void update(){
 		super.update();
+		if(this.onFire > 0f){
+			this.hurt(0.5f);
+		}
 		if(this.health<=0f){
 			this.setDead(true);
 		}
@@ -94,6 +98,13 @@ public class Mob extends EntitySolid implements GameObj{
 	
 	public void hurt(float amt){
 		this.health-=amt;
+	}
+	
+	public void hurt(float damage,float time){
+		if(this.hurtTimer<=0){
+			this.hurt(damage);
+			this.hurtTimer=time;
+		}
 	}
 	
 	public ItemStack[] getInventory(){
