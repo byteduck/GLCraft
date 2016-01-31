@@ -130,6 +130,9 @@ public class Tile {
 	public void blockUpdate(int x, int y, int z, WorldManager worldManager) {
 		
 	}
+	public void onCollide(int x, int y, int z, WorldManager worldManager) {
+		
+	}
 
 	public void renderHitbox(Vector3f pos) {
 		

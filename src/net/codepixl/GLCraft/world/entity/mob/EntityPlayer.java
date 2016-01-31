@@ -53,7 +53,7 @@ import net.codepixl.GLCraft.world.tile.Tile;
 
 public class EntityPlayer extends Mob {
 	
-	private float breakCooldown, buildCooldown, breakProgress;
+	private float breakCooldown, buildCooldown, breakProgress, hurtTimer;
 	private final float speed, maxU, maxD;
 	private int selectedSlot;
 	private boolean qPressed, wasBreaking;
@@ -68,6 +68,7 @@ public class EntityPlayer extends Mob {
 		buildCooldown = 0;
 		breakProgress = 0;
 		selectedSlot = 0;
+		hurtTimer = 0;
 		qPressed = false;
 		prevSelect = new Vector3f(-1, -1, -1);
 	}
@@ -108,6 +109,19 @@ public class EntityPlayer extends Mob {
 		}else{
 			this.breakProgress += Time.getDelta();
 		}
+		Tile t = Tile.getTile((byte)worldManager.getTileAtPos(pos));
+		t.onCollide((int)pos.x, (int)pos.y, (int)pos.z, worldManager);
+		if(this.onFire>0f){
+			this.hurt(0.5f, 0.5f);
+			this.onFire-=Time.getDelta();
+		}else{
+			this.onFire = 0f;
+		}
+		if(this.hurtTimer>0){
+			this.hurtTimer-=Time.getDelta();
+		}else{
+			this.hurtTimer = 0;
+		}
 	}
 	
 	public void respawn(){
@@ -116,9 +130,15 @@ public class EntityPlayer extends Mob {
 	}
 	
 	@Override
-	public void hurt(float amt){
-		super.hurt(amt);
-		this.rot.x = 5f;
+	public void hurt(float damage){
+			super.hurt(damage);
+			this.rot.x = 5f;
+	}
+	public void hurt(float damage,float time){
+		if(this.hurtTimer<=0){
+			this.hurt(damage);
+			this.hurtTimer=time;
+		}
 	}
 	
 	public void updateMouse() {

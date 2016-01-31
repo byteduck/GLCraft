@@ -19,6 +19,7 @@ public class Entity implements GameObj{
 	public WorldManager worldManager;
 	protected boolean dead = false;
 	public long timeAlive = 0;
+	public float onFire = 0;
 	
 	public Entity(float x, float y, float z, WorldManager worldManager){
 		this.pos = new Vector3f(x,y,z);
@@ -167,11 +168,16 @@ public class Entity implements GameObj{
 	
 	public void setDead(boolean isDead){
 		this.dead = isDead;
+		this.onFire = 0;
 	}
 
 	protected void voidHurt() {
 		if(this.getY() < -5){
 			this.setDead(true);
 		}
+	}
+
+	public void setFire(float Time) {
+		this.onFire = Time;
 	}
 }

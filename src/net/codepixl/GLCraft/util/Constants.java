@@ -47,4 +47,8 @@ public class Constants {
 
 	    return Arrays.copyOf(bytes, i + 1);
 	}
+	public static int randInt(int min, int max) {
+	    int randomNum = rand.nextInt((max - min) + 1) + min;
+	    return randomNum;
+	}
 }
