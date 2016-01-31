@@ -9,7 +9,9 @@ import net.codepixl.GLCraft.item.ItemStack;
 import net.codepixl.GLCraft.render.RenderType;
 import net.codepixl.GLCraft.util.Spritesheet;
 import net.codepixl.GLCraft.world.WorldManager;
+import net.codepixl.GLCraft.world.entity.Entity;
 import net.codepixl.GLCraft.world.entity.EntityItem;
+import net.codepixl.GLCraft.world.entity.mob.Mob;
 
 public class TileFire extends Tile{
 
@@ -81,9 +83,13 @@ public class TileFire extends Tile{
 			w.setTileAtPos(x, y, z-1, getId(), true);
 		}
 	}
-	public void onCollide(int x, int y, int z, WorldManager worldManager) {
-		worldManager.entityManager.getPlayer().hurt(2f,0.5f);
-		worldManager.entityManager.getPlayer().setFire(10);
+	
+	@Override
+	public void onCollide(int x, int y, int z, WorldManager worldManager, Entity e) {
+		if(e instanceof Mob){
+			((Mob) e).hurt(2f,0.5f);
+			((Mob) e).setFire(10);
+		}
 	}
 
 }

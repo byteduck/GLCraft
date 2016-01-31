@@ -32,10 +32,10 @@ public class GUIStartScreen extends GUI{
 		drawBG();
 		glDisable(GL_TEXTURE_2D);
 		//glClearColor(0.3f,0.1f,0.3f,1.0f);
-		GUI.createButton(MIDDLE,SINGLEPLAYERY,10,Constants.BTNHEIGHT,"Singleplayer",new Color4f(0f,0f,0f,1f),new Color4f(1f,1f,1f,1f));
+		GUI.createButton(MIDDLE,SINGLEPLAYERY,Constants.BTNPADDING,Constants.BTNHEIGHT,"Singleplayer",new Color4f(0f,0f,0f,1f),new Color4f(1f,1f,1f,1f));
 		//GUI.createButton(MIDDLE,MULTIPLAYERY,10,Constants.BTNHEIGHT,"Multiplayer",new Color4f(0f,0f,0f,1f),new Color4f(0.5f,0.5f,0.5f,1f));
 		//GUI.createButton(MIDDLE,SERVERY,10,Constants.BTNHEIGHT,"Server",new Color4f(0f,0f,0f,1f),new Color4f(1f,1f,1f,1f));
-		GUI.createButton(MIDDLE, SERVERY, 10, Constants.BTNHEIGHT, "Plugin Manager", new Color4f(0f,0f,0f,1f), new Color4f(1f,1f,1f,1f));
+		GUI.createButton(MIDDLE, SERVERY, Constants.BTNPADDING, Constants.BTNHEIGHT, "Plugin Manager", new Color4f(0f,0f,0f,1f), new Color4f(1f,1f,1f,1f));
 	}
 	
 	public static void drawBG(){

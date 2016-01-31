@@ -52,6 +52,7 @@ import java.io.IOException;
 import java.io.PipedInputStream;
 import java.nio.ByteBuffer;
 import java.nio.FloatBuffer;
+import java.util.concurrent.Callable;
 
 import org.lwjgl.BufferUtils;
 import org.lwjgl.input.Keyboard;
@@ -67,8 +68,10 @@ import com.nishu.utils.GameLoop;
 import com.nishu.utils.Screen;
 import com.nishu.utils.Time;
 
+import net.codepixl.GLCraft.GUI.GUIScreen;
 import net.codepixl.GLCraft.GUI.GUIServer;
 import net.codepixl.GLCraft.GUI.GUIStartScreen;
+import net.codepixl.GLCraft.GUI.Elements.GUIButton;
 import net.codepixl.GLCraft.render.Shape;
 import net.codepixl.GLCraft.util.Constants;
 import net.codepixl.GLCraft.util.Spritesheet;
@@ -85,6 +88,7 @@ public class CentralManager extends Screen{
 	private WorldManager worldManager;
 	private int currentBlock;
 	private PipedInputStream actionsToDo = new PipedInputStream();
+	private static GUIScreen guiStartScreen = new GUIScreen();
 	
 	public static final int AIRCHUNK = 0, MIXEDCHUNK = 1;
 
@@ -101,6 +105,13 @@ public class CentralManager extends Screen{
 
 	@Override
 	public void init() {
+		guiStartScreen.addElement(new GUIButton("leel", Constants.WIDTH/2, (int) (Constants.HEIGHT * 0.5), new Callable<Void>(){
+			@Override
+			public Void call() throws Exception {
+				System.out.println("ayy");
+				return null;
+			}
+		}));
 		Constants.setWorld(this);
 		Spritesheet.tiles.bind();
 		GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
@@ -133,6 +144,7 @@ public class CentralManager extends Screen{
 				}
 			}
 		}
+		guiStartScreen.input();
 	}
 	
 	@Override
@@ -193,7 +205,8 @@ public class CentralManager extends Screen{
 			renderInventory();
 		}else if(Constants.GAME_STATE == Constants.START_SCREEN){
 			render2D();
-			GUIStartScreen.render();
+			//GUIStartScreen.render();
+			guiStartScreen.render();
 			glDisable(GL_TEXTURE_2D);
 		}else if(Constants.GAME_STATE == Constants.SERVER){
 			render2D();
