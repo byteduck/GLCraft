@@ -7,7 +7,9 @@ import net.codepixl.GLCraft.GUI.Elements.GUIElement;
 
 public class GUIScreen {
 	private ArrayList<GUIElement> elements = new ArrayList<GUIElement>();
+	
 	public void render(){
+		drawBG();
 		Iterator<GUIElement> it = elements.iterator();
 		while(it.hasNext()){
 			it.next().render();
@@ -35,6 +37,10 @@ public class GUIScreen {
 	
 	public void addElement(GUIElement element){
 		this.elements.add(element);
+	}
+	
+	public void drawBG() {
+		
 	}
 	
 }

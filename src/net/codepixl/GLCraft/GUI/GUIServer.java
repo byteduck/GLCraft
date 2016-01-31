@@ -13,8 +13,10 @@ import org.newdawn.slick.opengl.TextureImpl;
 import net.codepixl.GLCraft.util.Constants;
 import net.codepixl.GLCraft.util.Spritesheet;
 
-public class GUIServer extends GUI{
-	public static void render() {
+public class GUIServer extends GUIScreen{
+	
+	@Override
+	public void render() {
 		// TODO Auto-generated method stub
 		glEnable(GL_TEXTURE_2D);
 		drawBG();
@@ -25,7 +27,8 @@ public class GUIServer extends GUI{
 		TextureImpl.unbind();
 	}
 	
-	public static void drawBG(){
+	@Override
+	public void drawBG(){
 		Spritesheet.tiles.bind();
 		glBegin(GL_QUADS);
 			glTexCoord2f(Spritesheet.tiles.uniformSize()*2, Spritesheet.tiles.uniformSize());

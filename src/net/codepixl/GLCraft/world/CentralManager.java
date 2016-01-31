@@ -68,6 +68,7 @@ import com.nishu.utils.GameLoop;
 import com.nishu.utils.Screen;
 import com.nishu.utils.Time;
 
+import net.codepixl.GLCraft.GUI.GUIManager;
 import net.codepixl.GLCraft.GUI.GUIScreen;
 import net.codepixl.GLCraft.GUI.GUIServer;
 import net.codepixl.GLCraft.GUI.GUIStartScreen;
@@ -88,7 +89,7 @@ public class CentralManager extends Screen{
 	private WorldManager worldManager;
 	private int currentBlock;
 	private PipedInputStream actionsToDo = new PipedInputStream();
-	private static GUIScreen guiStartScreen = new GUIScreen();
+	private GUIManager guiManager;
 	
 	public static final int AIRCHUNK = 0, MIXEDCHUNK = 1;
 
@@ -105,13 +106,6 @@ public class CentralManager extends Screen{
 
 	@Override
 	public void init() {
-		guiStartScreen.addElement(new GUIButton("leel", Constants.WIDTH/2, (int) (Constants.HEIGHT * 0.5), new Callable<Void>(){
-			@Override
-			public Void call() throws Exception {
-				System.out.println("ayy");
-				return null;
-			}
-		}));
 		Constants.setWorld(this);
 		Spritesheet.tiles.bind();
 		GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
@@ -121,6 +115,15 @@ public class CentralManager extends Screen{
 			e.printStackTrace();
 		}
 		worldManager = new WorldManager(this);
+		initGUIManager();
+	}
+	
+	private void initGUIManager(){
+		guiManager = new GUIManager();
+		GUIManager.setMainManager(guiManager);
+		guiManager.addGUI(new GUIStartScreen(), "startScreen");
+		guiManager.addGUI(new GUIServer(), "server");
+		guiManager.showGUI("startScreen");
 	}
 
 	@Override
@@ -132,10 +135,9 @@ public class CentralManager extends Screen{
 	}
 
 	private void input(){
+		guiManager.input();
 		if(Mouse.isButtonDown(0) && Constants.GAME_STATE == Constants.GAME){
 			Mouse.setGrabbed(true);
-		}else if(Constants.GAME_STATE == Constants.START_SCREEN){
-			GUIStartScreen.input();
 		}
 		while(Keyboard.next()){
 			if(Keyboard.getEventKeyState()){
@@ -144,7 +146,6 @@ public class CentralManager extends Screen{
 				}
 			}
 		}
-		guiStartScreen.input();
 	}
 	
 	@Override
@@ -203,16 +204,10 @@ public class CentralManager extends Screen{
 			renderClouds();
 			renderText();
 			renderInventory();
-		}else if(Constants.GAME_STATE == Constants.START_SCREEN){
-			render2D();
-			//GUIStartScreen.render();
-			guiStartScreen.render();
-			glDisable(GL_TEXTURE_2D);
-		}else if(Constants.GAME_STATE == Constants.SERVER){
-			render2D();
-			GUIServer.render();
-			glDisable(GL_TEXTURE_2D);
 		}
+		render2D();
+		guiManager.render();
+		glDisable(GL_TEXTURE_2D);
 	}
 
 	@SuppressWarnings("static-access")
@@ -339,6 +334,7 @@ public class CentralManager extends Screen{
 	
 	@Override
 	public void update() {
+		guiManager.update();
 		if(Constants.GAME_STATE == Constants.GAME){
 			worldManager.update();
 		}
