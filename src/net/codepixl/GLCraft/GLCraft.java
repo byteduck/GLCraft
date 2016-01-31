@@ -28,8 +28,6 @@ import java.net.URL;
 import java.nio.ByteBuffer;
 import java.nio.FloatBuffer;
 
-import javax.swing.JFileChooser;
-
 import org.lwjgl.BufferUtils;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
@@ -40,6 +38,7 @@ import com.nishu.utils.GameLoop;
 import com.nishu.utils.Screen;
 import com.nishu.utils.Window;
 
+import net.codepixl.GLCraft.plugin.Plugin;
 import net.codepixl.GLCraft.plugin.PluginManager;
 import net.codepixl.GLCraft.util.Constants;
 import net.codepixl.GLCraft.world.CentralManager;
@@ -49,12 +48,25 @@ public class GLCraft extends Screen{
 	private GameLoop gameLoop;
 	private PluginManager pluginManager;
 	private static GLCraft glcraft;
+	public static boolean isDevEnvironment = false;
+	public static boolean loadExtPlugins = true;
+	private Plugin devPlugin;
 	
 	public static GLCraft getGLCraft(){
 		return glcraft;
 	}
 	
 	public GLCraft() throws IOException{
+		commonInitializer();
+	}
+	
+	private GLCraft(Plugin p) throws IOException{
+		devPlugin = p;
+		commonInitializer();
+		
+	}
+	
+	private void commonInitializer() throws IOException{
 		glcraft = this;
 		Display.setIcon(new ByteBuffer[] {
 		        loadIcon(GLCraft.class.getResource("/textures/icons/icon16.png")),
@@ -76,7 +88,12 @@ public class GLCraft extends Screen{
 		String pluginsFolder = System.getProperty("user.home")+"/GLCraft/Plugins";
 		new File(pluginsFolder).mkdirs();
 		pluginManager = new PluginManager(pluginsFolder);
-		pluginManager.loadPlugins();
+		if(loadExtPlugins){
+			pluginManager.loadPlugins();
+		}
+		if(isDevEnvironment){
+			pluginManager.addDevPlugin(devPlugin);
+		}
 	}
 	
 	private void initCamera(){
@@ -132,6 +149,17 @@ public class GLCraft extends Screen{
 	
 	public static void main(String[] args) throws IOException{
 		glcraft = new GLCraft();
+	}
+	
+	public static void devEnvironment(Plugin p, boolean loadExtPlugins){
+		try {
+			isDevEnvironment = true;
+			GLCraft.loadExtPlugins = loadExtPlugins;
+			glcraft = new GLCraft(p);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 	
 	private static ByteBuffer loadIcon(URL url) throws IOException {

@@ -33,6 +33,16 @@ public class LoadedPlugin {
 		System.out.println("Loaded \""+name+"\" version \""+version+"\" with description \""+description+"\"");
 	}
 	
+	public LoadedPlugin(Plugin p){
+		this.plugin = p;
+		this.name = "dev plugin";
+		this.version = "dev";
+		this.description = "A plugin loaded from the GLCraft dev environment.";
+		this.mainClass = "dev";
+		p.init();
+		System.out.println("---Loaded dev plugin---");
+	}
+	
 	public void update(){
 		try{
 			plugin.update();

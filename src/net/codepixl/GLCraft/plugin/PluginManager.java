@@ -18,6 +18,10 @@ public class PluginManager {
 		path = pluginPath;
 	}
 	
+	public void addDevPlugin(Plugin p){
+		plugins.add(new LoadedPlugin(p));
+	}
+	
 	public void addTile(PluginTile t){
 		t.assignedID = currentTile;
 		Tile.tileMap.put(currentTile, t);
