@@ -11,6 +11,8 @@ There are a lot of things I am planning to add to do with GLCraft.
 
 Crossed out items means they are completed.
 
+Italic means half completed.
+
 * Plugin API - kinda finished
 * ~~Better GUI System~~
  * ~~A GUI manager to make showing and hiding GUIs easier~~
@@ -22,7 +24,7 @@ Crossed out items means they are completed.
 * Re-add multiplayer
 * User accounts
 * Animals/Monsters
-* Sound
+* *Sound*
 * Better menu
 * Options menu
 * Tile entities
