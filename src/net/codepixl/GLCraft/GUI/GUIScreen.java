@@ -7,6 +7,8 @@ import net.codepixl.GLCraft.GUI.Elements.GUIElement;
 
 public class GUIScreen {
 	private ArrayList<GUIElement> elements = new ArrayList<GUIElement>();
+	public boolean mouseGrabbed = false;
+	public boolean playerInput = false;
 	
 	public void render(){
 		drawBG();

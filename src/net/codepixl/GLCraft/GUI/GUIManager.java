@@ -8,8 +8,10 @@ public class GUIManager {
 	private boolean GUIOpen = false;
 	private HashMap<String,GUIScreen> staticGUIs = new HashMap<String,GUIScreen>();
 	private static GUIManager mainManager;
+	private String currentGUIName = "nogui";
 
-	public GUIManager() {
+	public GUIManager(){
+		
 	}
 	
 	public static void setMainManager(GUIManager manager){
@@ -23,15 +25,21 @@ public class GUIManager {
 	public void showGUI(GUIScreen gui) {
 		currentGUI = gui;
 		GUIOpen = true;
+		currentGUIName = "noname";
 	}
 	
 	public boolean showGUI(String guiName){
 		if(staticGUIs.containsKey(guiName)){
 			currentGUI = staticGUIs.get(guiName);
 			GUIOpen = true;
+			currentGUIName = guiName;
 			return true;
 		}
 		return false;
+	}
+	
+	public boolean isGUIOpen(){
+		return GUIOpen;
 	}
 	
 	public GUIScreen getGUI(String guiName){
@@ -49,6 +57,7 @@ public class GUIManager {
 	public void closeGUI() {
 		GUIOpen = false;
 		currentGUI = null;
+		currentGUIName = "nogui";
 	}
 
 	public void render() {
@@ -64,5 +73,25 @@ public class GUIManager {
 	public void input() {
 		if (GUIOpen)
 			currentGUI.input();
+	}
+
+	public boolean mouseShouldBeGrabbed() {
+		if(GUIOpen){
+			return currentGUI.mouseGrabbed;
+		}else{
+			return true;
+		}
+	}
+	
+	public boolean sendPlayerInput(){
+		if(GUIOpen){
+			return currentGUI.playerInput;
+		}else{
+			return true;
+		}
+	}
+
+	public String getCurrentGUIName() {
+		return currentGUIName;
 	}
 }

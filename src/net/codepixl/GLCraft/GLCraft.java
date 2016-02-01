@@ -127,9 +127,6 @@ public class GLCraft extends Screen{
 	public void update() {
 		world.update();
 		pluginManager.update();
-		if(Keyboard.isKeyDown(Keyboard.KEY_ESCAPE)){
-			Mouse.setGrabbed(false);
-		}
 		// TODO Auto-generated method stub
 	}
 

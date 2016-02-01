@@ -69,6 +69,7 @@ import com.nishu.utils.Screen;
 import com.nishu.utils.Time;
 
 import net.codepixl.GLCraft.GUI.GUIManager;
+import net.codepixl.GLCraft.GUI.GUIPauseMenu;
 import net.codepixl.GLCraft.GUI.GUIScreen;
 import net.codepixl.GLCraft.GUI.GUIServer;
 import net.codepixl.GLCraft.GUI.GUIStartScreen;
@@ -127,6 +128,7 @@ public class CentralManager extends Screen{
 		GUIManager.setMainManager(guiManager);
 		guiManager.addGUI(new GUIStartScreen(), "startScreen");
 		guiManager.addGUI(new GUIServer(), "server");
+		guiManager.addGUI(new GUIPauseMenu(), "pauseMenu");
 		guiManager.showGUI("startScreen");
 	}
 
@@ -140,13 +142,23 @@ public class CentralManager extends Screen{
 
 	private void input(){
 		guiManager.input();
-		if(Mouse.isButtonDown(0) && Constants.GAME_STATE == Constants.GAME){
+		if(Mouse.isButtonDown(0) && guiManager.mouseShouldBeGrabbed()){
 			Mouse.setGrabbed(true);
+		}else if(!guiManager.mouseShouldBeGrabbed()){
+			Mouse.setGrabbed(false);
 		}
 		while(Keyboard.next()){
 			if(Keyboard.getEventKeyState()){
 				if(Keyboard.isKeyDown(Keyboard.KEY_F3)){
 					renderDebug = !renderDebug;
+				}
+				if(Keyboard.isKeyDown(Keyboard.KEY_ESCAPE)){
+					if(guiManager.getCurrentGUIName() == "pauseMenu"){
+						guiManager.closeGUI();
+						Mouse.setGrabbed(true);
+					}else{
+						guiManager.showGUI("pauseMenu");
+					}
 				}
 			}
 		}
@@ -214,7 +226,6 @@ public class CentralManager extends Screen{
 		glDisable(GL_TEXTURE_2D);
 	}
 
-	@SuppressWarnings("static-access")
 	private int raycast(){
 		return worldManager.getEntityManager().getPlayer().raycast();
 	}

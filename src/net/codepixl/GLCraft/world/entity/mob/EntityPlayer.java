@@ -35,6 +35,7 @@ import com.evilco.mc.nbt.tag.TagString;
 import com.nishu.utils.Color4f;
 import com.nishu.utils.Time;
 
+import net.codepixl.GLCraft.GUI.GUIManager;
 import net.codepixl.GLCraft.item.Item;
 import net.codepixl.GLCraft.item.ItemStack;
 import net.codepixl.GLCraft.render.RenderType;
@@ -87,8 +88,10 @@ public class EntityPlayer extends Mob {
 			this.dropAllItems();
 			this.respawn();
 		}
-		updateMouse();
-		updateKeyboard(32, 0.25f);
+		if(GUIManager.getMainManager().sendPlayerInput()){
+			updateMouse();
+			updateKeyboard(32, 0.25f);
+		}
 		updateBreakCooldown();
 		updateBuildCooldown();
 		Iterator<Entity> i = (Iterator<Entity>) worldManager.getEntityManager().getEntitiesInRadiusOfEntityOfType(this, EntityItem.class, 1f).iterator();
@@ -503,7 +506,7 @@ public class EntityPlayer extends Mob {
 							glEnd();
 						}
 					}
-					if(Mouse.isButtonDown(0) && getBreakCooldown() == 0f) {
+					if(Mouse.isButtonDown(0) && getBreakCooldown() == 0f && GUIManager.getMainManager().sendPlayerInput()) {
 						this.wasBreaking = true;
 						if(Tile.getTile((byte) worldManager.getTileAtPos((int) r.pos.x, (int) r.pos.y, (int) r.pos.z)).getHardness() <= this.breakProgress) {
 							Tile.getTile((byte) worldManager.getTileAtPos((int) r.pos.x, (int) r.pos.y, (int) r.pos.z)).onBreak((int) r.pos.x, (int) r.pos.y, (int) r.pos.z, worldManager);
@@ -515,7 +518,7 @@ public class EntityPlayer extends Mob {
 						this.wasBreaking = false;
 					}
 					r.prev();
-					if(Mouse.isButtonDown(1) && worldManager.getEntityManager().getPlayer().getBuildCooldown() == 0f && worldManager.getEntityManager().getPlayer().getSelectedItemStack() != null && worldManager.getEntityManager().getPlayer().getSelectedItemStack().isTile()/** && worldManager.getTileAtPos(r.pos) == 0**/) {
+					if(Mouse.isButtonDown(1) && GUIManager.getMainManager().sendPlayerInput() && worldManager.getEntityManager().getPlayer().getBuildCooldown() == 0f && worldManager.getEntityManager().getPlayer().getSelectedItemStack() != null && worldManager.getEntityManager().getPlayer().getSelectedItemStack().isTile()/** && worldManager.getTileAtPos(r.pos) == 0**/) {
 						AABB blockaabb = new AABB(1, 1, 1);
 						blockaabb.update(new Vector3f(((int) r.pos.x) + 0.5f, (int) r.pos.y, ((int) r.pos.z) + 0.5f));
 						if(!AABB.testAABB(blockaabb, getAABB()) && worldManager.getEntityManager().getPlayer().getSelectedItemStack().getTile().canPlace((int) r.pos.x, (int) r.pos.y, (int) r.pos.z, worldManager)) {
