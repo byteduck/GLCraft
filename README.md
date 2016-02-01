@@ -9,7 +9,13 @@ Take a look at the wiki to see how you can make your own plugins for GLCraft.
 
 There are a lot of things I am planning to add to do with GLCraft.
 
+Crossed out items means they are completed.
+
 * Plugin API - kinda finished
+* ~~Better GUI System~~
+ * ~~A GUI manager to make showing and hiding GUIs easier~~
+ * ~~A GUIScreen class to make building guis easier~~
+  * Subclasses like ~~GUIButton~~, GUITextField, GUIImage, etc
 * Lighting - I worked on it a while ago but due to all of the bugs I stopped.
 * Infinite world
 * Crafting System
