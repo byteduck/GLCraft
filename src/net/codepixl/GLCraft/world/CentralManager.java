@@ -74,6 +74,7 @@ import net.codepixl.GLCraft.GUI.GUIServer;
 import net.codepixl.GLCraft.GUI.GUIStartScreen;
 import net.codepixl.GLCraft.GUI.Elements.GUIButton;
 import net.codepixl.GLCraft.render.Shape;
+import net.codepixl.GLCraft.sound.SoundManager;
 import net.codepixl.GLCraft.util.Constants;
 import net.codepixl.GLCraft.util.Spritesheet;
 import net.codepixl.GLCraft.world.entity.EntityManager;
@@ -90,6 +91,7 @@ public class CentralManager extends Screen{
 	private int currentBlock;
 	private PipedInputStream actionsToDo = new PipedInputStream();
 	private GUIManager guiManager;
+	private SoundManager soundManager;
 	
 	public static final int AIRCHUNK = 0, MIXEDCHUNK = 1;
 
@@ -116,6 +118,8 @@ public class CentralManager extends Screen{
 		}
 		worldManager = new WorldManager(this);
 		initGUIManager();
+		soundManager = new SoundManager();
+		SoundManager.setMainManager(soundManager);
 	}
 	
 	private void initGUIManager(){

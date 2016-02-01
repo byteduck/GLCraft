@@ -39,6 +39,7 @@ import net.codepixl.GLCraft.item.Item;
 import net.codepixl.GLCraft.item.ItemStack;
 import net.codepixl.GLCraft.render.RenderType;
 import net.codepixl.GLCraft.render.Shape;
+import net.codepixl.GLCraft.sound.SoundManager;
 import net.codepixl.GLCraft.util.AABB;
 import net.codepixl.GLCraft.util.Constants;
 import net.codepixl.GLCraft.util.MathUtils;
@@ -79,6 +80,7 @@ public class EntityPlayer extends Mob {
 	
 	public void update() {
 		super.update();
+		SoundManager.getMainManager().setPosAndRot(pos, rot);
 		this.rot.x = MathUtils.towardsZero(this.rot.x, (float) (Time.getDelta()*30f));
 		if(this.isDead()){
 			this.setDead(false);
@@ -216,7 +218,7 @@ public class EntityPlayer extends Mob {
 		if(space) {
 			this.jump();
 		}
-		/**
+		
 		if(Keyboard.isKeyDown(Keyboard.KEY_K)) {
 			TagCompound compound = new TagCompound("Player");
 			TagList posList = new TagList("Pos");
@@ -335,7 +337,7 @@ public class EntityPlayer extends Mob {
 				e.printStackTrace();
 			}
 		}
-		**/
+		
 		if(Keyboard.isKeyDown(Keyboard.KEY_1)) {
 			this.selectedSlot = 0;
 		}
@@ -369,6 +371,9 @@ public class EntityPlayer extends Mob {
 		float toZ = (float) ((x * (float) Math.cos(Math.toRadians(getRot().y - 90)) + z * Math.cos(Math.toRadians(getRot().y))));
 		float toX = (float) (-(x * (float) Math.sin(Math.toRadians(getRot().y - 90)) + z * Math.sin(Math.toRadians(getRot().y))));
 		float toY = 0;
+		if(toZ != 0 && toX != 0){
+			//SoundManager.getMainManager().quickPlayOnce("walk.grass");
+		}
 		move(toX, toY, toZ);
 	}
 	
@@ -514,7 +519,9 @@ public class EntityPlayer extends Mob {
 						AABB blockaabb = new AABB(1, 1, 1);
 						blockaabb.update(new Vector3f(((int) r.pos.x) + 0.5f, (int) r.pos.y, ((int) r.pos.z) + 0.5f));
 						if(!AABB.testAABB(blockaabb, getAABB()) && worldManager.getEntityManager().getPlayer().getSelectedItemStack().getTile().canPlace((int) r.pos.x, (int) r.pos.y, (int) r.pos.z, worldManager)) {
-							r.prev();
+							while(worldManager.getTileAtPos(r.pos) != Tile.Air.getId() || AABB.testAABB(blockaabb, getAABB()) && worldManager.getEntityManager().getPlayer().getSelectedItemStack().getTile().canPlace((int) r.pos.x, (int) r.pos.y, (int) r.pos.z, worldManager)){
+								r.prev();
+							}
 							worldManager.setTileAtPos((int) r.pos.x, (int) r.pos.y, (int) r.pos.z, worldManager.getEntityManager().getPlayer().getSelectedItemStack().getTile().getId(), true);
 							worldManager.getEntityManager().getPlayer().getSelectedItemStack().getTile().onPlace((int) r.pos.x, (int) r.pos.y, (int) r.pos.z, worldManager);
 							int sub = worldManager.getEntityManager().getPlayer().getSelectedItemStack().subFromStack(1);

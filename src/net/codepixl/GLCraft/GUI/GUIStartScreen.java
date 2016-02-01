@@ -18,6 +18,7 @@ import com.nishu.utils.Color4f;
 import net.codepixl.GLCraft.GLCraft;
 import net.codepixl.GLCraft.GUI.Elements.GUIButton;
 import net.codepixl.GLCraft.plugin.PluginManagerWindow;
+import net.codepixl.GLCraft.sound.SoundManager;
 import net.codepixl.GLCraft.util.Constants;
 import net.codepixl.GLCraft.util.Spritesheet;
 
@@ -28,8 +29,9 @@ public class GUIStartScreen extends GUIScreen{
 	private static final int MULTIPLAYERY = (int) (Constants.HEIGHT*0.5);
 	private static final int SERVERY = (int) (Constants.HEIGHT*0.7);
 	private static final int PLUGINMANAGERY = SERVERY;
+	private static final int SOUNDY = MULTIPLAYERY;
 	
-	private GUIButton startButton, pluginManagerButton;
+	private GUIButton startButton, pluginManagerButton, soundButton;
 	
 	public GUIStartScreen(){
 		startButton = new GUIButton("Singleplayer", MIDDLE, SINGLEPLAYERY, new Callable<Void>(){
@@ -42,20 +44,23 @@ public class GUIStartScreen extends GUIScreen{
 				return null;
 			}
 		});
+		soundButton = new GUIButton("Play a sound", MIDDLE, SOUNDY, new Callable<Void>(){
+
+			@Override
+			public Void call() throws Exception {
+				return null;
+			}
+			
+		});
 		pluginManagerButton = new GUIButton("Plugin Manager", MIDDLE, SERVERY, new Callable<Void>(){
 			@Override
 			public Void call() throws Exception {
 				new PluginManagerWindow(GLCraft.getGLCraft().getPluginManager()).setVisible(true);
-				try {
-					Thread.sleep(500);
-				} catch (InterruptedException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
 				return null;
 			}
 		});
 		this.addElement(startButton);
+		this.addElement(soundButton);
 		this.addElement(pluginManagerButton);
 	}
 	

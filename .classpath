@@ -19,5 +19,8 @@
 	<classpathentry kind="lib" path="res/jar/zip4j_1.3.2.jar"/>
 	<classpathentry kind="lib" path="res/jar/jgoodies-common-1.8.0.jar"/>
 	<classpathentry kind="lib" path="res/jar/jgoodies-forms-1.8.0.jar"/>
+	<classpathentry kind="lib" path="res/jar/LibraryLWJGLOpenAL.jar"/>
+	<classpathentry kind="lib" path="res/jar/SoundSystem.jar"/>
+	<classpathentry kind="lib" path="res/jar/CodecWav.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

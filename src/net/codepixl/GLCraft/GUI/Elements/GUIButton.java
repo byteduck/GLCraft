@@ -17,6 +17,7 @@ import org.newdawn.slick.opengl.TextureImpl;
 
 import com.nishu.utils.Color4f;
 
+import net.codepixl.GLCraft.sound.SoundManager;
 import net.codepixl.GLCraft.util.Constants;
 
 public class GUIButton implements GUIElement{
@@ -116,10 +117,13 @@ public class GUIButton implements GUIElement{
 	public void input() {
 		if(testMouse()){
 			if(Mouse.isButtonDown(0)){
-				try {
-					this.action.call();
-				} catch (Exception e) {
-					System.err.println("A button with text "+this.text+" tried to call a callable but failed.");
+				if(!pressed){
+					SoundManager.getMainManager().quickPlay("click");
+					try {
+						this.action.call();
+					} catch (Exception e) {
+						System.err.println("A button with text "+this.text+" tried to call a callable but failed.");
+					}
 				}
 				this.pressed = true;
 			}else{

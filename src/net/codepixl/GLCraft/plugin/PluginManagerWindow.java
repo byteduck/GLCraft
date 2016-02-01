@@ -86,6 +86,7 @@ public class PluginManagerWindow extends JFrame{
 		getContentPane().add(scrollPane, BorderLayout.CENTER);
 		this.setLocationRelativeTo(null);
 		this.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
+		this.setAlwaysOnTop(true);
 	}
 	
 	private void addPlugins(){
