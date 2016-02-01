@@ -4,23 +4,18 @@ import static org.lwjgl.opengl.GL11.GL_QUADS;
 import static org.lwjgl.opengl.GL11.GL_TEXTURE_2D;
 import static org.lwjgl.opengl.GL11.glBegin;
 import static org.lwjgl.opengl.GL11.glDisable;
-import static org.lwjgl.opengl.GL11.glEnable;
 import static org.lwjgl.opengl.GL11.glEnd;
 import static org.lwjgl.opengl.GL11.glTexCoord2f;
 import static org.lwjgl.opengl.GL11.glVertex2f;
 
 import java.util.concurrent.Callable;
 
-import org.lwjgl.input.Mouse;
-
-import com.nishu.utils.Color4f;
-
 import net.codepixl.GLCraft.GLCraft;
 import net.codepixl.GLCraft.GUI.Elements.GUIButton;
 import net.codepixl.GLCraft.plugin.PluginManagerWindow;
-import net.codepixl.GLCraft.sound.SoundManager;
 import net.codepixl.GLCraft.util.Constants;
 import net.codepixl.GLCraft.util.Spritesheet;
+import net.codepixl.GUI.Inventory.Elements.GUISlot;
 
 public class GUIStartScreen extends GUIScreen{
 	
@@ -31,7 +26,7 @@ public class GUIStartScreen extends GUIScreen{
 	private static final int PLUGINMANAGERY = SERVERY;
 	private static final int SOUNDY = MULTIPLAYERY;
 	
-	private GUIButton startButton, pluginManagerButton, soundButton;
+	private GUIButton startButton, pluginManagerButton, soundButton, quitButton;
 	
 	public GUIStartScreen(){
 		startButton = new GUIButton("Singleplayer", MIDDLE, SINGLEPLAYERY, new Callable<Void>(){
@@ -59,6 +54,14 @@ public class GUIStartScreen extends GUIScreen{
 				return null;
 			}
 		});
+		quitButton = new GUIButton("Quit", (Constants.FONT.getWidth("quit")+40)/2, Constants.BTNHEIGHT/2+10, new Callable<Void>(){
+			@Override
+			public Void call() throws Exception {
+				System.exit(0);
+				return null;
+			}
+		});
+		this.addElement(quitButton);
 		this.addElement(startButton);
 		this.addElement(soundButton);
 		this.addElement(pluginManagerButton);

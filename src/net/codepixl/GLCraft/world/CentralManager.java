@@ -74,6 +74,7 @@ import net.codepixl.GLCraft.GUI.GUIScreen;
 import net.codepixl.GLCraft.GUI.GUIServer;
 import net.codepixl.GLCraft.GUI.GUIStartScreen;
 import net.codepixl.GLCraft.GUI.Elements.GUIButton;
+import net.codepixl.GLCraft.GUI.Inventory.GUICrafting;
 import net.codepixl.GLCraft.render.Shape;
 import net.codepixl.GLCraft.sound.SoundManager;
 import net.codepixl.GLCraft.util.Constants;
@@ -117,8 +118,8 @@ public class CentralManager extends Screen{
 		} catch (FontFormatException | IOException e) {
 			e.printStackTrace();
 		}
-		worldManager = new WorldManager(this);
 		initGUIManager();
+		worldManager = new WorldManager(this);
 		soundManager = new SoundManager();
 		SoundManager.setMainManager(soundManager);
 	}
@@ -153,11 +154,19 @@ public class CentralManager extends Screen{
 					renderDebug = !renderDebug;
 				}
 				if(Keyboard.isKeyDown(Keyboard.KEY_ESCAPE)){
-					if(guiManager.getCurrentGUIName() == "pauseMenu"){
+					if(guiManager.isGUIOpen()){
 						guiManager.closeGUI();
 						Mouse.setGrabbed(true);
 					}else{
 						guiManager.showGUI("pauseMenu");
+					}
+				}
+				if(Keyboard.isKeyDown(Keyboard.KEY_E)){
+					if(guiManager.getCurrentGUIName() == "crafting"){
+						guiManager.closeGUI();
+						Mouse.setGrabbed(true);
+					}else{
+						guiManager.showGUI("crafting");
 					}
 				}
 			}

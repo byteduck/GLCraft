@@ -1,8 +1,5 @@
 package net.codepixl.GLCraft.GUI;
 
-import static org.lwjgl.opengl.GL11.GL_TEXTURE_2D;
-import static org.lwjgl.opengl.GL11.glDisable;
-
 import java.util.concurrent.Callable;
 
 import org.lwjgl.input.Mouse;
@@ -10,15 +7,16 @@ import org.lwjgl.opengl.GL11;
 
 import net.codepixl.GLCraft.GUI.Elements.GUIButton;
 import net.codepixl.GLCraft.util.Constants;
+import net.codepixl.GUI.Inventory.Elements.GUISlot;
 
 public class GUIPauseMenu extends GUIScreen{
 	
 	private static final int BACKY = (int) (Constants.HEIGHT*0.3);
+	private static final int SLOTY = (int) (Constants.HEIGHT*0.5);
 	private static final int QUITY = (int) (Constants.HEIGHT*0.7);
 	private static final int MIDDLE = Constants.WIDTH/2;
 	
-	private GUIButton backButton;
-	private GUIButton quitButton;
+	private GUIButton backButton,quitButton;
 	
 	public GUIPauseMenu(){
 		backButton = new GUIButton("Back to game", MIDDLE, BACKY, new Callable<Void>(){
