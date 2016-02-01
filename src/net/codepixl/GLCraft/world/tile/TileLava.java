@@ -54,7 +54,7 @@ public class TileLava extends Tile{
 	@Override
 	public void tick(int x, int y, int z, WorldManager w){
 		tick++;
-		if(tick >= 1){
+		if(tick >= 10){
 			int xx = Constants.randInt(-1,1);
 			int yy = Constants.randInt(-1,0);
 			int zz = Constants.randInt(-1,1);

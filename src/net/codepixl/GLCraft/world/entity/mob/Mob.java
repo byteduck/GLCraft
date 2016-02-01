@@ -64,7 +64,7 @@ public class Mob extends EntitySolid implements GameObj{
 	public void update(){
 		super.update();
 		if(this.onFire > 0f){
-			this.hurt(0.5f);
+			this.hurt(0.5f,1);
 		}
 		if(this.health<=0f){
 			this.setDead(true);
