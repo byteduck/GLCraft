@@ -20,7 +20,8 @@ Italic means half completed.
   * Subclasses like ~~GUIButton~~, GUITextField, GUIImage, etc
 * Lighting - I worked on it a while ago but due to all of the bugs I stopped.
 * Infinite world
-* Crafting System
+* ~~2x2 Crafting System~~
+* 3x3 Crafting System
 * Re-add multiplayer
 * User accounts
 * Animals/Monsters
