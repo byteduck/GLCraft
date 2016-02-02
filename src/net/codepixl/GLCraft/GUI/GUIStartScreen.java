@@ -12,10 +12,10 @@ import java.util.concurrent.Callable;
 
 import net.codepixl.GLCraft.GLCraft;
 import net.codepixl.GLCraft.GUI.Elements.GUIButton;
+import net.codepixl.GLCraft.GUI.Inventory.Elements.GUISlot;
 import net.codepixl.GLCraft.plugin.PluginManagerWindow;
 import net.codepixl.GLCraft.util.Constants;
 import net.codepixl.GLCraft.util.Spritesheet;
-import net.codepixl.GUI.Inventory.Elements.GUISlot;
 
 public class GUIStartScreen extends GUIScreen{
 	

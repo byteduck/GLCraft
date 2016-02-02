@@ -1,4 +1,4 @@
-package net.codepixl.GUI.Inventory.Elements;
+package net.codepixl.GLCraft.GUI.Inventory.Elements;
 
 import static org.lwjgl.opengl.GL11.GL_QUADS;
 import static org.lwjgl.opengl.GL11.glBegin;
@@ -27,7 +27,7 @@ public class GUISlot implements GUIElement{
 	public ItemStack itemstack;
 	private int x,y;
 	public static final float size = (float)Constants.WIDTH/18f;
-	private boolean hover = false;
+	public boolean hover = false;
 	
 	public GUISlot(int x, int y){
 		this.itemstack = null;

@@ -6,8 +6,8 @@ import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.GL11;
 
 import net.codepixl.GLCraft.GUI.Elements.GUIButton;
+import net.codepixl.GLCraft.GUI.Inventory.Elements.GUISlot;
 import net.codepixl.GLCraft.util.Constants;
-import net.codepixl.GUI.Inventory.Elements.GUISlot;
 
 public class GUIPauseMenu extends GUIScreen{
 	

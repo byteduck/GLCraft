@@ -75,6 +75,7 @@ import net.codepixl.GLCraft.GUI.GUIServer;
 import net.codepixl.GLCraft.GUI.GUIStartScreen;
 import net.codepixl.GLCraft.GUI.Elements.GUIButton;
 import net.codepixl.GLCraft.GUI.Inventory.GUICrafting;
+import net.codepixl.GLCraft.item.crafting.CraftingManager;
 import net.codepixl.GLCraft.render.Shape;
 import net.codepixl.GLCraft.sound.SoundManager;
 import net.codepixl.GLCraft.util.Constants;
@@ -119,6 +120,7 @@ public class CentralManager extends Screen{
 			e.printStackTrace();
 		}
 		initGUIManager();
+		CraftingManager.initRecipes();
 		worldManager = new WorldManager(this);
 		soundManager = new SoundManager();
 		SoundManager.setMainManager(soundManager);
