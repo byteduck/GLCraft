@@ -7,10 +7,15 @@ public class ItemStack{
 	private Item item;
 	public int count;
 	private boolean isTile;
+	private boolean isNull;
 	public ItemStack(Tile t){
 		count = 1;
 		isTile = true;
 		tile = t;
+	}
+	public ItemStack(){
+		isNull = true;
+		isTile = false;
 	}
 	public ItemStack(Item i){
 		count = 1;
@@ -22,6 +27,7 @@ public class ItemStack{
 		this.item = s.item;
 		this.count = s.count;
 		this.isTile = s.isTile;
+		this.isNull = s.isNull;
 	}
 	public ItemStack(ItemStack s, int count){
 		this.tile = s.tile;
@@ -91,5 +97,8 @@ public class ItemStack{
 		if(this.isTile && itemstack.isTile() && this.tile == itemstack.tile) return true;
 		if(this.isItem() && itemstack.isItem() && this.item == itemstack.item) return true;
 		return false;
+	}
+	public boolean isNull() {
+		return isNull;
 	}
 }

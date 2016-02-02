@@ -27,7 +27,7 @@ public class Mob extends EntitySolid implements GameObj{
 		super(pos,new Vector3f(0,0,0),new Vector3f(0,0,0),w);
 		this.inventory = new ItemStack[9];
 		for(int i = 0; i < 9; i++){
-			inventory[i] = null;
+			inventory[i] = new ItemStack();
 		}
 		this.health = 20f;
 		this.hurtTimer = 0;
@@ -41,9 +41,9 @@ public class Mob extends EntitySolid implements GameObj{
 	
 	public void dropAllItems(){
 		for(int i = 0; i < inventory.length; i++){
-			if(inventory[i] != null){
+			if(!inventory[i].isNull()){
 				worldManager.spawnEntity(new EntityItem(inventory[i],this.pos,worldManager));
-				inventory[i] = null;
+				inventory[i] = new ItemStack();
 			}
 		}
 	}
@@ -116,7 +116,7 @@ public class Mob extends EntitySolid implements GameObj{
 		ArrayList<Integer> blankSlots = new ArrayList<Integer>();
 		ArrayList<Integer> compatibleSlots = new ArrayList<Integer>();
 		for(int i = 0; i < inventory.length; i++){
-			if(inventory[i] == null){
+			if(inventory[i].isNull()){
 				blankSlots.add(i);
 			}else if(inventory[i].compatible(s)){
 				compatibleSlots.add(i);

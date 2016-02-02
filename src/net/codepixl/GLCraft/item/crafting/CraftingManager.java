@@ -15,7 +15,7 @@ public class CraftingManager {
 	
 	public static ItemStack checkRecipe(Recipe r){
 		Iterator<Recipe> it = recipies.iterator();
-		ItemStack result = null;
+		ItemStack result = new ItemStack();
 		while(it.hasNext()){
 			Recipe rec = it.next();
 			if(rec.checkRecipe(r))
@@ -25,7 +25,7 @@ public class CraftingManager {
 	}
 
 	public static void initRecipes() {
-		addRecipe(new Recipe(new ItemStack(Tile.Grass),new ItemStack(Tile.Log),new ItemStack(Tile.Log),new ItemStack(Tile.Grass),new ItemStack(Tile.Fire)));
+		addRecipe(new Recipe(new ItemStack(Tile.Log),new ItemStack(),new ItemStack(),new ItemStack(),new ItemStack(Tile.Wood,4)));
 	}
 	
 }

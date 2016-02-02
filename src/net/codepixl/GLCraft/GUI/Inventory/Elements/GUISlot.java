@@ -30,7 +30,7 @@ public class GUISlot implements GUIElement{
 	public boolean hover = false;
 	
 	public GUISlot(int x, int y){
-		this.itemstack = null;
+		this.itemstack = new ItemStack();
 		this.x = x;
 		this.y = y;
 	}
@@ -47,7 +47,7 @@ public class GUISlot implements GUIElement{
 		GL11.glBegin(GL11.GL_QUADS);
 		Shape.createCenteredSquare(x,y, color, new float[]{Spritesheet.tiles.uniformSize()*3,Spritesheet.tiles.uniformSize()}, size);
 		GL11.glEnd();
-		if(itemstack != null){
+		if(!itemstack.isNull()){
 			glPushMatrix();
 			glTranslatef(x,y,0);
 			glScalef(0.7f,0.7f,0.7f);

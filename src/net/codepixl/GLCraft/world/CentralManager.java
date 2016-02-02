@@ -279,7 +279,7 @@ public class CentralManager extends Screen{
 				Shape.createCenteredSquare((float)Constants.WIDTH/9f+i*SIZE+i*SPACING+SIZE/2f,Constants.HEIGHT-(SIZE/2f), new Color4f(1,1,1,1), new float[]{Spritesheet.tiles.uniformSize()*2,Spritesheet.tiles.uniformSize()}, (float)Constants.WIDTH/18f);
 			}
 			glEnd();
-			if(p.getInventory((int)i) != null){
+			if(!p.getInventory((int)i).isNull()){
 				glPushMatrix();
 				glTranslatef((float)Constants.WIDTH/9f+i*SIZE+i*SPACING+SIZE/2f,(float)Constants.HEIGHT-(SIZE/2f),0f);
 				glScalef(0.7f,0.7f,0.7f);

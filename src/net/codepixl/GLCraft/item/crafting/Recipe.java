@@ -10,7 +10,6 @@ public class Recipe {
 	 * |C|D|
 	 * */
 	public Recipe(ItemStack a, ItemStack b, ItemStack c, ItemStack d, ItemStack result){
-		System.out.println(a);
 		this.a = a;
 		this.b = b;
 		this.c = c;

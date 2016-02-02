@@ -179,16 +179,16 @@ public class EntityPlayer extends Mob {
 		boolean shift = Keyboard.isKeyDown(Keyboard.KEY_LSHIFT);
 		boolean ctrl = Keyboard.isKeyDown(Keyboard.KEY_LCONTROL);
 		boolean q = Keyboard.isKeyDown(Keyboard.KEY_Q);
-		if(q && !qPressed && inventory[selectedSlot] != null) {
+		if(q && !qPressed && !inventory[selectedSlot].isNull()) {
 			EntityItem e = new EntityItem(new ItemStack(inventory[selectedSlot], 1), getPos().x, getPos().y + 1.5f, getPos().z, worldManager);
 			e.setVelocity(MathUtils.RotToVel(this.getRot(), 1f));
 			if(ctrl) {
 				e.setCount(inventory[selectedSlot].count);
-				inventory[selectedSlot] = null;
+				inventory[selectedSlot] = new ItemStack();
 			}else{
 				int sub = inventory[selectedSlot].subFromStack(1);
 				if(sub > 0) {
-					inventory[selectedSlot] = null;
+					inventory[selectedSlot] = new ItemStack();
 				}
 			}
 			worldManager.spawnEntity(e);
@@ -246,7 +246,7 @@ public class EntityPlayer extends Mob {
 			TagList inventory = new TagList("Inventory");
 			for(int i = 0; i < this.inventory.length; i++){
 				ItemStack stack = this.getInventory(i);
-				if(stack != null){
+				if(!stack.isNull()){
 					TagCompound slot = new TagCompound("");
 					slot.setTag(new TagInteger("slot",i));
 					slot.setTag(new TagByte("isItem",(byte) (stack.isItem() ? 1 : 0 )));
@@ -450,8 +450,16 @@ public class EntityPlayer extends Mob {
 		return selectedSlot;
 	}
 	
+	public void setSelectedSlot(int slot) {
+		selectedSlot = slot;
+	}
+	
 	public ItemStack getSelectedItemStack() {
 		return inventory[selectedSlot];
+	}
+	
+	public void setSelectedItemStack(ItemStack stack) {
+		inventory[selectedSlot] = stack;
 	}
 	
 	public int raycast() {
@@ -518,7 +526,7 @@ public class EntityPlayer extends Mob {
 						this.wasBreaking = false;
 					}
 					r.prev();
-					if(Mouse.isButtonDown(1) && GUIManager.getMainManager().sendPlayerInput() && worldManager.getEntityManager().getPlayer().getBuildCooldown() == 0f && worldManager.getEntityManager().getPlayer().getSelectedItemStack() != null && worldManager.getEntityManager().getPlayer().getSelectedItemStack().isTile()/** && worldManager.getTileAtPos(r.pos) == 0**/) {
+					if(Mouse.isButtonDown(1) && GUIManager.getMainManager().sendPlayerInput() && worldManager.getEntityManager().getPlayer().getBuildCooldown() == 0f && !worldManager.getEntityManager().getPlayer().getSelectedItemStack().isNull() && worldManager.getEntityManager().getPlayer().getSelectedItemStack().isTile()/** && worldManager.getTileAtPos(r.pos) == 0**/) {
 						AABB blockaabb = new AABB(1, 1, 1);
 						blockaabb.update(new Vector3f(((int) r.pos.x) + 0.5f, (int) r.pos.y, ((int) r.pos.z) + 0.5f));
 						if(!AABB.testAABB(blockaabb, getAABB()) && worldManager.getEntityManager().getPlayer().getSelectedItemStack().getTile().canPlace((int) r.pos.x, (int) r.pos.y, (int) r.pos.z, worldManager)) {
@@ -529,7 +537,7 @@ public class EntityPlayer extends Mob {
 							worldManager.getEntityManager().getPlayer().getSelectedItemStack().getTile().onPlace((int) r.pos.x, (int) r.pos.y, (int) r.pos.z, worldManager);
 							int sub = worldManager.getEntityManager().getPlayer().getSelectedItemStack().subFromStack(1);
 							if(sub > 0) {
-								worldManager.getEntityManager().getPlayer().getInventory()[worldManager.getEntityManager().getPlayer().getSelectedSlot()] = null;
+								worldManager.getEntityManager().getPlayer().getInventory()[worldManager.getEntityManager().getPlayer().getSelectedSlot()] = new ItemStack();
 							}
 							setBuildCooldown(0.2f);
 							r.next();
