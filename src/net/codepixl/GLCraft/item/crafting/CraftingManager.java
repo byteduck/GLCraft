@@ -7,14 +7,14 @@ import net.codepixl.GLCraft.item.ItemStack;
 import net.codepixl.GLCraft.world.tile.Tile;
 
 public class CraftingManager {
-	private static ArrayList<Recipe> recipies = new ArrayList<Recipe>();
+	private static ArrayList<Recipe> recipes = new ArrayList<Recipe>();
 	
 	public static void addRecipe(Recipe r){
-		recipies.add(r);
+		recipes.add(r);
 	}
 	
 	public static ItemStack checkRecipe(Recipe r){
-		Iterator<Recipe> it = recipies.iterator();
+		Iterator<Recipe> it = recipes.iterator();
 		ItemStack result = new ItemStack();
 		while(it.hasNext()){
 			Recipe rec = it.next();
