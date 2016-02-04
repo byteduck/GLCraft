@@ -10,13 +10,21 @@ public class TextureManager {
 	private static HashMap<String,Texture> textures = new HashMap<String,Texture>();
 	public static final String TILES = "textures/tiles/";
 	public static final String ITEMS = "textures/items/";
-	public static final String GUIS = "textures/gui";
+	public static final String GUIS = "textures/gui/";
+	public static final String MISC = "textures/misc/";
 	public static boolean addTexture(String name, String path){
 		if(!textures.containsKey(name)){
 			textures.put(name, Texture.loadTexture(path));
 			return true;
 		}
 		return false;
+	}
+	public static void initTextures(){
+		addTexture("misc.highlight",TILES+"glass.png");
+		for(int i = 0; i <= 7; i++){
+			addTexture("misc.break_"+i,MISC+"break_"+i+".png");
+		}
+		addTexture("misc.break_8",MISC+"break_7.png");
 	}
 	public static Texture getTexture(String name) {
 		return textures.get(name);
@@ -43,7 +51,7 @@ public class TextureManager {
 		getTexture(string).bind();
 	}
 	public static void bindTileIcon(Tile t){
-		getTexture("tiles"+t.getIconName()).bind();
+		getTexture("tiles."+t.getIconName()).bind();
 	}
 	public static void bindItemStackIcon(ItemStack s) {
 		if(!s.isNull()){

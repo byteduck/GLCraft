@@ -11,7 +11,9 @@ import static org.lwjgl.opengl.GL11.glVertex2f;
 import org.newdawn.slick.opengl.TextureImpl;
 
 import net.codepixl.GLCraft.render.Spritesheet;
+import net.codepixl.GLCraft.render.TextureManager;
 import net.codepixl.GLCraft.util.Constants;
+import net.codepixl.GLCraft.world.tile.Tile;
 
 public class GUIServer extends GUIScreen{
 	
@@ -29,15 +31,15 @@ public class GUIServer extends GUIScreen{
 	
 	@Override
 	public void drawBG(){
-		Spritesheet.tiles.bind();
+		TextureManager.bindTile(Tile.Stone);
 		glBegin(GL_QUADS);
-			glTexCoord2f(Spritesheet.tiles.uniformSize()*2, Spritesheet.tiles.uniformSize());
+			glTexCoord2f(0,0);
 			glVertex2f(0,0);
-			glTexCoord2f(Spritesheet.tiles.uniformSize()*3, Spritesheet.tiles.uniformSize());
+			glTexCoord2f(0,1);
 			glVertex2f(0,Constants.HEIGHT);
-			glTexCoord2f(Spritesheet.tiles.uniformSize()*3, 0);
+			glTexCoord2f(1,1);
 			glVertex2f(Constants.WIDTH,Constants.HEIGHT);
-			glTexCoord2f(Spritesheet.tiles.uniformSize()*2, 0);
+			glTexCoord2f(1,0);
 			glVertex2f(Constants.WIDTH,0);
 		glEnd();
 	}

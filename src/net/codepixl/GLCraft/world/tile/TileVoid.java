@@ -16,12 +16,6 @@ public class TileVoid extends Tile{
 	}
 
 	@Override
-	public float[] getTexCoords() {
-		// TODO Auto-generated method stub
-		return new float[]{0,0};
-	}
-
-	@Override
 	public String getName() {
 		// TODO Auto-generated method stub
 		return "Void";

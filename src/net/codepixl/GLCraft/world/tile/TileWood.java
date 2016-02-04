@@ -30,12 +30,6 @@ public class TileWood extends Tile{
 	}
 
 	@Override
-	public float[] getTexCoords() {
-		// TODO Auto-generated method stub
-		return new float[]{Spritesheet.tiles.uniformSize()*7,Spritesheet.tiles.uniformSize()*2};
-	}
-
-	@Override
 	public boolean isTransparent() {
 		// TODO Auto-generated method stub
 		return false;

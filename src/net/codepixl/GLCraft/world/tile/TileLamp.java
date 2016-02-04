@@ -30,12 +30,6 @@ public class TileLamp extends Tile{
 	}
 
 	@Override
-	public float[] getTexCoords() {
-		// TODO Auto-generated method stub
-		return new float[]{Spritesheet.tiles.uniformSize(),Spritesheet.tiles.uniformSize()};
-	}
-
-	@Override
 	public boolean isTransparent() {
 		// TODO Auto-generated method stub
 		return true;

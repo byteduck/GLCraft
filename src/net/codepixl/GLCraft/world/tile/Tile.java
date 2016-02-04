@@ -65,21 +65,12 @@ public class Tile {
 		return new Color4f(1,1,1,1);
 	}
 	
-	/*@Deprecated
-	public float[] getTexCoords(){
-		return new float[]{0,0};
-	}*/
-	
 	public String getTextureName(){
 		return this.getName();
 	}
 	
 	public Texture getTexture(){
 		return TextureManager.getTexture("tiles."+this.getName());
-	}
-	
-	public float[] getIconCoords(){
-		return this.getTexCoords();
 	}
 	
 	public boolean isTransparent(){
@@ -159,6 +150,6 @@ public class Tile {
 	}
 
 	public String getIconName() {
-		return getTextureName();
+		return this.getTextureName();
 	}
 }

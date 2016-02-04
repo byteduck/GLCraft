@@ -2,6 +2,8 @@ package net.codepixl.GLCraft.GUI;
 
 import java.util.HashMap;
 
+import net.codepixl.GLCraft.render.TextureManager;
+
 public class GUIManager {
 
 	private GUIScreen currentGUI;
@@ -11,7 +13,14 @@ public class GUIManager {
 	private String currentGUIName = "nogui";
 
 	public GUIManager(){
-		
+		initTextures();
+	}
+	
+	private void initTextures(){
+		TextureManager.addTexture("gui.guislot", TextureManager.GUIS+"guislot.png");
+		TextureManager.addTexture("gui.heart", TextureManager.GUIS+"heart.png");
+		TextureManager.addTexture("gui.heart_half", TextureManager.GUIS+"heart_half.png");
+		TextureManager.addTexture("gui.heart_empty", TextureManager.GUIS+"heart_empty.png");
 	}
 	
 	public static void setMainManager(GUIManager manager){

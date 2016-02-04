@@ -24,27 +24,9 @@ public class TileGrass extends Tile{
 	}
 
 	@Override
-	public float[] getTexCoords() {
-		// TODO Auto-generated method stub
-		return new float[]{
-			Spritesheet.tiles.uniformSize()*2, Spritesheet.tiles.uniformSize(),
-			Spritesheet.tiles.uniformSize(), Spritesheet.tiles.uniformSize(),
-			Spritesheet.tiles.uniformSize()*3, Spritesheet.tiles.uniformSize(),
-			Spritesheet.tiles.uniformSize()*3, 0,
-			Spritesheet.tiles.uniformSize()*3, Spritesheet.tiles.uniformSize(),
-			Spritesheet.tiles.uniformSize()*3, Spritesheet.tiles.uniformSize()
-		};
-	}
-
-	@Override
 	public String getName() {
 		// TODO Auto-generated method stub
 		return "Grass";
-	}
-	
-	@Override
-	public float[] getIconCoords(){
-		return new float[]{Spritesheet.tiles.uniformSize()*3, 0};
 	}
 	
 	@Override

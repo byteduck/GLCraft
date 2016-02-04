@@ -116,6 +116,7 @@ public class CentralManager extends Screen{
 
 	@Override
 	public void init() {
+		TextureManager.initTextures();
 		Constants.setWorld(this);
 		GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
 		try {

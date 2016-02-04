@@ -54,12 +54,6 @@ public class TileTallGrass extends Tile {
 	public float getHardness(){
 		return 0f;
 	}
-
-	@Override
-	public float[] getTexCoords() {
-		// TODO Auto-generated method stub
-		return new float[]{Spritesheet.tiles.uniformSize()*14,0};
-	}
 	
 	@Override
 	public RenderType getRenderType(){

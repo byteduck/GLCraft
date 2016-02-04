@@ -35,12 +35,6 @@ public class TileIron extends Tile{
 	}
 
 	@Override
-	public float[] getTexCoords() {
-		// TODO Auto-generated method stub
-		return new float[]{Spritesheet.tiles.uniformSize()*9,0};
-	}
-
-	@Override
 	public boolean isTransparent() {
 		// TODO Auto-generated method stub
 		return false;

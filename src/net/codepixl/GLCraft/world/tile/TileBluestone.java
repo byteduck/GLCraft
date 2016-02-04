@@ -6,6 +6,7 @@ import com.nishu.utils.Time;
 import net.codepixl.GLCraft.render.RenderType;
 import net.codepixl.GLCraft.render.Shape;
 import net.codepixl.GLCraft.render.Spritesheet;
+import net.codepixl.GLCraft.render.TextureManager;
 import net.codepixl.GLCraft.util.AABB;
 import net.codepixl.GLCraft.world.Chunk;
 import net.codepixl.GLCraft.world.WorldManager;
@@ -61,7 +62,8 @@ public class TileBluestone extends Tile{
 	public void customRender(float x, float y, float z, WorldManager w, Chunk c){
 		float col = w.getMetaAtPos((int)x, (int)y, (int)z)/15f;
 		glBegin(GL_QUADS);
-		Shape.createFlat(x, y+0.01f, z, new Color4f(col,col,col,1f), getTexCoords(), 1);
+		TextureManager.bindTile(this);
+		Shape.createFlat(x, y+0.01f, z, new Color4f(col,col,col,1f), 1);
 		glEnd();
 		if(w.getTileAtPos(x, y, z-1) == Tile.Bluestone.getId() || w.getTileAtPos(x, y-1, z-1) == Tile.Bluestone.getId() || w.getTileAtPos(x, y+1, z-1) == Tile.Bluestone.getId()){
 			if(w.getTileAtPos(x, y-1, z-1) == Tile.Bluestone.getId()){
@@ -70,13 +72,13 @@ public class TileBluestone extends Tile{
 				glRotatef(90f,1f,0,0);
 				glTranslatef(-x,-y,-z);
 				glBegin(GL_QUADS);
-				Shape.createFlat(x, y+0.01f, z, new Color4f(col,col,col,1f), new float[]{Spritesheet.tiles.uniformSize()*4,Spritesheet.tiles.uniformSize()*2}, 1);
+				//Shape.createFlat(x, y+0.01f, z, new Color4f(col,col,col,1f), new float[]{Spritesheet.tiles.uniformSize()*4,Spritesheet.tiles.uniformSize()*2}, 1);
 				glEnd();
 				glPopMatrix();
 			}
 			glPushMatrix();
 			glBegin(GL_QUADS);
-			Shape.createFlat(x, y+0.01f, z, new Color4f(col,col,col,1f), new float[]{Spritesheet.tiles.uniformSize()*3,Spritesheet.tiles.uniformSize()*2}, 1);
+			//Shape.createFlat(x, y+0.01f, z, new Color4f(col,col,col,1f), new float[]{Spritesheet.tiles.uniformSize()*3,Spritesheet.tiles.uniformSize()*2}, 1);
 			glEnd();
 			glPopMatrix();
 		}
@@ -87,7 +89,7 @@ public class TileBluestone extends Tile{
 				glRotatef(-90f,1f,0,0);
 				glTranslatef(-x,-y,-z);
 				glBegin(GL_QUADS);
-				Shape.createFlat(x, y+0.01f, z, new Color4f(col,col,col,1f), new float[]{Spritesheet.tiles.uniformSize()*4,Spritesheet.tiles.uniformSize()*2}, 1);
+				//Shape.createFlat(x, y+0.01f, z, new Color4f(col,col,col,1f), new float[]{Spritesheet.tiles.uniformSize()*4,Spritesheet.tiles.uniformSize()*2}, 1);
 				glEnd();
 				glPopMatrix();
 			}
@@ -96,7 +98,7 @@ public class TileBluestone extends Tile{
 			glRotatef(180f,0,1f,0);
 			glTranslatef(-x,-y,-z);
 			glBegin(GL_QUADS);
-			Shape.createFlat(x, y+0.01f, z, new Color4f(col,col,col,1f), new float[]{Spritesheet.tiles.uniformSize()*3,Spritesheet.tiles.uniformSize()*2}, 1);
+			//Shape.createFlat(x, y+0.01f, z, new Color4f(col,col,col,1f), new float[]{Spritesheet.tiles.uniformSize()*3,Spritesheet.tiles.uniformSize()*2}, 1);
 			glEnd();
 			glPopMatrix();
 		}
@@ -106,7 +108,7 @@ public class TileBluestone extends Tile{
 			glRotatef(-90f,0,1f,0);
 			glTranslatef(-x,-y,-z);
 			glBegin(GL_QUADS);
-			Shape.createFlat(x, y+0.01f, z, new Color4f(col,col,col,1f), new float[]{Spritesheet.tiles.uniformSize()*3,Spritesheet.tiles.uniformSize()*2}, 1);
+			//Shape.createFlat(x, y+0.01f, z, new Color4f(col,col,col,1f), new float[]{Spritesheet.tiles.uniformSize()*3,Spritesheet.tiles.uniformSize()*2}, 1);
 			glEnd();
 			glPopMatrix();
 		}
@@ -116,7 +118,7 @@ public class TileBluestone extends Tile{
 			glRotatef(90f,0,1f,0);
 			glTranslatef(-x,-y,-z);
 			glBegin(GL_QUADS);
-			Shape.createFlat(x, y+0.01f, z, new Color4f(col,col,col,1f), new float[]{Spritesheet.tiles.uniformSize()*3,Spritesheet.tiles.uniformSize()*2}, 1);
+			//Shape.createFlat(x, y+0.01f, z, new Color4f(col,col,col,1f), new float[]{Spritesheet.tiles.uniformSize()*3,Spritesheet.tiles.uniformSize()*2}, 1);
 			glEnd();
 			glPopMatrix();
 		}
@@ -124,17 +126,10 @@ public class TileBluestone extends Tile{
 	
 	@Override
 	public void renderHitbox(Vector3f pos){
+		TextureManager.bindTexture("misc.highlight");
 		glBegin(GL_QUADS);
-		Shape.createFlat((int) pos.x - 0.0005f, (int) pos.y + 0.02f, (int) pos.z - 0.0005f, new Color4f(1, 1, 1, 1f), new float[] { Spritesheet.tiles.uniformSize() * 7, 0 }, 1.001f);
+		Shape.createFlat((int) pos.x - 0.0005f, (int) pos.y + 0.02f, (int) pos.z - 0.0005f, new Color4f(1, 1, 1, 1f), 1.001f);
 		glEnd();
-	}
-
-	@Override
-	public float[] getTexCoords() {
-		// TODO Auto-generated method stub
-		return new float[]{
-			Spritesheet.tiles.uniformSize()*2,Spritesheet.tiles.uniformSize()*2
-		};
 	}
 
 	@Override
