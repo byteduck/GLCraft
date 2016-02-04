@@ -12,6 +12,7 @@ public class TextureManager {
 	public static final String ITEMS = "textures/items/";
 	public static final String GUIS = "textures/gui/";
 	public static final String MISC = "textures/misc/";
+	private static String currentBoundTexture = "";
 	public static boolean addTexture(String name, String path){
 		if(!textures.containsKey(name)){
 			textures.put(name, Texture.loadTexture(path));
@@ -31,12 +32,19 @@ public class TextureManager {
 	}
 	public static void unbind() {
 		Texture.unbind();
+		currentBoundTexture = "";
 	}
 	public static void bindTile(Tile t){
-		getTexture("tiles."+t.getTextureName()).bind();
+		if(!currentBoundTexture.equals("tiles."+t.getTextureName())){
+			getTexture("tiles."+t.getTextureName()).bind();
+			currentBoundTexture = "tiles."+t.getTextureName();
+		}
 	}
 	public static void bindItem(Item i){
-		getTexture("tiles."+i.getTextureName()).bind();
+		if(!currentBoundTexture.equals("items."+i.getTextureName())){
+			getTexture("tiles."+i.getTextureName()).bind();
+			currentBoundTexture = "items."+i.getTextureName();
+		}
 	}
 	public static void bindItemStack(ItemStack s){
 		if(!s.isNull()){
@@ -47,11 +55,17 @@ public class TextureManager {
 			}
 		}
 	}
-	public static void bindTexture(String string){
-		getTexture(string).bind();
+	public static void bindTexture(String textureName){
+		if(!currentBoundTexture.equals(textureName)){
+			getTexture(textureName).bind();
+			currentBoundTexture = textureName;
+		}
 	}
 	public static void bindTileIcon(Tile t){
-		getTexture("tiles."+t.getIconName()).bind();
+		if(!currentBoundTexture.equals("tiles."+t.getIconName())){
+			getTexture("tiles."+t.getIconName()).bind();
+			currentBoundTexture = "tiles."+t.getIconName();
+		}
 	}
 	public static void bindItemStackIcon(ItemStack s) {
 		if(!s.isNull()){
