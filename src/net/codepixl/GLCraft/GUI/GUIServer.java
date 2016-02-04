@@ -10,8 +10,8 @@ import static org.lwjgl.opengl.GL11.glVertex2f;
 
 import org.newdawn.slick.opengl.TextureImpl;
 
+import net.codepixl.GLCraft.render.Spritesheet;
 import net.codepixl.GLCraft.util.Constants;
-import net.codepixl.GLCraft.util.Spritesheet;
 
 public class GUIServer extends GUIScreen{
 	

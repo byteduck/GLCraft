@@ -21,6 +21,7 @@ import static org.lwjgl.opengl.GL11.GL_SRC_ALPHA;
 import static org.lwjgl.opengl.GL11.GL_TEXTURE_2D;
 import static org.lwjgl.opengl.GL11.GL_TEXTURE_ENV;
 import static org.lwjgl.opengl.GL11.GL_TEXTURE_ENV_MODE;
+import static org.lwjgl.opengl.GL11.GL_TRANSFORM_BIT;
 import static org.lwjgl.opengl.GL11.glBegin;
 import static org.lwjgl.opengl.GL11.glBlendFunc;
 import static org.lwjgl.opengl.GL11.glClearColor;
@@ -36,8 +37,11 @@ import static org.lwjgl.opengl.GL11.glLightModel;
 import static org.lwjgl.opengl.GL11.glLoadIdentity;
 import static org.lwjgl.opengl.GL11.glMatrixMode;
 import static org.lwjgl.opengl.GL11.glOrtho;
+import static org.lwjgl.opengl.GL11.glPopAttrib;
 import static org.lwjgl.opengl.GL11.glPopMatrix;
+import static org.lwjgl.opengl.GL11.glPushAttrib;
 import static org.lwjgl.opengl.GL11.glPushMatrix;
+import static org.lwjgl.opengl.GL11.glRotatef;
 import static org.lwjgl.opengl.GL11.glScalef;
 import static org.lwjgl.opengl.GL11.glShadeModel;
 import static org.lwjgl.opengl.GL11.glTexEnvi;
@@ -77,9 +81,10 @@ import net.codepixl.GLCraft.GUI.Elements.GUIButton;
 import net.codepixl.GLCraft.GUI.Inventory.GUICrafting;
 import net.codepixl.GLCraft.item.crafting.CraftingManager;
 import net.codepixl.GLCraft.render.Shape;
+import net.codepixl.GLCraft.render.Spritesheet;
+import net.codepixl.GLCraft.render.TextureManager;
 import net.codepixl.GLCraft.sound.SoundManager;
 import net.codepixl.GLCraft.util.Constants;
-import net.codepixl.GLCraft.util.Spritesheet;
 import net.codepixl.GLCraft.world.entity.EntityManager;
 import net.codepixl.GLCraft.world.entity.mob.EntityPlayer;
 import net.codepixl.GLCraft.world.tile.Tile;
@@ -112,7 +117,6 @@ public class CentralManager extends Screen{
 	@Override
 	public void init() {
 		Constants.setWorld(this);
-		Spritesheet.tiles.bind();
 		GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
 		try {
 			ge.registerFont(Font.createFont(Font.TRUETYPE_FONT, getClass().getResourceAsStream("/font/GLCraft.ttf")));
@@ -177,52 +181,6 @@ public class CentralManager extends Screen{
 	
 	@Override
 	public void render() {
-		try {
-			while(actionsToDo.available() > 0){
-				byte ByteBuf[] = new byte[1500];
-				actionsToDo.read(ByteBuf);
-				ByteBuf = Constants.trim(ByteBuf);
-				String str = new String(ByteBuf);
-				String[] strs = str.split(";");
-				for(int i = 0; i < strs.length; i++){
-					String s = strs[i];
-					if(s.contains("GLCRAFT_CHANGEBLOCK")){
-						if(s.split("\\|\\|").length >= 3){
-							String pos = s.split("\\|\\|")[1];
-							byte tile = (byte)Integer.parseInt(s.split("\\|\\|")[2]);
-							int x = Integer.parseInt(pos.split(",")[0]);
-							int y = Integer.parseInt(pos.split(",")[1]);
-							int z = Integer.parseInt(pos.split(",")[2]);
-							getWorldManager().setTileAtPos(x, y, z, tile, true);
-						}
-					}
-					if(s.contains("GLCRAFT_MOVE_PLAYER")){
-						if(s.split("\\|\\|").length >= 2){
-							String pos = s.split("\\|\\|")[1];
-								if(pos.split(",").length >= 3){
-									float x = Float.parseFloat(pos.split(",")[0]);
-									float y = Float.parseFloat(pos.split(",")[1]);
-									float z = Float.parseFloat(pos.split(",")[2]);
-									worldManager.getEntityManager().getPlayerMP().setPos(new Vector3f(x,y,z));
-								}
-						}
-					}
-					if(s.contains("GLCRAFT_ROT_PLAYER")){
-						if(s.split("\\|\\|").length >= 2){
-							String pos = s.split("\\|\\|")[1];
-								if(pos.split(",").length >= 3){
-									float yaw = Float.parseFloat(pos.split(",")[0]);
-									float pitch = Float.parseFloat(pos.split(",")[1]);
-									float roll = Float.parseFloat(pos.split(",")[2]);
-									worldManager.getEntityManager().getPlayerMP().setRot(new Vector3f(yaw,pitch,roll));
-								}
-						}
-					}
-				}
-			}
-		} catch (NumberFormatException | IOException e) {
-			e.printStackTrace();
-		}
 		if(Constants.GAME_STATE == Constants.GAME){
 			glLoadIdentity();
 			render3D();
@@ -243,15 +201,13 @@ public class CentralManager extends Screen{
 	
 	private void renderClouds(){
 		Spritesheet.clouds.bind();
-		Shape.currentSpritesheet = Spritesheet.clouds;
 		GL11.glTranslatef(cloudMove, 100f, 1000f);
 		GL11.glRotatef(-90f, 1f, 0f, 0f);
 		GL11.glBegin(GL_QUADS);
-		Shape.createPlane(-4000f, 0, 0, new Color4f(1f,1f,1f,0.5f), new float[]{0f,0f}, 2000f);
-		Shape.createPlane(0, 0, 0, new Color4f(1f,1f,1f,0.5f), new float[]{0f,0f}, 2000f);
-		Shape.createPlane(-2000f, 0, 0, new Color4f(1f,1f,1f,0.5f), new float[]{0f,0f}, 2000f);
+		Shape.createPlane(-4000f, 0, 0, new Color4f(1f,1f,1f,0.5f), 2000f);
+		Shape.createPlane(0, 0, 0, new Color4f(1f,1f,1f,0.5f), 2000f);
+		Shape.createPlane(-2000f, 0, 0, new Color4f(1f,1f,1f,0.5f), 2000f);
 		GL11.glEnd();
-		Shape.currentSpritesheet = Spritesheet.tiles;
 	}
 	
 	private void renderInventory() {
@@ -262,34 +218,35 @@ public class CentralManager extends Screen{
 		float SPACING = (float)Constants.WIDTH/36f;
 		float HEARTSPACING = (float)Constants.WIDTH/72f;
 		EntityPlayer p = worldManager.getEntityManager().getPlayer();
-		Spritesheet.tiles.bind();
 		if(!p.tileAtEye().isTransparent()){
 			glPushMatrix();
 			glBegin(GL_QUADS);
-			Shape.createCenteredSquare(Constants.WIDTH/2f, Constants.HEIGHT/2f, new Color4f(1f,1f,1f,1f), p.tileAtEye().getIconCoords(), Constants.WIDTH);
+			TextureManager.bindTile(p.tileAtEye());
+			Shape.createCenteredSquare(Constants.WIDTH/2f, Constants.HEIGHT/2f, new Color4f(1f,1f,1f,1f), Constants.WIDTH);
 			glEnd();
 			glPopMatrix();
 		}
 		for(float i = 0; i < 9f; i++){
-			Spritesheet.tiles.bind();
 			glBegin(GL_QUADS);
+			TextureManager.bindTexture("gui.guislot");
 			if(i == p.getSelectedSlot()){
-				Shape.createCenteredSquare((float)Constants.WIDTH/9f+i*SIZE+i*SPACING+SIZE/2f,Constants.HEIGHT-(SIZE/2f), new Color4f(1,1,1,1), new float[]{Spritesheet.tiles.uniformSize()*3,Spritesheet.tiles.uniformSize()}, (float)Constants.WIDTH/18f);
+				Shape.createCenteredSquare((float)Constants.WIDTH/9f+i*SIZE+i*SPACING+SIZE/2f,Constants.HEIGHT-(SIZE/2f), new Color4f(1,1,1,1), (float)Constants.WIDTH/18f);
 			}else{
-				Shape.createCenteredSquare((float)Constants.WIDTH/9f+i*SIZE+i*SPACING+SIZE/2f,Constants.HEIGHT-(SIZE/2f), new Color4f(1,1,1,1), new float[]{Spritesheet.tiles.uniformSize()*2,Spritesheet.tiles.uniformSize()}, (float)Constants.WIDTH/18f);
+				Shape.createCenteredSquare((float)Constants.WIDTH/9f+i*SIZE+i*SPACING+SIZE/2f,Constants.HEIGHT-(SIZE/2f), new Color4f(0.75f,0.75f,0.75f,1), (float)Constants.WIDTH/18f);
 			}
 			glEnd();
 			if(!p.getInventory((int)i).isNull()){
 				glPushMatrix();
 				glTranslatef((float)Constants.WIDTH/9f+i*SIZE+i*SPACING+SIZE/2f,(float)Constants.HEIGHT-(SIZE/2f),0f);
 				glScalef(0.7f,0.7f,0.7f);
-					glBegin(GL_QUADS);
-						if(p.getInventory((int)i).isTile()){
-							Shape.createCenteredSquare(0,0, new Color4f(1f,1f,1f,1f), p.getInventory((int)i).getTile().getIconCoords(), (float)Constants.WIDTH/18f);
-						}else{
-							Shape.createCenteredSquare(0,0, new Color4f(1f,1f,1f,1f), p.getInventory((int)i).getItem().getTexCoords(), (float)Constants.WIDTH/18f);
-						}
-					glEnd();
+				TextureManager.bindTileIcon(p.getInventory((int)i).getTile());
+				glBegin(GL_QUADS);
+					if(p.getInventory((int)i).isTile()){
+						Shape.createCenteredSquare(0,0, new Color4f(1f,1f,1f,1f), (float)Constants.WIDTH/18f);
+					}else{
+						Shape.createCenteredSquare(0,0, new Color4f(1f,1f,1f,1f), (float)Constants.WIDTH/18f);
+					}
+				glEnd();
 				glPopMatrix();
 				Constants.FONT.drawString((float)Constants.WIDTH/9f+i*SIZE+i*SPACING+SIZE/2f, Constants.HEIGHT-(SIZE/2f), Integer.toString(p.getInventory((int)i).count));
 				TextureImpl.unbind();
@@ -297,7 +254,8 @@ public class CentralManager extends Screen{
 		}
 		glBegin(GL_QUADS);
 		for(int i = 0; i < 10; i++){
-			Shape.createCenteredSquare((float)Constants.WIDTH/9f+i*HEARTSIZE+i*HEARTSPACING+HEARTSIZE/2f,Constants.HEIGHT-(SIZE/2f)-HEARTSIZE*2f, new Color4f(1,1,1,1), p.getTexCoordsForHealthIndex(i), HEARTSIZE);
+			TextureManager.bindTexture(p.getTexNameForHealthIndex(i));
+			Shape.createCenteredSquare((float)Constants.WIDTH/9f+i*HEARTSIZE+i*HEARTSPACING+HEARTSIZE/2f,Constants.HEIGHT-(SIZE/2f)-HEARTSIZE*2f, new Color4f(1,1,1,1), HEARTSIZE);
 		}
 		glEnd();
 	}

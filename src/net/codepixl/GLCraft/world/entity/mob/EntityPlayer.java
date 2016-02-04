@@ -40,13 +40,14 @@ import net.codepixl.GLCraft.item.Item;
 import net.codepixl.GLCraft.item.ItemStack;
 import net.codepixl.GLCraft.render.RenderType;
 import net.codepixl.GLCraft.render.Shape;
+import net.codepixl.GLCraft.render.Spritesheet;
+import net.codepixl.GLCraft.render.TextureManager;
 import net.codepixl.GLCraft.sound.SoundManager;
 import net.codepixl.GLCraft.util.AABB;
 import net.codepixl.GLCraft.util.Constants;
 import net.codepixl.GLCraft.util.MathUtils;
 import net.codepixl.GLCraft.util.Ray;
 import net.codepixl.GLCraft.util.Raytracer;
-import net.codepixl.GLCraft.util.Spritesheet;
 import net.codepixl.GLCraft.world.WorldManager;
 import net.codepixl.GLCraft.world.entity.Entity;
 import net.codepixl.GLCraft.world.entity.EntityItem;
@@ -432,14 +433,14 @@ public class EntityPlayer extends Mob {
 		glRotatef(getRot().x, 0, 0, -1);
 	}
 	
-	public float[] getTexCoordsForHealthIndex(int i){
+	public String getTexNameForHealthIndex(int i){
 		if(this.health-((float)i*2f) >= 0){
 			if(this.health-((float)i*2f) <= 1){
-				return new float[]{Spritesheet.tiles.uniformSize()*14,Spritesheet.tiles.uniformSize()};
+				return "gui.heart_half";
 			}
-			return new float[]{Spritesheet.tiles.uniformSize()*13,Spritesheet.tiles.uniformSize()};
+			return "gui.heart";
 		}
-		return new float[]{Spritesheet.tiles.uniformSize()*15,Spritesheet.tiles.uniformSize()};
+		return "gui.heart_empty";
 	}
 	
 	public float getBuildCooldown() {
@@ -483,17 +484,18 @@ public class EntityPlayer extends Mob {
 					}
 					// System.out.println(worldManager.getTileAtPos((int)r.pos.x,
 					// (int)r.pos.y, (int)r.pos.z));
+					TextureManager.bindTexture("misc.highlight");
 					if(Tile.getTile((byte) tile).getRenderType() == RenderType.CUBE) {
 						glBegin(GL_QUADS);
-						Shape.createCube((int) r.pos.x - 0.0005f, (int) r.pos.y - 0.0005f, (int) r.pos.z - 0.0005f, new Color4f(1, 1, 1, 1f), new float[] { Spritesheet.tiles.uniformSize() * 7, 0 }, 1.001f);
+						Shape.createCube((int) r.pos.x - 0.0005f, (int) r.pos.y - 0.0005f, (int) r.pos.z - 0.0005f, new Color4f(1, 1, 1, 1f), 1.001f);
 						glEnd();
 					}else if(Tile.getTile((byte) tile).getRenderType() == RenderType.CROSS){
 						glBegin(GL_QUADS);
-						Shape.createCross((int) r.pos.x - 0.0005f, (int) r.pos.y - 0.0005f, (int) r.pos.z - 0.0005f, new Color4f(1, 1, 1, 1f), new float[] { Spritesheet.tiles.uniformSize() * 7, 0 }, 1.001f);
+						Shape.createCross((int) r.pos.x - 0.0005f, (int) r.pos.y - 0.0005f, (int) r.pos.z - 0.0005f, new Color4f(1, 1, 1, 1f), 1.001f);
 						glEnd();
 					}else if(Tile.getTile((byte) tile).getRenderType() == RenderType.FLAT){
 						glBegin(GL_QUADS);
-						Shape.createFlat((int) r.pos.x - 0.0005f, (int) r.pos.y + 0.1f, (int) r.pos.z - 0.0005f, new Color4f(1, 1, 1, 1f), new float[] { Spritesheet.tiles.uniformSize() * 7, 0 }, 1.001f);
+						Shape.createFlat((int) r.pos.x - 0.0005f, (int) r.pos.y + 0.1f, (int) r.pos.z - 0.0005f, new Color4f(1, 1, 1, 1f), 1.001f);
 						glEnd();
 					}else if(Tile.getTile((byte)tile).getRenderType() == RenderType.CUSTOM){
 						Tile.getTile((byte)tile).renderHitbox(r.pos);
@@ -504,13 +506,14 @@ public class EntityPlayer extends Mob {
 					this.prevSelect = new Vector3f((int) r.pos.x, (int) r.pos.y, (int) r.pos.z);
 					if(this.wasBreaking) {
 						float percent = this.breakProgress / Tile.getTile((byte) tile).getHardness();
+						TextureManager.bindTexture(breakingTexName(percent));
 						if(Tile.getTile((byte) tile).getRenderType() == RenderType.CUBE) {
 							glBegin(GL_QUADS);
-							Shape.createCube((int) r.pos.x - 0.001f, (int) r.pos.y - 0.001f, (int) r.pos.z - 0.001f, new Color4f(1, 1, 1, 1f), breakingTexCoords(percent), 1.002f);
+							Shape.createCube((int) r.pos.x - 0.001f, (int) r.pos.y - 0.001f, (int) r.pos.z - 0.001f, new Color4f(1, 1, 1, 1f), 1.002f);
 							glEnd();
 						}else{
 							glBegin(GL_QUADS);
-							Shape.createCross((int) r.pos.x - 0.001f, (int) r.pos.y - 0.001f, (int) r.pos.z - 0.001f, new Color4f(1, 1, 1, 1f), breakingTexCoords(percent), 1.001f);
+							Shape.createCross((int) r.pos.x - 0.001f, (int) r.pos.y - 0.001f, (int) r.pos.z - 0.001f, new Color4f(1, 1, 1, 1f), 1.001f);
 							glEnd();
 						}
 					}
@@ -557,7 +560,7 @@ public class EntityPlayer extends Mob {
 		return Tile.getTile((byte)worldManager.getTileAtPos(this.pos.x,this.pos.y+1.6f,this.pos.z));
 	}
 	
-	private static float[] breakingTexCoords(float percent) {
-		return new float[] { Spritesheet.tiles.uniformSize() * 4 + (Math.round((Spritesheet.tiles.uniformSize() * 7 * percent) / Spritesheet.tiles.uniformSize()) * Spritesheet.tiles.uniformSize()), Spritesheet.tiles.uniformSize() };
+	private static String breakingTexName(float percent) {
+		return "misc.break_"+Math.round((percent*100)/12.5f);
 	}
 }

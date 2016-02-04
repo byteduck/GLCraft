@@ -26,6 +26,11 @@ public class TileVoid extends Tile{
 		// TODO Auto-generated method stub
 		return "Void";
 	}
+	
+	@Override
+	public boolean hasTexture(){
+		return false;
+	}
 
 	@Override
 	public boolean isTransparent() {

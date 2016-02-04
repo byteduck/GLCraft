@@ -2,7 +2,7 @@ package net.codepixl.GLCraft.world.tile;
 
 import com.nishu.utils.Color4f;
 
-import net.codepixl.GLCraft.util.Spritesheet;
+import net.codepixl.GLCraft.render.Spritesheet;
 
 public class TileGrass extends Tile{
 
@@ -16,6 +16,11 @@ public class TileGrass extends Tile{
 	public Color4f getColor() {
 		// TODO Auto-generated method stub
 		return Color4f.WHITE;
+	}
+	
+	@Override
+	public String getTextureName(){
+		return "grass_side";
 	}
 
 	@Override

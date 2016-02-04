@@ -16,12 +16,12 @@ import com.nishu.utils.Time;
 import net.codepixl.GLCraft.Splash;
 import net.codepixl.GLCraft.GUI.GUIManager;
 import net.codepixl.GLCraft.GUI.Inventory.GUICrafting;
+import net.codepixl.GLCraft.render.Spritesheet;
 import net.codepixl.GLCraft.util.AABB;
 import net.codepixl.GLCraft.util.Constants;
 import net.codepixl.GLCraft.util.Frustum;
 import net.codepixl.GLCraft.util.MathUtils;
 import net.codepixl.GLCraft.util.OpenSimplexNoise;
-import net.codepixl.GLCraft.util.Spritesheet;
 import net.codepixl.GLCraft.world.entity.Entity;
 import net.codepixl.GLCraft.world.entity.EntityManager;
 import net.codepixl.GLCraft.world.entity.EntitySolid;
@@ -177,7 +177,7 @@ public class WorldManager {
 	}
 	
 	public void render(){
-		Spritesheet.tiles.bind();
+		//Spritesheet.tiles.bind();
 		getEntityManager().getPlayer().applyTranslations();
 		Vector3f pos = getEntityManager().getPlayer().getPos();
 		//if(getTileAtPos((int)pos.x,(int)pos.y+2,(int)pos.z) == 0 || getTileAtPos((int)pos.x,(int)pos.y+2,(int)pos.z) == -1 || getTileAtPos((int)pos.x,(int)pos.y+2,(int)pos.z) == 9 || getTileAtPos((int)pos.x,(int)pos.y+2,(int)pos.z) == 4){

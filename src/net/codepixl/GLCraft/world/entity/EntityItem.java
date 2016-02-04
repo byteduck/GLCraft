@@ -15,6 +15,7 @@ import net.codepixl.GLCraft.item.Item;
 import net.codepixl.GLCraft.item.ItemStack;
 import net.codepixl.GLCraft.render.RenderType;
 import net.codepixl.GLCraft.render.Shape;
+import net.codepixl.GLCraft.render.TextureManager;
 import net.codepixl.GLCraft.util.AABB;
 import net.codepixl.GLCraft.util.MathUtils;
 import net.codepixl.GLCraft.world.WorldManager;
@@ -67,20 +68,21 @@ public class EntityItem extends EntitySolid{
 			}else{
 				GL11.glTranslatef(-size/2, 0f, 0f);
 			}
+			TextureManager.bindItemStack(itemstack);
 			GL11.glBegin(GL11.GL_QUADS);
 			if(itemstack.isTile()){
 				GL11.glRotatef(this.getRot().y, 0f, 1.0f, 0f);
 				Tile tile = itemstack.getTile();
 				if(tile.getRenderType() == RenderType.CUBE){
-					Shape.createCube(0+((float)i*0.05f), yPos+((float)i*0.05f), 0+((float)i*0.05f), tile.getColor(), tile.getTexCoords(), size);
+					Shape.createCube(0+((float)i*0.05f), yPos+((float)i*0.05f), 0+((float)i*0.05f), tile.getColor(), size);
 				}else if(tile.getRenderType() == RenderType.CROSS){
-					Shape.createCross(0+((float)i*0.05f), yPos+((float)i*0.05f), 0+((float)i*0.05f), tile.getColor(), tile.getTexCoords(), size);
+					Shape.createCross(0+((float)i*0.05f), yPos+((float)i*0.05f), 0+((float)i*0.05f), tile.getColor(), size);
 				}else if(tile.getRenderType() == RenderType.FLAT || tile.getRenderType() == RenderType.CUSTOM){
-					Shape.createPlane(0+((float)i*0.05f), yPos+((float)i*0.05f), 0+((float)i*0.05f), tile.getColor(), tile.getTexCoords(), size);
+					Shape.createPlane(0+((float)i*0.05f), yPos+((float)i*0.05f), 0+((float)i*0.05f), tile.getColor(), size);
 				}
 			}else{
 				Item item = itemstack.getItem();
-				Shape.createPlane(0+((float)i*0.05f), yPos+((float)i*0.05f), 0+((float)i*0.05f), item.getColor(), item.getTexCoords(), size);
+				Shape.createPlane(0+((float)i*0.05f), yPos+((float)i*0.05f), 0+((float)i*0.05f), item.getColor(), size);
 			}
 			GL11.glEnd();
 			GL11.glPopMatrix();

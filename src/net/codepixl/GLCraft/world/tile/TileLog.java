@@ -2,7 +2,7 @@ package net.codepixl.GLCraft.world.tile;
 
 import com.nishu.utils.Color4f;
 
-import net.codepixl.GLCraft.util.Spritesheet;
+import net.codepixl.GLCraft.render.Spritesheet;
 
 public class TileLog extends Tile{
 
@@ -40,6 +40,11 @@ public class TileLog extends Tile{
 				Spritesheet.tiles.uniformSize()*11, Spritesheet.tiles.uniformSize(),
 				Spritesheet.tiles.uniformSize()*11, Spritesheet.tiles.uniformSize()
 			};
+	}
+	
+	@Override
+	public String getTextureName(){
+		return "log_side";
 	}
 
 	@Override

@@ -5,8 +5,8 @@ import com.nishu.utils.Time;
 
 import net.codepixl.GLCraft.render.RenderType;
 import net.codepixl.GLCraft.render.Shape;
+import net.codepixl.GLCraft.render.Spritesheet;
 import net.codepixl.GLCraft.util.AABB;
-import net.codepixl.GLCraft.util.Spritesheet;
 import net.codepixl.GLCraft.world.Chunk;
 import net.codepixl.GLCraft.world.WorldManager;
 import static org.lwjgl.opengl.GL11.*;
@@ -18,6 +18,11 @@ public class TileBluestone extends Tile{
 	public String getName() {
 		// TODO Auto-generated method stub
 		return "Bluestone";
+	}
+	
+	@Override
+	public String getTextureName(){
+		return "bluestone_center";
 	}
 
 	@Override

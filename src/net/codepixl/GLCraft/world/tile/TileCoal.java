@@ -2,7 +2,7 @@ package net.codepixl.GLCraft.world.tile;
 
 import com.nishu.utils.Color4f;
 
-import net.codepixl.GLCraft.util.Spritesheet;
+import net.codepixl.GLCraft.render.Spritesheet;
 
 public class TileCoal extends Tile{
 
@@ -10,6 +10,11 @@ public class TileCoal extends Tile{
 	public String getName() {
 		// TODO Auto-generated method stub
 		return "Coal Ore";
+	}
+	
+	@Override
+	public String getTextureName(){
+		return "coal";
 	}
 
 	@Override
@@ -27,12 +32,6 @@ public class TileCoal extends Tile{
 	@Override
 	public float getHardness(){
 		return 4.5f;
-	}
-
-	@Override
-	public float[] getTexCoords() {
-		// TODO Auto-generated method stub
-		return new float[]{Spritesheet.tiles.uniformSize()*8,0};
 	}
 
 	@Override

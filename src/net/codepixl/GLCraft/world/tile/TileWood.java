@@ -2,7 +2,7 @@ package net.codepixl.GLCraft.world.tile;
 
 import com.nishu.utils.Color4f;
 
-import net.codepixl.GLCraft.util.Spritesheet;
+import net.codepixl.GLCraft.render.Spritesheet;
 
 public class TileWood extends Tile{
 

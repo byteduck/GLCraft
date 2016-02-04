@@ -1,11 +1,11 @@
-package net.codepixl.GLCraft.util;
+package net.codepixl.GLCraft.render;
 
 public class Spritesheet {
 	private Texture texture;
 	private String path;
 	private float size;
 	
-	public static Spritesheet tiles = new Spritesheet("textures/spritesheets/tiles/tiles.png",16);
+	//public static Spritesheet tiles = new Spritesheet("textures/spritesheets/tiles/tiles.png",16);
 	public static Spritesheet clouds = new Spritesheet("textures/clouds.png",1);
 	
 	public Spritesheet(String path, float size){

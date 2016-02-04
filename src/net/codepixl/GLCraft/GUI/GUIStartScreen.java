@@ -14,8 +14,8 @@ import net.codepixl.GLCraft.GLCraft;
 import net.codepixl.GLCraft.GUI.Elements.GUIButton;
 import net.codepixl.GLCraft.GUI.Inventory.Elements.GUISlot;
 import net.codepixl.GLCraft.plugin.PluginManagerWindow;
+import net.codepixl.GLCraft.render.Spritesheet;
 import net.codepixl.GLCraft.util.Constants;
-import net.codepixl.GLCraft.util.Spritesheet;
 
 public class GUIStartScreen extends GUIScreen{
 	

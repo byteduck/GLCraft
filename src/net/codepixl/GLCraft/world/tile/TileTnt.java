@@ -1,6 +1,6 @@
 package net.codepixl.GLCraft.world.tile;
 
-import net.codepixl.GLCraft.util.Spritesheet;
+import net.codepixl.GLCraft.render.Spritesheet;
 import net.codepixl.GLCraft.world.WorldManager;
 import net.codepixl.GLCraft.world.entity.EntityTNT;
 

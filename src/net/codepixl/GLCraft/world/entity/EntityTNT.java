@@ -1,6 +1,7 @@
 package net.codepixl.GLCraft.world.entity;
 
 import net.codepixl.GLCraft.render.Shape;
+import net.codepixl.GLCraft.render.TextureManager;
 import net.codepixl.GLCraft.util.AABB;
 import net.codepixl.GLCraft.util.Constants;
 import net.codepixl.GLCraft.util.MathUtils;
@@ -38,8 +39,9 @@ public class EntityTNT extends EntitySolid{
 			offset = (size - 1f)/2f;
 		}
 		glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_ADD);
+		TextureManager.bindTile(Tile.Tnt);
 		glBegin(GL_QUADS);
-		Shape.createCube(this.getX()-0.5f-offset, this.getY(), this.getZ()-0.5f-offset, new Color4f(col,col,col,1f), Tile.Tnt.getTexCoords(), size);
+		Shape.createCube(this.getX()-0.5f-offset, this.getY(), this.getZ()-0.5f-offset, new Color4f(col,col,col,1f), size);
 		glEnd();
 		glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
 	}
