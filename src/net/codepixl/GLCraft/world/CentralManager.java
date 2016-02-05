@@ -125,6 +125,13 @@ public class CentralManager extends Screen{
 			e.printStackTrace();
 		}
 		initGUIManager();
+		try {
+			TextureManager.generateAtlas();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		Spritesheet.atlas.bind();
 		CraftingManager.initRecipes();
 		worldManager = new WorldManager(this);
 		soundManager = new SoundManager();
@@ -202,13 +209,16 @@ public class CentralManager extends Screen{
 	
 	private void renderClouds(){
 		Spritesheet.clouds.bind();
+		Shape.currentSpritesheet = Spritesheet.clouds;
 		GL11.glTranslatef(cloudMove, 100f, 1000f);
 		GL11.glRotatef(-90f, 1f, 0f, 0f);
 		GL11.glBegin(GL_QUADS);
-		Shape.createPlane(-4000f, 0, 0, new Color4f(1f,1f,1f,0.5f), 2000f);
-		Shape.createPlane(0, 0, 0, new Color4f(1f,1f,1f,0.5f), 2000f);
-		Shape.createPlane(-2000f, 0, 0, new Color4f(1f,1f,1f,0.5f), 2000f);
+		Shape.createPlane(-4000f, 0, 0, new Color4f(1f,1f,1f,0.5f), new float[]{0,0}, 2000f);
+		Shape.createPlane(0, 0, 0, new Color4f(1f,1f,1f,0.5f), new float[]{0,0}, 2000f);
+		Shape.createPlane(-2000f, 0, 0, new Color4f(1f,1f,1f,0.5f), new float[]{0,0}, 2000f);
 		GL11.glEnd();
+		Shape.currentSpritesheet = Spritesheet.atlas;
+		Spritesheet.atlas.bind();
 	}
 	
 	private void renderInventory() {
@@ -219,33 +229,32 @@ public class CentralManager extends Screen{
 		float SPACING = (float)Constants.WIDTH/36f;
 		float HEARTSPACING = (float)Constants.WIDTH/72f;
 		EntityPlayer p = worldManager.getEntityManager().getPlayer();
+		Spritesheet.atlas.bind();
 		if(!p.tileAtEye().isTransparent()){
 			glPushMatrix();
 			glBegin(GL_QUADS);
-			TextureManager.bindTile(p.tileAtEye());
-			Shape.createCenteredSquare(Constants.WIDTH/2f, Constants.HEIGHT/2f, new Color4f(1f,1f,1f,1f), Constants.WIDTH);
+			Shape.createCenteredSquare(Constants.WIDTH/2f, Constants.HEIGHT/2f, new Color4f(1f,1f,1f,1f), TextureManager.tile(p.tileAtEye()), Constants.WIDTH);
 			glEnd();
 			glPopMatrix();
 		}
 		for(float i = 0; i < 9f; i++){
+			Spritesheet.atlas.bind();
 			glBegin(GL_QUADS);
-			TextureManager.bindTexture("gui.guislot");
 			if(i == p.getSelectedSlot()){
-				Shape.createCenteredSquare((float)Constants.WIDTH/9f+i*SIZE+i*SPACING+SIZE/2f,Constants.HEIGHT-(SIZE/2f), new Color4f(1,1,1,1), (float)Constants.WIDTH/18f);
+				Shape.createCenteredSquare((float)Constants.WIDTH/9f+i*SIZE+i*SPACING+SIZE/2f,Constants.HEIGHT-(SIZE/2f), new Color4f(1,1,1,1), TextureManager.texture("gui.guislot"), (float)Constants.WIDTH/18f);
 			}else{
-				Shape.createCenteredSquare((float)Constants.WIDTH/9f+i*SIZE+i*SPACING+SIZE/2f,Constants.HEIGHT-(SIZE/2f), new Color4f(0.75f,0.75f,0.75f,1), (float)Constants.WIDTH/18f);
+				Shape.createCenteredSquare((float)Constants.WIDTH/9f+i*SIZE+i*SPACING+SIZE/2f,Constants.HEIGHT-(SIZE/2f), new Color4f(0.75f,0.75f,0.75f,1), TextureManager.texture("gui.guislot"), (float)Constants.WIDTH/18f);
 			}
 			glEnd();
 			if(!p.getInventory((int)i).isNull()){
 				glPushMatrix();
 				glTranslatef((float)Constants.WIDTH/9f+i*SIZE+i*SPACING+SIZE/2f,(float)Constants.HEIGHT-(SIZE/2f),0f);
 				glScalef(0.7f,0.7f,0.7f);
-				TextureManager.bindTileIcon(p.getInventory((int)i).getTile());
 				glBegin(GL_QUADS);
 					if(p.getInventory((int)i).isTile()){
-						Shape.createCenteredSquare(0,0, new Color4f(1f,1f,1f,1f), (float)Constants.WIDTH/18f);
+						Shape.createCenteredSquare(0,0, new Color4f(1f,1f,1f,1f), TextureManager.tile(p.getInventory((int)i).getTile()), (float)Constants.WIDTH/18f);
 					}else{
-						Shape.createCenteredSquare(0,0, new Color4f(1f,1f,1f,1f), (float)Constants.WIDTH/18f);
+						Shape.createCenteredSquare(0,0, new Color4f(1f,1f,1f,1f), TextureManager.item(p.getInventory((int)i).getItem()), (float)Constants.WIDTH/18f);
 					}
 				glEnd();
 				glPopMatrix();
@@ -255,8 +264,7 @@ public class CentralManager extends Screen{
 		}
 		glBegin(GL_QUADS);
 		for(int i = 0; i < 10; i++){
-			TextureManager.bindTexture(p.getTexNameForHealthIndex(i));
-			Shape.createCenteredSquare((float)Constants.WIDTH/9f+i*HEARTSIZE+i*HEARTSPACING+HEARTSIZE/2f,Constants.HEIGHT-(SIZE/2f)-HEARTSIZE*2f, new Color4f(1,1,1,1), HEARTSIZE);
+			Shape.createCenteredSquare((float)Constants.WIDTH/9f+i*HEARTSIZE+i*HEARTSPACING+HEARTSIZE/2f,Constants.HEIGHT-(SIZE/2f)-HEARTSIZE*2f, new Color4f(1,1,1,1), TextureManager.texture(p.getTexNameForHealthIndex(i)), HEARTSIZE);
 		}
 		glEnd();
 	}

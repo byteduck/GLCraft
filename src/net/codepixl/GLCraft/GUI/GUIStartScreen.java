@@ -71,7 +71,7 @@ public class GUIStartScreen extends GUIScreen{
 	
 	@Override
 	public void drawBG(){
-		TextureManager.bindTile(Tile.Stone);
+		Spritesheet.atlas.bind();
 		glBegin(GL_QUADS);
 			glTexCoord2f(0,0);
 			glVertex2f(0,0);

@@ -44,20 +44,19 @@ public class GUISlot implements GUIElement{
 		}else{
 			color = new Color4f(0.7f,0.7f,0.7f,1);
 		}
-		TextureManager.bindTexture("gui.guislot");
+		Spritesheet.atlas.bind();
 		GL11.glBegin(GL11.GL_QUADS);
-		Shape.createCenteredSquare(x,y, color, size);
+		Shape.createCenteredSquare(x,y, color, TextureManager.texture("gui.guislot"), size);
 		GL11.glEnd();
 		if(!itemstack.isNull()){
 			glPushMatrix();
 			glTranslatef(x,y,0);
 			glScalef(0.7f,0.7f,0.7f);
-			TextureManager.bindItemStackIcon(itemstack);
 			glBegin(GL_QUADS);
 				if(itemstack.isTile()){
-					Shape.createCenteredSquare(0,0, new Color4f(1f,1f,1f,1f), (float)Constants.WIDTH/18f);
+					Shape.createCenteredSquare(0,0, new Color4f(1f,1f,1f,1f), TextureManager.itemStackIcon(itemstack), (float)Constants.WIDTH/18f);
 				}else{
-					Shape.createCenteredSquare(0,0, new Color4f(1f,1f,1f,1f), (float)Constants.WIDTH/18f);
+					Shape.createCenteredSquare(0,0, new Color4f(1f,1f,1f,1f), TextureManager.itemStackIcon(itemstack), (float)Constants.WIDTH/18f);
 				}
 			glEnd();
 			glPopMatrix();

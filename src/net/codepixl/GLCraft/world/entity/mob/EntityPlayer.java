@@ -484,18 +484,18 @@ public class EntityPlayer extends Mob {
 					}
 					// System.out.println(worldManager.getTileAtPos((int)r.pos.x,
 					// (int)r.pos.y, (int)r.pos.z));
-					TextureManager.bindTexture("misc.highlight");
+					float[] highlightCoords = TextureManager.texture("misc.highlight");
 					if(Tile.getTile((byte) tile).getRenderType() == RenderType.CUBE) {
 						glBegin(GL_QUADS);
-						Shape.createCube((int) r.pos.x - 0.0005f, (int) r.pos.y - 0.0005f, (int) r.pos.z - 0.0005f, new Color4f(1, 1, 1, 1f), 1.001f);
+						Shape.createCube((int) r.pos.x - 0.0005f, (int) r.pos.y - 0.0005f, (int) r.pos.z - 0.0005f, new Color4f(1, 1, 1, 1f), highlightCoords, 1.001f);
 						glEnd();
 					}else if(Tile.getTile((byte) tile).getRenderType() == RenderType.CROSS){
 						glBegin(GL_QUADS);
-						Shape.createCross((int) r.pos.x - 0.0005f, (int) r.pos.y - 0.0005f, (int) r.pos.z - 0.0005f, new Color4f(1, 1, 1, 1f), 1.001f);
+						Shape.createCross((int) r.pos.x - 0.0005f, (int) r.pos.y - 0.0005f, (int) r.pos.z - 0.0005f, new Color4f(1, 1, 1, 1f), highlightCoords, 1.001f);
 						glEnd();
 					}else if(Tile.getTile((byte) tile).getRenderType() == RenderType.FLAT){
 						glBegin(GL_QUADS);
-						Shape.createFlat((int) r.pos.x - 0.0005f, (int) r.pos.y + 0.1f, (int) r.pos.z - 0.0005f, new Color4f(1, 1, 1, 1f), 1.001f);
+						Shape.createFlat((int) r.pos.x - 0.0005f, (int) r.pos.y + 0.1f, (int) r.pos.z - 0.0005f, new Color4f(1, 1, 1, 1f), highlightCoords, 1.001f);
 						glEnd();
 					}else if(Tile.getTile((byte)tile).getRenderType() == RenderType.CUSTOM){
 						Tile.getTile((byte)tile).renderHitbox(r.pos);
@@ -506,14 +506,14 @@ public class EntityPlayer extends Mob {
 					this.prevSelect = new Vector3f((int) r.pos.x, (int) r.pos.y, (int) r.pos.z);
 					if(this.wasBreaking) {
 						float percent = this.breakProgress / Tile.getTile((byte) tile).getHardness();
-						TextureManager.bindTexture(breakingTexName(percent));
+						float[] breakCoords = TextureManager.texture(breakingTexName(percent));
 						if(Tile.getTile((byte) tile).getRenderType() == RenderType.CUBE) {
 							glBegin(GL_QUADS);
-							Shape.createCube((int) r.pos.x - 0.001f, (int) r.pos.y - 0.001f, (int) r.pos.z - 0.001f, new Color4f(1, 1, 1, 1f), 1.002f);
+							Shape.createCube((int) r.pos.x - 0.001f, (int) r.pos.y - 0.001f, (int) r.pos.z - 0.001f, new Color4f(1, 1, 1, 1f), breakCoords, 1.002f);
 							glEnd();
 						}else{
 							glBegin(GL_QUADS);
-							Shape.createCross((int) r.pos.x - 0.001f, (int) r.pos.y - 0.001f, (int) r.pos.z - 0.001f, new Color4f(1, 1, 1, 1f), 1.001f);
+							Shape.createCross((int) r.pos.x - 0.001f, (int) r.pos.y - 0.001f, (int) r.pos.z - 0.001f, new Color4f(1, 1, 1, 1f), breakCoords, 1.001f);
 							glEnd();
 						}
 					}

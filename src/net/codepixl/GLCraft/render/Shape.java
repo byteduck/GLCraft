@@ -35,190 +35,11 @@ public class Shape {
 		return new Color4f(1f, 1f, 1f, 1f);
 	}
 	
-	public static void createCube(float x, float y, float z, Color4f color, float size){
-		glColor4f(color.r, color.g, color.b, color.a);
-		glTexCoord2f(0, 0);
-		glVertex3f(x, y, z + size);
-		glTexCoord2f(1, 0);
-		glVertex3f(x + size, y, z + size);
-		glTexCoord2f(1, 1);
-		glVertex3f(x + size, y, z);
-		glTexCoord2f(0, 1);
-		glVertex3f(x, y, z);
-
-		// top face
-		glColor4f(color.r, color.g, color.b, color.a);
-		glTexCoord2f(0, 0);
-		glVertex3f(x, y + size, z);
-		glTexCoord2f(1, 0);
-		glVertex3f(x + size, y + size, z);
-		glTexCoord2f(1, 1);
-		glVertex3f(x + size, y + size, z + size);
-		glTexCoord2f(0, 1);
-		glVertex3f(x, y + size, z + size);
-
-		// front face
-		glColor4f(color.r, color.g, color.b, color.a);
-		glTexCoord2f(0, 0);
-		glVertex3f(x, y, z);
-		glTexCoord2f(1, 0);
-		glVertex3f(x + size, y, z);
-		glTexCoord2f(1, 1);
-		glVertex3f(x + size, y + size, z);
-		glTexCoord2f(0, 1);
-		glVertex3f(x, y + size, z);
-
-		// back face
-		glColor4f(color.r, color.g, color.b, color.a);
-		glTexCoord2f(0, 0);
-		glVertex3f(x, y + size, z + size);
-		glTexCoord2f(1, 0);
-		glVertex3f(x + size, y + size, z + size);
-		glTexCoord2f(1, 1);
-		glVertex3f(x + size, y, z + size);
-		glTexCoord2f(0, 1);
-		glVertex3f(x, y, z + size);
-
-		// left face
-		glColor4f(color.r, color.g, color.b, color.a);
-		glTexCoord2f(0, 0);
-		glVertex3f(x + size, y, z);
-		glTexCoord2f(1, 0);
-		glVertex3f(x + size, y, z + size);
-		glTexCoord2f(1, 1);
-		glVertex3f(x + size, y + size, z + size);
-		glTexCoord2f(0, 1);
-		glVertex3f(x + size, y + size, z);
-
-		// right face
-		glColor4f(color.r, color.g, color.b, color.a);
-		glTexCoord2f(0, 0);
-		glVertex3f(x, y, z + size);
-		glTexCoord2f(1, 0);
-		glVertex3f(x, y, z);
-		glTexCoord2f(1, 1);
-		glVertex3f(x, y + size, z);
-		glTexCoord2f(0, 1);
-		glVertex3f(x, y + size, z + size);
-	}
+	public static Spritesheet currentSpritesheet = Spritesheet.atlas;
 	
-	public static void createCross(float x, float y, float z, Color4f color, float size){
-		glColor4f(color.r, color.g, color.b, color.a);
-		glTexCoord2f(0, 0);
-		glVertex3f(x + size, y + size, z + size);
-		glTexCoord2f(0, 1);
-		glVertex3f(x + size, y, z + size);
-		glTexCoord2f(1, 1);
-		glVertex3f(x, y, z);
-		glTexCoord2f(1, 0);
-		glVertex3f(x, y + size, z);
-
-		// face 1 reversed
-		glColor4f(color.r, color.g, color.b, color.a);
-		glTexCoord2f(0, 0);
-		glVertex3f(x, y + size, z);
-		glTexCoord2f(0, 1);
-		glVertex3f(x, y, z);
-		glTexCoord2f(1, 1);
-		glVertex3f(x + size, y, z + size);
-		glTexCoord2f(1, 0);
-		glVertex3f(x + size, y + size, z + size);
-
-		// face 2
-		glColor4f(color.r, color.g, color.b, color.a);
-		glTexCoord2f(0, 0);
-		glVertex3f(x + size, y + size, z);
-		glTexCoord2f(0, 1);
-		glVertex3f(x + size, y, z);
-		glTexCoord2f(1, 1);
-		glVertex3f(x, y, z + size);
-		glTexCoord2f(1, 0);
-		glVertex3f(x, y + size, z + size);
-
-		// face 2 reversed
-		glColor4f(color.r, color.g, color.b, color.a);
-		glTexCoord2f(0, 0);
-		glVertex3f(x, y + size, z + size);
-		glTexCoord2f(0, 1);
-		glVertex3f(x, y, z + size);
-		glTexCoord2f(1, 1);
-		glVertex3f(x + size, y, z);
-		glTexCoord2f(1, 0);
-		glVertex3f(x + size, y + size, z);
-	}
 	
-	public static void createFlat(float x, float y, float z, Color4f color, float size) {
-		// Top
-		glColor4f(color.r, color.g, color.b, color.a);
-		glTexCoord2f(0, 0);
-		glVertex3f(x, y, z);
-		glTexCoord2f(0, 1);
-		glVertex3f(x, y, z+size);
-		glTexCoord2f(1, 0);
-		glVertex3f(x + size, y, z+size);
-		glTexCoord2f(1, 0);
-		glVertex3f(x + size, y, z);
-
-		// Bottom
-		glTexCoord2f(0, 0);
-		glVertex3f(x + size, y, z);
-		glTexCoord2f(0, 1);
-		glVertex3f(x + size, y, z+size);
-		glTexCoord2f(1, 1);
-		glVertex3f(x, y, z+size);
-		glTexCoord2f(1, 0);
-		glVertex3f(x, y, z);
-	}
-	
-	public static void createSquare(float x, float y, Color4f color, float size) {
-		glColor4f(color.r, color.g, color.b, color.a);
-		glTexCoord2f(0, 0);
-		glVertex2f(x, y);
-		glTexCoord2f(0, 1);
-		glVertex2f(x, y + size);
-		glTexCoord2f(1, 1);
-		glVertex2f(x + size, y + size);
-		glTexCoord2f(1, 0);
-		glVertex2f(x + size, y);
-	}
-
-	public static void createCenteredSquare(float x, float y, Color4f color, float size) {
-		size = size / 2f;
-		createSquare(x - size, y - size, color, size * 2);
-	}
-
-	public static void createPlane(float x, float y, float z, Color4f color, float size) {
-		// Front
-		glColor4f(color.r, color.g, color.b, color.a);
-		glTexCoord2f(0, 0);
-		glVertex3f(x, y, z);
-		glTexCoord2f(0, 1);
-		glVertex3f(x, y + size, z);
-		glTexCoord2f(1, 1);
-		glVertex3f(x + size, y + size, z);
-		glTexCoord2f(1, 0);
-		glVertex3f(x + size, y, z);
-
-		// Back
-		glTexCoord2f(0, 0);
-		glVertex3f(x + size, y, z);
-		glTexCoord2f(0, 1);
-		glVertex3f(x + size, y + size, z);
-		glTexCoord2f(1, 1);
-		glVertex3f(x, y + size, z);
-		glTexCoord2f(1, 0);
-		glVertex3f(x, y, z);
-	}
-	
-	//DEPRECATED METHODS BELOW
-	
-	//public static Spritesheet currentSpritesheet = Spritesheet.tiles;
-	
-	/*@Deprecated
 	public static void createCube(float x, float y, float z, Color4f color, float[] texCoords, float size) {
-
 		//color = getColor(new Vector3f(x, y, z));
-
 		if (texCoords.length == 2) {
 			// bottom face
 			glColor4f(color.r, color.g, color.b, color.a);
@@ -288,7 +109,7 @@ public class Shape {
 		} else if (texCoords.length > 2) {
 			/*
 			 * bottom - first top - second front - third back - fourth left -
-			 * fifth right - sixth
+			 * fifth right - sixth */
 			 
 			// bottom face (0, 1)
 			glColor4f(color.r, color.g, color.b, color.a);
@@ -358,7 +179,7 @@ public class Shape {
 		}
 	}
 
-	@Deprecated
+	
 	public static void createCross(float x, float y, float z, Color4f color, float[] texCoords, float size) {
 
 		//color = getColor(new Vector3f(x, y, z));
@@ -449,7 +270,7 @@ public class Shape {
 		glColor4f(1, 1, 1, 1);
 	}
 
-	@Deprecated
+	
 	public static void createSquare(float x, float y, Color4f color, float[] texCoords, float size) {
 		glColor4f(color.r, color.g, color.b, color.a);
 		glTexCoord2f(texCoords[0], texCoords[1]);
@@ -462,13 +283,13 @@ public class Shape {
 		glVertex2f(x + size, y);
 	}
 
-	@Deprecated
+	
 	public static void createCenteredSquare(float x, float y, Color4f color, float[] texCoords, float size) {
 		size = size / 2f;
 		createSquare(x - size, y - size, color, texCoords, size * 2);
 	}
 
-	@Deprecated
+	
 	public static void createPlane(float x, float y, float z, Color4f color, float[] texCoords, float size) {
 		// Front
 		glColor4f(color.r, color.g, color.b, color.a);
@@ -492,7 +313,7 @@ public class Shape {
 		glVertex3f(x, y, z);
 	}
 	
-	@Deprecated
+	
 	public static void createFlat(float x, float y, float z, Color4f color, float[] texCoords, float size){
 		// Top
 		glColor4f(color.r, color.g, color.b, color.a);
@@ -514,5 +335,5 @@ public class Shape {
 		glVertex3f(x, y, z+size);
 		glTexCoord2f(texCoords[0] + currentSpritesheet.uniformSize(), texCoords[1]);
 		glVertex3f(x, y, z);
-	}*/
+	}
 }

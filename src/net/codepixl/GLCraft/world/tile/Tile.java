@@ -69,10 +69,6 @@ public class Tile {
 		return this.getName();
 	}
 	
-	public Texture getTexture(){
-		return TextureManager.getTexture("tiles."+this.getName());
-	}
-	
 	public boolean isTransparent(){
 		return false;
 	}

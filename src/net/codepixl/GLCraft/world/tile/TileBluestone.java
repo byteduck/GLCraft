@@ -62,8 +62,8 @@ public class TileBluestone extends Tile{
 	public void customRender(float x, float y, float z, WorldManager w, Chunk c){
 		float col = w.getMetaAtPos((int)x, (int)y, (int)z)/15f;
 		glBegin(GL_QUADS);
-		TextureManager.bindTile(this);
-		Shape.createFlat(x, y+0.01f, z, new Color4f(col,col,col,1f), 1);
+		float[] texCoords = TextureManager.tile(this);
+		Shape.createFlat(x, y+0.01f, z, new Color4f(col,col,col,1f), texCoords, 1);
 		glEnd();
 		if(w.getTileAtPos(x, y, z-1) == Tile.Bluestone.getId() || w.getTileAtPos(x, y-1, z-1) == Tile.Bluestone.getId() || w.getTileAtPos(x, y+1, z-1) == Tile.Bluestone.getId()){
 			if(w.getTileAtPos(x, y-1, z-1) == Tile.Bluestone.getId()){
@@ -126,9 +126,8 @@ public class TileBluestone extends Tile{
 	
 	@Override
 	public void renderHitbox(Vector3f pos){
-		TextureManager.bindTexture("misc.highlight");
 		glBegin(GL_QUADS);
-		Shape.createFlat((int) pos.x - 0.0005f, (int) pos.y + 0.02f, (int) pos.z - 0.0005f, new Color4f(1, 1, 1, 1f), 1.001f);
+		Shape.createFlat((int) pos.x - 0.0005f, (int) pos.y + 0.02f, (int) pos.z - 0.0005f, new Color4f(1, 1, 1, 1f), TextureManager.texture("misc.highlight"), 1.001f);
 		glEnd();
 	}
 

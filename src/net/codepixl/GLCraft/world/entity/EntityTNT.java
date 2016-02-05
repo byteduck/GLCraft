@@ -39,9 +39,8 @@ public class EntityTNT extends EntitySolid{
 			offset = (size - 1f)/2f;
 		}
 		glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_ADD);
-		TextureManager.bindTile(Tile.Tnt);
 		glBegin(GL_QUADS);
-		Shape.createCube(this.getX()-0.5f-offset, this.getY(), this.getZ()-0.5f-offset, new Color4f(col,col,col,1f), size);
+		Shape.createCube(this.getX()-0.5f-offset, this.getY(), this.getZ()-0.5f-offset, new Color4f(col,col,col,1f), TextureManager.tile(Tile.Tnt), size);
 		glEnd();
 		glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
 	}

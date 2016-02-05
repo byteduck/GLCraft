@@ -27,7 +27,6 @@ import org.lwjgl.BufferUtils;
 
 public class Texture {
 	int id,width,height;
-	String name;
 	private Texture(int id, int width, int height){
 		this.id = id;
 		this.width = width;
@@ -43,6 +42,10 @@ public class Texture {
 			e.printStackTrace();
 		}
 		
+		return commonLoad(image);
+	}
+	
+	private static Texture commonLoad(BufferedImage image){
 		int[] pixels = new int[image.getWidth() * image.getHeight()];
 		image.getRGB(0, 0, image.getWidth(), image.getHeight(), pixels, 0 , image.getHeight());
 		ByteBuffer buffer = BufferUtils.createByteBuffer(image.getWidth()*image.getHeight()*4);
@@ -60,12 +63,10 @@ public class Texture {
 		glBindTexture(GL_TEXTURE_2D, id);
 		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, image.getWidth(), image.getHeight(), 0, GL_RGBA, GL_UNSIGNED_BYTE, buffer);
 		Texture t = new Texture(id, image.getWidth(), image.getHeight());
-		t.name = loc;
 		return t;
 	}
 	
 	public void bind(){
-		System.out.println("binding "+this.name);
 		glEnable(GL_TEXTURE_2D);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
@@ -80,5 +81,9 @@ public class Texture {
 	
 	public void delete(){
 		glDeleteTextures(id);
+	}
+
+	public static Texture loadTexture(BufferedImage image) {
+		return commonLoad(image);
 	}
 }

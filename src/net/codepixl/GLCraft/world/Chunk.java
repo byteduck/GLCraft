@@ -30,6 +30,7 @@ import com.sun.org.apache.xerces.internal.dom.TextImpl;
 
 import net.codepixl.GLCraft.render.RenderType;
 import net.codepixl.GLCraft.render.Shape;
+import net.codepixl.GLCraft.render.Spritesheet;
 import net.codepixl.GLCraft.render.TextureManager;
 import net.codepixl.GLCraft.util.Constants;
 import net.codepixl.GLCraft.util.TileAndPos;
@@ -279,6 +280,8 @@ public class Chunk {
 	}
 	
 	public void rebuild(){
+		Spritesheet.atlas.bind();
+		GL11.glEnable(GL11.GL_TEXTURE_2D);
 		if(type != CentralManager.AIRCHUNK){
 			glNewList(vcID, GL_COMPILE);
 			for(int x = 0; x < sizeX; x++){
@@ -294,22 +297,23 @@ public class Chunk {
 								Shape.createCross(pos.x+x, pos.y+y, pos.z+z, Tile.getTile(tiles[x][y][z]).getColor(), Tile.getTile(tiles[x][y][z]).getTexCoords(), 1);
 							}**/
 							Tile t = Tile.getTile(tiles[x][y][z]);
+							float[] texCoords;
 							if(t.hasTexture()){
-								TextureManager.getTexture("tiles."+t.getTextureName()).bind();
+								texCoords = TextureManager.tile(t);
 							}else{
-								TextureManager.unbind();
+								texCoords = new float[]{0,0};
 							}
 							if(t.getRenderType() == RenderType.CUBE){
 								glBegin(GL_QUADS);
-								Shape.createCube(pos.x+x, pos.y+y, pos.z+z, t.getColor(), 1);
+								Shape.createCube(pos.x+x, pos.y+y, pos.z+z, t.getColor(), texCoords, 1);
 								glEnd();
 							}else if(t.getRenderType() == RenderType.CROSS){
 								glBegin(GL_QUADS);
-								Shape.createCross(pos.x+x, pos.y+y, pos.z+z, t.getColor(), 1);
+								Shape.createCross(pos.x+x, pos.y+y, pos.z+z, t.getColor(), texCoords, 1);
 								glEnd();
 							}else if(t.getRenderType() == RenderType.FLAT){
 								glBegin(GL_QUADS);
-								Shape.createFlat(pos.x+x, pos.y+y+0.01f, pos.z+z, t.getColor(), 1);
+								Shape.createFlat(pos.x+x, pos.y+y+0.01f, pos.z+z, t.getColor(), texCoords, 1);
 								glEnd();
 							}else if(t.getRenderType() == RenderType.CUSTOM){
 								t.customRender(pos.x+x, pos.y+y, pos.z+z, worldManager, this);

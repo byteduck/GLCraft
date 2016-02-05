@@ -32,6 +32,7 @@ public class Constants {
 	public static int GAME_STATE = START_SCREEN;
 	public static CentralManager world;
 	public static int worldLength = CHUNKSIZE*viewDistance;
+	public static String GLCRAFTDIR = System.getProperty("user.home")+"/GLCraft/";
 	
 	public static void setDoneGenerating(boolean generating){
 		doneGenerating = generating;

@@ -177,7 +177,7 @@ public class WorldManager {
 	}
 	
 	public void render(){
-		//Spritesheet.tiles.bind();
+		Spritesheet.atlas.bind();
 		getEntityManager().getPlayer().applyTranslations();
 		Vector3f pos = getEntityManager().getPlayer().getPos();
 		//if(getTileAtPos((int)pos.x,(int)pos.y+2,(int)pos.z) == 0 || getTileAtPos((int)pos.x,(int)pos.y+2,(int)pos.z) == -1 || getTileAtPos((int)pos.x,(int)pos.y+2,(int)pos.z) == 9 || getTileAtPos((int)pos.x,(int)pos.y+2,(int)pos.z) == 4){

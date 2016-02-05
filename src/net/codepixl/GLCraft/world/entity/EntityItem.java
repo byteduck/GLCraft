@@ -68,21 +68,21 @@ public class EntityItem extends EntitySolid{
 			}else{
 				GL11.glTranslatef(-size/2, 0f, 0f);
 			}
-			TextureManager.bindItemStack(itemstack);
+			float[] texCoords = TextureManager.itemStack(itemstack);
 			GL11.glBegin(GL11.GL_QUADS);
 			if(itemstack.isTile()){
 				GL11.glRotatef(this.getRot().y, 0f, 1.0f, 0f);
 				Tile tile = itemstack.getTile();
 				if(tile.getRenderType() == RenderType.CUBE){
-					Shape.createCube(0+((float)i*0.05f), yPos+((float)i*0.05f), 0+((float)i*0.05f), tile.getColor(), size);
+					Shape.createCube(0+((float)i*0.05f), yPos+((float)i*0.05f), 0+((float)i*0.05f), tile.getColor(), texCoords, size);
 				}else if(tile.getRenderType() == RenderType.CROSS){
-					Shape.createCross(0+((float)i*0.05f), yPos+((float)i*0.05f), 0+((float)i*0.05f), tile.getColor(), size);
+					Shape.createCross(0+((float)i*0.05f), yPos+((float)i*0.05f), 0+((float)i*0.05f), tile.getColor(), texCoords, size);
 				}else if(tile.getRenderType() == RenderType.FLAT || tile.getRenderType() == RenderType.CUSTOM){
-					Shape.createPlane(0+((float)i*0.05f), yPos+((float)i*0.05f), 0+((float)i*0.05f), tile.getColor(), size);
+					Shape.createPlane(0+((float)i*0.05f), yPos+((float)i*0.05f), 0+((float)i*0.05f), tile.getColor(), texCoords, size);
 				}
 			}else{
 				Item item = itemstack.getItem();
-				Shape.createPlane(0+((float)i*0.05f), yPos+((float)i*0.05f), 0+((float)i*0.05f), item.getColor(), size);
+				Shape.createPlane(0+((float)i*0.05f), yPos+((float)i*0.05f), 0+((float)i*0.05f), item.getColor(), texCoords, size);
 			}
 			GL11.glEnd();
 			GL11.glPopMatrix();
