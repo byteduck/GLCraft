@@ -2,8 +2,6 @@ package net.codepixl.GLCraft.world.tile;
 
 import com.nishu.utils.Color4f;
 
-import net.codepixl.GLCraft.util.Spritesheet;
-
 public class TileLog extends Tile{
 
 	@Override
@@ -28,18 +26,10 @@ public class TileLog extends Tile{
 	public float getHardness(){
 		return 1.5f;
 	}
-
+	
 	@Override
-	public float[] getTexCoords() {
-		// TODO Auto-generated method stub
-		return new float[]{
-				Spritesheet.tiles.uniformSize()*12, Spritesheet.tiles.uniformSize(),
-				Spritesheet.tiles.uniformSize()*12, Spritesheet.tiles.uniformSize(),
-				Spritesheet.tiles.uniformSize()*11, Spritesheet.tiles.uniformSize(),
-				Spritesheet.tiles.uniformSize()*11, 0,
-				Spritesheet.tiles.uniformSize()*11, Spritesheet.tiles.uniformSize(),
-				Spritesheet.tiles.uniformSize()*11, Spritesheet.tiles.uniformSize()
-			};
+	public String getTextureName(){
+		return "log_side";
 	}
 
 	@Override
@@ -52,11 +42,6 @@ public class TileLog extends Tile{
 	public boolean canPassThrough() {
 		// TODO Auto-generated method stub
 		return false;
-	}
-	
-	@Override
-	public float[] getIconCoords(){
-		return new float[]{Spritesheet.tiles.uniformSize()*12, 0f};
 	}
 
 }

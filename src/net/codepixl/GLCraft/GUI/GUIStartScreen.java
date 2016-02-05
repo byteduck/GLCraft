@@ -14,8 +14,10 @@ import net.codepixl.GLCraft.GLCraft;
 import net.codepixl.GLCraft.GUI.Elements.GUIButton;
 import net.codepixl.GLCraft.GUI.Inventory.Elements.GUISlot;
 import net.codepixl.GLCraft.plugin.PluginManagerWindow;
+import net.codepixl.GLCraft.render.TextureManager;
 import net.codepixl.GLCraft.util.Constants;
 import net.codepixl.GLCraft.util.Spritesheet;
+import net.codepixl.GLCraft.world.tile.Tile;
 
 public class GUIStartScreen extends GUIScreen{
 	
@@ -69,15 +71,16 @@ public class GUIStartScreen extends GUIScreen{
 	
 	@Override
 	public void drawBG(){
-		Spritesheet.tiles.bind();
+		Spritesheet.atlas.bind();
+		float[] texCoords = TextureManager.tile(Tile.Stone);
 		glBegin(GL_QUADS);
-			glTexCoord2f(Spritesheet.tiles.uniformSize()*2, Spritesheet.tiles.uniformSize());
+			glTexCoord2f(texCoords[0],texCoords[1]);
 			glVertex2f(0,0);
-			glTexCoord2f(Spritesheet.tiles.uniformSize()*3, Spritesheet.tiles.uniformSize());
+			glTexCoord2f(texCoords[0]+Spritesheet.atlas.uniformSize(),texCoords[1]);
 			glVertex2f(0,Constants.HEIGHT);
-			glTexCoord2f(Spritesheet.tiles.uniformSize()*3, 0);
+			glTexCoord2f(texCoords[0]+Spritesheet.atlas.uniformSize(),texCoords[1]+Spritesheet.atlas.uniformSize());
 			glVertex2f(Constants.WIDTH,Constants.HEIGHT);
-			glTexCoord2f(Spritesheet.tiles.uniformSize()*2, 0);
+			glTexCoord2f(texCoords[0],texCoords[1]+Spritesheet.atlas.uniformSize());
 			glVertex2f(Constants.WIDTH,0);
 		glEnd();
 	}

@@ -2,14 +2,12 @@ package net.codepixl.GLCraft.world.tile;
 
 import com.nishu.utils.Color4f;
 
-import net.codepixl.GLCraft.util.Spritesheet;
-
-public class TileLight extends Tile{
+public class TileLamp extends Tile{
 
 	@Override
 	public String getName() {
 		// TODO Auto-generated method stub
-		return "Light";
+		return "Lamp";
 	}
 
 	@Override
@@ -27,12 +25,6 @@ public class TileLight extends Tile{
 	@Override
 	public float getHardness(){
 		return 1.5f;
-	}
-
-	@Override
-	public float[] getTexCoords() {
-		// TODO Auto-generated method stub
-		return new float[]{Spritesheet.tiles.uniformSize(),Spritesheet.tiles.uniformSize()};
 	}
 
 	@Override

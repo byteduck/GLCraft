@@ -2,8 +2,6 @@ package net.codepixl.GLCraft.world.tile;
 
 import com.nishu.utils.Color4f;
 
-import net.codepixl.GLCraft.util.Spritesheet;
-
 public class TileIron extends Tile{
 
 	@Override
@@ -17,6 +15,11 @@ public class TileIron extends Tile{
 		// TODO Auto-generated method stub
 		return 6;
 	}
+	
+	@Override
+	public String getTextureName(){
+		return "iron";
+	}
 
 	@Override
 	public Color4f getColor() {
@@ -27,12 +30,6 @@ public class TileIron extends Tile{
 	@Override
 	public float getHardness(){
 		return 5.5f;
-	}
-
-	@Override
-	public float[] getTexCoords() {
-		// TODO Auto-generated method stub
-		return new float[]{Spritesheet.tiles.uniformSize()*9,0};
 	}
 
 	@Override

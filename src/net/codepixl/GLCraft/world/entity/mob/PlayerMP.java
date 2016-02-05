@@ -19,16 +19,16 @@ import net.codepixl.GLCraft.world.WorldManager;
 public class PlayerMP extends Mob{
 	
 	private float[] headCoords = {
-		0, Spritesheet.tiles.uniformSize()*2,
-		0, Spritesheet.tiles.uniformSize()*2,
-		0, Spritesheet.tiles.uniformSize()*2,
-		Spritesheet.tiles.uniformSize()*15, 0,
-		0, Spritesheet.tiles.uniformSize()*2,
-		0, Spritesheet.tiles.uniformSize()*2
+		0, Spritesheet.atlas.uniformSize()*2,
+		0, Spritesheet.atlas.uniformSize()*2,
+		0, Spritesheet.atlas.uniformSize()*2,
+		Spritesheet.atlas.uniformSize()*15, 0,
+		0, Spritesheet.atlas.uniformSize()*2,
+		0, Spritesheet.atlas.uniformSize()*2
 	};
 	
 	private float[] bottomCoords = {
-			0, Spritesheet.tiles.uniformSize()
+			0, Spritesheet.atlas.uniformSize()
 		};
 	
 	public PlayerMP(Vector3f pos, WorldManager w) {

@@ -15,6 +15,6 @@ public class ItemSeeds extends Item{
 	
 	@Override
 	public float[] getTexCoords(){
-		return new float[]{Spritesheet.tiles.uniformSize()*12,Spritesheet.tiles.uniformSize()};
+		return new float[]{Spritesheet.atlas.uniformSize()*12,Spritesheet.atlas.uniformSize()};
 	}
 }

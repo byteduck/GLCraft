@@ -15,11 +15,10 @@ public class TileAir extends Tile{
 		// TODO Auto-generated method stub
 		return Color4f.WHITE;
 	}
-
+	
 	@Override
-	public float[] getTexCoords() {
-		// TODO Auto-generated method stub
-		return new float[]{-1,-1};
+	public boolean hasTexture(){
+		return false;
 	}
 
 	@Override

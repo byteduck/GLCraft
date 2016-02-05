@@ -432,7 +432,7 @@ public class Chunk {
 			float ax = x+pos.x;
 			float ay = y+pos.y;
 			float az = z+pos.z;
-			if(tiles[x][y][z] == Tile.Light.getId()){
+			if(tiles[x][y][z] == Tile.Lamp.getId()){
 				this.light[x][y][z] = 0;
 			}
 			tiles[x][y][z] = tile;

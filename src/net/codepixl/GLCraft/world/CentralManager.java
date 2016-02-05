@@ -77,6 +77,7 @@ import net.codepixl.GLCraft.GUI.Elements.GUIButton;
 import net.codepixl.GLCraft.GUI.Inventory.GUICrafting;
 import net.codepixl.GLCraft.item.crafting.CraftingManager;
 import net.codepixl.GLCraft.render.Shape;
+import net.codepixl.GLCraft.render.TextureManager;
 import net.codepixl.GLCraft.sound.SoundManager;
 import net.codepixl.GLCraft.util.Constants;
 import net.codepixl.GLCraft.util.Spritesheet;
@@ -112,7 +113,6 @@ public class CentralManager extends Screen{
 	@Override
 	public void init() {
 		Constants.setWorld(this);
-		Spritesheet.tiles.bind();
 		GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
 		try {
 			ge.registerFont(Font.createFont(Font.TRUETYPE_FONT, getClass().getResourceAsStream("/font/GLCraft.ttf")));
@@ -120,12 +120,14 @@ public class CentralManager extends Screen{
 			e.printStackTrace();
 		}
 		initGUIManager();
+		TextureManager.initTextures();
+		TextureManager.generateAtlas();
 		CraftingManager.initRecipes();
 		worldManager = new WorldManager(this);
 		soundManager = new SoundManager();
 		SoundManager.setMainManager(soundManager);
 	}
-	
+
 	private void initGUIManager(){
 		guiManager = new GUIManager();
 		GUIManager.setMainManager(guiManager);
@@ -251,7 +253,8 @@ public class CentralManager extends Screen{
 		Shape.createPlane(0, 0, 0, new Color4f(1f,1f,1f,0.5f), new float[]{0f,0f}, 2000f);
 		Shape.createPlane(-2000f, 0, 0, new Color4f(1f,1f,1f,0.5f), new float[]{0f,0f}, 2000f);
 		GL11.glEnd();
-		Shape.currentSpritesheet = Spritesheet.tiles;
+		Spritesheet.atlas.bind();
+		Shape.currentSpritesheet = Spritesheet.atlas;
 	}
 	
 	private void renderInventory() {
@@ -262,7 +265,7 @@ public class CentralManager extends Screen{
 		float SPACING = (float)Constants.WIDTH/36f;
 		float HEARTSPACING = (float)Constants.WIDTH/72f;
 		EntityPlayer p = worldManager.getEntityManager().getPlayer();
-		Spritesheet.tiles.bind();
+		Spritesheet.atlas.bind();
 		if(!p.tileAtEye().isTransparent()){
 			glPushMatrix();
 			glBegin(GL_QUADS);
@@ -271,12 +274,12 @@ public class CentralManager extends Screen{
 			glPopMatrix();
 		}
 		for(float i = 0; i < 9f; i++){
-			Spritesheet.tiles.bind();
+			Spritesheet.atlas.bind();
 			glBegin(GL_QUADS);
 			if(i == p.getSelectedSlot()){
-				Shape.createCenteredSquare((float)Constants.WIDTH/9f+i*SIZE+i*SPACING+SIZE/2f,Constants.HEIGHT-(SIZE/2f), new Color4f(1,1,1,1), new float[]{Spritesheet.tiles.uniformSize()*3,Spritesheet.tiles.uniformSize()}, (float)Constants.WIDTH/18f);
+				Shape.createCenteredSquare((float)Constants.WIDTH/9f+i*SIZE+i*SPACING+SIZE/2f,Constants.HEIGHT-(SIZE/2f), new Color4f(1,1,1,1), TextureManager.texture("gui.guislot"), (float)Constants.WIDTH/18f);
 			}else{
-				Shape.createCenteredSquare((float)Constants.WIDTH/9f+i*SIZE+i*SPACING+SIZE/2f,Constants.HEIGHT-(SIZE/2f), new Color4f(1,1,1,1), new float[]{Spritesheet.tiles.uniformSize()*2,Spritesheet.tiles.uniformSize()}, (float)Constants.WIDTH/18f);
+				Shape.createCenteredSquare((float)Constants.WIDTH/9f+i*SIZE+i*SPACING+SIZE/2f,Constants.HEIGHT-(SIZE/2f), new Color4f(0,0,0,1), TextureManager.texture("gui.guislot"), (float)Constants.WIDTH/18f);
 			}
 			glEnd();
 			if(!p.getInventory((int)i).isNull()){

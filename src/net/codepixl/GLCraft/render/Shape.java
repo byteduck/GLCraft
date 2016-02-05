@@ -13,10 +13,10 @@ import net.codepixl.GLCraft.util.Spritesheet;;
 
 public class Shape {
 	
-	public static Spritesheet currentSpritesheet = Spritesheet.tiles;
+	public static Spritesheet currentSpritesheet = Spritesheet.atlas;
 	
 	public static void createCube(float x, float y, float z, Color4f color, float[] texCoords, float size) {
-
+		
 		//color = getColor(new Vector3f(x, y, z));
 
 		if (texCoords.length == 2) {

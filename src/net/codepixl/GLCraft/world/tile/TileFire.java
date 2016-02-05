@@ -1,16 +1,10 @@
 package net.codepixl.GLCraft.world.tile;
 
-import java.util.Random;
-
 import com.nishu.utils.Color4f;
 
-import net.codepixl.GLCraft.item.Item;
-import net.codepixl.GLCraft.item.ItemStack;
 import net.codepixl.GLCraft.render.RenderType;
-import net.codepixl.GLCraft.util.Spritesheet;
 import net.codepixl.GLCraft.world.WorldManager;
 import net.codepixl.GLCraft.world.entity.Entity;
-import net.codepixl.GLCraft.world.entity.EntityItem;
 import net.codepixl.GLCraft.world.entity.mob.Mob;
 
 public class TileFire extends Tile{
@@ -41,14 +35,6 @@ public class TileFire extends Tile{
 	@Override
 	public RenderType getRenderType(){
 		return RenderType.CROSS;
-	}
-
-	@Override
-	public float[] getTexCoords() {
-		// TODO Auto-generated method stub
-		return new float[]{
-			Spritesheet.tiles.uniformSize(),Spritesheet.tiles.uniformSize()*2
-		};
 	}
 
 	@Override

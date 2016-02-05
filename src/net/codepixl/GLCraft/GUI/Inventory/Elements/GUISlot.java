@@ -18,6 +18,7 @@ import net.codepixl.GLCraft.GUI.Elements.GUIElement;
 import net.codepixl.GLCraft.item.Item;
 import net.codepixl.GLCraft.item.ItemStack;
 import net.codepixl.GLCraft.render.Shape;
+import net.codepixl.GLCraft.render.TextureManager;
 import net.codepixl.GLCraft.util.Constants;
 import net.codepixl.GLCraft.util.Spritesheet;
 import net.codepixl.GLCraft.world.tile.Tile;
@@ -43,9 +44,9 @@ public class GUISlot implements GUIElement{
 		}else{
 			color = new Color4f(0.7f,0.7f,0.7f,1);
 		}
-		Spritesheet.tiles.bind();
+		Spritesheet.atlas.bind();
 		GL11.glBegin(GL11.GL_QUADS);
-		Shape.createCenteredSquare(x,y, color, new float[]{Spritesheet.tiles.uniformSize()*3,Spritesheet.tiles.uniformSize()}, size);
+		Shape.createCenteredSquare(x,y, color, TextureManager.texture("gui.guislot"), size);
 		GL11.glEnd();
 		if(!itemstack.isNull()){
 			glPushMatrix();

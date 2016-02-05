@@ -29,15 +29,15 @@ public class GUIServer extends GUIScreen{
 	
 	@Override
 	public void drawBG(){
-		Spritesheet.tiles.bind();
+		Spritesheet.atlas.bind();
 		glBegin(GL_QUADS);
-			glTexCoord2f(Spritesheet.tiles.uniformSize()*2, Spritesheet.tiles.uniformSize());
+			glTexCoord2f(Spritesheet.atlas.uniformSize()*2, Spritesheet.atlas.uniformSize());
 			glVertex2f(0,0);
-			glTexCoord2f(Spritesheet.tiles.uniformSize()*3, Spritesheet.tiles.uniformSize());
+			glTexCoord2f(Spritesheet.atlas.uniformSize()*3, Spritesheet.atlas.uniformSize());
 			glVertex2f(0,Constants.HEIGHT);
-			glTexCoord2f(Spritesheet.tiles.uniformSize()*3, 0);
+			glTexCoord2f(Spritesheet.atlas.uniformSize()*3, 0);
 			glVertex2f(Constants.WIDTH,Constants.HEIGHT);
-			glTexCoord2f(Spritesheet.tiles.uniformSize()*2, 0);
+			glTexCoord2f(Spritesheet.atlas.uniformSize()*2, 0);
 			glVertex2f(Constants.WIDTH,0);
 		glEnd();
 	}
