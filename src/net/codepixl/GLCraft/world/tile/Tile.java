@@ -6,7 +6,6 @@ import org.lwjgl.util.vector.Vector3f;
 
 import com.nishu.utils.Color4f;
 
-import net.codepixl.GLCraft.item.ItemStack;
 import net.codepixl.GLCraft.render.RenderType;
 import net.codepixl.GLCraft.render.TextureManager;
 import net.codepixl.GLCraft.util.AABB;
@@ -14,6 +13,7 @@ import net.codepixl.GLCraft.world.Chunk;
 import net.codepixl.GLCraft.world.WorldManager;
 import net.codepixl.GLCraft.world.entity.Entity;
 import net.codepixl.GLCraft.world.entity.EntityItem;
+import net.codepixl.GLCraft.world.item.ItemStack;
 
 public class Tile {
 
@@ -86,6 +86,19 @@ public class Tile {
 	
 	public void randomTick(int x, int y, int z, WorldManager worldManager){
 		
+	}
+	
+	/**
+	 * 0: Top <p>
+	 * 1: Bottom <p>
+	 * 2-5: Sides 1-4 <p>
+	 */
+	public String[] getMultiTextureNames(){
+		return new String[]{};
+	}
+	
+	public boolean hasMultipleTextures(){
+		return false;
 	}
 	
 	public void tick(int x, int y, int z, WorldManager worldManager){}

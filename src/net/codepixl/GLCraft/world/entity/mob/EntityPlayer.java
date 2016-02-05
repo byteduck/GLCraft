@@ -36,8 +36,6 @@ import com.nishu.utils.Color4f;
 import com.nishu.utils.Time;
 
 import net.codepixl.GLCraft.GUI.GUIManager;
-import net.codepixl.GLCraft.item.Item;
-import net.codepixl.GLCraft.item.ItemStack;
 import net.codepixl.GLCraft.render.RenderType;
 import net.codepixl.GLCraft.render.Shape;
 import net.codepixl.GLCraft.render.TextureManager;
@@ -52,6 +50,8 @@ import net.codepixl.GLCraft.world.WorldManager;
 import net.codepixl.GLCraft.world.entity.Entity;
 import net.codepixl.GLCraft.world.entity.EntityItem;
 import net.codepixl.GLCraft.world.entity.NBTUtil;
+import net.codepixl.GLCraft.world.item.Item;
+import net.codepixl.GLCraft.world.item.ItemStack;
 import net.codepixl.GLCraft.world.tile.Tile;
 
 public class EntityPlayer extends Mob {

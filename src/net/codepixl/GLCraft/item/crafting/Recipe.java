@@ -1,6 +1,6 @@
 package net.codepixl.GLCraft.item.crafting;
 
-import net.codepixl.GLCraft.item.ItemStack;
+import net.codepixl.GLCraft.world.item.ItemStack;
 
 public class Recipe {
 	ItemStack a,b,c,d,result;

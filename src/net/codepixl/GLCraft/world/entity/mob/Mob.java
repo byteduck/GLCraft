@@ -8,11 +8,11 @@ import com.evilco.mc.nbt.tag.TagCompound;
 import com.evilco.mc.nbt.tag.TagFloat;
 import com.nishu.utils.Time;
 
-import net.codepixl.GLCraft.item.ItemStack;
 import net.codepixl.GLCraft.util.GameObj;
 import net.codepixl.GLCraft.world.WorldManager;
 import net.codepixl.GLCraft.world.entity.EntityItem;
 import net.codepixl.GLCraft.world.entity.EntitySolid;
+import net.codepixl.GLCraft.world.item.ItemStack;
 import net.codepixl.GLCraft.world.tile.Tile;
 
 public class Mob extends EntitySolid implements GameObj{

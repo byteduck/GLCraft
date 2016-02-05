@@ -3,7 +3,7 @@ package net.codepixl.GLCraft.item.crafting;
 import java.util.ArrayList;
 import java.util.Iterator;
 
-import net.codepixl.GLCraft.item.ItemStack;
+import net.codepixl.GLCraft.world.item.ItemStack;
 import net.codepixl.GLCraft.world.tile.Tile;
 
 public class CraftingManager {

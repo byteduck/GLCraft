@@ -1,4 +1,4 @@
-package net.codepixl.GLCraft.item;
+package net.codepixl.GLCraft.world.item;
 
 import net.codepixl.GLCraft.util.Spritesheet;
 

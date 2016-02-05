@@ -5,11 +5,11 @@ import org.lwjgl.input.Mouse;
 
 import net.codepixl.GLCraft.GUI.GUIScreen;
 import net.codepixl.GLCraft.GUI.Inventory.Elements.GUISlot;
-import net.codepixl.GLCraft.item.ItemStack;
 import net.codepixl.GLCraft.item.crafting.CraftingManager;
 import net.codepixl.GLCraft.item.crafting.Recipe;
 import net.codepixl.GLCraft.util.Constants;
 import net.codepixl.GLCraft.world.entity.mob.EntityPlayer;
+import net.codepixl.GLCraft.world.item.ItemStack;
 
 public class GUICrafting extends GUIScreen{
 	private GUISlot slot1,slot2,slot3,slot4,result;

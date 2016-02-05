@@ -11,13 +11,13 @@ import com.evilco.mc.nbt.tag.TagByte;
 import com.evilco.mc.nbt.tag.TagCompound;
 import com.nishu.utils.Time;
 
-import net.codepixl.GLCraft.item.Item;
-import net.codepixl.GLCraft.item.ItemStack;
 import net.codepixl.GLCraft.render.RenderType;
 import net.codepixl.GLCraft.render.Shape;
 import net.codepixl.GLCraft.util.AABB;
 import net.codepixl.GLCraft.util.MathUtils;
 import net.codepixl.GLCraft.world.WorldManager;
+import net.codepixl.GLCraft.world.item.Item;
+import net.codepixl.GLCraft.world.item.ItemStack;
 import net.codepixl.GLCraft.world.tile.Tile;
 
 public class EntityItem extends EntitySolid{

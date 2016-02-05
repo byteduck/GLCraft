@@ -10,11 +10,11 @@ import java.util.Map;
 
 import javax.imageio.ImageIO;
 
-import net.codepixl.GLCraft.item.Item;
-import net.codepixl.GLCraft.item.ItemStack;
 import net.codepixl.GLCraft.util.Constants;
 import net.codepixl.GLCraft.util.Spritesheet;
 import net.codepixl.GLCraft.util.Texture;
+import net.codepixl.GLCraft.world.item.Item;
+import net.codepixl.GLCraft.world.item.ItemStack;
 import net.codepixl.GLCraft.world.tile.Tile;
 
 public class TextureManager {

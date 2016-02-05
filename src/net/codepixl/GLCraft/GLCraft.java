@@ -38,13 +38,13 @@ import com.nishu.utils.GameLoop;
 import com.nishu.utils.Screen;
 import com.nishu.utils.Window;
 
-import net.codepixl.GLCraft.item.Item;
 import net.codepixl.GLCraft.plugin.Plugin;
 import net.codepixl.GLCraft.plugin.PluginManager;
 import net.codepixl.GLCraft.render.TextureManager;
 import net.codepixl.GLCraft.sound.SoundManager;
 import net.codepixl.GLCraft.util.Constants;
 import net.codepixl.GLCraft.world.CentralManager;
+import net.codepixl.GLCraft.world.item.Item;
 import net.codepixl.GLCraft.world.tile.Tile;
 
 public class GLCraft extends Screen{
