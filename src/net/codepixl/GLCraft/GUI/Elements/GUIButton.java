@@ -122,7 +122,6 @@ public class GUIButton implements GUIElement{
 					try {
 						this.action.call();
 					} catch (Exception e) {
-						e.printStackTrace();
 						System.err.println("A button with text "+this.text+" tried to call a callable but failed.");
 					}
 				}

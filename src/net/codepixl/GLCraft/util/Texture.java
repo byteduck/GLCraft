@@ -1,4 +1,4 @@
-package net.codepixl.GLCraft.render;
+package net.codepixl.GLCraft.util;
 
 import static org.lwjgl.opengl.GL11.GL_NEAREST;
 import static org.lwjgl.opengl.GL11.GL_RGBA;
@@ -42,10 +42,6 @@ public class Texture {
 			e.printStackTrace();
 		}
 		
-		return commonLoad(image);
-	}
-	
-	private static Texture commonLoad(BufferedImage image){
 		int[] pixels = new int[image.getWidth() * image.getHeight()];
 		image.getRGB(0, 0, image.getWidth(), image.getHeight(), pixels, 0 , image.getHeight());
 		ByteBuffer buffer = BufferUtils.createByteBuffer(image.getWidth()*image.getHeight()*4);
@@ -62,8 +58,7 @@ public class Texture {
 		int id = glGenTextures();
 		glBindTexture(GL_TEXTURE_2D, id);
 		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, image.getWidth(), image.getHeight(), 0, GL_RGBA, GL_UNSIGNED_BYTE, buffer);
-		Texture t = new Texture(id, image.getWidth(), image.getHeight());
-		return t;
+		return new Texture(id, image.getWidth(), image.getHeight());
 	}
 	
 	public void bind(){
@@ -75,15 +70,11 @@ public class Texture {
 		glBindTexture(GL_TEXTURE_2D, id);
 	}
 	
-	public static void unbind(){
+	public void unbind(){
 		glBindTexture(GL_TEXTURE_2D, 0);
 	}
 	
 	public void delete(){
 		glDeleteTextures(id);
-	}
-
-	public static Texture loadTexture(BufferedImage image) {
-		return commonLoad(image);
 	}
 }

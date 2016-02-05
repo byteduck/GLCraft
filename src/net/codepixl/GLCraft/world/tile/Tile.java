@@ -8,8 +8,6 @@ import com.nishu.utils.Color4f;
 
 import net.codepixl.GLCraft.item.ItemStack;
 import net.codepixl.GLCraft.render.RenderType;
-import net.codepixl.GLCraft.render.Texture;
-import net.codepixl.GLCraft.render.TextureManager;
 import net.codepixl.GLCraft.util.AABB;
 import net.codepixl.GLCraft.world.Chunk;
 import net.codepixl.GLCraft.world.WorldManager;
@@ -33,7 +31,7 @@ public class Tile {
 	public static Tile Log = new TileLog();
 	public static Tile Leaf = new TileLeaf();
 	public static Tile TallGrass = new TileTallGrass();
-	public static Tile Lamp = new TileLamp();
+	public static Tile Light = new TileLight();
 	public static Tile Fire = new TileFire();
 	public static Tile Bluestone = new TileBluestone();
 	public static Tile Tnt = new TileTnt();
@@ -65,8 +63,12 @@ public class Tile {
 		return new Color4f(1,1,1,1);
 	}
 	
-	public String getTextureName(){
-		return this.getName();
+	public float[] getTexCoords(){
+		return new float[]{0,0};
+	}
+	
+	public float[] getIconCoords(){
+		return this.getTexCoords();
 	}
 	
 	public boolean isTransparent(){
@@ -124,9 +126,6 @@ public class Tile {
 	public Tile(){
 		if(this.getClass() != Tile.class){
 			registerTile();
-			if(this.hasTexture()){
-				TextureManager.addTexture("tiles."+this.getTextureName(), TextureManager.TILES+this.getTextureName()+".png");
-			}
 		}
 	}
 
@@ -139,13 +138,5 @@ public class Tile {
 
 	public void renderHitbox(Vector3f pos) {
 		
-	}
-
-	public boolean hasTexture() {
-		return true;
-	}
-
-	public String getIconName() {
-		return this.getTextureName();
 	}
 }

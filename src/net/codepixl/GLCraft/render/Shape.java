@@ -6,40 +6,19 @@ import static org.lwjgl.opengl.GL11.glVertex2f;
 import static org.lwjgl.opengl.GL11.glVertex3f;
 
 import org.lwjgl.util.vector.Vector3f;
-import org.newdawn.slick.opengl.TextureImpl;
 
-import com.nishu.utils.Color4f;;
+import com.nishu.utils.Color4f;
+
+import net.codepixl.GLCraft.util.Spritesheet;;
 
 public class Shape {
 	
-	private static Color4f getColor(Vector3f pos) {
-		/**
-		 * Constants.world.getWorldManager().s.addCurrentTile(1); int progress =
-		 * (int) (Constants.world.getWorldManager().s.currentTilePercentage() *
-		 * 0.33 + 66);
-		 * Constants.world.getWorldManager().s.getSplash().setProgress(progress,
-		 * "Lighting chunks "+progress+"%"); float minDist = 7; Color4f color =
-		 * new Color4f(0.1f,0.1f,0.1f,1.0f); for(int i = 0; i < lights.size();
-		 * i++){ Vector3f lPos = lights.get(i); float dist =
-		 * MathUtils.distance(lPos, pos); if(dist <= 7 && dist < minDist || dist
-		 * == 0){ float pdist = (7-dist)/7; minDist = dist; color =
-		 * MathUtils.mult(new Color4f(1.0f,1.0f,1.0f,1.0f), new
-		 * Color4f(pdist,pdist,pdist,1.0f)); } } return color;
-		 **/
-		/**
-		 * float light =
-		 * (float)Constants.world.getWorldManager().getLight((int)pos.x,
-		 * (int)pos.y, (int)pos.z, false)/(float)7; if(light < 0.2f) light =
-		 * 0.2f; return new Color4f(light,light,light,1.0f);
-		 **/
-		return new Color4f(1f, 1f, 1f, 1f);
-	}
-	
-	public static Spritesheet currentSpritesheet = Spritesheet.atlas;
-	
+	public static Spritesheet currentSpritesheet = Spritesheet.tiles;
 	
 	public static void createCube(float x, float y, float z, Color4f color, float[] texCoords, float size) {
+
 		//color = getColor(new Vector3f(x, y, z));
+
 		if (texCoords.length == 2) {
 			// bottom face
 			glColor4f(color.r, color.g, color.b, color.a);
@@ -109,8 +88,8 @@ public class Shape {
 		} else if (texCoords.length > 2) {
 			/*
 			 * bottom - first top - second front - third back - fourth left -
-			 * fifth right - sixth */
-			 
+			 * fifth right - sixth
+			 */
 			// bottom face (0, 1)
 			glColor4f(color.r, color.g, color.b, color.a);
 			glTexCoord2f(texCoords[0], texCoords[1]);
@@ -179,7 +158,6 @@ public class Shape {
 		}
 	}
 
-	
 	public static void createCross(float x, float y, float z, Color4f color, float[] texCoords, float size) {
 
 		//color = getColor(new Vector3f(x, y, z));
@@ -270,7 +248,29 @@ public class Shape {
 		glColor4f(1, 1, 1, 1);
 	}
 
-	
+	private static Color4f getColor(Vector3f pos) {
+		/**
+		 * Constants.world.getWorldManager().s.addCurrentTile(1); int progress =
+		 * (int) (Constants.world.getWorldManager().s.currentTilePercentage() *
+		 * 0.33 + 66);
+		 * Constants.world.getWorldManager().s.getSplash().setProgress(progress,
+		 * "Lighting chunks "+progress+"%"); float minDist = 7; Color4f color =
+		 * new Color4f(0.1f,0.1f,0.1f,1.0f); for(int i = 0; i < lights.size();
+		 * i++){ Vector3f lPos = lights.get(i); float dist =
+		 * MathUtils.distance(lPos, pos); if(dist <= 7 && dist < minDist || dist
+		 * == 0){ float pdist = (7-dist)/7; minDist = dist; color =
+		 * MathUtils.mult(new Color4f(1.0f,1.0f,1.0f,1.0f), new
+		 * Color4f(pdist,pdist,pdist,1.0f)); } } return color;
+		 **/
+		/**
+		 * float light =
+		 * (float)Constants.world.getWorldManager().getLight((int)pos.x,
+		 * (int)pos.y, (int)pos.z, false)/(float)7; if(light < 0.2f) light =
+		 * 0.2f; return new Color4f(light,light,light,1.0f);
+		 **/
+		return new Color4f(1f, 1f, 1f, 1f);
+	}
+
 	public static void createSquare(float x, float y, Color4f color, float[] texCoords, float size) {
 		glColor4f(color.r, color.g, color.b, color.a);
 		glTexCoord2f(texCoords[0], texCoords[1]);
@@ -283,13 +283,11 @@ public class Shape {
 		glVertex2f(x + size, y);
 	}
 
-	
 	public static void createCenteredSquare(float x, float y, Color4f color, float[] texCoords, float size) {
 		size = size / 2f;
 		createSquare(x - size, y - size, color, texCoords, size * 2);
 	}
 
-	
 	public static void createPlane(float x, float y, float z, Color4f color, float[] texCoords, float size) {
 		// Front
 		glColor4f(color.r, color.g, color.b, color.a);
@@ -312,7 +310,6 @@ public class Shape {
 		glTexCoord2f(texCoords[0] + currentSpritesheet.uniformSize(), texCoords[1]);
 		glVertex3f(x, y, z);
 	}
-	
 	
 	public static void createFlat(float x, float y, float z, Color4f color, float[] texCoords, float size){
 		// Top

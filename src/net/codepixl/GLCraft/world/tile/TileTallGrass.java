@@ -7,7 +7,7 @@ import com.nishu.utils.Color4f;
 import net.codepixl.GLCraft.item.Item;
 import net.codepixl.GLCraft.item.ItemStack;
 import net.codepixl.GLCraft.render.RenderType;
-import net.codepixl.GLCraft.render.Spritesheet;
+import net.codepixl.GLCraft.util.Spritesheet;
 import net.codepixl.GLCraft.world.WorldManager;
 import net.codepixl.GLCraft.world.entity.EntityItem;
 
@@ -17,11 +17,6 @@ public class TileTallGrass extends Tile {
 	public String getName() {
 		// TODO Auto-generated method stub
 		return "Tall Grass";
-	}
-	
-	@Override
-	public String getTextureName(){
-		return "tall_grass";
 	}
 
 	@Override
@@ -53,6 +48,12 @@ public class TileTallGrass extends Tile {
 	@Override
 	public float getHardness(){
 		return 0f;
+	}
+
+	@Override
+	public float[] getTexCoords() {
+		// TODO Auto-generated method stub
+		return new float[]{Spritesheet.tiles.uniformSize()*14,0};
 	}
 	
 	@Override

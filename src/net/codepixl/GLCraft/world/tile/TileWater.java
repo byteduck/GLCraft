@@ -2,7 +2,7 @@ package net.codepixl.GLCraft.world.tile;
 
 import com.nishu.utils.Color4f;
 
-import net.codepixl.GLCraft.render.Spritesheet;
+import net.codepixl.GLCraft.util.Spritesheet;
 
 public class TileWater extends Tile{
 
@@ -22,6 +22,12 @@ public class TileWater extends Tile{
 	public Color4f getColor() {
 		// TODO Auto-generated method stub
 		return Color4f.WHITE;
+	}
+
+	@Override
+	public float[] getTexCoords() {
+		// TODO Auto-generated method stub
+		return new float[]{Spritesheet.tiles.uniformSize()*5,0};
 	}
 
 	@Override

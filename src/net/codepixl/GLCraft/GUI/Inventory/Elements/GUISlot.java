@@ -18,9 +18,8 @@ import net.codepixl.GLCraft.GUI.Elements.GUIElement;
 import net.codepixl.GLCraft.item.Item;
 import net.codepixl.GLCraft.item.ItemStack;
 import net.codepixl.GLCraft.render.Shape;
-import net.codepixl.GLCraft.render.Spritesheet;
-import net.codepixl.GLCraft.render.TextureManager;
 import net.codepixl.GLCraft.util.Constants;
+import net.codepixl.GLCraft.util.Spritesheet;
 import net.codepixl.GLCraft.world.tile.Tile;
 
 public class GUISlot implements GUIElement{
@@ -44,21 +43,21 @@ public class GUISlot implements GUIElement{
 		}else{
 			color = new Color4f(0.7f,0.7f,0.7f,1);
 		}
-		Spritesheet.atlas.bind();
+		Spritesheet.tiles.bind();
 		GL11.glBegin(GL11.GL_QUADS);
-		Shape.createCenteredSquare(x,y, color, TextureManager.texture("gui.guislot"), size);
+		Shape.createCenteredSquare(x,y, color, new float[]{Spritesheet.tiles.uniformSize()*3,Spritesheet.tiles.uniformSize()}, size);
 		GL11.glEnd();
 		if(!itemstack.isNull()){
 			glPushMatrix();
 			glTranslatef(x,y,0);
 			glScalef(0.7f,0.7f,0.7f);
-			glBegin(GL_QUADS);
-				if(itemstack.isTile()){
-					Shape.createCenteredSquare(0,0, new Color4f(1f,1f,1f,1f), TextureManager.itemStackIcon(itemstack), (float)Constants.WIDTH/18f);
-				}else{
-					Shape.createCenteredSquare(0,0, new Color4f(1f,1f,1f,1f), TextureManager.itemStackIcon(itemstack), (float)Constants.WIDTH/18f);
-				}
-			glEnd();
+				glBegin(GL_QUADS);
+					if(itemstack.isTile()){
+						Shape.createCenteredSquare(0,0, new Color4f(1f,1f,1f,1f), itemstack.getTile().getIconCoords(), (float)Constants.WIDTH/18f);
+					}else{
+						Shape.createCenteredSquare(0,0, new Color4f(1f,1f,1f,1f), itemstack.getItem().getTexCoords(), (float)Constants.WIDTH/18f);
+					}
+				glEnd();
 			glPopMatrix();
 			Constants.FONT.drawString(x, y, Integer.toString(itemstack.count));
 			TextureImpl.unbind();

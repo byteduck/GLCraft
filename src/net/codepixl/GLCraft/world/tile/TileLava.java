@@ -2,8 +2,8 @@ package net.codepixl.GLCraft.world.tile;
 
 import com.nishu.utils.Color4f;
 
-import net.codepixl.GLCraft.render.Spritesheet;
 import net.codepixl.GLCraft.util.Constants;
+import net.codepixl.GLCraft.util.Spritesheet;
 import net.codepixl.GLCraft.world.WorldManager;
 import net.codepixl.GLCraft.world.entity.Entity;
 import net.codepixl.GLCraft.world.entity.mob.Mob;
@@ -26,6 +26,12 @@ public class TileLava extends Tile{
 	public Color4f getColor() {
 		// TODO Auto-generated method stub
 		return Color4f.WHITE;
+	}
+
+	@Override
+	public float[] getTexCoords() {
+		// TODO Auto-generated method stub
+		return new float[]{Spritesheet.tiles.uniformSize()*6,Spritesheet.tiles.uniformSize()*2};
 	}
 
 	@Override

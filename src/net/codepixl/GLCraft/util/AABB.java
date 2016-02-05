@@ -57,11 +57,11 @@ public class AABB {
 		return new Vector3f(r[0] * 2, r[1] * 2, r[2] * 2);
 	}
 
-	/*public void render() {
+	public void render() {
 		glPushMatrix();
 		glBegin(GL_QUADS);
 		Shape.createCube(pos.x - r[0], pos.y, pos.z - r[0], new Color4f(1.0f, 1.0f, 1.0f, 1.0f), new float[] { 0f, 0f }, 1.0f);
 		glEnd();
 		glPopMatrix();
-	}*/
+	}
 }

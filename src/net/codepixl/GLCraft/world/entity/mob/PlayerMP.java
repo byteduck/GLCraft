@@ -13,10 +13,23 @@ import org.lwjgl.util.vector.Vector3f;
 import com.nishu.utils.Color4f;
 
 import net.codepixl.GLCraft.render.Shape;
-import net.codepixl.GLCraft.render.Spritesheet;
+import net.codepixl.GLCraft.util.Spritesheet;
 import net.codepixl.GLCraft.world.WorldManager;
 
 public class PlayerMP extends Mob{
+	
+	private float[] headCoords = {
+		0, Spritesheet.tiles.uniformSize()*2,
+		0, Spritesheet.tiles.uniformSize()*2,
+		0, Spritesheet.tiles.uniformSize()*2,
+		Spritesheet.tiles.uniformSize()*15, 0,
+		0, Spritesheet.tiles.uniformSize()*2,
+		0, Spritesheet.tiles.uniformSize()*2
+	};
+	
+	private float[] bottomCoords = {
+			0, Spritesheet.tiles.uniformSize()
+		};
 	
 	public PlayerMP(Vector3f pos, WorldManager w) {
 		super(pos, w);
@@ -26,7 +39,7 @@ public class PlayerMP extends Mob{
 	public void update(){}
 	
 	public void render(){
-		/*glPushMatrix();
+		glPushMatrix();
 		glTranslatef(getPos().x, getPos().y-1, getPos().z);
 		glRotatef(-this.getRot().y+180,0,1f,0);
 		glRotatef(this.getRot().z,1f,0,0);
@@ -35,6 +48,6 @@ public class PlayerMP extends Mob{
 			Shape.createCube(getPos().x-0.5f, getPos().y-2f, getPos().z-0.5f, new Color4f(1.0f,1.0f,1.0f,1.0f), this.bottomCoords, 1.0f);
 			Shape.createCube(getPos().x-0.5f, getPos().y-1f, getPos().z-0.5f, new Color4f(1.0f,1.0f,1.0f,1.0f), this.headCoords, 1.0f);
 		glEnd();
-		glPopMatrix();*/
+		glPopMatrix();
 	}
 }

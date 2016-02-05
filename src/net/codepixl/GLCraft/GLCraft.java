@@ -38,13 +38,11 @@ import com.nishu.utils.GameLoop;
 import com.nishu.utils.Screen;
 import com.nishu.utils.Window;
 
-import net.codepixl.GLCraft.item.Item;
 import net.codepixl.GLCraft.plugin.Plugin;
 import net.codepixl.GLCraft.plugin.PluginManager;
 import net.codepixl.GLCraft.sound.SoundManager;
 import net.codepixl.GLCraft.util.Constants;
 import net.codepixl.GLCraft.world.CentralManager;
-import net.codepixl.GLCraft.world.tile.Tile;
 
 public class GLCraft extends Screen{
 	private CentralManager world;
@@ -86,8 +84,7 @@ public class GLCraft extends Screen{
 	public void init() {
 		// TODO Auto-generated method stub
 		initCamera();
-		Tile.tileMap.toString();
-		Item.itemMap.toString();
+		
 		world = new CentralManager();
 		String pluginsFolder = System.getProperty("user.home")+"/GLCraft/Plugins";
 		new File(pluginsFolder).mkdirs();

@@ -2,7 +2,7 @@ package net.codepixl.GLCraft.world.tile;
 
 import com.nishu.utils.Color4f;
 
-import net.codepixl.GLCraft.render.Spritesheet;
+import net.codepixl.GLCraft.util.Spritesheet;
 
 public class TileGrass extends Tile{
 
@@ -17,16 +17,29 @@ public class TileGrass extends Tile{
 		// TODO Auto-generated method stub
 		return Color4f.WHITE;
 	}
-	
+
 	@Override
-	public String getTextureName(){
-		return "grass_side";
+	public float[] getTexCoords() {
+		// TODO Auto-generated method stub
+		return new float[]{
+			Spritesheet.tiles.uniformSize()*2, Spritesheet.tiles.uniformSize(),
+			Spritesheet.tiles.uniformSize(), Spritesheet.tiles.uniformSize(),
+			Spritesheet.tiles.uniformSize()*3, Spritesheet.tiles.uniformSize(),
+			Spritesheet.tiles.uniformSize()*3, 0,
+			Spritesheet.tiles.uniformSize()*3, Spritesheet.tiles.uniformSize(),
+			Spritesheet.tiles.uniformSize()*3, Spritesheet.tiles.uniformSize()
+		};
 	}
 
 	@Override
 	public String getName() {
 		// TODO Auto-generated method stub
 		return "Grass";
+	}
+	
+	@Override
+	public float[] getIconCoords(){
+		return new float[]{Spritesheet.tiles.uniformSize()*3, 0};
 	}
 	
 	@Override
