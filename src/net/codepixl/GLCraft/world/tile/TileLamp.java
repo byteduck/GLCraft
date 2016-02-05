@@ -9,7 +9,10 @@ public class TileLamp extends Tile{
 		// TODO Auto-generated method stub
 		return "Lamp";
 	}
-
+	@Override
+	public String getTextureName(){
+		return "lamp";
+	}
 	@Override
 	public byte getId() {
 		// TODO Auto-generated method stub

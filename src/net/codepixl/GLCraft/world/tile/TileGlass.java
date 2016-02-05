@@ -9,7 +9,10 @@ public class TileGlass extends Tile{
 		// TODO Auto-generated method stub
 		return "Glass";
 	}
-
+	@Override
+	public String getTextureName(){
+		return "glass";
+	}
 	@Override
 	public byte getId() {
 		// TODO Auto-generated method stub
