@@ -15,10 +15,6 @@ public class TileLava extends Tile{
 		return "Lava";
 	}
 	@Override
-	public String getTextureName(){
-		return "lava";
-	}
-	@Override
 	public byte getId() {
 		// TODO Auto-generated method stub
 		return 15;

@@ -8,16 +8,7 @@ public class ItemSeeds extends Item{
 		return "Seeds";
 	}
 	@Override
-	public String getTextureName(){
-		return "seed";
-	}
-	@Override
 	public byte getId(){
 		return 1;
-	}
-	
-	@Override
-	public float[] getTexCoords(){
-		return new float[]{Spritesheet.atlas.uniformSize()*12,Spritesheet.atlas.uniformSize()};
 	}
 }

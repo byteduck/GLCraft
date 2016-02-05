@@ -10,10 +10,6 @@ public class TileLeaf extends Tile{
 		return "Leaves";
 	}
 	@Override
-	public String getTextureName(){
-		return "leaves";
-	}
-	@Override
 	public byte getId() {
 		// TODO Auto-generated method stub
 		return 9;

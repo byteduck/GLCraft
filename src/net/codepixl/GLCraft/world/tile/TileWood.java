@@ -9,10 +9,7 @@ public class TileWood extends Tile{
 		// TODO Auto-generated method stub
 		return "Wood";
 	}
-	@Override
-	public String getTextureName(){
-		return "wood";
-	}
+	
 	@Override
 	public byte getId() {
 		// TODO Auto-generated method stub

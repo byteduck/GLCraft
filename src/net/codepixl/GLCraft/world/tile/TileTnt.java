@@ -17,10 +17,6 @@ public class TileTnt extends Tile {
 		return "Tnt";
 	}
 	@Override
-	public String getTextureName(){
-		return "tnt";
-	}
-	@Override
 	public byte getId() {
 		// TODO Auto-generated method stub
 		return 14;

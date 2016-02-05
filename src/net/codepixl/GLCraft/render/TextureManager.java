@@ -27,7 +27,7 @@ public class TextureManager {
 	private static String currentBoundTexture = "";
 	private static boolean madeAtlas = false;
 	public static void addTexture(String name, String path){
-		textures.put(name.toLowerCase(),path);
+		textures.put(name.toLowerCase(),path.toLowerCase());
 	}
 	public static void initTextures(){
 		addTexture("misc.highlight",TILES+"glass.png");
