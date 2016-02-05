@@ -13,7 +13,7 @@ Crossed out items means they are completed.
 
 Italic means half completed.
 
-* *Plugin API*
+* Plugin API - kinda finished
 * ~~Better GUI System~~
  * ~~A GUI manager to make showing and hiding GUIs easier~~
  * ~~A GUIScreen class to make building guis easier~~
