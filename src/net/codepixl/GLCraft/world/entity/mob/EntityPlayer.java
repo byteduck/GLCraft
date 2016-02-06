@@ -170,7 +170,11 @@ public class EntityPlayer extends Mob {
 		}
 		
 	}
-	
+	public void dropItem(ItemStack item,int amount,Vector3f pos, Vector3f direction, WorldManager w){
+		EntityItem e = new EntityItem(new ItemStack(item, amount), pos.x, pos.y, pos.z, w);
+		e.setVelocity(MathUtils.RotToVel(direction, 1f));
+		w.spawnEntity(e);
+	}
 	public void updateKeyboard(float delay, float speed) {
 		boolean keyUp = Keyboard.isKeyDown(Keyboard.KEY_W);
 		boolean keyDown = Keyboard.isKeyDown(Keyboard.KEY_S);
