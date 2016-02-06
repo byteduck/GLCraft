@@ -89,8 +89,8 @@ public class Tile {
 	}
 	
 	/**
-	 * 0: Top <p>
-	 * 1: Bottom <p>
+	 * 0: Bottom <p>
+	 * 1: Top <p>
 	 * 2-5: Sides 1-4 <p>
 	 */
 	public String[] getMultiTextureNames(){
@@ -137,7 +137,18 @@ public class Tile {
 		if(this.getClass() != Tile.class){
 			registerTile();
 			if(this.hasTexture()){
-				TextureManager.addTexture("tiles."+this.getTextureName(), TextureManager.TILES+this.getTextureName()+".png");
+				if(this.hasMultipleTextures()){
+					for(String name : this.getMultiTextureNames()){
+						if(!TextureManager.hasTexture("tiles."+name)){
+							TextureManager.addTexture("tiles."+name, TextureManager.TILES+name+".png");
+						}
+					}
+				}else{
+					TextureManager.addTexture("tiles."+this.getTextureName(), TextureManager.TILES+this.getTextureName()+".png");
+				}
+				if(!TextureManager.hasTexture(this.getIconName())){
+					TextureManager.addTexture("tiles."+this.getIconName(), TextureManager.TILES+this.getIconName()+".png");
+				}
 			}
 		}
 	}

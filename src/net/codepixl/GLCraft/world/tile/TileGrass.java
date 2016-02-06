@@ -17,8 +17,25 @@ public class TileGrass extends Tile{
 	}
 	
 	@Override
-	public String getTextureName(){
-		return "grass_top";
+	public String getIconName(){
+		return "grass_side";
+	}
+	
+	@Override
+	public boolean hasMultipleTextures(){
+		return true;
+	}
+	
+	@Override
+	public String[] getMultiTextureNames(){
+		return new String[]{
+			"dirt",
+			"grass_top",
+			"grass_side",
+			"grass_side",
+			"grass_side",
+			"grass_side"
+		};
 	}
 
 	@Override
