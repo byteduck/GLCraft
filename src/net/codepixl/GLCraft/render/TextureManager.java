@@ -27,10 +27,17 @@ public class TextureManager {
 	public static final String MISC = "textures/misc/";
 	private static String currentBoundTexture = "";
 	private static boolean madeAtlas = false;
+	private static BufferedImage noimg;
 	public static void addTexture(String name, String path){
 		textures.put(name.toLowerCase(),path.toLowerCase());
 	}
 	public static void initTextures(){
+		try {
+			noimg = ImageIO.read(Texture.class.getClassLoader().getResourceAsStream(MISC+"no_img.png"));
+		} catch (Exception e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
 		addTexture("misc.highlight",MISC+"highlight.png");
 		for(int i = 0; i <= 7; i++){
 			addTexture("misc.break_"+i,MISC+"break_"+i+".png");
@@ -60,7 +67,9 @@ public class TextureManager {
 					atlasCoords.put(next.getKey(), new float[]{(float)x*(1f/(float)maxWidth),(float)y*(1f/(float)maxWidth)});
 					System.out.println("Added "+next.getKey()+" at "+x+","+y+" to texture atlas");
 				} catch (Exception e) {
-					System.err.println("Error adding "+next.getKey()+" to texture atlas: Could not find file "+next.getValue());
+					System.err.println("Error adding "+next.getKey()+" to texture atlas: Could not find file "+next.getValue()+". Replacing with \"NO IMG\"");
+					g.drawImage(noimg, x*16, y*16, null);
+					atlasCoords.put(next.getKey(), new float[]{(float)x*(1f/(float)maxWidth),(float)y*(1f/(float)maxWidth)});
 				}
 				x++;
 				if(x > maxWidth){
