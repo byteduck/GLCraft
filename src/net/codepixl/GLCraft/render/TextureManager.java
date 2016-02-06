@@ -4,6 +4,7 @@ import java.awt.Graphics;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
@@ -30,7 +31,7 @@ public class TextureManager {
 		textures.put(name.toLowerCase(),path.toLowerCase());
 	}
 	public static void initTextures(){
-		addTexture("misc.highlight",TILES+"glass.png");
+		addTexture("misc.highlight",MISC+"highlight.png");
 		for(int i = 0; i <= 7; i++){
 			addTexture("misc.break_"+i,MISC+"break_"+i+".png");
 		}
@@ -80,7 +81,17 @@ public class TextureManager {
 		}
 	}
 	public static float[] tile(Tile t){
-		return atlasCoords.get("tiles."+t.getTextureName().toLowerCase());
+		if(t.hasMultipleTextures()){
+			float[] coords = new float[12];
+			for(int i = 0; i < 6; i++){
+				int index = i*2;
+				coords[index] = atlasCoords.get("tiles."+t.getMultiTextureNames()[i].toLowerCase())[0];
+				coords[index+1] = atlasCoords.get("tiles."+t.getMultiTextureNames()[i].toLowerCase())[1];
+			}
+			return coords;
+		}else{
+			return atlasCoords.get("tiles."+t.getTextureName().toLowerCase());
+		}
 	}
 	public static float[] texture(String s){
 		return atlasCoords.get(s.toLowerCase());
@@ -104,5 +115,8 @@ public class TextureManager {
 			if(i.isTile()) return tile(i.getTile());
 		}
 		return new float[]{0,0};
+	}
+	public static boolean hasTexture(String name){
+		return textures.containsKey(name.toLowerCase());
 	}
 }

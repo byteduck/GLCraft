@@ -28,8 +28,25 @@ public class TileLog extends Tile{
 	}
 	
 	@Override
-	public String getTextureName(){
-		return "log_side";
+	public String getIconName(){
+		return "log_top";
+	}
+	
+	@Override
+	public boolean hasMultipleTextures(){
+		return true;
+	}
+	
+	@Override
+	public String[] getMultiTextureNames(){
+		return new String[]{
+			"log_top",
+			"log_top",
+			"log_side",
+			"log_side",
+			"log_side",
+			"log_side"
+		};
 	}
 
 	@Override
