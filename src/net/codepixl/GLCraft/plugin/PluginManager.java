@@ -3,6 +3,7 @@ package net.codepixl.GLCraft.plugin;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
 
 import net.codepixl.GLCraft.world.tile.PluginTile;
@@ -10,7 +11,8 @@ import net.codepixl.GLCraft.world.tile.Tile;
 
 public class PluginManager {
 	
-	ArrayList<LoadedPlugin> plugins = new ArrayList<LoadedPlugin>();
+	ArrayList<LoadedPlugin> loadedPlugins = new ArrayList<LoadedPlugin>();
+	HashMap<Plugin,LoadedPlugin> plugins = new HashMap<Plugin,LoadedPlugin>();
 	public static String path;
 	byte currentTile = 0x64;
 	
@@ -19,7 +21,9 @@ public class PluginManager {
 	}
 	
 	public void addDevPlugin(Plugin p){
-		plugins.add(new LoadedPlugin(p));
+		LoadedPlugin temp = new LoadedPlugin(p);
+		loadedPlugins.add(temp);
+		plugins.put(p, temp);
 	}
 	
 	public void addTile(PluginTile t){
@@ -30,7 +34,7 @@ public class PluginManager {
 	}
 	
 	public void update(){
-		Iterator<LoadedPlugin> it = plugins.iterator();
+		Iterator<LoadedPlugin> it = loadedPlugins.iterator();
 		while(it.hasNext()){
 			it.next().update();
 		}
@@ -42,12 +46,16 @@ public class PluginManager {
 		for(int i = 0; i < plugins.length; i++){
 			if(plugins[i].isDirectory()){
 				try {
-					this.plugins.add(new LoadedPlugin(plugins[i].getAbsolutePath()));
+					this.loadedPlugins.add(new LoadedPlugin(plugins[i].getAbsolutePath()));
 				} catch (IOException | ClassNotFoundException | InstantiationException | IllegalAccessException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
 			}
 		}
+	}
+
+	public String getResourceLocation(Plugin p) {
+		return plugins.get(p).path+"/res/";
 	}
 }

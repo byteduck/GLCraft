@@ -90,7 +90,7 @@ public class PluginManagerWindow extends JFrame{
 	}
 	
 	private void addPlugins(){
-		Iterator<LoadedPlugin> it = p.plugins.iterator();
+		Iterator<LoadedPlugin> it = p.loadedPlugins.iterator();
 		while(it.hasNext()){
 			LoadedPlugin p = it.next();
 			DefaultMutableTreeNode node = new DefaultMutableTreeNode(p.name +" ver "+p.version);

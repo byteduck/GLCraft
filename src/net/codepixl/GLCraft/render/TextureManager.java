@@ -31,6 +31,9 @@ public class TextureManager {
 	public static void addTexture(String name, String path){
 		textures.put(name.toLowerCase(),path.toLowerCase());
 	}
+	public static void addExternalTexture(String name, String path){
+		textures.put(name.toLowerCase(), "[EXTERNAL]"+path);
+	}
 	public static void initTextures(){
 		try {
 			noimg = ImageIO.read(Texture.class.getClassLoader().getResourceAsStream(MISC+"no_img.png"));
@@ -62,7 +65,11 @@ public class TextureManager {
 				Map.Entry<String, String> next = it.next();
 				BufferedImage image;
 				try {
-					image = ImageIO.read(Texture.class.getClassLoader().getResourceAsStream(next.getValue()));
+					if(next.getValue().startsWith("[EXTERNAL]")){
+						image = ImageIO.read(new File(next.getValue().substring(next.getValue().indexOf(']'))));
+					}else{
+						image = ImageIO.read(Texture.class.getClassLoader().getResourceAsStream(next.getValue()));
+					}
 					g.drawImage(image, x*16, y*16, null);
 					atlasCoords.put(next.getKey(), new float[]{(float)x*(1f/(float)maxWidth),(float)y*(1f/(float)maxWidth)});
 					System.out.println("Added "+next.getKey()+" at "+x+","+y+" to texture atlas");
