@@ -79,7 +79,7 @@ public class TextureManager {
 					atlasCoords.put(next.getKey(), new float[]{(float)x*(1f/(float)maxWidth),(float)y*(1f/(float)maxWidth)});
 				}
 				x++;
-				if(x > maxWidth){
+				if(x >= maxWidth){
 					x = 0;
 					y++;
 				}
