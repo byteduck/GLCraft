@@ -3,6 +3,8 @@ package net.codepixl.GLCraft.world.tile;
 import com.nishu.utils.Color4f;
 
 import net.codepixl.GLCraft.render.RenderType;
+import net.codepixl.GLCraft.world.Chunk;
+import net.codepixl.GLCraft.world.WorldManager;
 
 public class TileSapling extends Tile{
 
@@ -36,6 +38,11 @@ public class TileSapling extends Tile{
 	}
 	@Override
 	public RenderType getRenderType(){
-		return RenderType.CROSS;
+		return RenderType.CUBE;
+	}
+	@Override
+	public void onPlace(int x, int y, int z, WorldManager w){
+		//System.out.println("made tree");
+		Chunk.createCustomTree(x, y, z, Tile.Log, Tile.Leaf, w);
 	}
 }

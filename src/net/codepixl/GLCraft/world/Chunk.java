@@ -185,7 +185,7 @@ public class Chunk {
 		}
 	}
 	
-	private void createTree(int x, int y, int z){
+	public void createTree(int x, int y, int z){
 		x+=(int)pos.x;
 		y+=(int)pos.y;
 		z+=(int)pos.z;
@@ -209,6 +209,31 @@ public class Chunk {
 		worldManager.setTileAtPos(x-1, y+4, z, Tile.Leaf.getId(), false);
 		
 		worldManager.setTileAtPos(x, y+5, z, Tile.Leaf.getId(), false);
+	}
+	
+	public static void createCustomTree(int x, int y, int z,Tile trunk,Tile leaf,WorldManager w){
+		
+		for(int i = 0; i < 5; i++){
+			w.setTileAtPos(x, y+i, z, trunk.getId(), true);
+		}
+		w.setTileAtPos(x, y+3, z+1, leaf.getId(), true);
+		w.setTileAtPos(x+1, y+3, z+1, leaf.getId(), true);
+		w.setTileAtPos(x-1, y+3, z+1, leaf.getId(), true);
+		
+		w.setTileAtPos(x, y+3, z-1, leaf.getId(), true);
+		w.setTileAtPos(x+1, y+3, z-1, leaf.getId(), true);
+		w.setTileAtPos(x-1, y+3, z-1, leaf.getId(), true);
+		
+		w.setTileAtPos(x-1, y+3, z, leaf.getId(), true);
+		w.setTileAtPos(x+1, y+3, z, leaf.getId(), true);
+		
+		w.setTileAtPos(x, y+4, z+1, leaf.getId(), true);
+		w.setTileAtPos(x, y+4, z-1, leaf.getId(), true);
+		w.setTileAtPos(x+1, y+4, z, leaf.getId(), true);
+		w.setTileAtPos(x-1, y+4, z, leaf.getId(), true);
+		
+		w.setTileAtPos(x, y+5, z, leaf.getId(), true);
+		System.out.println("made tree");
 	}
 	
 	public void initGL(boolean bufChunk){
