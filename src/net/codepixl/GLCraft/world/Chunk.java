@@ -233,7 +233,6 @@ public class Chunk {
 		w.setTileAtPos(x-1, y+4, z, leaf.getId(), true);
 		
 		w.setTileAtPos(x, y+5, z, leaf.getId(), true);
-		System.out.println("made tree");
 	}
 	
 	public void initGL(boolean bufChunk){

@@ -16,7 +16,7 @@ public class Shape {
 	public static Spritesheet currentSpritesheet = Spritesheet.atlas;
 	
 	public static void createCube(float x, float y, float z, Color4f color, float[] texCoords, float size) {
-		
+		try{
 		//color = getColor(new Vector3f(x, y, z));
 
 		if (texCoords.length == 2) {
@@ -155,6 +155,11 @@ public class Shape {
 			glVertex3f(x, y + size, z);
 			glTexCoord2f(texCoords[10], texCoords[11]);
 			glVertex3f(x, y + size, z + size);
+		}
+		}catch(NullPointerException e){
+			System.out.println("Error rendering cube: Texcoords null");
+			e.printStackTrace();
+			System.exit(0);
 		}
 	}
 

@@ -68,6 +68,7 @@ import com.nishu.utils.GameLoop;
 import com.nishu.utils.Screen;
 import com.nishu.utils.Time;
 
+import net.codepixl.GLCraft.GLCraft;
 import net.codepixl.GLCraft.GUI.GUIManager;
 import net.codepixl.GLCraft.GUI.GUIPauseMenu;
 import net.codepixl.GLCraft.GUI.GUIScreen;
@@ -308,7 +309,7 @@ public class CentralManager extends Screen{
 	private void renderText(){
 		render2D();
 		glColor3f(1f,1f,1f);
-		Constants.FONT.drawString(10, 10, "GLCraft Alpha 0.0.6");
+		Constants.FONT.drawString(10, 10, "GLCraft Alpha "+GLCraft.version);
 		if(currentBlock != -1){
 			String toolTip = "Block: "+Tile.getTile((byte)currentBlock).getName();
 			Constants.FONT.drawString(Constants.WIDTH/2-Constants.FONT.getWidth(toolTip)/2, 10, toolTip);
