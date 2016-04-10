@@ -48,6 +48,7 @@ public class PluginManagerWindow extends JFrame{
 					File plugin = jf.getSelectedFile();
 					File tempFolder = new File(new File(PluginManager.path).getParentFile(),"temp");
 					try {
+						purgeDirectory(tempFolder);
 						Files.deleteIfExists(tempFolder.toPath());
 						ZipFile zip = new ZipFile(plugin);
 						zip.extractAll(tempFolder.getAbsolutePath());
@@ -96,6 +97,15 @@ public class PluginManagerWindow extends JFrame{
 			DefaultMutableTreeNode node = new DefaultMutableTreeNode(p.name +" ver "+p.version);
 			node.add(new DefaultMutableTreeNode(p.description));
 			top.add(node);
+		}
+	}
+	
+	void purgeDirectory(File dir) {
+		if(dir.exists()){
+		    for (File file: dir.listFiles()) {
+		        if (file.isDirectory()) purgeDirectory(file);
+		        file.delete();
+		    }
 		}
 	}
 

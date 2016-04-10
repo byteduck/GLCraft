@@ -45,7 +45,7 @@ public class TileSapling extends Tile{
 	
 	@Override
 	public void randomTick(int x, int y, int z, WorldManager w){
-		if(Constants.rand.nextFloat() < 0.){
+		if(Constants.rand.nextFloat() < 0.1){
 			Chunk.createCustomTree(x, y, z, Tile.Log, Tile.Leaf, w);
 		}
 	}

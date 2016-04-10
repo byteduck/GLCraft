@@ -135,7 +135,7 @@ public class Tile {
 	}
 	
 	public Tile(){
-		if(this.getClass() != Tile.class){
+		if(this.getClass() != Tile.class && !(this instanceof PluginTile)){
 			registerTile();
 			if(this.hasTexture()){
 				if(this.hasMultipleTextures()){

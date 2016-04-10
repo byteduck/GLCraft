@@ -66,7 +66,7 @@ public class TextureManager {
 				BufferedImage image;
 				try {
 					if(next.getValue().startsWith("[EXTERNAL]")){
-						image = ImageIO.read(new File(next.getValue().substring(next.getValue().indexOf(']'))));
+						image = ImageIO.read(new File(next.getValue().substring(next.getValue().indexOf(']')+1)));
 					}else{
 						image = ImageIO.read(Texture.class.getClassLoader().getResourceAsStream(next.getValue()));
 					}

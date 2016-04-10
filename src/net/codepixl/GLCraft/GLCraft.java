@@ -102,6 +102,7 @@ public class GLCraft extends Screen{
 		if(isDevEnvironment){
 			pluginManager.addDevPlugin(devPlugin);
 		}
+		TextureManager.generateAtlas();
 	}
 	
 	private void initCamera(){

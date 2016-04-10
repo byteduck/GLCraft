@@ -10,6 +10,8 @@ import java.nio.file.Path;
 
 import org.json.JSONObject;
 
+import net.codepixl.GLCraft.GLCraft;
+
 public class LoadedPlugin {
 	public String name;
 	public String version;
@@ -19,6 +21,7 @@ public class LoadedPlugin {
 	ClassLoader loader;
 	Plugin plugin;
 	public LoadedPlugin(String path) throws IOException, ClassNotFoundException, InstantiationException, IllegalAccessException{
+		GLCraft.getGLCraft().getPluginManager().currentlyLoadingPlugin = this;
 		this.path = path;
 		byte[] data = Files.readAllBytes(new File(path+"/plugin.json").toPath());
 		String jsonString = new String(data,StandardCharsets.UTF_8);
@@ -34,6 +37,7 @@ public class LoadedPlugin {
 	}
 	
 	public LoadedPlugin(Plugin p){
+		GLCraft.getGLCraft().getPluginManager().currentlyLoadingPlugin = this;
 		this.plugin = p;
 		this.name = "dev plugin";
 		this.version = "dev";

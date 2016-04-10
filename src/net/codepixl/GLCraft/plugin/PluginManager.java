@@ -15,6 +15,7 @@ public class PluginManager {
 	HashMap<Plugin,LoadedPlugin> plugins = new HashMap<Plugin,LoadedPlugin>();
 	public static String path;
 	byte currentTile = 0x64;
+	public LoadedPlugin currentlyLoadingPlugin = null;
 	
 	public PluginManager(String pluginPath){
 		path = pluginPath;
@@ -53,9 +54,24 @@ public class PluginManager {
 				}
 			}
 		}
+		currentlyLoadingPlugin = null;
 	}
 
 	public String getResourceLocation(Plugin p) {
-		return plugins.get(p).path+"/res/";
+		if(plugins.get(p).mainClass.equals("dev")){
+			return plugins.get(p).path+"/res/";
+		}else{
+			System.out.println(plugins.get(p).path);
+			return plugins.get(p).path;
+		}
+	}
+	
+	public String getResourceLocation(){
+		if(currentlyLoadingPlugin.mainClass.equals("dev")){
+			return currentlyLoadingPlugin.path+"/res/";
+		}else{
+			System.out.println(currentlyLoadingPlugin.path);
+			return currentlyLoadingPlugin.path;
+		}
 	}
 }

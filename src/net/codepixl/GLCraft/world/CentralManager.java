@@ -122,7 +122,6 @@ public class CentralManager extends Screen{
 		}
 		initGUIManager();
 		TextureManager.initTextures();
-		TextureManager.generateAtlas();
 		CraftingManager.initRecipes();
 		worldManager = new WorldManager(this);
 		soundManager = new SoundManager();
