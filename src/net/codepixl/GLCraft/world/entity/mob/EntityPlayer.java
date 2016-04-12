@@ -557,6 +557,10 @@ public class EntityPlayer extends Mob {
 	}
 	
 	private static float[] breakingTexCoords(float percent) {
-		return TextureManager.texture("misc.break_"+Math.round((percent*100)/12.5f));
+		float[] coords = TextureManager.texture("misc.break_"+Math.round((percent*100)/12.5f));
+		if(coords == null){
+			coords = TextureManager.texture("misc.break_7");
+		}
+		return coords;
 	}
 }

@@ -159,7 +159,7 @@ public class Shape {
 		}catch(NullPointerException e){
 			System.out.println("Error rendering cube: Texcoords null");
 			e.printStackTrace();
-			//System.exit(0); this will be temporary
+			System.exit(0);
 		}
 	}
 
