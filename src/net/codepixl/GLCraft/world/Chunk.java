@@ -103,13 +103,17 @@ public class Chunk {
 						if(posY < noise){
 							tiles[x][y][z] = Tile.Stone.getId();
 						}else if(posY-1f <= noise){
-							if(posY <= Constants.seaLevel){
+							if(posY <= Constants.seaLevel+1){
 								tiles[x][y][z] = Tile.Sand.getId();
 							}else{
 								tiles[x][y][z] = Tile.Grass.getId();
 							}
 						}else{
-							tiles[x][y][z] = Tile.Air.getId();
+							if(posY <= Constants.seaLevel){
+								tiles[x][y][z] = Tile.Water.getId();
+							}else{
+								tiles[x][y][z] = Tile.Air.getId();
+							}
 						}
 						/**noise = (float) worldManager.noise.eval((double)posX/2d, (double)posY/2d, (double)posZ/2d);
 						if(noise > 0f){
