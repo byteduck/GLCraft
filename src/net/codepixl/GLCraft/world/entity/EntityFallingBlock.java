@@ -1,18 +1,28 @@
 package net.codepixl.GLCraft.world.entity;
 
 import org.lwjgl.opengl.GL11;
+import org.lwjgl.util.vector.Vector3f;
 
 import com.nishu.utils.Color4f;
 
 import net.codepixl.GLCraft.render.Shape;
+import net.codepixl.GLCraft.util.AABB;
 import net.codepixl.GLCraft.world.WorldManager;
 import net.codepixl.GLCraft.world.item.ItemStack;
 import net.codepixl.GLCraft.world.tile.Tile;
 
 public class EntityFallingBlock extends EntitySolid{
 	
-	Tile tile = Tile.Sand;
+	private Tile tile = Tile.Sand;
 	boolean doneFalling = false;
+	
+	public Tile getTile(){
+		return tile;
+	}
+	
+	public void setTile(Tile t){
+		tile = t;
+	}
 	
 	public EntityFallingBlock(float x, float y, float z, WorldManager worldManager) {
 		super(x, y, z, worldManager);
@@ -20,15 +30,21 @@ public class EntityFallingBlock extends EntitySolid{
 	
 	@Override
 	public void render(){
-		getAABB().render();
+		//getAABB().render();
 		GL11.glBegin(GL11.GL_QUADS);
 		Shape.createCube(pos.x, pos.y, pos.z, Color4f.WHITE, tile.getTexCoords(), 1f);
 		GL11.glEnd();
 	}
 	
 	@Override
+	public AABB getDefaultAABB() {
+		return new AABB(1f,1f,1f);
+	}
+	
+	@Override
 	public void update(){
 		super.update();
+		
 		if(onGround && !doneFalling){
 			doneFalling = true;
 			if(Tile.getTile((byte) worldManager.getTileAtPos(pos)) != Tile.Air){
