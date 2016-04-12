@@ -50,6 +50,7 @@ public class Chunk {
 	private int randomUpdateTick = 0;
 	private int randomUpdateInterval;
 	private boolean needsRebuild = false;
+	private ArrayList<Vector3f> tickTiles = new ArrayList<Vector3f>();
 	
 	public Chunk(ShaderProgram shader, int type, float x, float y, float z,WorldManager w, boolean fromBuf){
 		this.pos = new Vector3f(x,y,z);
@@ -289,11 +290,20 @@ public class Chunk {
 	}
 	
 	public void tick(){
+		Iterator<Vector3f> i = tickTiles.iterator();
+		while(i.hasNext()){
+			Vector3f next = i.next();
+			Tile.getTile(tiles[(int) next.x][(int) next.y][(int) next.z]).tick((int)next.x, (int)next.y, (int)next.z, worldManager);
+		}
+	}
+	
+	public void rebuildTickTiles(){
+		tickTiles.clear();
 		for(int x = 0; x < sizeX; x++){
 			for(int y = 0; y < sizeY; y++){
 				for(int z = 0; z < sizeZ; z++){
 					if(Tile.getTile(tiles[x][y][z]).needsConstantTick()){
-						Tile.getTile(tiles[x][y][z]).tick(x+(int)pos.x, y+(int)pos.y, z+(int)pos.z, worldManager);
+						tickTiles.add(new Vector3f(x,y,z));
 					}
 				}
 			}
@@ -459,7 +469,13 @@ public class Chunk {
 			if(tiles[x][y][z] == Tile.Lamp.getId()){
 				this.light[x][y][z] = 0;
 			}
+			if(tickTiles.contains(new Vector3f(x,y,z))){
+				tickTiles.remove(new Vector3f(x,y,z));
+			}
 			tiles[x][y][z] = tile;
+			if(Tile.getTile(tile).needsConstantTick()){
+				tickTiles.add(new Vector3f(x,y,z));
+			}
 			if(rebuild){
 				queueLight();
 				/**worldManager.getChunkAtCoords(MathUtils.coordsToChunkPos((int)ax-7, (int)ay, (int)az)).queueLight();

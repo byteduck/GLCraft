@@ -84,7 +84,9 @@ public class WorldManager {
 		
 		i = activeChunks.iterator();
 		while(i.hasNext()){
-			i.next().rebuild();
+			Chunk c = i.next();
+			c.rebuild();
+			c.rebuildTickTiles();
 		}
 		s.getSplash().splashOff();
 		System.out.println("Done!");
@@ -107,12 +109,16 @@ public class WorldManager {
 	}
 	
 	public void update(){
+		//long utime = System.currentTimeMillis();
 		entityManager.update();
 		Iterator<Chunk> i = activeChunks.iterator();
+		//long ctime = System.currentTimeMillis();
 		while(i.hasNext()){
 			i.next().update();
 		}
+		//ctime = System.currentTimeMillis() - ctime;
 		//loadUnload();
+		//long ttime = System.currentTimeMillis();
 		tick+=Time.getDelta();
 		if(tick > 1.0f/20f){
 			tick = 0f;
@@ -121,6 +127,9 @@ public class WorldManager {
 				i.next().tick();
 			}
 		}
+		//ttime = System.currentTimeMillis() - ttime;
+		//utime = System.currentTimeMillis() - utime;
+		//System.out.println("Total Update Time: "+utime+"ms Chunk update time: "+ctime+"ms Chunk Tick Time "+ttime+"ms");
 	}
 	
 	private void loadUnload() {
@@ -177,6 +186,7 @@ public class WorldManager {
 	}
 	
 	public void render(){
+		long rtime = System.currentTimeMillis();
 		Spritesheet.atlas.bind();
 		getEntityManager().getPlayer().applyTranslations();
 		Vector3f pos = getEntityManager().getPlayer().getPos();
@@ -192,6 +202,8 @@ public class WorldManager {
 		//}
 		//System.out.println(Raytracer.getScreenCenterRay());
 		entityManager.render();
+		rtime = System.currentTimeMillis() - rtime;
+		System.out.println("Render Time: "+rtime+"ms");
 	}
 	
 	public EntityManager getEntityManager(){
