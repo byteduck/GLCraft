@@ -54,6 +54,8 @@ import java.nio.ByteBuffer;
 import java.nio.FloatBuffer;
 import java.util.concurrent.Callable;
 
+import javax.swing.JOptionPane;
+
 import org.lwjgl.BufferUtils;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
@@ -84,6 +86,7 @@ import net.codepixl.GLCraft.util.Constants;
 import net.codepixl.GLCraft.util.Spritesheet;
 import net.codepixl.GLCraft.world.entity.EntityManager;
 import net.codepixl.GLCraft.world.entity.mob.EntityPlayer;
+import net.codepixl.GLCraft.world.entity.mob.animal.EntityTestAnimal;
 import net.codepixl.GLCraft.world.tile.Tile;
 
 public class CentralManager extends Screen{
@@ -173,6 +176,28 @@ public class CentralManager extends Screen{
 						guiManager.showGUI("crafting");
 					}
 				}
+				Vector3f pos = worldManager.entityManager.getPlayer().getPos();
+				if(Keyboard.isKeyDown(Keyboard.KEY_F)){
+					worldManager.setTileAtPos(pos, Tile.Fire.getId(), true);
+				}
+				if(Keyboard.isKeyDown(Keyboard.KEY_P)){
+					String id = JOptionPane.showInputDialog("Enter in the id of the tile you wish to place: ");
+					int tileid = Integer.parseInt(id);
+					worldManager.setTileAtPos(pos, (byte) tileid, true);
+				}
+				if(Keyboard.isKeyDown(Keyboard.KEY_B)){
+					worldManager.setTileAtPos(pos, Tile.Bluestone.getId(), true);
+				}
+				if(Keyboard.isKeyDown(Keyboard.KEY_M)){
+					System.out.println(worldManager.getMetaAtPos((int)pos.x, (int)pos.y, (int)pos.z));
+				}
+				if(Keyboard.isKeyDown(Keyboard.KEY_T)){
+					worldManager.setTileAtPos(pos, Tile.Tnt.getId(), true);
+				}
+				if(Keyboard.isKeyDown(Keyboard.KEY_SEMICOLON)){
+					worldManager.entityManager.add(new EntityTestAnimal(pos, worldManager));
+				}
+			
 			}
 		}
 	}

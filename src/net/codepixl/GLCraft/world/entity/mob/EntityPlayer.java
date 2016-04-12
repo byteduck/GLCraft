@@ -50,6 +50,7 @@ import net.codepixl.GLCraft.world.WorldManager;
 import net.codepixl.GLCraft.world.entity.Entity;
 import net.codepixl.GLCraft.world.entity.EntityItem;
 import net.codepixl.GLCraft.world.entity.NBTUtil;
+import net.codepixl.GLCraft.world.entity.mob.animal.EntityTestAnimal;
 import net.codepixl.GLCraft.world.item.Item;
 import net.codepixl.GLCraft.world.item.ItemStack;
 import net.codepixl.GLCraft.world.tile.Tile;
@@ -113,11 +114,6 @@ public class EntityPlayer extends Mob {
 			this.prevSelect.z = -1f;
 		}else{
 			this.breakProgress += Time.getDelta();
-		}
-		if(this.hurtTimer>0){
-			this.hurtTimer-=Time.getDelta();
-		}else{
-			this.hurtTimer = 0;
 		}
 	}
 	
@@ -274,24 +270,6 @@ public class EntityPlayer extends Mob {
 				e.printStackTrace();
 			}
 			
-		}
-		
-		if(Keyboard.isKeyDown(Keyboard.KEY_F)){
-			worldManager.setTileAtPos(pos, Tile.Fire.getId(), true);
-		}
-		if(Keyboard.isKeyDown(Keyboard.KEY_P)){
-			String id = JOptionPane.showInputDialog("Enter in the id of the tile you wish to place: ");
-			int tileid = Integer.parseInt(id);
-			worldManager.setTileAtPos(pos, (byte) tileid, true);
-		}
-		if(Keyboard.isKeyDown(Keyboard.KEY_B)){
-			worldManager.setTileAtPos(pos, Tile.Bluestone.getId(), true);
-		}
-		if(Keyboard.isKeyDown(Keyboard.KEY_M)){
-			System.out.println(worldManager.getMetaAtPos((int)pos.x, (int)pos.y, (int)pos.z));
-		}
-		if(Keyboard.isKeyDown(Keyboard.KEY_T)){
-			worldManager.setTileAtPos(pos, Tile.Tnt.getId(), true);
 		}
 		if(Keyboard.isKeyDown(Keyboard.KEY_L)){
 			try {
@@ -465,6 +443,21 @@ public class EntityPlayer extends Mob {
 	
 	public void setSelectedItemStack(ItemStack stack) {
 		inventory[selectedSlot] = stack;
+	}
+	
+	public Vector3f getLookRayPos(){
+		Ray r = Raytracer.getScreenCenterRay();
+		boolean loop = true;
+		while(loop && r.distance < 10){
+			if(worldManager.getTileAtPos((int) r.pos.x, (int) r.pos.y, (int) r.pos.z) == -1 || worldManager.getTileAtPos((int) r.pos.x, (int) r.pos.y, (int) r.pos.z) == 0) {
+				r.next();
+			}else{
+				r.prev();
+				loop = false;
+			}
+			r.next();
+		}
+		return r.pos;
 	}
 	
 	public int raycast() {

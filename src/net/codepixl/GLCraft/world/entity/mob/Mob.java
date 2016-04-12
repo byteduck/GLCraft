@@ -9,6 +9,7 @@ import com.evilco.mc.nbt.tag.TagFloat;
 import com.nishu.utils.Time;
 
 import net.codepixl.GLCraft.util.GameObj;
+import net.codepixl.GLCraft.util.Ray;
 import net.codepixl.GLCraft.world.WorldManager;
 import net.codepixl.GLCraft.world.entity.EntityItem;
 import net.codepixl.GLCraft.world.entity.EntitySolid;
@@ -37,6 +38,10 @@ public class Mob extends EntitySolid implements GameObj{
 	public void writeToNBT(TagCompound t){
 		TagFloat healthTag = new TagFloat("healF",health);
 		t.setTag(healthTag);
+	}
+	
+	public void handleAI(){
+		
 	}
 	
 	public void dropAllItems(){
@@ -69,6 +74,11 @@ public class Mob extends EntitySolid implements GameObj{
 		if(this.health<=0f){
 			this.setDead(true);
 		}
+		if(this.hurtTimer>0){
+			this.hurtTimer-=Time.getDelta();
+		}else{
+			this.hurtTimer = 0;
+		}
 		if(this.onGround){
 			if(this.fallDistance > 0f){
 				float damage = (fallDistance - 3f)*2;
@@ -83,6 +93,7 @@ public class Mob extends EntitySolid implements GameObj{
 		this.prevY = this.getY();
 		//getCamera().updateKeyboard(32, 2);
 		//getCamera().updateMouse();
+		handleAI();
 	}
 	
 	public void jump(){

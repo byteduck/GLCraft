@@ -5,6 +5,7 @@ import java.util.HashMap;
 import com.nishu.utils.Color4f;
 
 import net.codepixl.GLCraft.render.TextureManager;
+import net.codepixl.GLCraft.world.entity.mob.EntityPlayer;
 
 public class Item {
 	
@@ -40,6 +41,10 @@ public class Item {
 	public String getTextureName() {
 		// TODO Auto-generated method stub
 		return this.getName();
+	}
+	
+	public void onClick(EntityPlayer p){
+		
 	}
 
 	public Item(){
