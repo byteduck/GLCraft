@@ -86,7 +86,7 @@ public class Mob extends EntitySolid implements GameObj{
 	}
 	
 	public void jump(){
-		if(onGround) this.getVelocity().y = 0.8f;
+		if(onGround) this.getVelocity().y = 0.9f;
 	}
 	
 	public ItemStack getInventory(int index){
