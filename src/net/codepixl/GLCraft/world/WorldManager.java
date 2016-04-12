@@ -186,7 +186,7 @@ public class WorldManager {
 	}
 	
 	public void render(){
-		long rtime = System.currentTimeMillis();
+		//long rtime = System.currentTimeMillis();
 		Spritesheet.atlas.bind();
 		getEntityManager().getPlayer().applyTranslations();
 		Vector3f pos = getEntityManager().getPlayer().getPos();
@@ -202,8 +202,8 @@ public class WorldManager {
 		//}
 		//System.out.println(Raytracer.getScreenCenterRay());
 		entityManager.render();
-		rtime = System.currentTimeMillis() - rtime;
-		System.out.println("Render Time: "+rtime+"ms");
+		//rtime = System.currentTimeMillis() - rtime;
+		//System.out.println("Render Time: "+rtime+"ms");
 	}
 	
 	public EntityManager getEntityManager(){

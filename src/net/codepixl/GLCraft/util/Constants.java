@@ -12,7 +12,8 @@ import net.codepixl.GLCraft.world.CentralManager;
 
 public class Constants {
 	public static Random rand = new Random();
-	public static int viewDistance = 5;
+	public static int viewDistance = 10;
+	public static int seaLevel = 10;
 	public static final int WORLDHEIGHT = 5;
 	public static final int HEIGHT = 700;
 	public static final int WIDTH = 1000;

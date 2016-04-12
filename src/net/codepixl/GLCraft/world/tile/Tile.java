@@ -39,6 +39,7 @@ public class Tile {
 	public static Tile Lava = new TileLava();
 	public static Tile Wood = new TileWood();
 	public static Tile Sapling = new TileSapling();
+	public static Tile Sand = new TileSand();
 	//TILES
 	
 	public String getName(){

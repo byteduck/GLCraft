@@ -103,7 +103,11 @@ public class Chunk {
 						if(posY < noise){
 							tiles[x][y][z] = Tile.Stone.getId();
 						}else if(posY-1f <= noise){
-							tiles[x][y][z] = Tile.Grass.getId();
+							if(posY <= Constants.seaLevel){
+								tiles[x][y][z] = Tile.Sand.getId();
+							}else{
+								tiles[x][y][z] = Tile.Grass.getId();
+							}
 						}else{
 							tiles[x][y][z] = Tile.Air.getId();
 						}
