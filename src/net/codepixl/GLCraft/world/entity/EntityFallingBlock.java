@@ -48,7 +48,11 @@ public class EntityFallingBlock extends EntitySolid{
 		if(onGround && !doneFalling){
 			doneFalling = true;
 			if(Tile.getTile((byte) worldManager.getTileAtPos(pos)) != Tile.Air){
-				worldManager.spawnEntity(new EntityItem(new ItemStack(tile),pos,worldManager));
+				if(Tile.getTile((byte) worldManager.getTileAtPos(pos)) == Tile.Water){
+					worldManager.setTileAtPos(pos, tile.getId(), true);
+				}else{
+					worldManager.spawnEntity(new EntityItem(new ItemStack(tile),pos,worldManager));
+				}
 			}else{
 				worldManager.setTileAtPos(pos, tile.getId(), true);
 			}

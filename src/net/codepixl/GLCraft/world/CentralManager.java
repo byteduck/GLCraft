@@ -87,6 +87,7 @@ import net.codepixl.GLCraft.util.Spritesheet;
 import net.codepixl.GLCraft.world.entity.EntityManager;
 import net.codepixl.GLCraft.world.entity.mob.EntityPlayer;
 import net.codepixl.GLCraft.world.entity.mob.animal.EntityTestAnimal;
+import net.codepixl.GLCraft.world.entity.mob.hostile.EntityTestHostile;
 import net.codepixl.GLCraft.world.tile.Tile;
 
 public class CentralManager extends Screen{
@@ -196,6 +197,9 @@ public class CentralManager extends Screen{
 				}
 				if(Keyboard.isKeyDown(Keyboard.KEY_SEMICOLON)){
 					worldManager.entityManager.add(new EntityTestAnimal(pos, worldManager));
+				}
+				if(Keyboard.isKeyDown(Keyboard.KEY_APOSTROPHE)){
+					worldManager.entityManager.add(new EntityTestHostile(pos, worldManager));
 				}
 			
 			}
