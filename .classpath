@@ -2,7 +2,6 @@
 <classpath>
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="src" path="res"/>
-	<classpathentry kind="lib" path="res/jar/GLUtils.jar"/>
 	<classpathentry kind="lib" path="res/jar/JSplashScreen.jar"/>
 	<classpathentry kind="lib" path="res/jar/lwjgl_util.jar"/>
 	<classpathentry kind="lib" path="res/jar/lwjgl.jar">
@@ -22,5 +21,6 @@
 	<classpathentry kind="lib" path="res/jar/LibraryLWJGLOpenAL.jar"/>
 	<classpathentry kind="lib" path="res/jar/SoundSystem.jar"/>
 	<classpathentry kind="lib" path="res/jar/CodecWav.jar"/>
+	<classpathentry kind="lib" path="res/jar/GLUtils.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

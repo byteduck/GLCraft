@@ -83,7 +83,7 @@ public class GLCraft extends Screen{
 		gameLoop = new GameLoop();
 		gameLoop.setScreen(this);
 		gameLoop.setDebugMode(false);
-		gameLoop.start(120);
+		gameLoop.start(60);
 	}
 	
 	@Override
@@ -147,8 +147,6 @@ public class GLCraft extends Screen{
 		glClearColor(0,0,0.75f,1);
 		world.render();
 		DebugTimer.endTimer("loop_time");
-		// TODO Auto-generated method stub
-		
 	}
 
 	@Override
