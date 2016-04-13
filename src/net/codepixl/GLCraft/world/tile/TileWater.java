@@ -37,5 +37,9 @@ public class TileWater extends Tile{
 		// TODO Auto-generated method stub
 		return true;
 	}
+	@Override
+	public float getHardness(){
+		return 0.1f;
+	}
 
 }
