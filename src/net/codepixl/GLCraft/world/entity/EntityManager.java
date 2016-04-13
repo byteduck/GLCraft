@@ -197,4 +197,8 @@ public class EntityManager implements GameObj{
 		return currentId;
 	}
 
+	public int totalEntities() {
+		return entities.size();
+	}
+
 }

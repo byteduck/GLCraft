@@ -32,7 +32,7 @@ public class EntityTestAnimal extends Animal{
 	public void handleAI(){
 		Vector3f bPos = new Vector3f(pos);
 		List<Entity> e = worldManager.entityManager.getEntitiesInRadiusOfEntityOfType(this, EntityPlayer.class, 20f);
-		if(e.get(0) != null){
+		if(e.size() > 0){
 			Vector3f ppos = e.get(0).getPos();
 			if(pos.x > ppos.x) this.move( -0.25f * (float)Time.getDelta() * 15, 0, 0); else this.move( 0.25f * (float)Time.getDelta() * 15, 0, 0);
 			if(pos.z > ppos.z) this.move(0, 0, -0.25f * (float)Time.getDelta() * 15); else this.move(0, 0, 0.25f * (float)Time.getDelta() * 15);

@@ -52,7 +52,7 @@ import java.io.IOException;
 import java.io.PipedInputStream;
 import java.nio.ByteBuffer;
 import java.nio.FloatBuffer;
-import java.util.concurrent.Callable;
+import java.util.Iterator;
 
 import javax.swing.JOptionPane;
 
@@ -73,16 +73,14 @@ import com.nishu.utils.Time;
 import net.codepixl.GLCraft.GLCraft;
 import net.codepixl.GLCraft.GUI.GUIManager;
 import net.codepixl.GLCraft.GUI.GUIPauseMenu;
-import net.codepixl.GLCraft.GUI.GUIScreen;
 import net.codepixl.GLCraft.GUI.GUIServer;
 import net.codepixl.GLCraft.GUI.GUIStartScreen;
-import net.codepixl.GLCraft.GUI.Elements.GUIButton;
-import net.codepixl.GLCraft.GUI.Inventory.GUICrafting;
 import net.codepixl.GLCraft.item.crafting.CraftingManager;
 import net.codepixl.GLCraft.render.Shape;
 import net.codepixl.GLCraft.render.TextureManager;
 import net.codepixl.GLCraft.sound.SoundManager;
 import net.codepixl.GLCraft.util.Constants;
+import net.codepixl.GLCraft.util.DebugTimer;
 import net.codepixl.GLCraft.util.Spritesheet;
 import net.codepixl.GLCraft.world.entity.EntityManager;
 import net.codepixl.GLCraft.world.entity.mob.EntityPlayer;
@@ -129,6 +127,16 @@ public class CentralManager extends Screen{
 		worldManager = new WorldManager(this);
 		soundManager = new SoundManager();
 		SoundManager.setMainManager(soundManager);
+		
+		//INIT DEBUGS
+		DebugTimer.addTimer("total_render");
+		DebugTimer.addTimer("chunk_render");
+		DebugTimer.addTimer("entity_render");
+		DebugTimer.addTimer("total_update");
+		DebugTimer.addTimer("entity_update");
+		DebugTimer.addTimer("chunk_update");
+		DebugTimer.addTimer("chunk_tick");
+		DebugTimer.addTimer("loop_time");
 	}
 
 	private void initGUIManager(){
@@ -204,52 +212,7 @@ public class CentralManager extends Screen{
 	
 	@Override
 	public void render() {
-		try {
-			while(actionsToDo.available() > 0){
-				byte ByteBuf[] = new byte[1500];
-				actionsToDo.read(ByteBuf);
-				ByteBuf = Constants.trim(ByteBuf);
-				String str = new String(ByteBuf);
-				String[] strs = str.split(";");
-				for(int i = 0; i < strs.length; i++){
-					String s = strs[i];
-					if(s.contains("GLCRAFT_CHANGEBLOCK")){
-						if(s.split("\\|\\|").length >= 3){
-							String pos = s.split("\\|\\|")[1];
-							byte tile = (byte)Integer.parseInt(s.split("\\|\\|")[2]);
-							int x = Integer.parseInt(pos.split(",")[0]);
-							int y = Integer.parseInt(pos.split(",")[1]);
-							int z = Integer.parseInt(pos.split(",")[2]);
-							getWorldManager().setTileAtPos(x, y, z, tile, true);
-						}
-					}
-					if(s.contains("GLCRAFT_MOVE_PLAYER")){
-						if(s.split("\\|\\|").length >= 2){
-							String pos = s.split("\\|\\|")[1];
-								if(pos.split(",").length >= 3){
-									float x = Float.parseFloat(pos.split(",")[0]);
-									float y = Float.parseFloat(pos.split(",")[1]);
-									float z = Float.parseFloat(pos.split(",")[2]);
-									worldManager.getEntityManager().getPlayerMP().setPos(new Vector3f(x,y,z));
-								}
-						}
-					}
-					if(s.contains("GLCRAFT_ROT_PLAYER")){
-						if(s.split("\\|\\|").length >= 2){
-							String pos = s.split("\\|\\|")[1];
-								if(pos.split(",").length >= 3){
-									float yaw = Float.parseFloat(pos.split(",")[0]);
-									float pitch = Float.parseFloat(pos.split(",")[1]);
-									float roll = Float.parseFloat(pos.split(",")[2]);
-									worldManager.getEntityManager().getPlayerMP().setRot(new Vector3f(yaw,pitch,roll));
-								}
-						}
-					}
-				}
-			}
-		} catch (NumberFormatException | IOException e) {
-			e.printStackTrace();
-		}
+		DebugTimer.getTimer("total_render").start();
 		if(Constants.GAME_STATE == Constants.GAME){
 			glLoadIdentity();
 			render3D();
@@ -262,6 +225,7 @@ public class CentralManager extends Screen{
 		render2D();
 		guiManager.render();
 		glDisable(GL_TEXTURE_2D);
+		DebugTimer.getTimer("total_render").end();
 	}
 
 	private int raycast(){
@@ -344,6 +308,13 @@ public class CentralManager extends Screen{
 			Constants.FONT.drawString(10,Constants.FONT.getLineHeight()+10, "X:"+(int)p.getX()+" Y:"+(int)p.getY()+" Z:"+(int)p.getZ());
 			Constants.FONT.drawString(10,Constants.FONT.getLineHeight()*2+10, "RotX:"+(int)p.getRot().x+" RotY:"+(int)p.getRot().y+" RotZ:"+(int)p.getRot().z);
 			Constants.FONT.drawString(10,Constants.FONT.getLineHeight()*3+10, "FPS:"+GameLoop.getFPS());
+			Constants.FONT.drawString(10,Constants.FONT.getLineHeight()*4+10, "Entities:"+worldManager.entityManager.totalEntities());
+			Iterator<DebugTimer> i = DebugTimer.getTimers().iterator();
+			int ind = 5;
+			while(i.hasNext()){
+				Constants.FONT.drawString(10,Constants.FONT.getLineHeight()*ind+10, i.next().toString());
+				ind++;
+			}
 		}
 		
 		TextureImpl.unbind();
@@ -387,7 +358,8 @@ public class CentralManager extends Screen{
 	}
 	
 	@Override
-	public void update() {
+	public void update(){
+		DebugTimer.getTimer("total_update").start();
 		guiManager.update();
 		if(Constants.GAME_STATE == Constants.GAME){
 			worldManager.update();
@@ -395,6 +367,7 @@ public class CentralManager extends Screen{
 		input();
 		cloudMove+=Time.getDelta()*2;
 		cloudMove = cloudMove % 2000f;
+		DebugTimer.getTimer("total_update").end();
 	}
 	
 	public EntityManager getEntityManager(){

@@ -18,6 +18,7 @@ import net.codepixl.GLCraft.GUI.GUIManager;
 import net.codepixl.GLCraft.GUI.Inventory.GUICrafting;
 import net.codepixl.GLCraft.util.AABB;
 import net.codepixl.GLCraft.util.Constants;
+import net.codepixl.GLCraft.util.DebugTimer;
 import net.codepixl.GLCraft.util.Frustum;
 import net.codepixl.GLCraft.util.MathUtils;
 import net.codepixl.GLCraft.util.OpenSimplexNoise;
@@ -109,16 +110,18 @@ public class WorldManager {
 	}
 	
 	public void update(){
-		//long utime = System.currentTimeMillis();
+		DebugTimer.startTimer("entity_update");
 		entityManager.update();
+		DebugTimer.endTimer("entity_update");
+		
+		DebugTimer.startTimer("chunk_update");
 		Iterator<Chunk> i = activeChunks.iterator();
-		//long ctime = System.currentTimeMillis();
 		while(i.hasNext()){
 			i.next().update();
 		}
-		//ctime = System.currentTimeMillis() - ctime;
-		//loadUnload();
-		//long ttime = System.currentTimeMillis();
+		DebugTimer.endTimer("chunk_update");
+		
+		DebugTimer.startTimer("chunk_tick");
 		tick+=Time.getDelta();
 		if(tick > 1.0f/20f){
 			tick = 0f;
@@ -127,9 +130,7 @@ public class WorldManager {
 				i.next().tick();
 			}
 		}
-		//ttime = System.currentTimeMillis() - ttime;
-		//utime = System.currentTimeMillis() - utime;
-		//System.out.println("Total Update Time: "+utime+"ms Chunk update time: "+ctime+"ms Chunk Tick Time "+ttime+"ms");
+		DebugTimer.endTimer("chunk_tick");
 	}
 	
 	private void loadUnload() {
@@ -187,6 +188,7 @@ public class WorldManager {
 	
 	public void render(){
 		//long rtime = System.currentTimeMillis();
+		DebugTimer.startTimer("chunk_render");
 		Spritesheet.atlas.bind();
 		getEntityManager().getPlayer().applyTranslations();
 		Vector3f pos = getEntityManager().getPlayer().getPos();
@@ -200,8 +202,11 @@ public class WorldManager {
 				}
 			}
 		//}
+		DebugTimer.endTimer("chunk_render");
 		//System.out.println(Raytracer.getScreenCenterRay());
+		DebugTimer.startTimer("entity_render");
 		entityManager.render();
+		DebugTimer.endTimer("entity_render");
 		//rtime = System.currentTimeMillis() - rtime;
 		//System.out.println("Render Time: "+rtime+"ms");
 	}

@@ -36,6 +36,7 @@ import org.newdawn.slick.opengl.PNGDecoder;
 
 import com.nishu.utils.GameLoop;
 import com.nishu.utils.Screen;
+import com.nishu.utils.Time;
 import com.nishu.utils.Window;
 
 import net.codepixl.GLCraft.plugin.Plugin;
@@ -43,6 +44,7 @@ import net.codepixl.GLCraft.plugin.PluginManager;
 import net.codepixl.GLCraft.render.TextureManager;
 import net.codepixl.GLCraft.sound.SoundManager;
 import net.codepixl.GLCraft.util.Constants;
+import net.codepixl.GLCraft.util.DebugTimer;
 import net.codepixl.GLCraft.world.CentralManager;
 import net.codepixl.GLCraft.world.item.Item;
 import net.codepixl.GLCraft.world.tile.Tile;
@@ -133,6 +135,7 @@ public class GLCraft extends Screen{
 
 	@Override
 	public void update() {
+		DebugTimer.startTimer("loop_time");
 		world.update();
 		pluginManager.update();
 		// TODO Auto-generated method stub
@@ -143,6 +146,7 @@ public class GLCraft extends Screen{
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		glClearColor(0,0,0.75f,1);
 		world.render();
+		DebugTimer.endTimer("loop_time");
 		// TODO Auto-generated method stub
 		
 	}
