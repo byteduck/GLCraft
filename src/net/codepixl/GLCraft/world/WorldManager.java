@@ -187,7 +187,6 @@ public class WorldManager {
 	}
 	
 	public void render(){
-		//long rtime = System.currentTimeMillis();
 		DebugTimer.startTimer("chunk_render");
 		Spritesheet.atlas.bind();
 		getEntityManager().getPlayer().applyTranslations();
@@ -207,8 +206,6 @@ public class WorldManager {
 		DebugTimer.startTimer("entity_render");
 		entityManager.render();
 		DebugTimer.endTimer("entity_render");
-		//rtime = System.currentTimeMillis() - rtime;
-		//System.out.println("Render Time: "+rtime+"ms");
 	}
 	
 	public EntityManager getEntityManager(){
