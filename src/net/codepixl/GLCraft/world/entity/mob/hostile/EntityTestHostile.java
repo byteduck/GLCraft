@@ -9,6 +9,7 @@ import com.nishu.utils.Color4f;
 import com.nishu.utils.Time;
 
 import net.codepixl.GLCraft.render.Shape;
+import net.codepixl.GLCraft.util.MathUtils;
 import net.codepixl.GLCraft.world.WorldManager;
 import net.codepixl.GLCraft.world.entity.Entity;
 import net.codepixl.GLCraft.world.entity.mob.EntityPlayer;
@@ -33,12 +34,16 @@ public class EntityTestHostile extends Hostile{
 		Vector3f bPos = new Vector3f(pos);
 		List<Entity> e = worldManager.entityManager.getEntitiesInRadiusOfEntityOfType(this, EntityPlayer.class, 20f);
 		if(e.size() != 0){
-			Entity player = e.get(0);
+			EntityPlayer player = (EntityPlayer) e.get(0);
 			Vector3f ppos = player.getPos();
 			if(pos.x > ppos.x) this.move( -0.25f * (float)Time.getDelta() * 15, 0, 0); else this.move( 0.25f * (float)Time.getDelta() * 15, 0, 0);
 			if(pos.z > ppos.z) this.move(0, 0, -0.25f * (float)Time.getDelta() * 15); else this.move(0, 0, 0.25f * (float)Time.getDelta() * 15);
 			this.jump();
+			float distance = MathUtils.distance(ppos,pos);
 			
+			if(distance <= 2){
+				player.hurt(3f, 1f);
+			}
 		}
 	}
 
