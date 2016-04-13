@@ -8,6 +8,7 @@ import com.evilco.mc.nbt.tag.TagCompound;
 import com.evilco.mc.nbt.tag.TagFloat;
 import com.nishu.utils.Time;
 
+import net.codepixl.GLCraft.util.DebugTimer;
 import net.codepixl.GLCraft.util.GameObj;
 import net.codepixl.GLCraft.util.Ray;
 import net.codepixl.GLCraft.world.WorldManager;
@@ -93,7 +94,9 @@ public class Mob extends EntitySolid implements GameObj{
 		this.prevY = this.getY();
 		//getCamera().updateKeyboard(32, 2);
 		//getCamera().updateMouse();
+		DebugTimer.startTimer("ai_time");
 		handleAI();
+		DebugTimer.pauseTimer("ai_time");
 	}
 	
 	public void jump(){

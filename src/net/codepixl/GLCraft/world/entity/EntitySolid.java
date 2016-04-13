@@ -49,14 +49,17 @@ public class EntitySolid extends Entity{
 			if(AABB.testAABB(toAABB, next)){
 				collided = true;
 				boolean found = false;
-				for(float u = 0; u <= 1; u = u + 0.01f){
-					if(!found){
-						Vector3f to = MathUtils.PointAlongLine(toPos, this.getPos(), u);
-						toAABB.update(to);
-						if(!AABB.testAABB(toAABB, next)){
-							toPos = to;
-							found = true;
-						}
+				float u = 1;
+				while(!found){
+					Vector3f to = MathUtils.PointAlongLine(this.getPos(), toPos, u);
+					toAABB.update(to);
+					if(!AABB.testAABB(toAABB, next)){
+						toPos = to;
+						found = true;
+					}
+					u = u/2f;
+					if(u == 0){
+						found = true;
 					}
 				}
 				exit = true;

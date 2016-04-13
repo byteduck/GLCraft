@@ -16,6 +16,7 @@ import com.evilco.mc.nbt.stream.NbtOutputStream;
 import com.evilco.mc.nbt.tag.TagCompound;
 import com.evilco.mc.nbt.tag.TagList;
 
+import net.codepixl.GLCraft.util.DebugTimer;
 import net.codepixl.GLCraft.util.GameObj;
 import net.codepixl.GLCraft.util.MathUtils;
 import net.codepixl.GLCraft.world.WorldManager;
@@ -123,6 +124,7 @@ public class EntityManager implements GameObj{
 	        e.update();
 	    }
 	    iterating = false;
+	    DebugTimer.endTimer("ai_time");
 	}
 
 	@Override

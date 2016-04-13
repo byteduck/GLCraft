@@ -138,6 +138,7 @@ public class CentralManager extends Screen{
 		DebugTimer.addTimer("chunk_update");
 		DebugTimer.addTimer("chunk_tick");
 		DebugTimer.addTimer("loop_time");
+		DebugTimer.addTimer("ai_time");
 	}
 
 	private void initGUIManager(){

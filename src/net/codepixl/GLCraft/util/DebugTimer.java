@@ -8,8 +8,10 @@ import java.util.HashMap;
 public class DebugTimer{
 	private long time = 0;
 	private long ltime = 0;
+	private long ptime = 0;
 	public String name;
 	private static HashMap<String,DebugTimer> timers = new HashMap<String,DebugTimer>();
+	public boolean paused = false;
 	
 	public static void addTimer(String name){
 		timers.put(name,new DebugTimer(name));
@@ -35,6 +37,10 @@ public class DebugTimer{
 		getTimer(name).end();
 	}
 	
+	public static void pauseTimer(String name){
+		getTimer(name).pause();
+	}
+	
 	public DebugTimer(String name){
 		this.name = name;
 	}
@@ -44,7 +50,12 @@ public class DebugTimer{
 	}
 	
 	public void end(){
-		ltime = System.nanoTime()-time;
+		ltime = System.nanoTime()-time+ptime;
+		ptime = 0;
+	}
+	
+	public void pause(){
+		ptime += System.nanoTime()-time;
 	}
 	
 	public float getMillis(){
