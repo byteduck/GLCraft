@@ -32,14 +32,15 @@ import net.codepixl.GLCraft.render.Shape;
 import net.codepixl.GLCraft.util.Constants;
 import net.codepixl.GLCraft.util.TileAndPos;
 import net.codepixl.GLCraft.world.tile.Tile;
+import net.codepixl.GLCraft.world.tile.tick.TickHelper;
 
 
 public class Chunk {
 	private WorldManager worldManager;
 	private Vector3f pos;
-	private byte [][][] tiles;
-	private int [][][] light;
-	private byte [][][] meta;
+	private volatile byte [][][] tiles;
+	private volatile int [][][] light;
+	private volatile byte [][][] meta;
 	private ShaderProgram shader;
 	public int vcID;
 	private int sizeX;
@@ -112,6 +113,7 @@ public class Chunk {
 						}else{
 							if(posY <= Constants.seaLevel){
 								tiles[x][y][z] = Tile.Water.getId();
+								tickTiles.add(new Vector3f(x,y,z));
 							}else{
 								tiles[x][y][z] = Tile.Air.getId();
 							}
@@ -318,13 +320,12 @@ public class Chunk {
 			Tile t = Tile.getTile(tiles[(int) next.x][(int) next.y][(int) next.z]);
 			if(t.tickRate() > 1){
 				if(Tile.tickMap.get(t) == null){
-					Tile.tickMap.put(t, 0);
+					Tile.tickMap.put(t, new TickHelper(t.tickRate()));
 				}
-				if(Tile.tickMap.get(t) >= t.tickRate()){
-					Tile.tickMap.put(t, 0);
+				if(Tile.tickMap.get(t).needsTick()){
 					t.tick((int)(x+pos.x), (int)(y+pos.y), (int)(z+pos.z), worldManager);
 				}
-				Tile.tickMap.put(t, Tile.tickMap.get(t)+1);
+				Tile.tickMap.get(t).cycle();
 			}else{
 				t.tick((int)(x+pos.x), (int)(y+pos.y), (int)(z+pos.z), worldManager);
 			}
@@ -342,6 +343,10 @@ public class Chunk {
 				}
 			}
 		}
+	}
+	
+	public boolean isTickTile(int x, int y, int z){
+		return tickTiles.contains(new Vector3f(x,y,z));
 	}
 	
 	public void rebuild(){

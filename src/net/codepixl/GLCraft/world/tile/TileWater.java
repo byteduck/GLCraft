@@ -55,21 +55,41 @@ public class TileWater extends Tile{
 	}
 	
 	@Override
-	public void tick(int x, int y, int z, WorldManager w){
+	public void blockUpdate(int x, int y, int z, WorldManager w){
 		if(w.getTileAtPos(x+1, y, z) == Tile.Air.getId()){
-			w.setTileAtPos(x+1, y, z, getId(), true);
+			w.setMetaAtPos(x, y, z, (byte)1, false, false);
+		}else if(w.getTileAtPos(x-1, y, z) == Tile.Air.getId()){
+			w.setMetaAtPos(x, y, z, (byte)1, false, false);
+		}else if(w.getTileAtPos(x, y, z+1) == Tile.Air.getId()){
+			w.setMetaAtPos(x, y, z, (byte)1, false, false);
+		}else if(w.getTileAtPos(x, y, z-1) == Tile.Air.getId()){
+			w.setMetaAtPos(x, y, z, (byte)1, false, false);
+		}else if(w.getTileAtPos(x, y-1, z) == Tile.Air.getId()){
+			w.setMetaAtPos(x, y, z, (byte)1, false, false);
+		}else{
+			w.setMetaAtPos(x, y, z, (byte)0, false, false);
 		}
-		if(w.getTileAtPos(x-1, y, z) == Tile.Air.getId()){
-			w.setTileAtPos(x-1, y, z, getId(), true);
-		}
-		if(w.getTileAtPos(x, y, z+1) == Tile.Air.getId()){
-			w.setTileAtPos(x, y, z+1, getId(), true);
-		}
-		if(w.getTileAtPos(x, y, z-1) == Tile.Air.getId()){
-			w.setTileAtPos(x, y, z-1, getId(), true);
-		}
-		if(w.getTileAtPos(x, y-1, z) == Tile.Air.getId()){
-			w.setTileAtPos(x, y-1, z, getId(), true);
+	}
+	
+	@Override
+	public void tick(int x, int y, int z, WorldManager w){
+		//If water is not stationary
+		if(w.getMetaAtPos(x,y,z) != 0){
+			if(w.getTileAtPos(x+1, y, z) == Tile.Air.getId()){
+				w.setTileAtPos(x+1, y, z, getId(), true);
+			}
+			if(w.getTileAtPos(x-1, y, z) == Tile.Air.getId()){
+				w.setTileAtPos(x-1, y, z, getId(), true);
+			}
+			if(w.getTileAtPos(x, y, z+1) == Tile.Air.getId()){
+				w.setTileAtPos(x, y, z+1, getId(), true);
+			}
+			if(w.getTileAtPos(x, y, z-1) == Tile.Air.getId()){
+				w.setTileAtPos(x, y, z-1, getId(), true);
+			}
+			if(w.getTileAtPos(x, y-1, z) == Tile.Air.getId()){
+				w.setTileAtPos(x, y-1, z, getId(), true);
+			}
 		}
 	}
 }

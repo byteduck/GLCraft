@@ -28,6 +28,7 @@ import net.codepixl.GLCraft.world.entity.EntityManager;
 import net.codepixl.GLCraft.world.entity.EntitySolid;
 import net.codepixl.GLCraft.world.entity.mob.EntityPlayer;
 import net.codepixl.GLCraft.world.tile.Tile;
+import net.codepixl.GLCraft.world.tile.tick.TickHelper;
 
 public class WorldManager {
 	public int loop = 0;
@@ -130,8 +131,13 @@ public class WorldManager {
 			while(i.hasNext()){
 				i.next().tick();
 			}
+			Iterator<TickHelper> iter = Tile.tickMap.values().iterator();
+			while(iter.hasNext()){
+				iter.next().setUpdated(false);
+			}
 			DebugTimer.endTimer("chunk_tick");
 		}
+		
 	}
 	
 	private void loadUnload() {
@@ -263,6 +269,17 @@ public class WorldManager {
 		return -1;
 	}
 	
+	public boolean getIsTickTile(int x, int y, int z){
+		Iterator<Chunk> i = activeChunks.iterator();
+		while(i.hasNext()){
+			Chunk c = i.next();
+			if(x >= c.getPos().x && y >= c.getPos().y && z >= c.getPos().z && x <= c.getPos().x + 15 && y <= c.getPos().y + 15 && z <= c.getPos().z + 15){
+				return c.isTickTile(x-(int)c.getPos().x, y-(int)c.getPos().y, z-(int)c.getPos().z);
+			}
+		}
+		return false;
+	}
+	
 	public byte getMetaAtPos(int x, int y, int z){
 		Iterator<Chunk> i = activeChunks.iterator();
 		while(i.hasNext()){
@@ -304,18 +321,24 @@ public class WorldManager {
 	}
 	
 	public void setMetaAtPos(int x, int y, int z, byte meta, boolean rebuild){
+		setMetaAtPos(x,y,z,meta,rebuild,true);
+	}
+	
+	public void setMetaAtPos(int x, int y, int z, byte meta, boolean rebuild, boolean blockUpdate){
 		Iterator<Chunk> i = activeChunks.iterator();
 		while(i.hasNext()){
 			Chunk c = i.next();
 			if(x >= c.getPos().x && y >= c.getPos().y && z >= c.getPos().z && x <= c.getPos().x + 15 && y <= c.getPos().y + 15 && z <= c.getPos().z + 15){
 				c.setMetaAtPos(x-(int)c.getPos().x, y-(int)c.getPos().y, z-(int)c.getPos().z,meta, rebuild);
-				Tile.getTile((byte)getTileAtPos(x,y,z)).blockUpdate(x,y,z,this);
-				Tile.getTile((byte)getTileAtPos(x+1,y,z)).blockUpdate(x+1,y,z,this);
-				Tile.getTile((byte)getTileAtPos(x-1,y,z)).blockUpdate(x-1,y,z,this);
-				Tile.getTile((byte)getTileAtPos(x,y+1,z)).blockUpdate(x,y+1,z,this);
-				Tile.getTile((byte)getTileAtPos(x,y-1,z)).blockUpdate(x,y-1,z,this);
-				Tile.getTile((byte)getTileAtPos(x,y,z+1)).blockUpdate(x,y,z+1,this);
-				Tile.getTile((byte)getTileAtPos(x,y,z-1)).blockUpdate(x,y,z-1,this);
+				if(blockUpdate){
+					Tile.getTile((byte)getTileAtPos(x,y,z)).blockUpdate(x,y,z,this);
+					Tile.getTile((byte)getTileAtPos(x+1,y,z)).blockUpdate(x+1,y,z,this);
+					Tile.getTile((byte)getTileAtPos(x-1,y,z)).blockUpdate(x-1,y,z,this);
+					Tile.getTile((byte)getTileAtPos(x,y+1,z)).blockUpdate(x,y+1,z,this);
+					Tile.getTile((byte)getTileAtPos(x,y-1,z)).blockUpdate(x,y-1,z,this);
+					Tile.getTile((byte)getTileAtPos(x,y,z+1)).blockUpdate(x,y,z+1,this);
+					Tile.getTile((byte)getTileAtPos(x,y,z-1)).blockUpdate(x,y,z-1,this);
+				}
 				return;
 			}
 		}

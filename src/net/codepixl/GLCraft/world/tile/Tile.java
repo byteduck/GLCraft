@@ -14,11 +14,12 @@ import net.codepixl.GLCraft.world.WorldManager;
 import net.codepixl.GLCraft.world.entity.Entity;
 import net.codepixl.GLCraft.world.entity.EntityItem;
 import net.codepixl.GLCraft.world.item.ItemStack;
+import net.codepixl.GLCraft.world.tile.tick.TickHelper;
 
 public class Tile {
 
 	public static HashMap<Byte, Tile> tileMap = new HashMap<Byte, Tile>();
-	public static HashMap<Tile, Integer> tickMap = new HashMap<Tile, Integer>();
+	public static HashMap<Tile, TickHelper> tickMap = new HashMap<Tile, TickHelper>();
 	
 	//TILES
 	public static Tile Void = new TileVoid();
