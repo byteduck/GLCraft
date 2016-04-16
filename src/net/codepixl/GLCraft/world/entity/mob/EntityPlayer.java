@@ -53,6 +53,7 @@ import net.codepixl.GLCraft.world.entity.NBTUtil;
 import net.codepixl.GLCraft.world.entity.mob.animal.EntityTestAnimal;
 import net.codepixl.GLCraft.world.item.Item;
 import net.codepixl.GLCraft.world.item.ItemStack;
+import net.codepixl.GLCraft.world.item.tool.Tool;
 import net.codepixl.GLCraft.world.tile.Tile;
 
 public class EntityPlayer extends Mob {
@@ -114,7 +115,14 @@ public class EntityPlayer extends Mob {
 			this.prevSelect.y = -1f;
 			this.prevSelect.z = -1f;
 		}else{
-			this.breakProgress += Time.getDelta();
+			float multiplier = 1;
+			if(this.getSelectedItemStack().isItem()){
+				Item selItem = this.getSelectedItemStack().getItem();
+				if(selItem instanceof Tool){
+					multiplier = ((Tool)selItem).getStrength();
+				}
+			}
+			this.breakProgress += Time.getDelta() * multiplier;
 		}
 	}
 	

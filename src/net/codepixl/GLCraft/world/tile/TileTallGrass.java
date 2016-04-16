@@ -38,7 +38,7 @@ public class TileTallGrass extends Tile {
 	@Override
 	public void onBreak(int x, int y, int z, WorldManager worldManager){
 		if(new Random().nextFloat() < 0.1){
-			worldManager.spawnEntity(new EntityItem(new ItemStack(Item.seeds), (float)x+0.5f, (float)y+0.5f,(float)z+0.5f, worldManager));
+			worldManager.spawnEntity(new EntityItem(new ItemStack(Item.Seeds), (float)x+0.5f, (float)y+0.5f,(float)z+0.5f, worldManager));
 		}
 	}
 	

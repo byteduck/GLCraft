@@ -6,11 +6,14 @@ import com.nishu.utils.Color4f;
 
 import net.codepixl.GLCraft.render.TextureManager;
 import net.codepixl.GLCraft.world.entity.mob.EntityPlayer;
+import net.codepixl.GLCraft.world.item.tool.ItemWoodPickaxe;
 
 public class Item {
 	
 	public static HashMap<Byte, Item> itemMap = new HashMap<Byte, Item>();
-	public static Item seeds = new ItemSeeds();
+	public static Item Seeds = new ItemSeeds();
+	public static Item Stick = new ItemStick();
+	public static Item WoodPick = new ItemWoodPickaxe();
 	
 	public String getName(){
 		return "Un-named item";
