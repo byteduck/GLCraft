@@ -3,7 +3,7 @@ Just testing my skills to see if I can make a voxel game. I'm not planning to do
 
 Main website here: http://www.codepixl.net/GLCraft
 
-Gource: https://www.youtube.com/watch?v=lSscChmX2JI made by Spike11302000
+Gource: https://youtu.be/lSscChmX2JI made by Spike11302000
 
 Take a look at the wiki to see how you can make your own plugins for GLCraft.
 
