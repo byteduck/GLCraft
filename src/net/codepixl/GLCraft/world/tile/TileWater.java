@@ -1,7 +1,12 @@
 package net.codepixl.GLCraft.world.tile;
 
+import org.lwjgl.opengl.GL11;
+
 import com.nishu.utils.Color4f;
 
+import net.codepixl.GLCraft.render.RenderType;
+import net.codepixl.GLCraft.render.Shape;
+import net.codepixl.GLCraft.world.Chunk;
 import net.codepixl.GLCraft.world.WorldManager;
 
 public class TileWater extends Tile{
@@ -21,6 +26,25 @@ public class TileWater extends Tile{
 	public Color4f getColor() {
 		// TODO Auto-generated method stub
 		return Color4f.WHITE;
+	}
+	
+	@Override
+	public RenderType getRenderType(){
+		return RenderType.CUSTOM;
+	}
+	
+	@Override
+	public void customRender(float x, float y, float z, WorldManager w, Chunk c){
+		float size;
+		byte meta = w.getMetaAtPos((int)x, (int)y, (int)z);
+		if(meta == 0){
+			size = 1f;
+		}else{
+			size = (15f-((float)meta-1f))/15f;
+		}
+		GL11.glBegin(GL11.GL_QUADS);
+		Shape.createCube(x, y, z, Color4f.WHITE, getTexCoords(), size);
+		GL11.glEnd();
 	}
 
 	@Override
@@ -67,7 +91,9 @@ public class TileWater extends Tile{
 		}else if(w.getTileAtPos(x, y-1, z) == Tile.Air.getId()){
 			w.setMetaAtPos(x, y, z, (byte)1, false, false);
 		}else{
-			w.setMetaAtPos(x, y, z, (byte)0, false, false);
+			if(w.getMetaAtPos(x, y, z) == 1){
+				w.setMetaAtPos(x, y, z, (byte)0, false, false);
+			}
 		}
 	}
 	
