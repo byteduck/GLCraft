@@ -293,6 +293,7 @@ public class Chunk {
 		Iterator<Vector3f> it = tempTickTiles.iterator();
 		while(it.hasNext()){
 			Vector3f v = it.next();
+			it.remove();
 			tickTiles.remove(v);
 			Tile t = Tile.getTile(tiles[(int) v.x][(int) v.y][(int) v.z]);
 			if(t.needsConstantTick()){
@@ -336,7 +337,7 @@ public class Chunk {
 			for(int y = 0; y < sizeY; y++){
 				for(int z = 0; z < sizeZ; z++){
 					if(Tile.getTile(tiles[x][y][z]).needsConstantTick()){
-						tickTiles.add(new Vector3f(x,y,z));
+						queueTickTileUpdate(x,y,z);
 					}
 				}
 			}

@@ -8,7 +8,6 @@ import net.codepixl.GLCraft.world.entity.Entity;
 import net.codepixl.GLCraft.world.entity.particle.Particle;
 
 public class TileParticleProjector extends Tile{
-	private int timer = 0;
 	@Override
 	public String getName() {
 		return "Particle Projector";
@@ -17,15 +16,17 @@ public class TileParticleProjector extends Tile{
 	public byte getId() {
 		return 19;
 	}
+	
+	@Override
+	public int tickRate(){
+		return 2;
+	}
+	
 	@Override
 	public void tick(int x, int y, int z, WorldManager worldManager){
-		timer++;
-		if(timer>= 1){
-			Particle particle = new Particle(new Vector3f(x+.5f,y,z+.5f), new Vector3f(Constants.randFloat(-0.1f, 0.1f),Constants.randFloat(0, 1),Constants.randFloat(-0.1f, 0.1f)), worldManager);
+			Particle particle = new Particle(new Vector3f(x+.5f,y+.5f,z+.5f), new Vector3f(Constants.randFloat(-0.1f, 0.1f),Constants.randFloat(0, 1),Constants.randFloat(-0.1f, 0.1f)), worldManager);
 			//particle.setTexCoords(Tile.Tnt.getTexCoords());
 			worldManager.entityManager.add(particle);
-			timer = 0;
-		}
 	}
 	@Override
 	public boolean needsConstantTick(){
@@ -34,5 +35,9 @@ public class TileParticleProjector extends Tile{
 	@Override
 	public String getTextureName(){
 		return "particle_projector";
+	}
+	@Override
+	public boolean isTransparent(){
+		return true;
 	}
 }

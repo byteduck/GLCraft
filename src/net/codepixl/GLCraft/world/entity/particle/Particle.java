@@ -8,6 +8,7 @@ import org.lwjgl.util.vector.Vector3f;
 import com.nishu.utils.Color4f;
 
 import net.codepixl.GLCraft.render.Shape;
+import net.codepixl.GLCraft.util.AABB;
 import net.codepixl.GLCraft.world.WorldManager;
 import net.codepixl.GLCraft.world.entity.Entity;
 import net.codepixl.GLCraft.world.entity.EntitySolid;
@@ -74,5 +75,10 @@ public class Particle extends EntitySolid{
 			//this.rot.z = (float) Math.toDegrees(Math.atan2(tpos.x - this.pos.x, tpos.z - this.pos.z));
 		
 		}
+	}
+	
+	@Override
+	public AABB getDefaultAABB(){
+		return new AABB(0.1f,0.1f,0.1f);
 	}
 }

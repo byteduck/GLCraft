@@ -53,6 +53,7 @@ import java.io.PipedInputStream;
 import java.nio.ByteBuffer;
 import java.nio.FloatBuffer;
 import java.util.Iterator;
+import java.util.Scanner;
 
 import javax.swing.JOptionPane;
 
@@ -191,9 +192,10 @@ public class CentralManager extends Screen{
 					worldManager.setTileAtPos(pos, Tile.Fire.getId(), true);
 				}
 				if(Keyboard.isKeyDown(Keyboard.KEY_P)){
-					String id = JOptionPane.showInputDialog("Enter in the id of the tile you wish to place: ");
+					/*String id = JOptionPane.showInputDialog("Enter in the id of the tile you wish to place: ");
 					int tileid = Integer.parseInt(id);
-					worldManager.setTileAtPos(pos, (byte) tileid, true);
+					worldManager.setTileAtPos(pos, (byte) tileid, true);*/
+					worldManager.setTileAtPos(pos,Tile.ParticleProjector.getId(),true);
 				}
 				if(Keyboard.isKeyDown(Keyboard.KEY_B)){
 					worldManager.setTileAtPos(pos, Tile.Bluestone.getId(), true);
