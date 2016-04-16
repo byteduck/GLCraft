@@ -23,19 +23,27 @@ public class EntityTestAnimal extends Animal{
 	
 	@Override
 	public void render(){
-		GL11.glBegin(GL11.GL_QUADS);
-		Shape.createCube(pos.x-0.5f, pos.y, pos.z-0.5f, Color4f.WHITE, Tile.Glass.getTexCoords(), 1f);
 		GL11.glEnd();
+		GL11.glPushMatrix();
+		GL11.glTranslatef(getX(), getY(), getZ());
+		GL11.glRotatef(this.rot.y, 0f, 2.0f, 0f);
+		GL11.glBegin(GL11.GL_QUADS);
+		Shape.createCube(-0.5f, 0, -0.5f, Color4f.WHITE, Tile.Glass.getTexCoords(), 1f);
+		GL11.glEnd();
+		GL11.glPopMatrix();
 	}
 	
 	@Override
 	public void handleAI(){
+		super.handleAI();
 		Vector3f bPos = new Vector3f(pos);
 		List<Entity> e = worldManager.entityManager.getEntitiesInRadiusOfEntityOfType(this, EntityPlayer.class, 20f);
 		if(e.size() > 0){
 			Vector3f ppos = e.get(0).getPos();
-			if(pos.x > ppos.x) this.move( -0.25f * (float)Time.getDelta() * 15, 0, 0); else this.move( 0.25f * (float)Time.getDelta() * 15, 0, 0);
-			if(pos.z > ppos.z) this.move(0, 0, -0.25f * (float)Time.getDelta() * 15); else this.move(0, 0, 0.25f * (float)Time.getDelta() * 15);
+			this.setTarget(e.get(0));
+			this.walkForward();
+			//if(pos.x > ppos.x) this.move( -0.25f * (float)Time.getDelta() * 15, 0, 0); else this.move( 0.25f * (float)Time.getDelta() * 15, 0, 0);
+			//if(pos.z > ppos.z) this.move(0, 0, -0.25f * (float)Time.getDelta() * 15); else this.move(0, 0, 0.25f * (float)Time.getDelta() * 15);
 			this.jump();
 		}
 	}
