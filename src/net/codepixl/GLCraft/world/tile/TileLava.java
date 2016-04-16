@@ -6,6 +6,7 @@ import net.codepixl.GLCraft.util.Constants;
 import net.codepixl.GLCraft.world.WorldManager;
 import net.codepixl.GLCraft.world.entity.Entity;
 import net.codepixl.GLCraft.world.entity.mob.Mob;
+import net.codepixl.GLCraft.world.tile.material.Material;
 
 public class TileLava extends Tile{
 	int tick = 0;
@@ -14,6 +15,12 @@ public class TileLava extends Tile{
 		// TODO Auto-generated method stub
 		return "Lava";
 	}
+	
+	@Override
+	public Material getMaterial(){
+		return Material.LIQUID;
+	}
+	
 	@Override
 	public byte getId() {
 		// TODO Auto-generated method stub

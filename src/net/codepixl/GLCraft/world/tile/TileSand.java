@@ -4,11 +4,17 @@ import com.nishu.utils.Color4f;
 
 import net.codepixl.GLCraft.world.WorldManager;
 import net.codepixl.GLCraft.world.entity.EntityFallingBlock;
+import net.codepixl.GLCraft.world.tile.material.Material;
 
 public class TileSand extends Tile{
 	@Override
 	public String getName() {
 		return "Sand";
+	}
+	
+	@Override
+	public Material getMaterial(){
+		return Material.SAND;
 	}
 	
 	@Override

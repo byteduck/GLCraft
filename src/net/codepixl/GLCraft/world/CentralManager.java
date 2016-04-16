@@ -98,7 +98,7 @@ public class CentralManager extends Screen{
 	private WorldManager worldManager;
 	private int currentBlock;
 	private PipedInputStream actionsToDo = new PipedInputStream();
-	private GUIManager guiManager;
+	public GUIManager guiManager;
 	private SoundManager soundManager;
 	
 	public static final int AIRCHUNK = 0, MIXEDCHUNK = 1;
@@ -180,7 +180,7 @@ public class CentralManager extends Screen{
 					}
 				}
 				if(Keyboard.isKeyDown(Keyboard.KEY_E)){
-					if(guiManager.getCurrentGUIName() == "crafting"){
+					if(guiManager.getCurrentGUIName() == "crafting" || guiManager.getCurrentGUIName() == "adv_crafting"){
 						guiManager.closeGUI();
 						Mouse.setGrabbed(true);
 					}else{

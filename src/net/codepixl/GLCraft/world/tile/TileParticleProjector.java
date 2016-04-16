@@ -6,12 +6,19 @@ import net.codepixl.GLCraft.util.Constants;
 import net.codepixl.GLCraft.world.WorldManager;
 import net.codepixl.GLCraft.world.entity.Entity;
 import net.codepixl.GLCraft.world.entity.particle.Particle;
+import net.codepixl.GLCraft.world.tile.material.Material;
 
 public class TileParticleProjector extends Tile{
 	@Override
 	public String getName() {
 		return "Particle Projector";
 	}
+	
+	@Override
+	public Material getMaterial(){
+		return Material.STONE;
+	}
+	
 	@Override
 	public byte getId() {
 		return 19;

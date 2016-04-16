@@ -6,6 +6,7 @@ import com.nishu.utils.Color4f;
 
 import net.codepixl.GLCraft.render.TextureManager;
 import net.codepixl.GLCraft.world.entity.mob.EntityPlayer;
+import net.codepixl.GLCraft.world.item.tool.ItemStonePickaxe;
 import net.codepixl.GLCraft.world.item.tool.ItemWoodPickaxe;
 
 public class Item {
@@ -14,6 +15,7 @@ public class Item {
 	public static Item Seeds = new ItemSeeds();
 	public static Item Stick = new ItemStick();
 	public static Item WoodPick = new ItemWoodPickaxe();
+	public static Item StonePick = new ItemStonePickaxe();
 	
 	public String getName(){
 		return "Un-named item";

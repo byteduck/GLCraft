@@ -1,7 +1,6 @@
 package net.codepixl.GLCraft.world.item.tool;
 
-public class ItemWoodPickaxe extends Tool{
-	
+public class ItemStonePickaxe extends Tool{
 	@Override
 	public ToolType getToolType(){
 		return ToolType.PICKAXE;
@@ -9,22 +8,21 @@ public class ItemWoodPickaxe extends Tool{
 	
 	@Override
 	public float getStrength(){
-		return 2.5f;
+		return 4.5f;
 	}
 	
 	@Override
 	public String getName(){
-		return "Wooden Pickaxe";
+		return "Stone Pickaxe";
 	}
 	
 	@Override
 	public String getTextureName(){
-		return "pick_wood";
+		return "pick_stone";
 	}
 	
 	@Override
 	public byte getId(){
 		return 2;
 	}
-	
 }
