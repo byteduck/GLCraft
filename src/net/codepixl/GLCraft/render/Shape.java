@@ -338,4 +338,15 @@ public class Shape {
 		glTexCoord2f(texCoords[0] + currentSpritesheet.uniformSize(), texCoords[1]);
 		glVertex3f(x, y, z);
 	}
+	public static void createSprite(float x, float y, float z, Color4f color, float[] texCoords, float size){ //one sided plane
+		glColor4f(color.r, color.g, color.b, color.a);
+		glTexCoord2f(texCoords[0], texCoords[1]);
+		glVertex3f(x, y, z);
+		glTexCoord2f(texCoords[0], texCoords[1] + currentSpritesheet.uniformSize());
+		glVertex3f(x, y + size, z);
+		glTexCoord2f(texCoords[0] + currentSpritesheet.uniformSize(), texCoords[1] + currentSpritesheet.uniformSize());
+		glVertex3f(x + size, y + size, z);
+		glTexCoord2f(texCoords[0] + currentSpritesheet.uniformSize(), texCoords[1]);
+		glVertex3f(x + size, y, z);
+	}
 }
