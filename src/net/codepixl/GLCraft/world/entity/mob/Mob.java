@@ -14,6 +14,7 @@ import net.codepixl.GLCraft.util.Ray;
 import net.codepixl.GLCraft.world.WorldManager;
 import net.codepixl.GLCraft.world.entity.EntityItem;
 import net.codepixl.GLCraft.world.entity.EntitySolid;
+import net.codepixl.GLCraft.world.entity.mob.animal.EntityTestAnimal;
 import net.codepixl.GLCraft.world.item.ItemStack;
 import net.codepixl.GLCraft.world.tile.Tile;
 

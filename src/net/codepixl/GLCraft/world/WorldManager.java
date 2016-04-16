@@ -121,16 +121,17 @@ public class WorldManager {
 		}
 		DebugTimer.endTimer("chunk_update");
 		
-		DebugTimer.startTimer("chunk_tick");
+		
 		tick+=Time.getDelta();
 		if(tick > 1.0f/20f){
+			DebugTimer.startTimer("chunk_tick");
 			tick = 0f;
 			i = activeChunks.iterator();
 			while(i.hasNext()){
 				i.next().tick();
 			}
+			DebugTimer.endTimer("chunk_tick");
 		}
-		DebugTimer.endTimer("chunk_tick");
 	}
 	
 	private void loadUnload() {

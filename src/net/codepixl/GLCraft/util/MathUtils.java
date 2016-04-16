@@ -68,6 +68,22 @@ public class MathUtils {
     	}
     }
     
+    public static float towardsValue(float f, float amount, float value){
+    	if(f < value){
+    		if(f+amount > value){
+    			return value;
+    		}else{
+    			return f+amount;
+    		}
+    	}else{
+    		if(f-amount < value){
+    			return value;
+    		}else{
+    			return f-amount;
+    		}
+    	}
+    }
+    
     //Gives point along a line where the line is a to b. U is the percent along the line.
     public static Vector3f PointAlongLine(Vector3f a, Vector3f b, float u){
     	Vector3f ret = new Vector3f();

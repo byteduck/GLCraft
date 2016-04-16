@@ -19,7 +19,6 @@ public class TileParticleProjector extends Tile{
 	}
 	@Override
 	public void tick(int x, int y, int z, WorldManager worldManager){
-		System.out.println(new Vector3f(x,y,z));
 		timer++;
 		if(timer>= 1){
 			Particle particle = new Particle(new Vector3f(x+.5f,y,z+.5f), new Vector3f(Constants.randFloat(-0.1f, 0.1f),Constants.randFloat(0, 1),Constants.randFloat(-0.1f, 0.1f)), worldManager);

@@ -57,8 +57,8 @@ import net.codepixl.GLCraft.world.tile.Tile;
 
 public class EntityPlayer extends Mob {
 	
-	private float breakCooldown, buildCooldown, breakProgress;
-	private final float speed, maxU, maxD;
+	private float breakCooldown, buildCooldown, breakProgress, walkAccel;
+	private final float maxU, maxD, speed;
 	private int selectedSlot;
 	private boolean qPressed, wasBreaking;
 	private Vector3f prevSelect;
@@ -66,6 +66,7 @@ public class EntityPlayer extends Mob {
 	public EntityPlayer(Vector3f pos, WorldManager w) {
 		super(pos, w);
 		speed = 1;
+		walkAccel = 0;
 		maxU = 90;
 		maxD = -90;
 		breakCooldown = 0;
@@ -219,6 +220,11 @@ public class EntityPlayer extends Mob {
 		if(keyRight && !keyLeft && !keyUp && !keyDown) {
 			Pmove(speed * delay * (float) Time.getDelta(), 0, 0);
 		}
+		if(!keyRight && !keyLeft && !keyUp && !keyDown){
+			walkAccel = MathUtils.towardsZero(walkAccel, (float)Time.getDelta()*3f);
+		}else{
+			walkAccel = MathUtils.towardsValue(walkAccel, (float)Time.getDelta()*3f, 1);
+		}
 		if(space) {
 			this.jump();
 		}
@@ -353,9 +359,9 @@ public class EntityPlayer extends Mob {
 		}
 	}
 	
-	public void Pmove(float x, float y, float z) {
-		float toZ = (float) ((x * (float) Math.cos(Math.toRadians(getRot().y - 90)) + z * Math.cos(Math.toRadians(getRot().y))));
-		float toX = (float) (-(x * (float) Math.sin(Math.toRadians(getRot().y - 90)) + z * Math.sin(Math.toRadians(getRot().y))));
+	public void Pmove(float x, float y, float z){
+		float toZ = walkAccel * (float) ((x * (float) Math.cos(Math.toRadians(getRot().y - 90)) + z * Math.cos(Math.toRadians(getRot().y))));
+		float toX = walkAccel * (float) (-(x * (float) Math.sin(Math.toRadians(getRot().y - 90)) + z * Math.sin(Math.toRadians(getRot().y))));
 		float toY = 0;
 		if(toZ != 0 && toX != 0){
 			//SoundManager.getMainManager().quickPlayOnce("walk.grass");

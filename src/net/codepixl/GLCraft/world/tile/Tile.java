@@ -18,6 +18,7 @@ import net.codepixl.GLCraft.world.item.ItemStack;
 public class Tile {
 
 	public static HashMap<Byte, Tile> tileMap = new HashMap<Byte, Tile>();
+	public static HashMap<Tile, Integer> tickMap = new HashMap<Tile, Integer>();
 	
 	//TILES
 	public static Tile Void = new TileVoid();
@@ -61,6 +62,10 @@ public class Tile {
 	
 	public boolean needsConstantTick(){
 		return false;
+	}
+	
+	public int tickRate(){
+		return 1;
 	}
 	
 	public Color4f getColor(){
@@ -173,6 +178,11 @@ public class Tile {
 
 	public String getIconName() {
 		return this.getTextureName();
+	}
+	
+	@Override
+	public String toString(){
+		return getName();
 	}
 
 	public float[] getTexCoords() {

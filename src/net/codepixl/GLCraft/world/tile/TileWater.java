@@ -43,9 +43,19 @@ public class TileWater extends Tile{
 	public float getHardness(){
 		return 0.1f;
 	}
+	
+	@Override
+	public int tickRate(){
+		return 5;
+	}
+	
+	@Override
+	public boolean needsConstantTick(){
+		return true;
+	}
+	
 	@Override
 	public void tick(int x, int y, int z, WorldManager w){
-		//System.out.println("water tick");
 		if(w.getTileAtPos(x+1, y, z) == Tile.Air.getId()){
 			w.setTileAtPos(x+1, y, z, getId(), true);
 		}
@@ -61,9 +71,5 @@ public class TileWater extends Tile{
 		if(w.getTileAtPos(x, y-1, z) == Tile.Air.getId()){
 			w.setTileAtPos(x, y-1, z, getId(), true);
 		}
-	}
-	@Override
-	public boolean needsConstantTick(){
-		return true;
 	}
 }
