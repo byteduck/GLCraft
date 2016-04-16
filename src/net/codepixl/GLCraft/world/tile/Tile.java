@@ -40,6 +40,7 @@ public class Tile {
 	public static Tile Wood = new TileWood();
 	public static Tile Sapling = new TileSapling();
 	public static Tile Sand = new TileSand();
+	public static Tile ParticleProjector = new TileParticleProjector();
 	//TILES
 	
 	public String getName(){
@@ -63,7 +64,7 @@ public class Tile {
 	}
 	
 	public Color4f getColor(){
-		return new Color4f(1,1,1,1);
+		return Color4f.WHITE;
 	}
 	
 	public String getTextureName(){

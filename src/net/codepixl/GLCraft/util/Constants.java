@@ -60,4 +60,8 @@ public class Constants {
 	    int randomNum = rand.nextInt((max - min) + 1) + min;
 	    return randomNum;
 	}
+	public static float randFloat(float min, float max) {
+	    float randomNum = rand.nextFloat() * (max - min) + min;
+	    return randomNum;
+	}
 }
