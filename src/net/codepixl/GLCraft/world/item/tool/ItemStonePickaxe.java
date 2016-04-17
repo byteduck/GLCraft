@@ -23,6 +23,6 @@ public class ItemStonePickaxe extends Tool{
 	
 	@Override
 	public byte getId(){
-		return 2;
+		return 3;
 	}
 }

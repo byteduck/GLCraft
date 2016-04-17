@@ -44,6 +44,11 @@ public class TileBluestone extends Tile{
 	}
 	
 	@Override
+	public boolean canBeDestroyedByLiquid(){
+		return true;
+	}
+	
+	@Override
 	public boolean customHitbox(){
 		return true;
 	}

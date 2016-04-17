@@ -153,7 +153,6 @@ public class Tile {
 	}
 	
 	public void registerTile() {
-		// TODO Auto-generated method stub
 		System.out.println("Registering Tile "+getName()+" ("+getId()+")");
 		Tile.tileMap.put(getId(), this);
 	}
@@ -247,22 +246,22 @@ public class Tile {
 	}
 
 	public float[] getTexCoords() {
-		// TODO Auto-generated method stub
 		return TextureManager.tile(this);
 	}
 	
 	public float[] getTexCoords(byte meta){
-		// TODO Auto-generated method stub
 		return TextureManager.tile(this, meta);
 	}
 
 	public float[] getIconCoords() {
-		// TODO Auto-generated method stub
 		return TextureManager.tileIcon(this);
 	}
 	
 	public float[] getIconCoords(byte meta) {
-		// TODO Auto-generated method stub
 		return TextureManager.tileIcon(this, meta);
+	}
+
+	public boolean canBeDestroyedByLiquid() {
+		return false;
 	}
 }

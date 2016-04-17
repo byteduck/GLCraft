@@ -55,6 +55,7 @@ import net.codepixl.GLCraft.world.item.Item;
 import net.codepixl.GLCraft.world.item.ItemStack;
 import net.codepixl.GLCraft.world.item.tool.Tool;
 import net.codepixl.GLCraft.world.tile.Tile;
+import net.codepixl.GLCraft.world.tile.material.Material;
 
 public class EntityPlayer extends Mob {
 	
@@ -62,8 +63,10 @@ public class EntityPlayer extends Mob {
 	public byte currentTile;
 	private final float maxU, maxD, speed;
 	private int selectedSlot;
-	private boolean qPressed, wasBreaking;
+	private boolean qPressed, wasBreaking, wasRightClick;
 	private Vector3f prevSelect;
+	private boolean shouldPlaceTile;
+	private Tile tileToPlace;
 	
 	public EntityPlayer(Vector3f pos, WorldManager w) {
 		super(pos, w);
@@ -480,7 +483,7 @@ public class EntityPlayer extends Mob {
 		int tile = -1;
 		while(r.distance < 10){
 			if(worldManager.doneGenerating) {
-				if(worldManager.getTileAtPos((int) r.pos.x, (int) r.pos.y, (int) r.pos.z) == -1 || worldManager.getTileAtPos((int) r.pos.x, (int) r.pos.y, (int) r.pos.z) == 0) {
+				if(worldManager.getTileAtPos((int) r.pos.x, (int) r.pos.y, (int) r.pos.z) == -1 || worldManager.getTileAtPos((int) r.pos.x, (int) r.pos.y, (int) r.pos.z) == 0 || Tile.getTile((byte) worldManager.getTileAtPos((int) r.pos.x, (int) r.pos.y, (int) r.pos.z)).getMaterial() == Material.LIQUID) {
 					r.next();
 				}else{
 					tile = worldManager.getTileAtPos((int) r.pos.x, (int) r.pos.y, (int) r.pos.z);
@@ -558,8 +561,23 @@ public class EntityPlayer extends Mob {
 									setBuildCooldown(0.2f);
 									r.next();
 								}
+							}else if(!worldManager.getEntityManager().getPlayer().getSelectedItemStack().isNull() && worldManager.getEntityManager().getPlayer().getSelectedItemStack().isItem() && !wasRightClick){
+								worldManager.getEntityManager().getPlayer().getSelectedItemStack().getItem().onClick(this);
 							}
 						}
+					}else if(shouldPlaceTile){
+						AABB blockaabb = new AABB(1, 1, 1);
+						blockaabb.update(new Vector3f(((int) r.pos.x) + 0.5f, (int) r.pos.y, ((int) r.pos.z) + 0.5f));
+						if(!AABB.testAABB(blockaabb, getAABB()) && worldManager.getEntityManager().getPlayer().getSelectedItemStack().getTile().canPlace((int) r.pos.x, (int) r.pos.y, (int) r.pos.z, worldManager)) {
+							while(worldManager.getTileAtPos(r.pos) != Tile.Air.getId() || AABB.testAABB(blockaabb, getAABB()) && worldManager.getEntityManager().getPlayer().getSelectedItemStack().getTile().canPlace((int) r.pos.x, (int) r.pos.y, (int) r.pos.z, worldManager)){
+								r.prev();
+							}
+							worldManager.setTileAtPos((int) r.pos.x, (int) r.pos.y, (int) r.pos.z, tileToPlace.getId(), true, (byte) 0);
+							worldManager.getEntityManager().getPlayer().getSelectedItemStack().getTile().onPlace((int) r.pos.x, (int) r.pos.y, (int) r.pos.z, worldManager);
+							setBuildCooldown(0.2f);
+							r.next();
+						}
+						shouldPlaceTile = false;
 					}
 					r.distance = 11;
 				}
@@ -569,6 +587,7 @@ public class EntityPlayer extends Mob {
 			}
 		}
 		this.currentTile = (byte)tile;
+		wasRightClick = Mouse.isButtonDown(1);
 		return tile;
 	}
 	
@@ -583,4 +602,10 @@ public class EntityPlayer extends Mob {
 		}
 		return coords;
 	}
+
+	public void placeTile(Tile tile) {
+		shouldPlaceTile = true;
+		tileToPlace = tile;
+	}
+	
 }

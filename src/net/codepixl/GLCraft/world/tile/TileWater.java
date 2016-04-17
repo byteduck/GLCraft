@@ -108,19 +108,19 @@ public class TileWater extends Tile{
 	public void tick(int x, int y, int z, WorldManager w){
 		//If water is not stationary
 		if(w.getMetaAtPos(x,y,z) != 0){
-			if(w.getTileAtPos(x+1, y, z) == Tile.Air.getId()){
+			if(w.getTileAtPos(x+1, y, z) == Tile.Air.getId() || Tile.getTile((byte) w.getTileAtPos(x+1, y, z)).canBeDestroyedByLiquid()){
 				w.setTileAtPos(x+1, y, z, getId(), true);
 			}
-			if(w.getTileAtPos(x-1, y, z) == Tile.Air.getId()){
+			if(w.getTileAtPos(x-1, y, z) == Tile.Air.getId() || Tile.getTile((byte) w.getTileAtPos(x-1, y, z)).canBeDestroyedByLiquid()){
 				w.setTileAtPos(x-1, y, z, getId(), true);
 			}
-			if(w.getTileAtPos(x, y, z+1) == Tile.Air.getId()){
+			if(w.getTileAtPos(x, y, z+1) == Tile.Air.getId() || Tile.getTile((byte) w.getTileAtPos(x, y, z+1)).canBeDestroyedByLiquid()){
 				w.setTileAtPos(x, y, z+1, getId(), true);
 			}
-			if(w.getTileAtPos(x, y, z-1) == Tile.Air.getId()){
+			if(w.getTileAtPos(x, y, z-1) == Tile.Air.getId() || Tile.getTile((byte) w.getTileAtPos(x, y, z+1)).canBeDestroyedByLiquid()){
 				w.setTileAtPos(x, y, z-1, getId(), true);
 			}
-			if(w.getTileAtPos(x, y-1, z) == Tile.Air.getId()){
+			if(w.getTileAtPos(x, y-1, z) == Tile.Air.getId() || Tile.getTile((byte) w.getTileAtPos(x, y-1, z)).canBeDestroyedByLiquid()){
 				w.setTileAtPos(x, y-1, z, getId(), true);
 			}
 		}
