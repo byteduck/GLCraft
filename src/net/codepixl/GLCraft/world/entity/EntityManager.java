@@ -23,7 +23,7 @@ import net.codepixl.GLCraft.util.GameObj;
 import net.codepixl.GLCraft.util.MathUtils;
 import net.codepixl.GLCraft.world.WorldManager;
 import net.codepixl.GLCraft.world.entity.mob.EntityPlayer;
-import net.codepixl.GLCraft.world.entity.mob.EntityPlayerMP;
+import net.codepixl.GLCraft.world.entity.mob.PlayerMP;
 import net.codepixl.GLCraft.world.entity.tileentity.TileEntity;
 
 public class EntityManager implements GameObj{
@@ -34,7 +34,7 @@ public class EntityManager implements GameObj{
 	private ArrayList<TileEntity> tileEntities;
 	boolean shouldRemoveAll = false;
 	private EntityPlayer player;
-	private EntityPlayerMP otherPlayer;
+	private PlayerMP otherPlayer;
 	private WorldManager w;
 	public boolean iterating = false;
 	
@@ -61,7 +61,7 @@ public class EntityManager implements GameObj{
 	}
 	
 	public void initPlayerMP(){
-		otherPlayer = new EntityPlayerMP(new Vector3f(0,0,0),w);
+		otherPlayer = new PlayerMP(new Vector3f(0,0,0),w);
 		add(otherPlayer);
 	}
 	
@@ -189,7 +189,7 @@ public class EntityManager implements GameObj{
 		return player;
 	}
 
-	public EntityPlayerMP getPlayerMP() {
+	public PlayerMP getPlayerMP() {
 		// TODO Auto-generated method stub
 		return this.otherPlayer;
 	}

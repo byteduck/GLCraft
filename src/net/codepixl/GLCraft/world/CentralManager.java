@@ -166,58 +166,56 @@ public class CentralManager extends Screen{
 		}else if(!guiManager.mouseShouldBeGrabbed()){
 			Mouse.setGrabbed(false);
 		}
-		if(!GLCraft.IS_SERVER){
-			while(Keyboard.next()){
-				if(Keyboard.getEventKeyState()){
-					if(Keyboard.isKeyDown(Keyboard.KEY_F3)){
-						renderDebug = !renderDebug;
-					}
-					if(Keyboard.isKeyDown(Keyboard.KEY_ESCAPE)){
-						if(guiManager.isGUIOpen()){
-							guiManager.closeGUI();
-							Mouse.setGrabbed(true);
-						}else{
-							guiManager.showGUI("pauseMenu");
-						}
-					}
-					if(Keyboard.isKeyDown(Keyboard.KEY_E)){
-						if(guiManager.getCurrentGUIName() == "crafting" || guiManager.getCurrentGUIName() == "adv_crafting"){
-							guiManager.closeGUI();
-							Mouse.setGrabbed(true);
-						}else{
-							guiManager.showGUI("crafting");
-						}
-					}
-					Vector3f pos = worldManager.entityManager.getPlayer().getPos();
-					if(Keyboard.isKeyDown(Keyboard.KEY_F)){
-						worldManager.setTileAtPos(pos, Tile.Fire.getId(), true);
-					}
-					if(Keyboard.isKeyDown(Keyboard.KEY_P)){
-						/*String id = JOptionPane.showInputDialog("Enter in the id of the tile you wish to place: ");
-						int tileid = Integer.parseInt(id);
-						worldManager.setTileAtPos(pos, (byte) tileid, true);*/
-						/*worldManager.setTileAtPos(pos,Tile.ParticleProjector.getId(),true);*/
-						/*worldManager.setTileAtPos(pos, Tile.Log.getId(), false);
-						worldManager.setMetaAtPos((int)pos.x, (int)pos.y, (int)pos.z, (byte)4, true);*/
-						worldManager.setTileAtPos(pos, Tile.Chest.getId(), true);
-					}
-					if(Keyboard.isKeyDown(Keyboard.KEY_B)){
-						worldManager.setTileAtPos(pos, Tile.Bluestone.getId(), true);
-					}
-					if(Keyboard.isKeyDown(Keyboard.KEY_M)){
-						System.out.println(worldManager.getMetaAtPos((int)pos.x, (int)pos.y, (int)pos.z));
-					}
-					if(Keyboard.isKeyDown(Keyboard.KEY_T)){
-						worldManager.setTileAtPos(pos, Tile.Tnt.getId(), true);
-					}
-					if(Keyboard.isKeyDown(Keyboard.KEY_SEMICOLON)){
-						worldManager.entityManager.add(new EntityTestAnimal(pos, worldManager));
-					}
-					if(Keyboard.isKeyDown(Keyboard.KEY_APOSTROPHE)){
-						worldManager.entityManager.add(new EntityTestHostile(pos, worldManager));
-					}
-				
+		while(Keyboard.next()){
+			if(Keyboard.getEventKeyState()){
+				if(Keyboard.isKeyDown(Keyboard.KEY_F3)){
+					renderDebug = !renderDebug;
 				}
+				if(Keyboard.isKeyDown(Keyboard.KEY_ESCAPE)){
+					if(guiManager.isGUIOpen()){
+						guiManager.closeGUI();
+						Mouse.setGrabbed(true);
+					}else{
+						guiManager.showGUI("pauseMenu");
+					}
+				}
+				if(Keyboard.isKeyDown(Keyboard.KEY_E)){
+					if(guiManager.getCurrentGUIName() == "crafting" || guiManager.getCurrentGUIName() == "adv_crafting"){
+						guiManager.closeGUI();
+						Mouse.setGrabbed(true);
+					}else{
+						guiManager.showGUI("crafting");
+					}
+				}
+				Vector3f pos = worldManager.entityManager.getPlayer().getPos();
+				if(Keyboard.isKeyDown(Keyboard.KEY_F)){
+					worldManager.setTileAtPos(pos, Tile.Fire.getId(), true);
+				}
+				if(Keyboard.isKeyDown(Keyboard.KEY_P)){
+					/*String id = JOptionPane.showInputDialog("Enter in the id of the tile you wish to place: ");
+					int tileid = Integer.parseInt(id);
+					worldManager.setTileAtPos(pos, (byte) tileid, true);*/
+					/*worldManager.setTileAtPos(pos,Tile.ParticleProjector.getId(),true);*/
+					/*worldManager.setTileAtPos(pos, Tile.Log.getId(), false);
+					worldManager.setMetaAtPos((int)pos.x, (int)pos.y, (int)pos.z, (byte)4, true);*/
+					worldManager.setTileAtPos(pos, Tile.Chest.getId(), true);
+				}
+				if(Keyboard.isKeyDown(Keyboard.KEY_B)){
+					worldManager.setTileAtPos(pos, Tile.Bluestone.getId(), true);
+				}
+				if(Keyboard.isKeyDown(Keyboard.KEY_M)){
+					System.out.println(worldManager.getMetaAtPos((int)pos.x, (int)pos.y, (int)pos.z));
+				}
+				if(Keyboard.isKeyDown(Keyboard.KEY_T)){
+					worldManager.setTileAtPos(pos, Tile.Tnt.getId(), true);
+				}
+				if(Keyboard.isKeyDown(Keyboard.KEY_SEMICOLON)){
+					worldManager.entityManager.add(new EntityTestAnimal(pos, worldManager));
+				}
+				if(Keyboard.isKeyDown(Keyboard.KEY_APOSTROPHE)){
+					worldManager.entityManager.add(new EntityTestHostile(pos, worldManager));
+				}
+			
 			}
 		}
 	}
@@ -225,16 +223,14 @@ public class CentralManager extends Screen{
 	@Override
 	public void render() {
 		DebugTimer.getTimer("total_render").start();
-		if(!GLCraft.IS_SERVER){
-			if(Constants.GAME_STATE == Constants.GAME){
-				glLoadIdentity();
-				render3D();
-				worldManager.render();
-				currentBlock = raycast();
-				renderClouds();
-				renderText();
-				renderInventory();
-			}
+		if(Constants.GAME_STATE == Constants.GAME){
+			glLoadIdentity();
+			render3D();
+			worldManager.render();
+			currentBlock = raycast();
+			renderClouds();
+			renderText();
+			renderInventory();
 		}
 		render2D();
 		guiManager.render();
