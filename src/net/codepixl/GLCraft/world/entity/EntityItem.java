@@ -72,11 +72,23 @@ public class EntityItem extends EntitySolid{
 				GL11.glRotatef(this.getRot().y, 0f, 1.0f, 0f);
 				Tile tile = itemstack.getTile();
 				if(tile.getRenderType() == RenderType.CUBE){
-					Shape.createCube(0+((float)i*0.05f), yPos+((float)i*0.05f), 0+((float)i*0.05f), tile.getColor(), tile.getTexCoords(), size);
+					if(tile.hasMetaTextures()){
+						Shape.createCube(0+((float)i*0.05f), yPos+((float)i*0.05f), 0+((float)i*0.05f), tile.getColor(), tile.getTexCoords(itemstack.getMeta()), size);
+					}else{
+						Shape.createCube(0+((float)i*0.05f), yPos+((float)i*0.05f), 0+((float)i*0.05f), tile.getColor(), tile.getTexCoords(), size);
+					}
 				}else if(tile.getRenderType() == RenderType.CROSS){
-					Shape.createCross(0+((float)i*0.05f), yPos+((float)i*0.05f), 0+((float)i*0.05f), tile.getColor(), tile.getTexCoords(), size);
+					if(tile.hasMetaTextures()){
+						Shape.createCross(0+((float)i*0.05f), yPos+((float)i*0.05f), 0+((float)i*0.05f), tile.getColor(), tile.getTexCoords(itemstack.getMeta()), size);
+					}else{
+						Shape.createCross(0+((float)i*0.05f), yPos+((float)i*0.05f), 0+((float)i*0.05f), tile.getColor(), tile.getTexCoords(), size);
+					}
 				}else if(tile.getRenderType() == RenderType.FLAT || tile.getRenderType() == RenderType.CUSTOM){
-					Shape.createPlane(0+((float)i*0.05f), yPos+((float)i*0.05f), 0+((float)i*0.05f), tile.getColor(), tile.getTexCoords(), size);
+					if(tile.hasMetaTextures()){
+						Shape.createPlane(0+((float)i*0.05f), yPos+((float)i*0.05f), 0+((float)i*0.05f), tile.getColor(), tile.getTexCoords(itemstack.getMeta()), size);
+					}else{
+						Shape.createPlane(0+((float)i*0.05f), yPos+((float)i*0.05f), 0+((float)i*0.05f), tile.getColor(), tile.getTexCoords(), size);
+					}
 				}
 			}else{
 				Item item = itemstack.getItem();

@@ -5,7 +5,9 @@ import com.nishu.utils.Color4f;
 import net.codepixl.GLCraft.world.tile.material.Material;
 
 public class TileWood extends Tile{
-
+	
+	private static String[] types = {"oak","darkoak","maple","pine","whiteoak"};
+	
 	@Override
 	public String getName() {
 		// TODO Auto-generated method stub
@@ -15,6 +17,27 @@ public class TileWood extends Tile{
 	@Override
 	public Material getMaterial(){
 		return Material.WOOD;
+	}
+	
+	@Override
+	public boolean hasMetaTextures(){
+		return true;
+	}
+	
+	@Override
+	public String getFolderSuffix(){
+		return "wood";
+	}
+	
+	@Override
+	public String getTextureName(byte i){
+		String suffix;
+		if(i < types.length){
+			suffix = types[i];
+		}else{
+			suffix = types[0];
+		}
+		return "wood_"+suffix;
 	}
 	
 	@Override

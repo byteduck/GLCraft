@@ -294,11 +294,16 @@ public class WorldManager {
 	}
 	
 	public void setTileAtPos(int x, int y, int z, byte tile, boolean rebuild){
+		setTileAtPos(x,y,z,tile,rebuild,(byte)0);
+	}
+	
+	public void setTileAtPos(int x, int y, int z, byte tile, boolean rebuild, byte meta){
 		Iterator<Chunk> i = activeChunks.iterator();
 		while(i.hasNext()){
 			Chunk c = i.next();
 			if(x >= c.getPos().x && y >= c.getPos().y && z >= c.getPos().z && x <= c.getPos().x + 15 && y <= c.getPos().y + 15 && z <= c.getPos().z + 15){
-				c.setTileAtPos(x-(int)c.getPos().x, y-(int)c.getPos().y, z-(int)c.getPos().z,tile, rebuild);
+				c.setTileAtPos(x-(int)c.getPos().x, y-(int)c.getPos().y, z-(int)c.getPos().z, tile, false);
+				setMetaAtPos(x,y,z,meta,rebuild);
 				Tile.getTile((byte)getTileAtPos(x,y,z)).blockUpdate(x,y,z,this);
 				Tile.getTile((byte)getTileAtPos(x+1,y,z)).blockUpdate(x+1,y,z,this);
 				Tile.getTile((byte)getTileAtPos(x-1,y,z)).blockUpdate(x-1,y,z,this);

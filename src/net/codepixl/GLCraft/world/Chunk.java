@@ -170,7 +170,6 @@ public class Chunk {
 		for(int x = 0; x < sizeX; x++){
 			for(int y = 0; y < sizeY; y++){
 				for(int z = 0; z < sizeZ; z++){
-					meta[x][y][z] = 0;
 					if(tiles[x][y][z] == Tile.Stone.getId()){
 						int rand = Constants.rand.nextInt(10000);
 						if(rand <= 100){
@@ -183,7 +182,8 @@ public class Chunk {
 					}else if(tiles[x][y][z] == Tile.Grass.getId()){
 						int rand = Constants.rand.nextInt(100);
 						if(rand == 1){
-							createTree(x,y+1,z);
+							int randMeta = Constants.rand.nextInt(5);
+							createCustomTree(x+(int)pos.x,y+1+(int)pos.y,z+(int)pos.z, Tile.Log, Tile.Leaf,(byte)randMeta,(byte)0,worldManager);
 						}
 						if(rand > 1 && rand <= 11){
 							worldManager.setTileAtPos(x+(int)pos.x, y+1+(int)pos.y, z+(int)pos.z, Tile.TallGrass.getId(), false);
@@ -243,6 +243,30 @@ public class Chunk {
 		w.setTileAtPos(x, y+4, z-1, leaf.getId(), true);
 		w.setTileAtPos(x+1, y+4, z, leaf.getId(), true);
 		w.setTileAtPos(x-1, y+4, z, leaf.getId(), true);
+		
+		w.setTileAtPos(x, y+5, z, leaf.getId(), true);
+	}
+	
+public static void createCustomTree(int x, int y, int z,Tile trunk,Tile leaf, byte trunkMeta, byte leafMeta, WorldManager w){
+		
+		for(int i = 0; i < 5; i++){
+			w.setTileAtPos(x, y+i, z, trunk.getId(), true, trunkMeta);
+		}
+		w.setTileAtPos(x, y+3, z+1, leaf.getId(), true, leafMeta);
+		w.setTileAtPos(x+1, y+3, z+1, leaf.getId(), true, leafMeta);
+		w.setTileAtPos(x-1, y+3, z+1, leaf.getId(), true, leafMeta);
+		
+		w.setTileAtPos(x, y+3, z-1, leaf.getId(), true, leafMeta);
+		w.setTileAtPos(x+1, y+3, z-1, leaf.getId(), true, leafMeta);
+		w.setTileAtPos(x-1, y+3, z-1, leaf.getId(), true, leafMeta);
+		
+		w.setTileAtPos(x-1, y+3, z, leaf.getId(), true, leafMeta);
+		w.setTileAtPos(x+1, y+3, z, leaf.getId(), true, leafMeta);
+		
+		w.setTileAtPos(x, y+4, z+1, leaf.getId(), true, leafMeta);
+		w.setTileAtPos(x, y+4, z-1, leaf.getId(), true, leafMeta);
+		w.setTileAtPos(x+1, y+4, z, leaf.getId(), true, leafMeta);
+		w.setTileAtPos(x-1, y+4, z, leaf.getId(), true, leafMeta);
 		
 		w.setTileAtPos(x, y+5, z, leaf.getId(), true);
 	}
@@ -367,15 +391,27 @@ public class Chunk {
 							Tile t = Tile.getTile(tiles[x][y][z]);
 								if(t.getRenderType() == RenderType.CUBE){
 									glBegin(GL_QUADS);
-									Shape.createCube(pos.x+x, pos.y+y, pos.z+z, t.getColor(), t.getTexCoords(), 1);
+									if(t.hasMetaTextures()){
+										Shape.createCube(pos.x+x, pos.y+y, pos.z+z, t.getColor(), t.getTexCoords(meta[x][y][z]), 1);
+									}else{
+										Shape.createCube(pos.x+x, pos.y+y, pos.z+z, t.getColor(), t.getTexCoords(), 1);
+									}
 									glEnd();
 								}else if(t.getRenderType() == RenderType.CROSS){
 									glBegin(GL_QUADS);
-									Shape.createCross(pos.x+x, pos.y+y, pos.z+z, t.getColor(), t.getTexCoords(), 1);
+									if(t.hasMetaTextures()){
+										Shape.createCross(pos.x+x, pos.y+y, pos.z+z, t.getColor(), t.getTexCoords(meta[x][y][z]), 1);
+									}else{
+										Shape.createCross(pos.x+x, pos.y+y, pos.z+z, t.getColor(), t.getTexCoords(), 1);
+									}
 									glEnd();
 								}else if(t.getRenderType() == RenderType.FLAT){
 									glBegin(GL_QUADS);
-									Shape.createFlat(pos.x+x, pos.y+y+0.01f, pos.z+z, t.getColor(), t.getTexCoords(), 1);
+									if(t.hasMetaTextures()){
+										Shape.createFlat(pos.x+x, pos.y+y+0.01f, pos.z+z, t.getColor(), t.getTexCoords(meta[x][y][z]), 1);
+									}else{
+										Shape.createFlat(pos.x+x, pos.y+y+0.01f, pos.z+z, t.getColor(), t.getTexCoords(), 1);
+									}
 									glEnd();
 								}else if(t.getRenderType() == RenderType.CUSTOM){
 									t.customRender(pos.x+x, pos.y+y, pos.z+z, worldManager, this);

@@ -38,12 +38,12 @@ public class TileWorkbench extends Tile{
 	@Override
 	public String[] getMultiTextureNames(){
 		return new String[]{
-			"wood",
+			"wood_oak",
 			"workbench_top",
-			"wood",
-			"wood",
-			"wood",
-			"wood"
+			"wood_oak",
+			"wood_oak",
+			"wood_oak",
+			"wood_oak"
 		};
 	}
 

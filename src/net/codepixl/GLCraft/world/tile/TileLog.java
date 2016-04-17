@@ -3,7 +3,9 @@ package net.codepixl.GLCraft.world.tile;
 import com.nishu.utils.Color4f;
 
 public class TileLog extends Tile{
-
+	
+	private static String[] types = {"oak","darkoak","maple","pine","whiteoak"};
+	
 	@Override
 	public String getName() {
 		// TODO Auto-generated method stub
@@ -28,8 +30,19 @@ public class TileLog extends Tile{
 	}
 	
 	@Override
-	public String getIconName(){
-		return "log_top";
+	public String getFolderSuffix(){
+		return "wood";
+	}
+	
+	@Override
+	public String getIconName(byte i){
+		String suffix;
+		if(i < types.length){
+			suffix = types[i];
+		}else{
+			suffix = types[0];
+		}
+		return "log_top_"+suffix;
 	}
 	
 	@Override
@@ -38,14 +51,25 @@ public class TileLog extends Tile{
 	}
 	
 	@Override
-	public String[] getMultiTextureNames(){
+	public boolean hasMetaTextures(){
+		return true;
+	}
+	
+	@Override
+	public String[] getMultiTextureNames(byte i){
+		String suffix;
+		if(i < types.length){
+			suffix = types[i];
+		}else{
+			suffix = types[0];
+		}
 		return new String[]{
-			"log_top",
-			"log_top",
-			"log_side",
-			"log_side",
-			"log_side",
-			"log_side"
+			"log_top_"+suffix,
+			"log_top_"+suffix,
+			"log_side_"+suffix,
+			"log_side_"+suffix,
+			"log_side_"+suffix,
+			"log_side_"+suffix
 		};
 	}
 

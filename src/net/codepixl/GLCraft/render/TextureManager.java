@@ -109,6 +109,19 @@ public class TextureManager {
 			return atlasCoords.get("tiles."+t.getTextureName().toLowerCase());
 		}
 	}
+	public static float[] tile(Tile t, byte meta) {
+		if(t.hasMultipleTextures()){
+			float[] coords = new float[12];
+			for(int i = 0; i < 6; i++){
+				int index = i*2;
+				coords[index] = atlasCoords.get("tiles."+t.getMultiTextureNames(meta)[i].toLowerCase())[0];
+				coords[index+1] = atlasCoords.get("tiles."+t.getMultiTextureNames(meta)[i].toLowerCase())[1];
+			}
+			return coords;
+		}else{
+			return atlasCoords.get("tiles."+t.getTextureName(meta).toLowerCase());
+		}
+	}
 	public static float[] texture(String s){
 		return atlasCoords.get(s.toLowerCase());
 	}
@@ -121,6 +134,9 @@ public class TextureManager {
 	}
 	public static float[] tileIcon(Tile t) {
 		return atlasCoords.get("tiles."+t.getIconName().toLowerCase());
+	}
+	public static float[] tileIcon(Tile t, byte meta) {
+		return atlasCoords.get("tiles."+t.getIconName(meta).toLowerCase());
 	}
 	public static float[] item(Item i) {
 		return atlasCoords.get("items."+i.getTextureName().toLowerCase());

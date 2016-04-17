@@ -80,6 +80,10 @@ public class Tile {
 		return this.getName();
 	}
 	
+	public String getTextureName(byte meta){
+		return this.getTextureName();
+	}
+	
 	public boolean isTransparent(){
 		return false;
 	}
@@ -93,7 +97,7 @@ public class Tile {
 	}
 	
 	public void onBreak(int x, int y, int z, WorldManager worldManager){
-		worldManager.spawnEntity(new EntityItem(new ItemStack(this),(float)x+0.5f,(float)y+0.5f,(float)z+0.5f,worldManager));
+		worldManager.spawnEntity(new EntityItem(new ItemStack(this,worldManager.getMetaAtPos(x, y, z)),(float)x+0.5f,(float)y+0.5f,(float)z+0.5f,worldManager));
 	}
 	
 	public void randomTick(int x, int y, int z, WorldManager worldManager){
@@ -107,6 +111,14 @@ public class Tile {
 	 */
 	public String[] getMultiTextureNames(){
 		return new String[]{};
+	}
+	
+	public String[] getMultiTextureNames(byte meta){
+		return getMultiTextureNames();
+	}
+	
+	public boolean hasMetaTextures(){
+		return false;
 	}
 	
 	public boolean hasMultipleTextures(){
@@ -149,21 +161,49 @@ public class Tile {
 		return true;
 	}
 	
+	public String getFolderSuffix(){
+		return "";
+	}
+	
 	public Tile(){
 		if(this.getClass() != Tile.class && !(this instanceof PluginTile)){
 			registerTile();
 			if(this.hasTexture()){
 				if(this.hasMultipleTextures()){
-					for(String name : this.getMultiTextureNames()){
-						if(!TextureManager.hasTexture("tiles."+name)){
-							TextureManager.addTexture("tiles."+name, TextureManager.TILES+name+".png");
+					if(this.hasMetaTextures()){
+						for(int i = 0; i < 128; i++){
+							for(String name : this.getMultiTextureNames((byte) i)){
+								if(!TextureManager.hasTexture("tiles."+name)){
+									TextureManager.addTexture("tiles."+name, TextureManager.TILES+this.getFolderSuffix()+"/"+name+".png");
+								}
+							}
+						}
+					}else{
+						for(String name : this.getMultiTextureNames()){
+							if(!TextureManager.hasTexture("tiles."+name)){
+								TextureManager.addTexture("tiles."+name, TextureManager.TILES+this.getFolderSuffix()+"/"+name+".png");
+							}
 						}
 					}
 				}else{
-					TextureManager.addTexture("tiles."+this.getTextureName(), TextureManager.TILES+this.getTextureName()+".png");
+					if(this.hasMetaTextures()){
+						for(int i = 0; i < 128; i++){
+							TextureManager.addTexture("tiles."+this.getTextureName((byte) i), TextureManager.TILES+this.getFolderSuffix()+"/"+this.getTextureName((byte) i)+".png");
+						}
+					}else{
+						TextureManager.addTexture("tiles."+this.getTextureName(), TextureManager.TILES+this.getFolderSuffix()+"/"+this.getTextureName()+".png");
+					}
 				}
-				if(!TextureManager.hasTexture(this.getIconName())){
-					TextureManager.addTexture("tiles."+this.getIconName(), TextureManager.TILES+this.getIconName()+".png");
+				if(this.hasMetaTextures()){
+					for(int i = 0; i < 128; i++){
+						if(!TextureManager.hasTexture(this.getIconName((byte) i))){
+							TextureManager.addTexture("tiles."+this.getIconName((byte) i), TextureManager.TILES+this.getFolderSuffix()+"/"+this.getIconName((byte) i)+".png");
+						}	
+					}
+				}else{
+					if(!TextureManager.hasTexture(this.getIconName())){
+						TextureManager.addTexture("tiles."+this.getIconName(), TextureManager.TILES+this.getFolderSuffix()+"/"+this.getIconName()+".png");
+					}
 				}
 			}
 		}
@@ -192,6 +232,10 @@ public class Tile {
 		return this.getTextureName();
 	}
 	
+	public String getIconName(byte meta) {
+		return this.getTextureName(meta);
+	}
+	
 	@Override
 	public String toString(){
 		return getName();
@@ -201,9 +245,19 @@ public class Tile {
 		// TODO Auto-generated method stub
 		return TextureManager.tile(this);
 	}
+	
+	public float[] getTexCoords(byte meta){
+		// TODO Auto-generated method stub
+		return TextureManager.tile(this, meta);
+	}
 
 	public float[] getIconCoords() {
 		// TODO Auto-generated method stub
 		return TextureManager.tileIcon(this);
+	}
+	
+	public float[] getIconCoords(byte meta) {
+		// TODO Auto-generated method stub
+		return TextureManager.tileIcon(this, meta);
 	}
 }

@@ -549,7 +549,7 @@ public class EntityPlayer extends Mob {
 									while(worldManager.getTileAtPos(r.pos) != Tile.Air.getId() || AABB.testAABB(blockaabb, getAABB()) && worldManager.getEntityManager().getPlayer().getSelectedItemStack().getTile().canPlace((int) r.pos.x, (int) r.pos.y, (int) r.pos.z, worldManager)){
 										r.prev();
 									}
-									worldManager.setTileAtPos((int) r.pos.x, (int) r.pos.y, (int) r.pos.z, worldManager.getEntityManager().getPlayer().getSelectedItemStack().getTile().getId(), true);
+									worldManager.setTileAtPos((int) r.pos.x, (int) r.pos.y, (int) r.pos.z, this.getSelectedItemStack().getTile().getId(), true, this.getSelectedItemStack().getMeta());
 									worldManager.getEntityManager().getPlayer().getSelectedItemStack().getTile().onPlace((int) r.pos.x, (int) r.pos.y, (int) r.pos.z, worldManager);
 									int sub = worldManager.getEntityManager().getPlayer().getSelectedItemStack().subFromStack(1);
 									if(sub > 0) {

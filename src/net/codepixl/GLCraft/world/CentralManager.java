@@ -195,7 +195,9 @@ public class CentralManager extends Screen{
 					/*String id = JOptionPane.showInputDialog("Enter in the id of the tile you wish to place: ");
 					int tileid = Integer.parseInt(id);
 					worldManager.setTileAtPos(pos, (byte) tileid, true);*/
-					worldManager.setTileAtPos(pos,Tile.ParticleProjector.getId(),true);
+					/*worldManager.setTileAtPos(pos,Tile.ParticleProjector.getId(),true);*/
+					worldManager.setTileAtPos(pos, Tile.Log.getId(), false);
+					worldManager.setMetaAtPos((int)pos.x, (int)pos.y, (int)pos.z, (byte)4, true);
 				}
 				if(Keyboard.isKeyDown(Keyboard.KEY_B)){
 					worldManager.setTileAtPos(pos, Tile.Bluestone.getId(), true);
@@ -284,7 +286,11 @@ public class CentralManager extends Screen{
 				glScalef(0.7f,0.7f,0.7f);
 					glBegin(GL_QUADS);
 						if(p.getInventory((int)i).isTile()){
-							Shape.createCenteredSquare(0,0, new Color4f(1f,1f,1f,1f), p.getInventory((int)i).getTile().getIconCoords(), (float)Constants.WIDTH/18f);
+							if(p.getInventory((int)i).getTile().hasMetaTextures()){
+								Shape.createCenteredSquare(0,0, new Color4f(1f,1f,1f,1f), p.getInventory((int)i).getTile().getIconCoords(p.getInventory((int)i).getMeta()), (float)Constants.WIDTH/18f);
+							}else{
+								Shape.createCenteredSquare(0,0, new Color4f(1f,1f,1f,1f), p.getInventory((int)i).getTile().getIconCoords(), (float)Constants.WIDTH/18f);
+							}
 						}else{
 							Shape.createCenteredSquare(0,0, new Color4f(1f,1f,1f,1f), p.getInventory((int)i).getItem().getTexCoords(), (float)Constants.WIDTH/18f);
 						}
