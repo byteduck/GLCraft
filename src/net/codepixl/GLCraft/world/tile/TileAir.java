@@ -2,6 +2,8 @@ package net.codepixl.GLCraft.world.tile;
 
 import com.nishu.utils.Color4f;
 
+import net.codepixl.GLCraft.world.WorldManager;
+
 public class TileAir extends Tile{
 
 	@Override
@@ -37,6 +39,11 @@ public class TileAir extends Tile{
 	public boolean canPassThrough() {
 		// TODO Auto-generated method stub
 		return true;
+	}
+	
+	@Override
+	public void onBreak(int x, int y, int z, boolean drop, WorldManager w){
+		
 	}
 
 }

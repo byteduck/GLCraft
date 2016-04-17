@@ -16,6 +16,8 @@ public class Item {
 	public static Item Stick = new ItemStick();
 	public static Item WoodPick = new ItemWoodPickaxe();
 	public static Item StonePick = new ItemStonePickaxe();
+	public static Item Bucket = new ItemBucketEmpty();
+	public static Item BucketWater = new ItemBucketWater();
 	
 	public String getName(){
 		return "Un-named item";

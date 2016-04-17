@@ -7,6 +7,6 @@ public class ItemStick extends Item{
 	}
 	@Override
 	public byte getId(){
-		return 3;
+		return 4;
 	}
 }

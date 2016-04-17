@@ -60,8 +60,9 @@ public class EntityItem extends EntitySolid{
 		}
 		for(int i = 0; i < count; i++){
 			GL11.glPushMatrix();
-			GL11.glTranslatef(getX(), getY(), getZ());
+			GL11.glTranslatef(getX(), getY()+0.8f, getZ());
 			GL11.glRotatef(this.getRot().y, 0f, 1.0f, 0f);
+			GL11.glRotatef(180, 1.0f, 0, 0);
 			if(itemstack.isTile()){
 				GL11.glTranslatef(-size/2, 0f, -size/2f);
 			}else{
