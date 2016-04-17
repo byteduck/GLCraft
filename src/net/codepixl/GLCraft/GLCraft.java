@@ -38,9 +38,11 @@ import com.nishu.utils.GameLoop;
 import com.nishu.utils.Screen;
 import com.nishu.utils.Window;
 
+import net.codepixl.GLCraft.client.Client;
 import net.codepixl.GLCraft.plugin.Plugin;
 import net.codepixl.GLCraft.plugin.PluginManager;
 import net.codepixl.GLCraft.render.TextureManager;
+import net.codepixl.GLCraft.server.Server;
 import net.codepixl.GLCraft.util.Constants;
 import net.codepixl.GLCraft.util.DebugTimer;
 import net.codepixl.GLCraft.world.CentralManager;

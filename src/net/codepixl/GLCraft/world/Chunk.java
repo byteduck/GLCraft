@@ -13,6 +13,7 @@ import static org.lwjgl.opengl.GL11.glNewList;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.Iterator;
 
@@ -650,5 +651,13 @@ public static void createCustomTree(int x, int y, int z,Tile trunk,Tile leaf, by
 				}
 			}
 		}**/
+	}
+
+	public byte[][][] getTiles() {
+		return tiles;
+	}
+	
+	public byte[][][] getMeta(){
+		return meta;
 	}
 }

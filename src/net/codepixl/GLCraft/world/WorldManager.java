@@ -18,6 +18,8 @@ import net.codepixl.GLCraft.Splash;
 import net.codepixl.GLCraft.GUI.GUIManager;
 import net.codepixl.GLCraft.GUI.Inventory.GUICrafting;
 import net.codepixl.GLCraft.GUI.Inventory.GUICraftingAdvanced;
+import net.codepixl.GLCraft.client.Client;
+import net.codepixl.GLCraft.server.Server;
 import net.codepixl.GLCraft.util.AABB;
 import net.codepixl.GLCraft.util.Constants;
 import net.codepixl.GLCraft.util.DebugTimer;
@@ -39,16 +41,22 @@ public class WorldManager {
 	public static OpenSimplexNoise noise;
 	public boolean doneGenerating = false;
 	public EntityManager entityManager;
-	private volatile ArrayList<Chunk> activeChunks;
+	public volatile ArrayList<Chunk> activeChunks;
 	private ShaderProgram shader;
 	public static Tile selectedBlock = Tile.Air;
 	public CentralManager world;
 	public float tick = 0f;
+	public Server server;
+	public Client client;
 	
 	public WorldManager(CentralManager w){
-		this.world = w;
-		initGL();
-		init();
+		if(GLCraft.IS_SERVER){
+			this.world = w;
+			initServer();
+		}else{
+			initGL();
+			initClient();
+		}
 		//createWorld();
 	}
 	
@@ -59,12 +67,20 @@ public class WorldManager {
 		}
 	}
 	
-	private void init(){
+	private void initClient(){
+		client = new Client(25566);
 		entityManager = new EntityManager(this);
-		if(!GLCraft.IS_SERVER) entityManager.initPlayer();
+		entityManager.initPlayer();
 		activeChunks = new ArrayList<Chunk>();
-		if(!GLCraft.IS_SERVER) GUIManager.getMainManager().addGUI(new GUICrafting(entityManager.getPlayer()), "crafting");
-		if(!GLCraft.IS_SERVER) GUIManager.getMainManager().addGUI(new GUICraftingAdvanced(entityManager.getPlayer()), "adv_crafting");
+		GUIManager.getMainManager().addGUI(new GUICrafting(entityManager.getPlayer()), "crafting");
+		GUIManager.getMainManager().addGUI(new GUICraftingAdvanced(entityManager.getPlayer()), "adv_crafting");
+	}
+	
+	private void initServer(){
+		server = new Server(25566);
+		server.connect();
+		entityManager = new EntityManager(this);
+		activeChunks = new ArrayList<Chunk>();
 	}
 	
 	public void createWorld(){
@@ -101,6 +117,11 @@ public class WorldManager {
 		doneGenerating = true;
 	}
 	
+	public void fetchLocalWorld(){
+		s = new Splash();
+		s.getSplash().splashOff();
+	}
+	
 	public void worldFromBuf(){
 		s = new Splash();
 		for(int x = 0; x < Constants.viewDistance; x++){
@@ -117,6 +138,11 @@ public class WorldManager {
 	}
 	
 	public void update(){
+		if(GLCraft.IS_SERVER)
+			server.update();
+		else
+			client.update();
+		
 		DebugTimer.startTimer("entity_update");
 		entityManager.update();
 		DebugTimer.endTimer("entity_update");
