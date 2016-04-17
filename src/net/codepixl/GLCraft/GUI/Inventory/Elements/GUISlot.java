@@ -90,5 +90,9 @@ public class GUISlot implements GUIElement{
 		}
 		return false;
 	}
+	
+	public boolean isEmpty(){
+		return this.itemstack.count == 0 || this.itemstack == null || this.itemstack.equals(new ItemStack());
+	}
 
 }

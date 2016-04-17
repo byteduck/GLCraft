@@ -2,12 +2,19 @@ package net.codepixl.GLCraft.world.tile;
 
 import com.nishu.utils.Color4f;
 
+import net.codepixl.GLCraft.world.tile.material.Material;
+
 public class TileStone extends Tile{
 
 	@Override
 	public String getName() {
 		// TODO Auto-generated method stub
 		return "Stone";
+	}
+	
+	@Override
+	public Material getMaterial(){
+		return Material.STONE;
 	}
 	
 	@Override

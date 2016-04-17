@@ -13,7 +13,9 @@ import net.codepixl.GLCraft.world.Chunk;
 import net.codepixl.GLCraft.world.WorldManager;
 import net.codepixl.GLCraft.world.entity.Entity;
 import net.codepixl.GLCraft.world.entity.EntityItem;
+import net.codepixl.GLCraft.world.entity.mob.EntityPlayer;
 import net.codepixl.GLCraft.world.item.ItemStack;
+import net.codepixl.GLCraft.world.tile.material.Material;
 import net.codepixl.GLCraft.world.tile.tick.TickHelper;
 
 public class Tile {
@@ -43,6 +45,7 @@ public class Tile {
 	public static Tile Sapling = new TileSapling();
 	public static Tile Sand = new TileSand();
 	public static Tile ParticleProjector = new TileParticleProjector();
+	public static Tile Workbench = new TileWorkbench();
 	//TILES
 	
 	public String getName(){
@@ -116,6 +119,10 @@ public class Tile {
 		return tileMap.get(id);
 	}
 	
+	public Material getMaterial(){
+		return Material.DEFAULT;
+	}
+	
 	public RenderType getRenderType(){
 		return RenderType.CUBE;
 	}
@@ -160,6 +167,10 @@ public class Tile {
 				}
 			}
 		}
+	}
+	
+	public boolean onClick(int x, int y, int z, EntityPlayer p, WorldManager worldManager){
+		return false;
 	}
 
 	public void blockUpdate(int x, int y, int z, WorldManager worldManager) {

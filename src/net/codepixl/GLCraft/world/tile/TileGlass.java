@@ -2,6 +2,8 @@ package net.codepixl.GLCraft.world.tile;
 
 import com.nishu.utils.Color4f;
 
+import net.codepixl.GLCraft.world.tile.material.Material;
+
 public class TileGlass extends Tile{
 
 	@Override
@@ -9,6 +11,12 @@ public class TileGlass extends Tile{
 		// TODO Auto-generated method stub
 		return "Glass";
 	}
+	
+	@Override
+	public Material getMaterial(){
+		return Material.GLASS;
+	}
+	
 	@Override
 	public String getTextureName(){
 		return "glass";

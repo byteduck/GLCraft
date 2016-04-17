@@ -16,6 +16,7 @@ import com.nishu.utils.Time;
 import net.codepixl.GLCraft.Splash;
 import net.codepixl.GLCraft.GUI.GUIManager;
 import net.codepixl.GLCraft.GUI.Inventory.GUICrafting;
+import net.codepixl.GLCraft.GUI.Inventory.GUICraftingAdvanced;
 import net.codepixl.GLCraft.util.AABB;
 import net.codepixl.GLCraft.util.Constants;
 import net.codepixl.GLCraft.util.DebugTimer;
@@ -59,6 +60,7 @@ public class WorldManager {
 		entityManager.initPlayer();
 		activeChunks = new ArrayList<Chunk>();
 		GUIManager.getMainManager().addGUI(new GUICrafting(entityManager.getPlayer()), "crafting");
+		GUIManager.getMainManager().addGUI(new GUICraftingAdvanced(entityManager.getPlayer()), "adv_crafting");
 	}
 	
 	public void createWorld(){

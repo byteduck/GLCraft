@@ -8,6 +8,7 @@ import net.codepixl.GLCraft.render.RenderType;
 import net.codepixl.GLCraft.render.Shape;
 import net.codepixl.GLCraft.world.Chunk;
 import net.codepixl.GLCraft.world.WorldManager;
+import net.codepixl.GLCraft.world.tile.material.Material;
 
 public class TileWater extends Tile{
 
@@ -16,6 +17,12 @@ public class TileWater extends Tile{
 		// TODO Auto-generated method stub
 		return "Water";
 	}
+	
+	@Override
+	public Material getMaterial(){
+		return Material.LIQUID;
+	}
+	
 	@Override
 	public byte getId() {
 		// TODO Auto-generated method stub

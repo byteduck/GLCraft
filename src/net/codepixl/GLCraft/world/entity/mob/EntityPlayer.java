@@ -59,6 +59,7 @@ import net.codepixl.GLCraft.world.tile.Tile;
 public class EntityPlayer extends Mob {
 	
 	private float breakCooldown, buildCooldown, breakProgress, walkAccel;
+	public byte currentTile;
 	private final float maxU, maxD, speed;
 	private int selectedSlot;
 	private boolean qPressed, wasBreaking;
@@ -119,7 +120,7 @@ public class EntityPlayer extends Mob {
 			if(this.getSelectedItemStack().isItem()){
 				Item selItem = this.getSelectedItemStack().getItem();
 				if(selItem instanceof Tool){
-					multiplier = ((Tool)selItem).getStrength();
+					multiplier = ((Tool)selItem).getStrengthForMaterial(Tile.getTile(currentTile).getMaterial());
 				}
 			}
 			this.breakProgress += Time.getDelta() * multiplier;
@@ -539,21 +540,25 @@ public class EntityPlayer extends Mob {
 						this.wasBreaking = false;
 					}
 					r.prev();
-					if(Mouse.isButtonDown(1) && GUIManager.getMainManager().sendPlayerInput() && worldManager.getEntityManager().getPlayer().getBuildCooldown() == 0f && !worldManager.getEntityManager().getPlayer().getSelectedItemStack().isNull() && worldManager.getEntityManager().getPlayer().getSelectedItemStack().isTile()/** && worldManager.getTileAtPos(r.pos) == 0**/) {
-						AABB blockaabb = new AABB(1, 1, 1);
-						blockaabb.update(new Vector3f(((int) r.pos.x) + 0.5f, (int) r.pos.y, ((int) r.pos.z) + 0.5f));
-						if(!AABB.testAABB(blockaabb, getAABB()) && worldManager.getEntityManager().getPlayer().getSelectedItemStack().getTile().canPlace((int) r.pos.x, (int) r.pos.y, (int) r.pos.z, worldManager)) {
-							while(worldManager.getTileAtPos(r.pos) != Tile.Air.getId() || AABB.testAABB(blockaabb, getAABB()) && worldManager.getEntityManager().getPlayer().getSelectedItemStack().getTile().canPlace((int) r.pos.x, (int) r.pos.y, (int) r.pos.z, worldManager)){
-								r.prev();
+					if(Mouse.isButtonDown(1) && GUIManager.getMainManager().sendPlayerInput() && worldManager.getEntityManager().getPlayer().getBuildCooldown() == 0f/** && worldManager.getTileAtPos(r.pos) == 0**/) {
+						if(Tile.getTile((byte) tile).onClick((int)r.pos.x, (int)r.pos.y, (int)r.pos.z, this, worldManager)){}else{
+							if(!worldManager.getEntityManager().getPlayer().getSelectedItemStack().isNull() && worldManager.getEntityManager().getPlayer().getSelectedItemStack().isTile()){
+								AABB blockaabb = new AABB(1, 1, 1);
+								blockaabb.update(new Vector3f(((int) r.pos.x) + 0.5f, (int) r.pos.y, ((int) r.pos.z) + 0.5f));
+								if(!AABB.testAABB(blockaabb, getAABB()) && worldManager.getEntityManager().getPlayer().getSelectedItemStack().getTile().canPlace((int) r.pos.x, (int) r.pos.y, (int) r.pos.z, worldManager)) {
+									while(worldManager.getTileAtPos(r.pos) != Tile.Air.getId() || AABB.testAABB(blockaabb, getAABB()) && worldManager.getEntityManager().getPlayer().getSelectedItemStack().getTile().canPlace((int) r.pos.x, (int) r.pos.y, (int) r.pos.z, worldManager)){
+										r.prev();
+									}
+									worldManager.setTileAtPos((int) r.pos.x, (int) r.pos.y, (int) r.pos.z, worldManager.getEntityManager().getPlayer().getSelectedItemStack().getTile().getId(), true);
+									worldManager.getEntityManager().getPlayer().getSelectedItemStack().getTile().onPlace((int) r.pos.x, (int) r.pos.y, (int) r.pos.z, worldManager);
+									int sub = worldManager.getEntityManager().getPlayer().getSelectedItemStack().subFromStack(1);
+									if(sub > 0) {
+										worldManager.getEntityManager().getPlayer().getInventory()[worldManager.getEntityManager().getPlayer().getSelectedSlot()] = new ItemStack();
+									}
+									setBuildCooldown(0.2f);
+									r.next();
+								}
 							}
-							worldManager.setTileAtPos((int) r.pos.x, (int) r.pos.y, (int) r.pos.z, worldManager.getEntityManager().getPlayer().getSelectedItemStack().getTile().getId(), true);
-							worldManager.getEntityManager().getPlayer().getSelectedItemStack().getTile().onPlace((int) r.pos.x, (int) r.pos.y, (int) r.pos.z, worldManager);
-							int sub = worldManager.getEntityManager().getPlayer().getSelectedItemStack().subFromStack(1);
-							if(sub > 0) {
-								worldManager.getEntityManager().getPlayer().getInventory()[worldManager.getEntityManager().getPlayer().getSelectedSlot()] = new ItemStack();
-							}
-							setBuildCooldown(0.2f);
-							r.next();
 						}
 					}
 					r.distance = 11;
@@ -563,6 +568,7 @@ public class EntityPlayer extends Mob {
 				return -1;
 			}
 		}
+		this.currentTile = (byte)tile;
 		return tile;
 	}
 	

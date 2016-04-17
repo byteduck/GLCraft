@@ -26,9 +26,11 @@ public class CraftingManager {
 	}
 
 	public static void initRecipes() {
-		addRecipe(new Recipe(new ItemStack(Tile.Log),new ItemStack(),new ItemStack(),new ItemStack(),new ItemStack(Tile.Wood,4)));
-		addRecipe(new Recipe(new ItemStack(Tile.Wood),new ItemStack(),new ItemStack(Tile.Wood),new ItemStack(),new ItemStack(Item.Stick,4)));
-		addRecipe(new Recipe(new ItemStack(Item.Stick),new ItemStack(Tile.Wood),new ItemStack(Item.Stick),new ItemStack(Tile.Wood),new ItemStack(Item.WoodPick,1)));
+		/**Wood**/addRecipe(new Recipe(new ItemStack(Tile.Log),new ItemStack(),new ItemStack(),new ItemStack(),new ItemStack(Tile.Wood,4)));
+		/**Workbench**/addRecipe(new Recipe(new ItemStack(Tile.Wood),new ItemStack(Tile.Wood),new ItemStack(Tile.Wood),new ItemStack(Tile.Wood),new ItemStack(Tile.Workbench,1)));
+		/**Sticks**/addRecipe(new Recipe(new ItemStack(Tile.Wood),new ItemStack(),new ItemStack(Tile.Wood),new ItemStack(),new ItemStack(Item.Stick,4)));
+		/**Wood Pick**/addRecipe(new Recipe(new ItemStack(Tile.Wood),new ItemStack(Tile.Wood),new ItemStack(Tile.Wood),new ItemStack(),new ItemStack(Item.Stick),new ItemStack(),new ItemStack(),new ItemStack(Item.Stick),new ItemStack(),new ItemStack(Item.WoodPick,1)));
+		/**Stone Pick**/addRecipe(new Recipe(new ItemStack(Tile.Stone),new ItemStack(Tile.Stone),new ItemStack(Tile.Stone),new ItemStack(),new ItemStack(Item.Stick),new ItemStack(),new ItemStack(),new ItemStack(Item.Stick),new ItemStack(),new ItemStack(Item.StonePick,1)));
 	}
 	
 }
