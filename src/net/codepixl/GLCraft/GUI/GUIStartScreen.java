@@ -35,8 +35,7 @@ public class GUIStartScreen extends GUIScreen{
 			@Override
 			public Void call() throws Exception {
 				Constants.setState(Constants.GAME);
-				if(GLCraft.IS_SERVER) Constants.world.getWorldManager().createWorld();
-				else Constants.world.getWorldManager().fetchLocalWorld();
+				Constants.world.getWorldManager().createWorld();
 				glDisable(GL_TEXTURE_2D);
 				GUIManager.getMainManager().closeGUI();
 				return null;
