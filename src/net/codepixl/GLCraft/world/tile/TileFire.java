@@ -49,7 +49,7 @@ public class TileFire extends Tile{
 	}
 	
 	@Override
-	public void onBreak(int x, int y, int z, WorldManager worldManager){
+	public void onBreak(int x, int y, int z, boolean drop, WorldManager worldManager){
 		
 	}
 	

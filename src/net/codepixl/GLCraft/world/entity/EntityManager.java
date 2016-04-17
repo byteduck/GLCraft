@@ -7,8 +7,10 @@ import static org.lwjgl.opengl.GL11.glGenLists;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 import org.lwjgl.util.vector.Vector3f;
 
@@ -22,12 +24,14 @@ import net.codepixl.GLCraft.util.MathUtils;
 import net.codepixl.GLCraft.world.WorldManager;
 import net.codepixl.GLCraft.world.entity.mob.EntityPlayer;
 import net.codepixl.GLCraft.world.entity.mob.PlayerMP;
+import net.codepixl.GLCraft.world.entity.tileentity.TileEntity;
 
 public class EntityManager implements GameObj{
 	
 	private ArrayList<Entity> entities;
 	private ArrayList<Entity> toAdd;
 	private ArrayList<Entity> toRemove;
+	private ArrayList<TileEntity> tileEntities;
 	boolean shouldRemoveAll = false;
 	private EntityPlayer player;
 	private PlayerMP otherPlayer;
@@ -47,6 +51,7 @@ public class EntityManager implements GameObj{
 		entities = new ArrayList<Entity>();
 		toAdd = new ArrayList<Entity>();
 		toRemove = new ArrayList<Entity>();
+		tileEntities = new ArrayList<TileEntity>();
 		initGL();
 	}
 	
@@ -112,6 +117,9 @@ public class EntityManager implements GameObj{
 		while(i.hasNext()){
 			Entity e = i.next();
 			entities.add(e);
+			if(e instanceof TileEntity){
+				tileEntities.add((TileEntity) e);
+			}
 			i.remove();
 		}
 	    Iterator<Entity> it = entities.iterator();
@@ -201,6 +209,18 @@ public class EntityManager implements GameObj{
 
 	public int totalEntities() {
 		return entities.size();
+	}
+	
+	public TileEntity getTileEntityForPos(int x, int y, int z){
+		Iterator<TileEntity> i = tileEntities.iterator();
+		TileEntity ret = null;
+		while(i.hasNext()){
+			TileEntity e = i.next();
+			if(e.pos.equals(new Vector3f(x,y,z))){
+				ret = e;
+			}
+		}
+		return ret;
 	}
 
 }

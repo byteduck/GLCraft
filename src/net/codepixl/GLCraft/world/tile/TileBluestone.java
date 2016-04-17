@@ -257,8 +257,8 @@ public class TileBluestone extends Tile{
 	}
 	
 	@Override
-	public void onBreak(int x, int y, int z, WorldManager w){
-		super.onBreak(x,y,z,w);
+	public void onBreak(int x, int y, int z, boolean drop, WorldManager w){
+		super.onBreak(x,y,z,drop,w);
 		onPlace(x,y,z,w);
 	}
 	

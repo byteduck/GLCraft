@@ -103,7 +103,11 @@ public class Chunk {
 						//System.out.println(posX+","+posZ);
 						float noise = ((float) worldManager.noise.eval((double)posX/50d, (double)posZ/50d) + 1f)*(float)Constants.CHUNKSIZE;
 						if(posY < noise){
-							tiles[x][y][z] = Tile.Stone.getId();
+							if(posY == 0){
+								tiles[x][y][z] = Tile.Bedrock.getId();
+							}else{
+								tiles[x][y][z] = Tile.Stone.getId();
+							}
 						}else if(posY-1f <= noise){
 							if(posY <= Constants.seaLevel+1){
 								tiles[x][y][z] = Tile.Sand.getId();
@@ -113,7 +117,6 @@ public class Chunk {
 						}else{
 							if(posY <= Constants.seaLevel){
 								tiles[x][y][z] = Tile.Water.getId();
-								tickTiles.add(new Vector3f(x,y,z));
 							}else{
 								tiles[x][y][z] = Tile.Air.getId();
 							}
@@ -541,6 +544,7 @@ public static void createCustomTree(int x, int y, int z,Tile trunk,Tile leaf, by
 			float ax = x+pos.x;
 			float ay = y+pos.y;
 			float az = z+pos.z;
+			Tile.getTile(tiles[x][y][z]).onBreak((int)ax, (int)ay, (int)az, false, worldManager);
 			if(tiles[x][y][z] == Tile.Lamp.getId()){
 				this.light[x][y][z] = 0;
 			}
@@ -548,6 +552,7 @@ public static void createCustomTree(int x, int y, int z,Tile trunk,Tile leaf, by
 				queueTickTileUpdate(x,y,z);
 			}
 			tiles[x][y][z] = tile;
+			Tile.getTile(tile).onPlace((int)ax, (int)ay, (int)az, worldManager);
 			if(rebuild){
 				queueLight();
 				/**worldManager.getChunkAtCoords(MathUtils.coordsToChunkPos((int)ax-7, (int)ay, (int)az)).queueLight();
