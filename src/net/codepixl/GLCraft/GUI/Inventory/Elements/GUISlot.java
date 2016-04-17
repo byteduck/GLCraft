@@ -54,7 +54,11 @@ public class GUISlot implements GUIElement{
 			glScalef(0.7f,0.7f,0.7f);
 				glBegin(GL_QUADS);
 					if(itemstack.isTile()){
-						Shape.createCenteredSquare(0,0, new Color4f(1f,1f,1f,1f), itemstack.getTile().getIconCoords(), (float)Constants.WIDTH/18f);
+						if(itemstack.getTile().hasMetaTextures()){
+							Shape.createCenteredSquare(0,0, new Color4f(1f,1f,1f,1f), itemstack.getTile().getIconCoords(itemstack.getMeta()), (float)Constants.WIDTH/18f);
+						}else{
+							Shape.createCenteredSquare(0,0, new Color4f(1f,1f,1f,1f), itemstack.getTile().getIconCoords(), (float)Constants.WIDTH/18f);
+						}
 					}else{
 						Shape.createCenteredSquare(0,0, new Color4f(1f,1f,1f,1f), itemstack.getItem().getTexCoords(), (float)Constants.WIDTH/18f);
 					}

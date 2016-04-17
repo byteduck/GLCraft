@@ -4,7 +4,8 @@ import net.codepixl.GLCraft.world.item.ItemStack;
 
 public class Recipe {
 	ItemStack a,b,c,d,e,f,g,h,i,result;
-	boolean advanced;
+	boolean advanced,preserveMeta;
+	int preserveMetaFrom;
 	
 	/** A crafting recipe formatted like this: 
 	 * |A|B|
@@ -26,6 +27,7 @@ public class Recipe {
 		this.i = new ItemStack();
 		this.result = result;
 		advanced = false;
+		preserveMeta = false;
 	}
 	
 	public Recipe(ItemStack a, ItemStack b, ItemStack c, ItemStack d, ItemStack e, ItemStack f, ItemStack g, ItemStack h, ItemStack i, ItemStack result){
@@ -40,6 +42,13 @@ public class Recipe {
 		this.i = i;
 		this.result = result;
 		advanced = true;
+		preserveMeta = false;
+	}
+	
+	//Preserves the sets the metadata of the item in the slot given to the result, eg wood
+	public void setPreserveMetaFromSlot(int slot){
+		preserveMeta = true;
+		preserveMetaFrom = slot;
 	}
 	
 	public boolean checkRecipe(Recipe r){
