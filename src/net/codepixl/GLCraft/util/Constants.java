@@ -34,7 +34,6 @@ public class Constants {
 	public static int GAME_STATE = START_SCREEN;
 	public static CentralManager world;
 	public static int worldLength = CHUNKSIZE*viewDistance;
-	public static boolean IS_SERVER = false;
 	
 	public static void setDoneGenerating(boolean generating){
 		doneGenerating = generating;

@@ -13,7 +13,6 @@ import com.nishu.utils.Shader;
 import com.nishu.utils.ShaderProgram;
 import com.nishu.utils.Time;
 
-import net.codepixl.GLCraft.GLCraft;
 import net.codepixl.GLCraft.Splash;
 import net.codepixl.GLCraft.GUI.GUIManager;
 import net.codepixl.GLCraft.GUI.Inventory.GUICrafting;
@@ -53,18 +52,16 @@ public class WorldManager {
 	}
 	
 	private void initGL(){
-		if(!GLCraft.IS_SERVER){
-			Shader temp = new Shader("/shaders/chunk.vert","/shaders/chunk.frag");
-			shader = new ShaderProgram(temp.getvShader(), temp.getfShader());
-		}
+		Shader temp = new Shader("/shaders/chunk.vert","/shaders/chunk.frag");
+		shader = new ShaderProgram(temp.getvShader(), temp.getfShader());
 	}
 	
 	private void init(){
 		entityManager = new EntityManager(this);
-		if(!GLCraft.IS_SERVER) entityManager.initPlayer();
+		entityManager.initPlayer();
 		activeChunks = new ArrayList<Chunk>();
-		if(!GLCraft.IS_SERVER) GUIManager.getMainManager().addGUI(new GUICrafting(entityManager.getPlayer()), "crafting");
-		if(!GLCraft.IS_SERVER) GUIManager.getMainManager().addGUI(new GUICraftingAdvanced(entityManager.getPlayer()), "adv_crafting");
+		GUIManager.getMainManager().addGUI(new GUICrafting(entityManager.getPlayer()), "crafting");
+		GUIManager.getMainManager().addGUI(new GUICraftingAdvanced(entityManager.getPlayer()), "adv_crafting");
 	}
 	
 	public void createWorld(){
@@ -146,7 +143,7 @@ public class WorldManager {
 		
 	}
 	
-	/*private void loadUnload() {
+	private void loadUnload() {
 		EntityPlayer p = entityManager.getPlayer();
 		Vector3f pos = p.getPos();
 		Iterator<Chunk> i = activeChunks.iterator();
@@ -175,10 +172,11 @@ public class WorldManager {
 			c.populateChunk();
 			c.rebuild();
 		}
-	}*/
+	}
 	
-	public List<Vector3f> getChunkPosInRadiusOfPlayer(EntityPlayer p){
+	public List<Vector3f> getChunkPosInRadiusOfPlayer(){
 		ArrayList<Vector3f> ret = new ArrayList<Vector3f>();
+		EntityPlayer p = entityManager.getPlayer();
 		Vector3f pos = p.getPos();
 		for(int x = -Constants.viewDistance * Constants.CHUNKSIZE; x < Constants.viewDistance * Constants.CHUNKSIZE; x+=Constants.CHUNKSIZE){
 			for(int y = -Constants.viewDistance * Constants.CHUNKSIZE; y < Constants.viewDistance * Constants.CHUNKSIZE; y+=Constants.CHUNKSIZE){
@@ -199,27 +197,25 @@ public class WorldManager {
 	}
 	
 	public void render(){
-		if(!GLCraft.IS_SERVER){
-			DebugTimer.startTimer("chunk_render");
-			Spritesheet.atlas.bind();
-			getEntityManager().getPlayer().applyTranslations();
-			Vector3f pos = getEntityManager().getPlayer().getPos();
-			//if(getTileAtPos((int)pos.x,(int)pos.y+2,(int)pos.z) == 0 || getTileAtPos((int)pos.x,(int)pos.y+2,(int)pos.z) == -1 || getTileAtPos((int)pos.x,(int)pos.y+2,(int)pos.z) == 9 || getTileAtPos((int)pos.x,(int)pos.y+2,(int)pos.z) == 4){
-				for(int i = 0; i < activeChunks.size(); i++){
-					if(Frustum.getFrustum().cubeInFrustum(activeChunks.get(i).getPos().getX(), activeChunks.get(i).getPos().getY(), activeChunks.get(i).getPos().getZ(), activeChunks.get(i).getPos().getX() + Constants.CHUNKSIZE, activeChunks.get(i).getPos().getY() + Constants.CHUNKSIZE, activeChunks.get(i).getPos().getZ() + Constants.CHUNKSIZE)){
-						float distance=(float) Math.sqrt(Math.pow(activeChunks.get(i).getCenter().getX()-entityManager.getPlayer().getX(),2) + Math.pow(activeChunks.get(i).getCenter().getY()-entityManager.getPlayer().getY(),2) + Math.pow(activeChunks.get(i).getCenter().getZ()-entityManager.getPlayer().getZ(),2));
-						if(distance < 10*Constants.CHUNKSIZE){
-							activeChunks.get(i).render();
-						}
+		DebugTimer.startTimer("chunk_render");
+		Spritesheet.atlas.bind();
+		getEntityManager().getPlayer().applyTranslations();
+		Vector3f pos = getEntityManager().getPlayer().getPos();
+		//if(getTileAtPos((int)pos.x,(int)pos.y+2,(int)pos.z) == 0 || getTileAtPos((int)pos.x,(int)pos.y+2,(int)pos.z) == -1 || getTileAtPos((int)pos.x,(int)pos.y+2,(int)pos.z) == 9 || getTileAtPos((int)pos.x,(int)pos.y+2,(int)pos.z) == 4){
+			for(int i = 0; i < activeChunks.size(); i++){
+				if(Frustum.getFrustum().cubeInFrustum(activeChunks.get(i).getPos().getX(), activeChunks.get(i).getPos().getY(), activeChunks.get(i).getPos().getZ(), activeChunks.get(i).getPos().getX() + Constants.CHUNKSIZE, activeChunks.get(i).getPos().getY() + Constants.CHUNKSIZE, activeChunks.get(i).getPos().getZ() + Constants.CHUNKSIZE)){
+					float distance=(float) Math.sqrt(Math.pow(activeChunks.get(i).getCenter().getX()-entityManager.getPlayer().getX(),2) + Math.pow(activeChunks.get(i).getCenter().getY()-entityManager.getPlayer().getY(),2) + Math.pow(activeChunks.get(i).getCenter().getZ()-entityManager.getPlayer().getZ(),2));
+					if(distance < 10*Constants.CHUNKSIZE){
+						activeChunks.get(i).render();
 					}
 				}
-			//}
-			DebugTimer.endTimer("chunk_render");
-			//System.out.println(Raytracer.getScreenCenterRay());
-			DebugTimer.startTimer("entity_render");
-			entityManager.render();
-			DebugTimer.endTimer("entity_render");
-		}
+			}
+		//}
+		DebugTimer.endTimer("chunk_render");
+		//System.out.println(Raytracer.getScreenCenterRay());
+		DebugTimer.startTimer("entity_render");
+		entityManager.render();
+		DebugTimer.endTimer("entity_render");
 	}
 	
 	public EntityManager getEntityManager(){

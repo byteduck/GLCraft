@@ -27,7 +27,6 @@ import com.evilco.mc.nbt.tag.TagCompound;
 import com.nishu.utils.Color4f;
 import com.nishu.utils.ShaderProgram;
 
-import net.codepixl.GLCraft.GLCraft;
 import net.codepixl.GLCraft.render.RenderType;
 import net.codepixl.GLCraft.render.Shape;
 import net.codepixl.GLCraft.util.Constants;
@@ -299,7 +298,7 @@ public static void createCustomTree(int x, int y, int z,Tile trunk,Tile leaf, by
 	}
 	
 	public void render(){
-		if(type != CentralManager.AIRCHUNK && !GLCraft.IS_SERVER){
+		if(type != CentralManager.AIRCHUNK){
 			shader.use();
 			int texLoc = GL20.glGetUniformLocation(shader.getProgram(), "u_texture");
 			int posLoc = GL20.glGetUniformLocation(shader.getProgram(), "lightpos");
@@ -378,7 +377,7 @@ public static void createCustomTree(int x, int y, int z,Tile trunk,Tile leaf, by
 	}
 	
 	public void rebuild(){
-		if(type != CentralManager.AIRCHUNK && !GLCraft.IS_SERVER){
+		if(type != CentralManager.AIRCHUNK){
 			glNewList(vcID, GL_COMPILE);
 			for(int x = 0; x < sizeX; x++){
 				for(int y = 0; y < sizeY; y++){
