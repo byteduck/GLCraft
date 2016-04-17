@@ -6,7 +6,7 @@ import net.codepixl.GLCraft.world.entity.EntityTNT;
 public class TileTnt extends Tile {
 	
 	@Override
-	public void onBreak(int x, int y, int z, WorldManager w){
+	public void onBreak(int x, int y, int z, boolean drop, WorldManager w){
 		EntityTNT tnt = new EntityTNT(x,y,z,w);
 		w.spawnEntity(tnt);
 	}

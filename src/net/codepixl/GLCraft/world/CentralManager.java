@@ -196,8 +196,9 @@ public class CentralManager extends Screen{
 					int tileid = Integer.parseInt(id);
 					worldManager.setTileAtPos(pos, (byte) tileid, true);*/
 					/*worldManager.setTileAtPos(pos,Tile.ParticleProjector.getId(),true);*/
-					worldManager.setTileAtPos(pos, Tile.Log.getId(), false);
-					worldManager.setMetaAtPos((int)pos.x, (int)pos.y, (int)pos.z, (byte)4, true);
+					/*worldManager.setTileAtPos(pos, Tile.Log.getId(), false);
+					worldManager.setMetaAtPos((int)pos.x, (int)pos.y, (int)pos.z, (byte)4, true);*/
+					worldManager.setTileAtPos(pos, Tile.Chest.getId(), true);
 				}
 				if(Keyboard.isKeyDown(Keyboard.KEY_B)){
 					worldManager.setTileAtPos(pos, Tile.Bluestone.getId(), true);
@@ -300,6 +301,7 @@ public class CentralManager extends Screen{
 				TextureImpl.unbind();
 			}
 		}
+		Spritesheet.atlas.bind();
 		glBegin(GL_QUADS);
 		for(int i = 0; i < 10; i++){
 			Shape.createCenteredSquare((float)Constants.WIDTH/9f+i*HEARTSIZE+i*HEARTSPACING+HEARTSIZE/2f,Constants.HEIGHT-(SIZE/2f)-HEARTSIZE*2f, new Color4f(1,1,1,1), p.getTexCoordsForHealthIndex(i), HEARTSIZE);

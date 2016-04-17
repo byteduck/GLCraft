@@ -28,6 +28,7 @@ import net.codepixl.GLCraft.world.entity.Entity;
 import net.codepixl.GLCraft.world.entity.EntityManager;
 import net.codepixl.GLCraft.world.entity.EntitySolid;
 import net.codepixl.GLCraft.world.entity.mob.EntityPlayer;
+import net.codepixl.GLCraft.world.entity.tileentity.TileEntity;
 import net.codepixl.GLCraft.world.tile.Tile;
 import net.codepixl.GLCraft.world.tile.tick.TickHelper;
 
@@ -461,6 +462,10 @@ public class WorldManager {
 
 	public void setTileAtPos(Vector3f thisPos, byte tile, boolean rebuild) {
 		setTileAtPos((int)thisPos.x,(int)thisPos.y,(int)thisPos.z,tile,rebuild);
+	}
+	
+	public TileEntity getTileEntityAtPos(int x, int y, int z){
+		return entityManager.getTileEntityForPos(x, y, z);
 	}
 	
 }

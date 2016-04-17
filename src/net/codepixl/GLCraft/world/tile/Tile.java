@@ -17,6 +17,7 @@ import net.codepixl.GLCraft.world.entity.mob.EntityPlayer;
 import net.codepixl.GLCraft.world.item.ItemStack;
 import net.codepixl.GLCraft.world.tile.material.Material;
 import net.codepixl.GLCraft.world.tile.tick.TickHelper;
+import net.codepixl.GLCraft.world.tile.tileentity.TileChest;
 
 public class Tile {
 
@@ -46,6 +47,8 @@ public class Tile {
 	public static Tile Sand = new TileSand();
 	public static Tile ParticleProjector = new TileParticleProjector();
 	public static Tile Workbench = new TileWorkbench();
+	public static Tile Bedrock = new TileBedrock();
+	public static Tile Chest = new TileChest();
 	//TILES
 	
 	public String getName(){
@@ -96,8 +99,10 @@ public class Tile {
 		return false;
 	}
 	
-	public void onBreak(int x, int y, int z, WorldManager worldManager){
-		worldManager.spawnEntity(new EntityItem(new ItemStack(this,worldManager.getMetaAtPos(x, y, z)),(float)x+0.5f,(float)y+0.5f,(float)z+0.5f,worldManager));
+	public void onBreak(int x, int y, int z, boolean drop, WorldManager worldManager){
+		if(drop){
+			worldManager.spawnEntity(new EntityItem(new ItemStack(this,worldManager.getMetaAtPos(x, y, z)),(float)x+0.5f,(float)y+0.5f,(float)z+0.5f,worldManager));
+		}
 	}
 	
 	public void randomTick(int x, int y, int z, WorldManager worldManager){
