@@ -28,21 +28,19 @@ import java.net.URL;
 import java.nio.ByteBuffer;
 import java.nio.FloatBuffer;
 
+import javax.swing.JOptionPane;
+
 import org.lwjgl.BufferUtils;
-import org.lwjgl.input.Keyboard;
-import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.Display;
 import org.newdawn.slick.opengl.PNGDecoder;
 
 import com.nishu.utils.GameLoop;
 import com.nishu.utils.Screen;
-import com.nishu.utils.Time;
 import com.nishu.utils.Window;
 
 import net.codepixl.GLCraft.plugin.Plugin;
 import net.codepixl.GLCraft.plugin.PluginManager;
 import net.codepixl.GLCraft.render.TextureManager;
-import net.codepixl.GLCraft.sound.SoundManager;
 import net.codepixl.GLCraft.util.Constants;
 import net.codepixl.GLCraft.util.DebugTimer;
 import net.codepixl.GLCraft.world.CentralManager;
@@ -57,6 +55,7 @@ public class GLCraft extends Screen{
 	public static boolean isDevEnvironment = false;
 	public static boolean loadExtPlugins = true;
 	public static String version = "0.0.7";
+	public static boolean IS_SERVER = false;
 	private Plugin devPlugin;
 	
 	public static GLCraft getGLCraft(){
@@ -156,6 +155,9 @@ public class GLCraft extends Screen{
 	}
 	
 	public static void main(String[] args) throws IOException{
+		if (JOptionPane.showConfirmDialog(null, "Would you like to start GLCraft as a server?", "GLCraft", JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
+		    GLCraft.IS_SERVER  = true;
+		}
 		glcraft = new GLCraft();
 	}
 	
