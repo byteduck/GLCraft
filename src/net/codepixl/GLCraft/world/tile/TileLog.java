@@ -42,7 +42,7 @@ public class TileLog extends Tile{
 		}else{
 			suffix = types[0];
 		}
-		return "log_top_"+suffix;
+		return "log_side_"+suffix;
 	}
 	
 	@Override

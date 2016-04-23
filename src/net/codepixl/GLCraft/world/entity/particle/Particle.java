@@ -15,21 +15,23 @@ import net.codepixl.GLCraft.world.entity.EntitySolid;
 import net.codepixl.GLCraft.world.entity.mob.EntityPlayer;
 import net.codepixl.GLCraft.world.tile.Tile;
 
-public class Particle extends EntitySolid{
+public class Particle extends Entity{
 	
 	private float texCoords[];
 	private float size;
 	private float lifetime;
 	private Vector3f Vel;
 	private boolean hasg;
+	private float[] texCoordFrag;
 	public Particle(Vector3f pos, Vector3f vel,WorldManager w){
 		super(pos,new Vector3f(0,0,0),new Vector3f(0,0,0),w);
 		this.texCoords = Tile.Lava.getTexCoords();
 		this.size = 0.2f;
-		this.lifetime = 5.0f;
+		this.lifetime = 1.0f;
 		this.Vel = vel;
 		this.hasg = false;
 		RegisterParicle();
+		this.texCoordFrag = Tile.Lava.getTexCoords();
 		
 	}
 	public void setTexCoords(float[] tc){
@@ -47,6 +49,7 @@ public class Particle extends EntitySolid{
 		GL11.glTranslatef(getX(), getY(), getZ());
 		GL11.glRotatef(-this.rot.y, 0.0f, 1.0f, 0f);
 		GL11.glRotatef(-this.rot.z, 1.0f, 0f, 0f);
+		GL11.glRotatef(180, 0f, 0f, 1.0f);
 		GL11.glBegin(GL11.GL_QUADS);
 		Shape.createSprite(0,0,0, Color4f.WHITE, this.texCoords, this.size);
 		GL11.glEnd();
@@ -62,8 +65,8 @@ public class Particle extends EntitySolid{
 		if(this.lifetime < 0){
 			this.setDead(true);
 		}
-		if(!this.hasg){
-			this.setVelocity(new Vector3f(0,0,0));
+		if(this.hasg){
+			this.Vel.y -= .01f;
 		}
 		this.pos.x += this.Vel.x/10;
 		this.pos.y += this.Vel.y/10;
@@ -81,4 +84,6 @@ public class Particle extends EntitySolid{
 	public void RegisterParicle(){
 		
 	}
+
+	
 }
