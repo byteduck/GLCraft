@@ -132,7 +132,7 @@ public class GLCraft extends Screen{
 		glEnable(GL_LINE_SMOOTH);
 		glHint(GL_LINE_SMOOTH_HINT, GL_NICEST);
 	}
-
+ 
 	@Override
 	public void update() {
 		DebugTimer.startTimer("loop_time");
