@@ -87,7 +87,9 @@ public class GLCraft extends Screen{
 		        loadIcon(GLCraft.class.getResource("/textures/icons/icon16.png")),
 		        loadIcon(GLCraft.class.getResource("/textures/icons/icon32.png")),
 		});
-		Window.createWindow(Constants.WIDTH, Constants.HEIGHT, "GLCraft", false);
+		Window.createWindow(1000, 700, "GLCraft", false);
+		Display.setResizable(true);
+		
 		gameLoop = new GameLoop();
 		gameLoop.setScreen(this); //THIS IS WHEN INITGL AND INIT ARE CALLED
 		gameLoop.setDebugMode(false);
@@ -154,6 +156,10 @@ public class GLCraft extends Screen{
 
 	@Override
 	public void render() {
+		if(Display.wasResized()){
+			Constants.WIDTH = Display.getWidth();
+			Constants.HEIGHT = Display.getHeight();
+		}
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		glClearColor(0,0,0.75f,1);
 		world.render();

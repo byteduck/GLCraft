@@ -15,8 +15,6 @@ public class Constants {
 	public static int viewDistance = 10;
 	public static int seaLevel = 10;
 	public static final int WORLDHEIGHT = 5;
-	public static final int HEIGHT = 700;
-	public static final int WIDTH = 1000;
 	public static final int CHUNKSIZE = 16;
 	public static final float textSize = 0.5f;
 	public static boolean doneGenerating = false;
@@ -34,6 +32,8 @@ public class Constants {
 	public static int GAME_STATE = START_SCREEN;
 	public static CentralManager world;
 	public static int worldLength = CHUNKSIZE*viewDistance;
+	public static int WIDTH = 1000;
+	public static int HEIGHT = 700;
 	
 	public static void setDoneGenerating(boolean generating){
 		doneGenerating = generating;
