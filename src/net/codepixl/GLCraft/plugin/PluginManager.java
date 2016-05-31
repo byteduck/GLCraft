@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 
+import net.codepixl.GLCraft.GLCraft;
 import net.codepixl.GLCraft.world.tile.PluginTile;
 import net.codepixl.GLCraft.world.tile.Tile;
 
@@ -22,6 +23,7 @@ public class PluginManager {
 	}
 	
 	public void addDevPlugin(Plugin p){
+		GLCraft.renderSplashText("Loading Plugins...", "Dev Plugin");
 		LoadedPlugin temp = new LoadedPlugin(p);
 		loadedPlugins.add(temp);
 		plugins.put(p, temp);
@@ -47,6 +49,7 @@ public class PluginManager {
 		for(int i = 0; i < plugins.length; i++){
 			if(plugins[i].isDirectory()){
 				try {
+					GLCraft.renderSplashText("Loading Plugins...", plugins[i].getName());
 					this.loadedPlugins.add(new LoadedPlugin(plugins[i].getAbsolutePath()));
 				} catch (IOException | ClassNotFoundException | InstantiationException | IllegalAccessException e) {
 					// TODO Auto-generated catch block

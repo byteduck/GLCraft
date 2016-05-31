@@ -118,9 +118,11 @@ public class CentralManager extends Screen{
 	public void init() {
 		Constants.setWorld(this);
 		initGUIManager();
+		
 		TextureManager.initTextures();
 		CraftingManager.initRecipes();
 		worldManager = new WorldManager(this);
+		GLCraft.renderSplashText("Starting Central Manager...", "Starting Sound System");
 		soundManager = new SoundManager();
 		SoundManager.setMainManager(soundManager);
 		

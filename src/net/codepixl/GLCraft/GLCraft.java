@@ -157,13 +157,12 @@ public class GLCraft extends Screen{
 		glHint(GL_PERSPECTIVE_CORRECTION_HINT, GL_NICEST);
 		glEnable(GL_LINE_SMOOTH);
 		glHint(GL_LINE_SMOOTH_HINT, GL_NICEST);
-		
-		renderSplashText();
+		initSplashText();
+		renderSplashText("GLCraft is loading...","Initializing OpenGL...");
 		
 	}
 	
-	private void renderSplashText(){
-		System.out.println("AYY");
+	private void initSplashText(){
 		glCullFace(GL_BACK);
 		glClearDepth(1);
 		glMatrixMode(GL_PROJECTION);
@@ -179,8 +178,14 @@ public class GLCraft extends Screen{
 		glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
 		glEnable(GL_CULL_FACE);
 		GL11.glColor3f(1f,1f,1f);
-		String disp = "GLCraft is loading...";
-		Constants.FONT.drawString(Constants.WIDTH/2-Constants.FONT.getWidth(disp)/2,Constants.HEIGHT/2-Constants.FONT.getHeight(disp)/2, disp);
+	}
+	
+	public static void renderSplashText(String line1, String line2){
+		GL11.glClear(GL11.GL_COLOR_BUFFER_BIT);
+		String ltext = "GLCraft is loading...";
+		Constants.FONT.drawString(Constants.WIDTH/2-Constants.FONT.getWidth(ltext)/2,30, ltext);
+		Constants.FONT.drawString(Constants.WIDTH/2-Constants.FONT.getWidth(line1)/2,Constants.HEIGHT/2-Constants.FONT.getHeight(line1), line1);
+		Constants.FONT.drawString(Constants.WIDTH/2-Constants.FONT.getWidth(line2)/2,Constants.HEIGHT/2+Constants.FONT.getHeight(line2), line2);
 		TextureImpl.unbind();
 		Display.update();
 	}

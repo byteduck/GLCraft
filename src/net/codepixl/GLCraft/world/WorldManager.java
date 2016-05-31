@@ -13,6 +13,7 @@ import com.nishu.utils.Shader;
 import com.nishu.utils.ShaderProgram;
 import com.nishu.utils.Time;
 
+import net.codepixl.GLCraft.GLCraft;
 import net.codepixl.GLCraft.Splash;
 import net.codepixl.GLCraft.GUI.GUIManager;
 import net.codepixl.GLCraft.GUI.Inventory.GUICrafting;

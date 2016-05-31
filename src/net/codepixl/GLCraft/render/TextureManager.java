@@ -11,6 +11,7 @@ import java.util.Map;
 
 import javax.imageio.ImageIO;
 
+import net.codepixl.GLCraft.GLCraft;
 import net.codepixl.GLCraft.util.Constants;
 import net.codepixl.GLCraft.util.Spritesheet;
 import net.codepixl.GLCraft.util.Texture;
@@ -65,6 +66,7 @@ public class TextureManager {
 				Map.Entry<String, String> next = it.next();
 				BufferedImage image;
 				try {
+					GLCraft.renderSplashText("Generating Texture Atlas...", "Loading "+next.getKey());
 					if(next.getValue().startsWith("[EXTERNAL]")){
 						image = ImageIO.read(new File(next.getValue().substring(next.getValue().indexOf(']')+1)));
 					}else{
