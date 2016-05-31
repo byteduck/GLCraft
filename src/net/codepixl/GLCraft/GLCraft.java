@@ -1,7 +1,9 @@
 package net.codepixl.GLCraft;
 
 import static org.lwjgl.opengl.GL11.GL_BACK;
+import static org.lwjgl.opengl.GL11.GL_BLEND;
 import static org.lwjgl.opengl.GL11.GL_COLOR_BUFFER_BIT;
+import static org.lwjgl.opengl.GL11.GL_CULL_FACE;
 import static org.lwjgl.opengl.GL11.GL_DEPTH_BUFFER_BIT;
 import static org.lwjgl.opengl.GL11.GL_DEPTH_TEST;
 import static org.lwjgl.opengl.GL11.GL_LIGHT0;
@@ -9,10 +11,16 @@ import static org.lwjgl.opengl.GL11.GL_LIGHTING;
 import static org.lwjgl.opengl.GL11.GL_LINE_SMOOTH;
 import static org.lwjgl.opengl.GL11.GL_LINE_SMOOTH_HINT;
 import static org.lwjgl.opengl.GL11.GL_MODELVIEW;
+import static org.lwjgl.opengl.GL11.GL_MODULATE;
 import static org.lwjgl.opengl.GL11.GL_NICEST;
+import static org.lwjgl.opengl.GL11.GL_ONE_MINUS_SRC_ALPHA;
 import static org.lwjgl.opengl.GL11.GL_PERSPECTIVE_CORRECTION_HINT;
 import static org.lwjgl.opengl.GL11.GL_POSITION;
 import static org.lwjgl.opengl.GL11.GL_PROJECTION;
+import static org.lwjgl.opengl.GL11.GL_SRC_ALPHA;
+import static org.lwjgl.opengl.GL11.GL_TEXTURE_ENV;
+import static org.lwjgl.opengl.GL11.GL_TEXTURE_ENV_MODE;
+import static org.lwjgl.opengl.GL11.glBlendFunc;
 import static org.lwjgl.opengl.GL11.glClear;
 import static org.lwjgl.opengl.GL11.glClearColor;
 import static org.lwjgl.opengl.GL11.glClearDepth;
@@ -24,9 +32,13 @@ import static org.lwjgl.opengl.GL11.glLight;
 import static org.lwjgl.opengl.GL11.glLoadIdentity;
 import static org.lwjgl.opengl.GL11.glMatrixMode;
 import static org.lwjgl.opengl.GL11.glOrtho;
+import static org.lwjgl.opengl.GL11.glTexEnvi;
 import static org.lwjgl.opengl.GL11.glViewport;
 import static org.lwjgl.util.glu.GLU.gluPerspective;
 
+import java.awt.Font;
+import java.awt.FontFormatException;
+import java.awt.GraphicsEnvironment;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
@@ -128,22 +140,49 @@ public class GLCraft extends Screen{
 
 	@Override
 	public void initGL() {
-		// TODO Auto-generated method stub
+		GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
+		try {
+			ge.registerFont(Font.createFont(Font.TRUETYPE_FONT, getClass().getResourceAsStream("/font/GLCraft.ttf")));
+		} catch (FontFormatException | IOException e) {
+			e.printStackTrace();
+		}
+		
 		glViewport(0,0,Display.getWidth(),Display.getHeight());
 		glMatrixMode(GL_PROJECTION);
 		glLoadIdentity();
 		gluPerspective(67f,Constants.WIDTH/Constants.HEIGHT,0.001f, 1000f);
 		glMatrixMode(GL_MODELVIEW);
-		final FloatBuffer position = BufferUtils.createFloatBuffer(4);
-		position.put(0.5f).put(0.5f).put(5.0f).put(0.0f).flip();
-		glLight(GL_LIGHT0, GL_POSITION, position);
-		
+
 		glEnable(GL_DEPTH_TEST);
 		glHint(GL_PERSPECTIVE_CORRECTION_HINT, GL_NICEST);
 		glEnable(GL_LINE_SMOOTH);
 		glHint(GL_LINE_SMOOTH_HINT, GL_NICEST);
 		
+		renderSplashText();
 		
+	}
+	
+	private void renderSplashText(){
+		System.out.println("AYY");
+		glCullFace(GL_BACK);
+		glClearDepth(1);
+		glMatrixMode(GL_PROJECTION);
+		glLoadIdentity();
+		glViewport(0,0,Constants.WIDTH,Constants.HEIGHT);
+		glOrtho(0,Constants.WIDTH,Constants.HEIGHT,0,-200,200);
+		glMatrixMode(GL_MODELVIEW);
+		glLoadIdentity();
+		glDisable(GL_DEPTH_TEST);
+		glDisable(GL_LIGHTING);
+		glEnable(GL_BLEND);
+		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+		glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
+		glEnable(GL_CULL_FACE);
+		GL11.glColor3f(1f,1f,1f);
+		String disp = "GLCraft is loading...";
+		Constants.FONT.drawString(Constants.WIDTH/2-Constants.FONT.getWidth(disp)/2,Constants.HEIGHT/2-Constants.FONT.getHeight(disp)/2, disp);
+		TextureImpl.unbind();
+		Display.update();
 	}
 
 	@Override
