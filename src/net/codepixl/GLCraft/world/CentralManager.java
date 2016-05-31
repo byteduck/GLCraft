@@ -116,13 +116,13 @@ public class CentralManager extends Screen{
 
 	@Override
 	public void init() {
-		Constants.setWorld(this);
 		GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
 		try {
 			ge.registerFont(Font.createFont(Font.TRUETYPE_FONT, getClass().getResourceAsStream("/font/GLCraft.ttf")));
 		} catch (FontFormatException | IOException e) {
 			e.printStackTrace();
 		}
+		Constants.setWorld(this);
 		initGUIManager();
 		TextureManager.initTextures();
 		CraftingManager.initRecipes();
@@ -140,6 +140,7 @@ public class CentralManager extends Screen{
 		DebugTimer.addTimer("chunk_tick");
 		DebugTimer.addTimer("loop_time");
 		DebugTimer.addTimer("ai_time");
+		renderSplashText();
 	}
 
 	private void initGUIManager(){
@@ -157,6 +158,10 @@ public class CentralManager extends Screen{
 		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 		glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
 		glEnable(GL_CULL_FACE);
+	}
+	
+	private void renderSplashText(){
+		renderText();
 	}
 
 	private void input(){

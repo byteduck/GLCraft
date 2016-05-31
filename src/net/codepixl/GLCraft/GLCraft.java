@@ -1,9 +1,11 @@
 package net.codepixl.GLCraft;
 
+import static org.lwjgl.opengl.GL11.GL_BACK;
 import static org.lwjgl.opengl.GL11.GL_COLOR_BUFFER_BIT;
 import static org.lwjgl.opengl.GL11.GL_DEPTH_BUFFER_BIT;
 import static org.lwjgl.opengl.GL11.GL_DEPTH_TEST;
 import static org.lwjgl.opengl.GL11.GL_LIGHT0;
+import static org.lwjgl.opengl.GL11.GL_LIGHTING;
 import static org.lwjgl.opengl.GL11.GL_LINE_SMOOTH;
 import static org.lwjgl.opengl.GL11.GL_LINE_SMOOTH_HINT;
 import static org.lwjgl.opengl.GL11.GL_MODELVIEW;
@@ -13,11 +15,15 @@ import static org.lwjgl.opengl.GL11.GL_POSITION;
 import static org.lwjgl.opengl.GL11.GL_PROJECTION;
 import static org.lwjgl.opengl.GL11.glClear;
 import static org.lwjgl.opengl.GL11.glClearColor;
+import static org.lwjgl.opengl.GL11.glClearDepth;
+import static org.lwjgl.opengl.GL11.glCullFace;
+import static org.lwjgl.opengl.GL11.glDisable;
 import static org.lwjgl.opengl.GL11.glEnable;
 import static org.lwjgl.opengl.GL11.glHint;
 import static org.lwjgl.opengl.GL11.glLight;
 import static org.lwjgl.opengl.GL11.glLoadIdentity;
 import static org.lwjgl.opengl.GL11.glMatrixMode;
+import static org.lwjgl.opengl.GL11.glOrtho;
 import static org.lwjgl.opengl.GL11.glViewport;
 import static org.lwjgl.util.glu.GLU.gluPerspective;
 
@@ -32,7 +38,9 @@ import org.lwjgl.BufferUtils;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.Display;
+import org.lwjgl.opengl.GL11;
 import org.newdawn.slick.opengl.PNGDecoder;
+import org.newdawn.slick.opengl.TextureImpl;
 
 import com.nishu.utils.GameLoop;
 import com.nishu.utils.Screen;
@@ -78,18 +86,19 @@ public class GLCraft extends Screen{
 		Display.setIcon(new ByteBuffer[] {
 		        loadIcon(GLCraft.class.getResource("/textures/icons/icon16.png")),
 		        loadIcon(GLCraft.class.getResource("/textures/icons/icon32.png")),
-			});
-			Window.createWindow(Constants.WIDTH, Constants.HEIGHT, "GLCraft", false);
+		});
+		Window.createWindow(Constants.WIDTH, Constants.HEIGHT, "GLCraft", false);
 		gameLoop = new GameLoop();
-		gameLoop.setScreen(this);
+		gameLoop.setScreen(this); //THIS IS WHEN INITGL AND INIT ARE CALLED
 		gameLoop.setDebugMode(false);
 		gameLoop.start(60);
 	}
 	
 	@Override
 	public void init() {
-		// TODO Auto-generated method stub
+		
 		/**To initialize Tiles and items because they are static*/
+		
 		Tile.tileMap.toString();
 		Item.itemMap.toString();
 		
@@ -131,6 +140,8 @@ public class GLCraft extends Screen{
 		glHint(GL_PERSPECTIVE_CORRECTION_HINT, GL_NICEST);
 		glEnable(GL_LINE_SMOOTH);
 		glHint(GL_LINE_SMOOTH_HINT, GL_NICEST);
+		
+		
 	}
 
 	@Override
