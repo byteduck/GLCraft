@@ -104,17 +104,17 @@ public class Tile {
 	public void onBreak(int x, int y, int z, boolean drop, WorldManager worldManager){
 		if(drop){
 			worldManager.spawnEntity(new EntityItem(new ItemStack(this,worldManager.getMetaAtPos(x, y, z)),(float)x+0.5f,(float)y+0.5f,(float)z+0.5f,worldManager));
-		}
-		for(int i=1; i<5; i++){
-			Particle particle = new Particle(new Vector3f(x+.5f,y+.5f,z+.5f), new Vector3f(Constants.randFloat(-0.1f, 0.1f),0,Constants.randFloat(-0.1f, 0.1f)), worldManager);
-			if(this.hasMetaTextures() == false){
-				particle.setTexCoords(this.getIconCoords());
-			}else{
-				particle.setTexCoords(this.getIconCoords(worldManager.getMetaAtPos(x, y, z)));
+			for(int i=1; i<5; i++){
+				Particle particle = new Particle(new Vector3f(x+.5f,y+.5f,z+.5f), new Vector3f(Constants.randFloat(-0.1f, 0.1f),0,Constants.randFloat(-0.1f, 0.1f)), worldManager);
+				if(this.hasMetaTextures() == false){
+					particle.setTexCoords(this.getIconCoords());
+				}else{
+					particle.setTexCoords(this.getIconCoords(worldManager.getMetaAtPos(x, y, z)));
+				}
+				particle.setLifeTime(Constants.randFloat(2, 10));
+				particle.hasGravity(true);
+				worldManager.entityManager.add(particle);
 			}
-			particle.setLifeTime(Constants.randFloat(2, 10));
-			particle.hasGravity(true);
-			worldManager.entityManager.add(particle);
 		}
 	}
 	
