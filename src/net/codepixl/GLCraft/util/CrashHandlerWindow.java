@@ -27,6 +27,8 @@ public class CrashHandlerWindow extends JFrame{
 				"Free Memory Available to JVM: "+Runtime.getRuntime().freeMemory()/1000000+"MB\n"+
 				"Operating System: "+System.getProperty("os.name"));
 		
+		System.err.println(stackTrace);
+		
 		setLocationRelativeTo(null);
 		setVisible(true);
 	}
