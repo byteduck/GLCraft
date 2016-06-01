@@ -300,13 +300,6 @@ public static void createCustomTree(int x, int y, int z,Tile trunk,Tile leaf, by
 	public void render(){
 		if(type != CentralManager.AIRCHUNK){
 			shader.use();
-			int texLoc = GL20.glGetUniformLocation(shader.getProgram(), "u_texture");
-			int posLoc = GL20.glGetUniformLocation(shader.getProgram(), "lightpos");
-			int enLoc = GL20.glGetUniformLocation(shader.getProgram(), "lightingEnabled");
-			Vector3f pos = worldManager.getEntityManager().getPlayer().getPos();
-			GL20.glUniform1i(texLoc, 0);
-			GL20.glUniform3f(posLoc, pos.x, pos.y, pos.z);
-			GL20.glUniform1i(enLoc, 1);
 			GL11.glPolygonOffset(1.0f,1.0f);
 			glCallList(vcID);
 			shader.release();
