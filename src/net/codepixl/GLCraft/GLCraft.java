@@ -6,7 +6,6 @@ import static org.lwjgl.opengl.GL11.GL_COLOR_BUFFER_BIT;
 import static org.lwjgl.opengl.GL11.GL_CULL_FACE;
 import static org.lwjgl.opengl.GL11.GL_DEPTH_BUFFER_BIT;
 import static org.lwjgl.opengl.GL11.GL_DEPTH_TEST;
-import static org.lwjgl.opengl.GL11.GL_LIGHT0;
 import static org.lwjgl.opengl.GL11.GL_LIGHTING;
 import static org.lwjgl.opengl.GL11.GL_LINE_SMOOTH;
 import static org.lwjgl.opengl.GL11.GL_LINE_SMOOTH_HINT;
@@ -15,7 +14,6 @@ import static org.lwjgl.opengl.GL11.GL_MODULATE;
 import static org.lwjgl.opengl.GL11.GL_NICEST;
 import static org.lwjgl.opengl.GL11.GL_ONE_MINUS_SRC_ALPHA;
 import static org.lwjgl.opengl.GL11.GL_PERSPECTIVE_CORRECTION_HINT;
-import static org.lwjgl.opengl.GL11.GL_POSITION;
 import static org.lwjgl.opengl.GL11.GL_PROJECTION;
 import static org.lwjgl.opengl.GL11.GL_SRC_ALPHA;
 import static org.lwjgl.opengl.GL11.GL_TEXTURE_ENV;
@@ -28,7 +26,6 @@ import static org.lwjgl.opengl.GL11.glCullFace;
 import static org.lwjgl.opengl.GL11.glDisable;
 import static org.lwjgl.opengl.GL11.glEnable;
 import static org.lwjgl.opengl.GL11.glHint;
-import static org.lwjgl.opengl.GL11.glLight;
 import static org.lwjgl.opengl.GL11.glLoadIdentity;
 import static org.lwjgl.opengl.GL11.glMatrixMode;
 import static org.lwjgl.opengl.GL11.glOrtho;
@@ -44,11 +41,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
 import java.nio.ByteBuffer;
-import java.nio.FloatBuffer;
 
-import org.lwjgl.BufferUtils;
-import org.lwjgl.input.Keyboard;
-import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.Display;
 import org.lwjgl.opengl.GL11;
 import org.newdawn.slick.opengl.PNGDecoder;
@@ -56,14 +49,13 @@ import org.newdawn.slick.opengl.TextureImpl;
 
 import com.nishu.utils.GameLoop;
 import com.nishu.utils.Screen;
-import com.nishu.utils.Time;
 import com.nishu.utils.Window;
 
 import net.codepixl.GLCraft.plugin.Plugin;
 import net.codepixl.GLCraft.plugin.PluginManager;
 import net.codepixl.GLCraft.render.TextureManager;
-import net.codepixl.GLCraft.sound.SoundManager;
 import net.codepixl.GLCraft.util.Constants;
+import net.codepixl.GLCraft.util.CrashHandler;
 import net.codepixl.GLCraft.util.DebugTimer;
 import net.codepixl.GLCraft.world.CentralManager;
 import net.codepixl.GLCraft.world.item.Item;
@@ -217,6 +209,8 @@ public class GLCraft extends Screen{
 	}
 	
 	public static void main(String[] args) throws IOException{
+		
+		Thread.setDefaultUncaughtExceptionHandler(new CrashHandler());
 		glcraft = new GLCraft();
 	}
 	
