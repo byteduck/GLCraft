@@ -81,6 +81,7 @@ public class GUIStartScreen extends GUIScreen {
 				jf.setFileFilter(filter);
 				int returnVal = jf.showOpenDialog(null);
 				File TP = null;
+			
 				if (returnVal == JFileChooser.APPROVE_OPTION) {
 					TP = jf.getSelectedFile();
 					File tempFolder = new File(System.getProperty("user.home") + "/GLCraft/Texturepacks/tmp/textures");
@@ -90,7 +91,7 @@ public class GUIStartScreen extends GUIScreen {
 					zip.extractAll(tempFolder.getAbsolutePath());
 				}
 
-				File texturepackInfo = new File(System.getProperty("user.home") + "GLCraft/Texturepacks/currentTP.txt");
+				File texturepackInfo = new File(System.getProperty("user.home") + "/GLCraft/Texturepacks/currentTP.txt");
 				try {
 					texturepackInfo.createNewFile();
 				} catch (IOException e) {
