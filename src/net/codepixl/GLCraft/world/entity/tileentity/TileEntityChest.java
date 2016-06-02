@@ -16,7 +16,7 @@ public class TileEntityChest extends TileEntityContainer{
 	}
 	
 	public void openGUI(WorldManager w, EntityPlayer p){
-		w.world.guiManager.showGUI(new GUIChest(this, p));
+		w.centralManager.guiManager.showGUI(new GUIChest(this, p));
 	}
 
 }

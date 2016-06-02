@@ -13,8 +13,6 @@ import com.nishu.utils.Shader;
 import com.nishu.utils.ShaderProgram;
 import com.nishu.utils.Time;
 
-import net.codepixl.GLCraft.GLCraft;
-import net.codepixl.GLCraft.Splash;
 import net.codepixl.GLCraft.GUI.GUIManager;
 import net.codepixl.GLCraft.GUI.Inventory.GUICrafting;
 import net.codepixl.GLCraft.GUI.Inventory.GUICraftingAdvanced;
@@ -35,18 +33,18 @@ import net.codepixl.GLCraft.world.tile.tick.TickHelper;
 
 public class WorldManager {
 	public int loop = 0;
-	public Splash s;
 	public static OpenSimplexNoise noise;
 	public boolean doneGenerating = false;
 	public EntityManager entityManager;
 	private volatile ArrayList<Chunk> activeChunks;
 	private ShaderProgram shader;
 	public static Tile selectedBlock = Tile.Air;
-	public CentralManager world;
+	public CentralManager centralManager;
 	public float tick = 0f;
+	public int currentChunk = 0;
 	
 	public WorldManager(CentralManager w){
-		this.world = w;
+		this.centralManager = w;
 		initGL();
 		init();
 		//createWorld();
@@ -67,11 +65,12 @@ public class WorldManager {
 	
 	public void createWorld(){
 		System.out.println("Creating Chunks...");
-		s = new Splash();
 		noise = new OpenSimplexNoise(10);
+		centralManager.initSplashText();
 		for(int x = 0; x < Constants.viewDistance; x++){
 			for(int y = 0; y < Constants.viewDistance; y++){
 				for(int z = 0; z < Constants.viewDistance; z++){
+					currentChunk++;
 					activeChunks.add(new Chunk(shader, 1, x * Constants.CHUNKSIZE, y * Constants.CHUNKSIZE, z * Constants.CHUNKSIZE, this));
 					//saveChunk(activeChunks.get(activeChunks.size() - 1));
 				}
@@ -79,10 +78,14 @@ public class WorldManager {
 		}
 		Iterator<Chunk> i = activeChunks.iterator();
 		System.out.println("Populating World...");
+		this.currentChunk = 0;
 		while(i.hasNext()){
+			this.currentChunk++;
 			i.next().populateChunk();
 		}
 		i = activeChunks.iterator();
+		
+		centralManager.renderSplashText("Hold on...","Finishing up a few things");
 		
 		while(i.hasNext()){
 			i.next().light();
@@ -94,23 +97,22 @@ public class WorldManager {
 			c.rebuild();
 			c.rebuildTickTiles();
 		}
-		s.getSplash().splashOff();
 		System.out.println("Done!");
 		doneGenerating = true;
 	}
 	
 	public void worldFromBuf(){
-		s = new Splash();
+		centralManager.initSplashText();
 		for(int x = 0; x < Constants.viewDistance; x++){
 			for(int y = 0; y < Constants.viewDistance; y++){
 				for(int z = 0; z < Constants.viewDistance; z++){
+					currentChunk++;
 					Chunk c = new Chunk(shader, CentralManager.MIXEDCHUNK, x * Constants.CHUNKSIZE, 0, z * Constants.CHUNKSIZE, this, true);
 					activeChunks.add(c);
 					c.rebuild();
 				}
 			}
 		}
-		s.getSplash().splashOff();
 		doneGenerating = true;
 	}
 	

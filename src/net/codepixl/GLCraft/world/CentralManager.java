@@ -319,7 +319,6 @@ public class CentralManager extends Screen{
 	
 	public void render3D(){
 		//setupLighting();
-		glClearColor(0.0f,0.749019608f,1.0f,0.0f);
 		glCullFace(GL_FRONT);
 		glViewport(0,0,Constants.WIDTH,Constants.HEIGHT);
 		glMatrixMode(GL_PROJECTION);
@@ -367,5 +366,21 @@ public class CentralManager extends Screen{
 	
 	public WorldManager getWorldManager(){
 		return worldManager;
+	}
+	
+	public void initSplashText(){
+		render2D();
+	}
+	
+	public void renderSplashText(String line1, String line2){
+		glClearColor(0,0,0,1);
+		GL11.glClear(GL11.GL_COLOR_BUFFER_BIT);
+		String ltext = "GLCraft is generating the world...";
+		Constants.FONT.drawString(Constants.WIDTH/2-Constants.FONT.getWidth(ltext)/2,30, ltext);
+		Constants.FONT.drawString(Constants.WIDTH/2-Constants.FONT.getWidth(line1)/2,Constants.HEIGHT/2-Constants.FONT.getHeight(line1), line1);
+		Constants.FONT.drawString(Constants.WIDTH/2-Constants.FONT.getWidth(line2)/2,Constants.HEIGHT/2+Constants.FONT.getHeight(line2), line2);
+		TextureImpl.unbind();
+		Display.update();
+		glClearColor(0.0f,0.749019608f,1.0f,0.0f);
 	}
 }

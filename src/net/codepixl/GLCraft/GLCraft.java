@@ -37,10 +37,13 @@ import java.awt.Font;
 import java.awt.FontFormatException;
 import java.awt.GraphicsEnvironment;
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.PrintStream;
 import java.net.URL;
 import java.nio.ByteBuffer;
+import java.nio.file.Files;
 
 import org.lwjgl.opengl.Display;
 import org.lwjgl.opengl.GL11;
@@ -55,8 +58,9 @@ import net.codepixl.GLCraft.plugin.Plugin;
 import net.codepixl.GLCraft.plugin.PluginManager;
 import net.codepixl.GLCraft.render.TextureManager;
 import net.codepixl.GLCraft.util.Constants;
-import net.codepixl.GLCraft.util.CrashHandler;
 import net.codepixl.GLCraft.util.DebugTimer;
+import net.codepixl.GLCraft.util.logging.CrashHandler;
+import net.codepixl.GLCraft.util.logging.TeeOutputStream;
 import net.codepixl.GLCraft.world.CentralManager;
 import net.codepixl.GLCraft.world.item.Item;
 import net.codepixl.GLCraft.world.tile.Tile;
@@ -197,7 +201,7 @@ public class GLCraft extends Screen{
 			Constants.HEIGHT = Display.getHeight();
 		}
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-		glClearColor(0,0,0.75f,1);
+		glClearColor(0.0f,0.749019608f,1.0f,0.0f);
 		world.render();
 		DebugTimer.endTimer("loop_time");
 	}
@@ -209,8 +213,13 @@ public class GLCraft extends Screen{
 	}
 	
 	public static void main(String[] args) throws IOException{
-		
 		Thread.setDefaultUncaughtExceptionHandler(new CrashHandler());
+		Files.deleteIfExists(new File(System.getProperty("user.home")+"/GLCraft/GLCraft.log").toPath());
+		FileOutputStream lfos = new FileOutputStream(System.getProperty("user.home")+"/GLCraft/GLCraft.log");
+		TeeOutputStream otos = new TeeOutputStream(System.out,lfos);
+		TeeOutputStream etos = new TeeOutputStream(System.err,lfos);
+		System.setErr(new PrintStream(etos));
+		System.setOut(new PrintStream(otos));
 		glcraft = new GLCraft();
 	}
 	

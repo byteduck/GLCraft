@@ -60,7 +60,7 @@ public class TileWorkbench extends Tile{
 	
 	@Override
 	public boolean onClick(int x, int y, int z, EntityPlayer p, WorldManager worldManager){
-		worldManager.world.guiManager.showGUI("adv_crafting");
+		worldManager.centralManager.guiManager.showGUI("adv_crafting");
 		return true;
 	}
 	
