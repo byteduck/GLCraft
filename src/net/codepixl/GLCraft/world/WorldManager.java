@@ -71,6 +71,8 @@ public class WorldManager {
 			for(int y = 0; y < Constants.viewDistance; y++){
 				for(int z = 0; z < Constants.viewDistance; z++){
 					currentChunk++;
+					int progress = (int) (((float)currentChunk/(float)Math.pow(Constants.viewDistance, 3))*100f);
+					centralManager.renderSplashText("Generating Chunks...", progress+"%", progress);
 					activeChunks.add(new Chunk(shader, 1, x * Constants.CHUNKSIZE, y * Constants.CHUNKSIZE, z * Constants.CHUNKSIZE, this));
 					//saveChunk(activeChunks.get(activeChunks.size() - 1));
 				}
@@ -81,6 +83,8 @@ public class WorldManager {
 		this.currentChunk = 0;
 		while(i.hasNext()){
 			this.currentChunk++;
+			int progress = (int) (((float)currentChunk/(float)Math.pow(Constants.viewDistance, 3))*100f);
+			centralManager.renderSplashText("Populating Chunks...", progress+"%", progress);
 			i.next().populateChunk();
 		}
 		i = activeChunks.iterator();

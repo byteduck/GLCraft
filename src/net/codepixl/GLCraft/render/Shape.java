@@ -287,6 +287,14 @@ public class Shape {
 		glTexCoord2f(texCoords[0] + currentSpritesheet.uniformSize(), texCoords[1]);
 		glVertex2f(x + size, y);
 	}
+	
+	public static void createTexturelessSquare(float x, float y, Color4f color, float size){
+		glColor4f(color.r, color.g, color.b, color.a);
+		glVertex2f(x, y);
+		glVertex2f(x, y + size);
+		glVertex2f(x + size, y + size);
+		glVertex2f(x + size, y);
+	}
 
 	public static void createCenteredSquare(float x, float y, Color4f color, float[] texCoords, float size) {
 		size = size / 2f;

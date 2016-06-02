@@ -82,8 +82,6 @@ public class Chunk {
 	}
 	
 	private void createChunk(){
-		int progress = (int) (((float)worldManager.currentChunk/(float)Math.pow(Constants.viewDistance, 3))*100f);
-		worldManager.centralManager.renderSplashText("Generating Chunks...", progress+"%");
 		if(type == CentralManager.AIRCHUNK){
 			for(int x = (int) pos.getX(); x < sizeX; x++){
 				for(int y = (int) pos.getY(); y < sizeY; y++){
@@ -166,8 +164,6 @@ public class Chunk {
 	}
 	
 	void populateChunk(){
-		int progress = (int) (((float)worldManager.currentChunk/(float)Math.pow(Constants.viewDistance, 3))*100f);
-		worldManager.centralManager.renderSplashText("Populating Chunks...", progress+"%");
 		for(int x = 0; x < sizeX; x++){
 			for(int y = 0; y < sizeY; y++){
 				for(int z = 0; z < sizeZ; z++){

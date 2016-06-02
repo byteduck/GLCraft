@@ -373,13 +373,47 @@ public class CentralManager extends Screen{
 	}
 	
 	public void renderSplashText(String line1, String line2){
+		int CENTER = Constants.WIDTH/2;
+		int HCENTER = Constants.HEIGHT/2;
 		glClearColor(0,0,0,1);
 		GL11.glClear(GL11.GL_COLOR_BUFFER_BIT);
 		String ltext = "GLCraft is generating the world...";
-		Constants.FONT.drawString(Constants.WIDTH/2-Constants.FONT.getWidth(ltext)/2,30, ltext);
-		Constants.FONT.drawString(Constants.WIDTH/2-Constants.FONT.getWidth(line1)/2,Constants.HEIGHT/2-Constants.FONT.getHeight(line1), line1);
-		Constants.FONT.drawString(Constants.WIDTH/2-Constants.FONT.getWidth(line2)/2,Constants.HEIGHT/2+Constants.FONT.getHeight(line2), line2);
+		Constants.FONT.drawString(CENTER-Constants.FONT.getWidth(ltext)/2,30, ltext);
+		Constants.FONT.drawString(CENTER-Constants.FONT.getWidth(line1)/2,HCENTER-Constants.FONT.getHeight(line1), line1);
+		Constants.FONT.drawString(CENTER-Constants.FONT.getWidth(line2)/2,HCENTER+Constants.FONT.getHeight(line2), line2);
 		TextureImpl.unbind();
+		Display.update();
+		glClearColor(0.0f,0.749019608f,1.0f,0.0f);
+	}
+	
+	public void renderSplashText(String line1, String line2, int percent){
+		int CENTER = Constants.WIDTH/2;
+		int HCENTER = Constants.HEIGHT/2;
+		glClearColor(0,0,0,1);
+		GL11.glClear(GL11.GL_COLOR_BUFFER_BIT);
+		String ltext = "GLCraft is generating the world...";
+		Constants.FONT.drawString(CENTER-Constants.FONT.getWidth(ltext)/2,30, ltext);
+		Constants.FONT.drawString(CENTER-Constants.FONT.getWidth(line1)/2,HCENTER-Constants.FONT.getHeight(line1), line1);
+		Constants.FONT.drawString(CENTER-Constants.FONT.getWidth(line2)/2,HCENTER+Constants.FONT.getHeight(line2), line2);
+		TextureImpl.unbind();
+		glLoadIdentity();
+		render2D();
+		glDisable(GL_TEXTURE_2D);
+		glColor3f(0.1f,0.2f,0.1f);
+		glBegin(GL_QUADS);
+		glVertex2f(CENTER-100,HCENTER+100);
+		glVertex2f(CENTER-100,HCENTER+110);
+		glVertex2f(CENTER+100,HCENTER+110);
+		glVertex2f(CENTER+100,HCENTER+100);
+		glEnd();
+		glColor3f(0.3f,0.5f,0.3f);
+		glBegin(GL_QUADS);
+		glVertex2f(CENTER-100,HCENTER+100);
+		glVertex2f(CENTER-100,HCENTER+110);
+		glVertex2f(CENTER+(percent*2-100),HCENTER+110);
+		glVertex2f(CENTER+(percent*2-100),HCENTER+100);
+		glEnd();
+		glEnable(GL_TEXTURE_2D);
 		Display.update();
 		glClearColor(0.0f,0.749019608f,1.0f,0.0f);
 	}
