@@ -36,11 +36,17 @@ import static org.lwjgl.util.glu.GLU.gluPerspective;
 import java.awt.Font;
 import java.awt.FontFormatException;
 import java.awt.GraphicsEnvironment;
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.PrintStream;
+import java.io.PrintWriter;
+import java.io.UnsupportedEncodingException;
 import java.net.URL;
 import java.nio.ByteBuffer;
 import java.nio.file.Files;
@@ -107,8 +113,41 @@ public class GLCraft extends Screen{
 	@Override
 	public void init() {
 		
-		/**To initialize Tiles and items because they are static*/
+		String texturepacksFolder = System.getProperty("user.home")+"/GLCraft/Texturepacks";
+		new File(texturepacksFolder).mkdirs();
+		File texturepackInfo = new File(System.getProperty("user.home")+"/GLCraft/Texturepacks/currentTP.txt");
+		PrintWriter writer = null;
+		if(!texturepackInfo.exists()){
+			try {
+				texturepackInfo.createNewFile();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+			
+			try {
+				writer = new PrintWriter(texturepackInfo.getAbsolutePath(), "UTF-8");
+			} catch (FileNotFoundException | UnsupportedEncodingException e) {
+				e.printStackTrace();
+			}
+			writer.println("none");
+			writer.close();
+		}
+		BufferedReader br = null;
+		try {
+			br = new BufferedReader(new FileReader(texturepackInfo.getAbsolutePath()));
+		} catch (FileNotFoundException e1) {
+			e1.printStackTrace();
+		}
+		String sCurrentLine= null;
+		try {
+			while ((sCurrentLine = br.readLine()) != null) {
+				TextureManager.currentTexturepack = sCurrentLine;
+			}
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 		
+		/**To initialize Tiles and items because they are static*/
 		Tile.tileMap.toString();
 		Item.itemMap.toString();
 		
