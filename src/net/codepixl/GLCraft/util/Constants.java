@@ -9,9 +9,6 @@ import java.net.URL;
 import java.util.Arrays;
 import java.util.Random;
 import org.newdawn.slick.TrueTypeFont;
-import com.google.maps.GeoApiContext;
-import com.google.maps.GeocodingApi;
-import com.google.maps.model.GeocodingResult;
 import com.nishu.utils.Color4f;
 
 import net.codepixl.GLCraft.world.CentralManager;
