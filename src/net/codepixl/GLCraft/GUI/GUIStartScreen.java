@@ -42,8 +42,8 @@ public class GUIStartScreen extends GUIScreen{
 	private static final int SINGLEPLAYERY = (int) (Constants.HEIGHT*0.1);
 	private static final int MULTIPLAYERY = (int) (Constants.HEIGHT*0.3);
 	private static final int SERVERY = (int) (Constants.HEIGHT*0.5);
-	private static final int BUGY = (int) (Constants.HEIGHT * 0.7);
-	private static final int TEXTUREY = (int) (Constants.HEIGHT * 0.9);
+	private static final int BUGY = (int) (Constants.HEIGHT * 0.9);
+	private static final int TEXTUREY = (int) (Constants.HEIGHT * 0.7);
 	private static final int PLUGINMANAGERY = SERVERY;
 	private static final int SOUNDY = MULTIPLAYERY;
 	
@@ -141,16 +141,22 @@ public class GUIStartScreen extends GUIScreen{
 	@Override
 	public void drawBG() {
 		Spritesheet.atlas.bind();
+		int howManyWide = (Constants.WIDTH/64)+1;
+		int howManyTall = (Constants.HEIGHT/64)+1;
 		float[] texCoords = TextureManager.tile(Tile.Stone);
-		glBegin(GL_QUADS);
-		glTexCoord2f(texCoords[0], texCoords[1]);
-		glVertex2f(0, 0);
-		glTexCoord2f(texCoords[0] + Spritesheet.atlas.uniformSize(), texCoords[1]);
-		glVertex2f(0, Constants.HEIGHT);
-		glTexCoord2f(texCoords[0] + Spritesheet.atlas.uniformSize(), texCoords[1] + Spritesheet.atlas.uniformSize());
-		glVertex2f(Constants.WIDTH, Constants.HEIGHT);
-		glTexCoord2f(texCoords[0], texCoords[1] + Spritesheet.atlas.uniformSize());
-		glVertex2f(Constants.WIDTH, 0);
-		glEnd();
+		for(int x = 0; x < howManyWide*64; x+=64){
+			for(int y = 0; y < howManyTall*64; y+=64){
+				glBegin(GL_QUADS);
+				glTexCoord2f(texCoords[0], texCoords[1]);
+				glVertex2f(x, y);
+				glTexCoord2f(texCoords[0] + Spritesheet.atlas.uniformSize(), texCoords[1]);
+				glVertex2f(x, y+64);
+				glTexCoord2f(texCoords[0] + Spritesheet.atlas.uniformSize(), texCoords[1] + Spritesheet.atlas.uniformSize());
+				glVertex2f(x+64, y+64);
+				glTexCoord2f(texCoords[0], texCoords[1] + Spritesheet.atlas.uniformSize());
+				glVertex2f(x+64, y);
+				glEnd();
+			}
+		}
 	}
 }
