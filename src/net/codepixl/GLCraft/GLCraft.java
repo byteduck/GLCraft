@@ -132,7 +132,7 @@ public class GLCraft extends Screen{
 			} catch (FileNotFoundException | UnsupportedEncodingException e) {
 				e.printStackTrace();
 			}
-			writer.println("none");
+			writer.print("none");
 			writer.close();
 		}
 		BufferedReader br = null;

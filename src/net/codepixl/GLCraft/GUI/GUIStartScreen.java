@@ -30,6 +30,7 @@ import net.codepixl.GLCraft.GUI.Inventory.Elements.GUISlot;
 import net.codepixl.GLCraft.plugin.PluginManager;
 import net.codepixl.GLCraft.plugin.PluginManagerWindow;
 import net.codepixl.GLCraft.render.TextureManager;
+import net.codepixl.GLCraft.render.texturepack.TexturePackManagerWindow;
 import net.codepixl.GLCraft.util.Constants;
 import net.codepixl.GLCraft.util.Spritesheet;
 import net.codepixl.GLCraft.util.logging.CrashHandler;
@@ -68,40 +69,7 @@ public class GUIStartScreen extends GUIScreen{
 		texturepackButton = new GUIButton("Texturepacks", MIDDLE, TEXTUREY, new Callable<Void>() {
 			@Override
 			public Void call() throws Exception {
-				JFileChooser jf = new JFileChooser();
-				jf.setCurrentDirectory(new File(System.getProperty("user.home") + "/GLCraft/Texturepacks"));
-				FileNameExtensionFilter filter = new FileNameExtensionFilter("Compressed GLCraft Texturepack", "zip");
-				jf.setFileFilter(filter);
-				int returnVal = jf.showOpenDialog(null);
-				File TP = null;
-			
-				if (returnVal == JFileChooser.APPROVE_OPTION) {
-					TP = jf.getSelectedFile();
-					File tempFolder = new File(System.getProperty("user.home") + "/GLCraft/Texturepacks/tmp/textures");
-					tempFolder.delete();
-					tempFolder.mkdirs();
-					ZipFile zip = new ZipFile(TP);
-					zip.extractAll(tempFolder.getAbsolutePath());
-				}
-
-				File texturepackInfo = new File(System.getProperty("user.home") + "/GLCraft/Texturepacks/currentTP.txt");
-				try {
-					texturepackInfo.createNewFile();
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
-				PrintWriter writer = null;
-				try {
-					writer = new PrintWriter(texturepackInfo.getAbsolutePath(), "UTF-8");
-				} catch (FileNotFoundException | UnsupportedEncodingException e) {
-					e.printStackTrace();
-				}
-				writer.println(TP.getName().substring(0, TP.getName().length()-4));
-				writer.close();
-				
-				JOptionPane.showMessageDialog(null, "You must restart GLCraft for changes to take effect.");
-
-				
+				new TexturePackManagerWindow();
 				return null;
 			}
 		});

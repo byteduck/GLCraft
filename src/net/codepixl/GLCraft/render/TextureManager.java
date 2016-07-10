@@ -77,7 +77,11 @@ public class TextureManager {
 							image = ImageIO.read(Texture.class.getClassLoader().getResourceAsStream(next.getValue()));
 						}else{
 							File tp = new File(Constants.GLCRAFTDIR + "Texturepacks/tmp/"+next.getValue());
-							image = ImageIO.read(tp.getAbsoluteFile());
+							if(tp.exists()){
+								image = ImageIO.read(tp.getAbsoluteFile());
+							}else{
+								image = ImageIO.read(Texture.class.getClassLoader().getResourceAsStream(next.getValue()));
+							}
 						}
 					}
 					g.drawImage(image, x*16, y*16, null);
