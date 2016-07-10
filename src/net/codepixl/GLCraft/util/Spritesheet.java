@@ -7,6 +7,7 @@ public class Spritesheet {
 	private String path;
 	private float size;
 	private BufferedImage image;
+	public int id;
 	
 	public static Spritesheet atlas;
 	public static Spritesheet clouds = new Spritesheet("textures/clouds.png",1);
@@ -31,14 +32,17 @@ public class Spritesheet {
 
 	private void loadExt() {
 		texture = Texture.loadExternalTexture(path);
+		id = texture.id;
 	}
 
 	private void load(){
 		texture = Texture.loadTexture(path);
+		id = texture.id;
 	}
 	
 	private void loadBuffered(){
 		texture = Texture.loadTexture(image);
+		id = texture.id;
 	}
 	
 	public void bind(){

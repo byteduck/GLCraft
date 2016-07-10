@@ -96,23 +96,37 @@ public class GUIStartScreen extends GUIScreen{
 
 	@Override
 	public void drawBG() {
-		Spritesheet.atlas.bind();
-		int howManyWide = (Constants.WIDTH/64)+1;
-		int howManyTall = (Constants.HEIGHT/64)+1;
-		float[] texCoords = TextureManager.tile(Tile.Stone);
-		for(int x = 0; x < howManyWide*64; x+=64){
-			for(int y = 0; y < howManyTall*64; y+=64){
-				glBegin(GL_QUADS);
-				glTexCoord2f(texCoords[0], texCoords[1]);
-				glVertex2f(x, y);
-				glTexCoord2f(texCoords[0] + Spritesheet.atlas.uniformSize(), texCoords[1]);
-				glVertex2f(x, y+64);
-				glTexCoord2f(texCoords[0] + Spritesheet.atlas.uniformSize(), texCoords[1] + Spritesheet.atlas.uniformSize());
-				glVertex2f(x+64, y+64);
-				glTexCoord2f(texCoords[0], texCoords[1] + Spritesheet.atlas.uniformSize());
-				glVertex2f(x+64, y);
-				glEnd();
+		try{
+			Spritesheet.atlas.bind();
+			int howManyWide = (Constants.WIDTH/64)+1;
+			int howManyTall = (Constants.HEIGHT/64)+1;
+			float[] texCoords = TextureManager.tile(Tile.Stone);
+			for(int x = 0; x < howManyWide*64; x+=64){
+				for(int y = 0; y < howManyTall*64; y+=64){
+					glBegin(GL_QUADS);
+					glTexCoord2f(texCoords[0], texCoords[1]);
+					glVertex2f(x, y);
+					glTexCoord2f(texCoords[0] + Spritesheet.atlas.uniformSize(), texCoords[1]);
+					glVertex2f(x, y+64);
+					glTexCoord2f(texCoords[0] + Spritesheet.atlas.uniformSize(), texCoords[1] + Spritesheet.atlas.uniformSize());
+					glVertex2f(x+64, y+64);
+					glTexCoord2f(texCoords[0], texCoords[1] + Spritesheet.atlas.uniformSize());
+					glVertex2f(x+64, y);
+					glEnd();
+				}
 			}
+		}catch(NullPointerException e){
+			//This happens if we're in the middle of changing texturepacks
+		}
+	}
+	
+	@Override
+	public void update(){
+		super.update();
+		if(TextureManager.setAtlas){
+			File outputfile = new File(Constants.GLCRAFTDIR,"temp/atlas.png");
+			Spritesheet.atlas = new Spritesheet(outputfile.getAbsolutePath(),TextureManager.maxWidth,true);
+			TextureManager.setAtlas = false;
 		}
 	}
 }

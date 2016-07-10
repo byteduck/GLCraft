@@ -44,9 +44,22 @@ public class TileSapling extends Tile{
 	}
 	
 	@Override
+	public float getHardness(){
+		return 0.0f;
+	}
+	
+	@Override
 	public void randomTick(int x, int y, int z, WorldManager w){
-		if(Constants.rand.nextFloat() < 0.1){
+		if(Constants.rand.nextFloat() < 0.2){
 			Chunk.createCustomTree(x, y, z, Tile.Log, Tile.Leaf, w);
+		}
+	}
+	
+	@Override
+	public void blockUpdate(int x, int y, int z, WorldManager w){
+		if(Tile.getTile((byte)w.getTileAtPos(x, y-1, z)).canPassThrough()){
+			w.setTileAtPos(x, y, z, Tile.Air.getId(), true);
+			onBreak(x,y,z,true,w);
 		}
 	}
 }

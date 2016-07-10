@@ -66,6 +66,7 @@ import com.nishu.utils.Window;
 import net.codepixl.GLCraft.plugin.Plugin;
 import net.codepixl.GLCraft.plugin.PluginManager;
 import net.codepixl.GLCraft.render.TextureManager;
+import net.codepixl.GLCraft.render.texturepack.TexturePackManager;
 import net.codepixl.GLCraft.util.Constants;
 import net.codepixl.GLCraft.util.DebugTimer;
 import net.codepixl.GLCraft.util.logging.CrashHandler;
@@ -116,40 +117,7 @@ public class GLCraft extends Screen{
 	@Override
 	public void init() {
 		
-		String texturepacksFolder = System.getProperty("user.home")+"/GLCraft/Texturepacks";
-		new File(texturepacksFolder).mkdirs();
-		File texturepackInfo = new File(System.getProperty("user.home")+"/GLCraft/Texturepacks/currentTP.txt");
-		PrintWriter writer = null;
-		if(!texturepackInfo.exists()){
-			try {
-				texturepackInfo.createNewFile();
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-			
-			try {
-				writer = new PrintWriter(texturepackInfo.getAbsolutePath(), "UTF-8");
-			} catch (FileNotFoundException | UnsupportedEncodingException e) {
-				e.printStackTrace();
-			}
-			writer.print("none");
-			writer.close();
-		}
-		BufferedReader br = null;
-		try {
-			br = new BufferedReader(new FileReader(texturepackInfo.getAbsolutePath()));
-		} catch (FileNotFoundException e1) {
-			e1.printStackTrace();
-		}
-		String sCurrentLine= null;
-		try {
-			while ((sCurrentLine = br.readLine()) != null) {
-				TextureManager.currentTexturepack = sCurrentLine;
-			}
-			br.close();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+		TexturePackManager.initTexturePacks();
 		
 		/**To initialize Tiles and items because they are static*/
 		Tile.tileMap.toString();
@@ -166,7 +134,7 @@ public class GLCraft extends Screen{
 		if(isDevEnvironment){
 			pluginManager.addDevPlugin(devPlugin);
 		}
-		TextureManager.generateAtlas();
+		TextureManager.generateAtlas(false);
 	}
 	
 	private void initCamera(){

@@ -28,6 +28,7 @@ import org.lwjgl.BufferUtils;
 
 public class Texture {
 	int id,width,height;
+	
 	private Texture(int id, int width, int height){
 		this.id = id;
 		this.width = width;

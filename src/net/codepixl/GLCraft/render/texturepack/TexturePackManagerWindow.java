@@ -157,12 +157,7 @@ public class TexturePackManagerWindow extends JFrame {
 			ogIcon = tpimage;
 			fitImage(tpimage,imageLabel);
 			lblPackName.setText(tpname);
-			if(tpname.equals("Default textures")){
-				new File(System.getProperty("user.home")+"/GLCraft/Texturepacks/currentTP.txt").delete();
-				JOptionPane.showMessageDialog(null, "You must restart GLCraft for changes to take effect.");
-			}else{
-				TexturePackManager.setTexturePack(tpname);
-			}
+			TexturePackManager.setTexturePack(tpname);
 		} catch (FileNotFoundException | UnsupportedEncodingException | ZipException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

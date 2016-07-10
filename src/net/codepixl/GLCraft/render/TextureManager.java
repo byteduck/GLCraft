@@ -31,6 +31,8 @@ public class TextureManager {
 	private static boolean madeAtlas = false;
 	private static BufferedImage noimg;
 	public static String currentTexturepack = "none";
+	public static boolean setAtlas;
+	public static final int maxWidth = 16;
 	
 	public static void addTexture(String name, String path){
 		textures.put(name.toLowerCase(),path.toLowerCase());
@@ -51,10 +53,14 @@ public class TextureManager {
 		}
 		addTexture("misc.break_8",MISC+"break_7.png");
 	}
-	public static void generateAtlas(){
-		if(!madeAtlas){
+	public static void regenerateAtlas(){
+		atlasCoords = new HashMap<String,float[]>();
+		generateAtlas(true);
+	}
+	public static void generateAtlas(boolean regen){
+		if(!madeAtlas || regen){
+			System.out.println("Generating atlas with texture pack: "+currentTexturepack);
 			madeAtlas = true;
-			final int maxWidth = 16;
 			int total = 0;
 			for (String list : textures.values()) {
 			    total++;
@@ -69,7 +75,7 @@ public class TextureManager {
 				Map.Entry<String, String> next = it.next();
 				BufferedImage image;
 				try {
-					GLCraft.renderSplashText("Generating Texture Atlas...", "Loading "+next.getKey());
+					if(!regen) GLCraft.renderSplashText("Generating Texture Atlas...", "Loading "+next.getKey());
 					if(next.getValue().startsWith("[EXTERNAL]")){
 						image = ImageIO.read(new File(next.getValue().substring(next.getValue().indexOf(']')+1)));
 					}else{
@@ -89,6 +95,7 @@ public class TextureManager {
 					System.out.println("Added "+next.getKey()+" at "+x+","+y+" to texture atlas");
 				} catch (Exception e) {
 					System.err.println("Error adding "+next.getKey()+" to texture atlas: Could not find file "+next.getValue()+". Replacing with \"NO IMG\"");
+					e.printStackTrace();
 					g.drawImage(noimg, x*16, y*16, null);
 					atlasCoords.put(next.getKey(), new float[]{(float)x*(1f/(float)maxWidth),(float)y*(1f/(float)maxWidth)});
 				}
@@ -103,7 +110,8 @@ public class TextureManager {
 				outputfile.mkdirs();
 				outputfile.createNewFile();
 				ImageIO.write(combined, "png", outputfile);
-				Spritesheet.atlas = new Spritesheet(outputfile.getAbsolutePath(),maxWidth,true);
+				
+				if(!regen) Spritesheet.atlas = new Spritesheet(outputfile.getAbsolutePath(),maxWidth,true); else setAtlas = true;
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
