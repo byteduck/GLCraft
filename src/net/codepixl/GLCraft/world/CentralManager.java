@@ -40,6 +40,7 @@ import net.codepixl.GLCraft.sound.SoundManager;
 import net.codepixl.GLCraft.util.Constants;
 import net.codepixl.GLCraft.util.DebugTimer;
 import net.codepixl.GLCraft.util.Spritesheet;
+import net.codepixl.GLCraft.util.logging.CrashHandler;
 import net.codepixl.GLCraft.world.entity.EntityManager;
 import net.codepixl.GLCraft.world.entity.mob.EntityPlayer;
 import net.codepixl.GLCraft.world.entity.mob.animal.EntityTestAnimal;
@@ -119,6 +120,9 @@ public class CentralManager extends Screen{
 			Mouse.setGrabbed(true);
 		}else if(!guiManager.mouseShouldBeGrabbed()){
 			Mouse.setGrabbed(false);
+		}
+		if(Keyboard.isKeyDown(Keyboard.KEY_LMENU) && Keyboard.isKeyDown(Keyboard.KEY_C)){
+			CrashHandler.invokeCrash();
 		}
 		while(Keyboard.next()){
 			if(Keyboard.getEventKeyState()){

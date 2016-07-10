@@ -43,7 +43,10 @@ import java.io.InputStream;
 import java.io.PrintStream;
 import java.net.URL;
 import java.nio.ByteBuffer;
+import java.nio.file.FileSystemException;
 import java.nio.file.Files;
+
+import javax.swing.JOptionPane;
 
 import org.lwjgl.opengl.Display;
 import org.lwjgl.opengl.GL11;
@@ -214,7 +217,13 @@ public class GLCraft extends Screen{
 	
 	public static void main(String[] args) throws IOException{
 		Thread.setDefaultUncaughtExceptionHandler(new CrashHandler());
-		Files.deleteIfExists(new File(System.getProperty("user.home")+"/GLCraft/GLCraft.log").toPath());
+		try{
+			Files.deleteIfExists(new File(System.getProperty("user.home")+"/GLCraft/GLCraft.log").toPath());
+		}catch(FileSystemException e){
+			JOptionPane.showMessageDialog(null, "You can only run one GLCraft instance at a time.", "GLCraft", JOptionPane.ERROR_MESSAGE);
+			System.exit(0);
+		}
+		Files.createDirectories(new File(System.getProperty("user.home")+"/GLCraft").toPath());
 		FileOutputStream lfos = new FileOutputStream(System.getProperty("user.home")+"/GLCraft/GLCraft.log");
 		TeeOutputStream otos = new TeeOutputStream(System.out,lfos);
 		TeeOutputStream etos = new TeeOutputStream(System.err,lfos);

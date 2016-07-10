@@ -8,6 +8,8 @@ import static org.lwjgl.opengl.GL11.glEnd;
 import static org.lwjgl.opengl.GL11.glTexCoord2f;
 import static org.lwjgl.opengl.GL11.glVertex2f;
 
+import java.awt.Desktop;
+import java.net.URI;
 import java.util.concurrent.Callable;
 
 import net.codepixl.GLCraft.GLCraft;
@@ -17,18 +19,20 @@ import net.codepixl.GLCraft.plugin.PluginManagerWindow;
 import net.codepixl.GLCraft.render.TextureManager;
 import net.codepixl.GLCraft.util.Constants;
 import net.codepixl.GLCraft.util.Spritesheet;
+import net.codepixl.GLCraft.util.logging.CrashHandler;
 import net.codepixl.GLCraft.world.tile.Tile;
 
 public class GUIStartScreen extends GUIScreen{
 	
 	private static final int MIDDLE = Constants.WIDTH/2;
-	private static final int SINGLEPLAYERY = (int) (Constants.HEIGHT*0.3);
-	private static final int MULTIPLAYERY = (int) (Constants.HEIGHT*0.5);
-	private static final int SERVERY = (int) (Constants.HEIGHT*0.7);
+	private static final int SINGLEPLAYERY = (int) (Constants.HEIGHT*0.2);
+	private static final int MULTIPLAYERY = (int) (Constants.HEIGHT*0.4);
+	private static final int SERVERY = (int) (Constants.HEIGHT*0.6);
+	private static final int BUGY = (int) (Constants.HEIGHT * 0.8);
 	private static final int PLUGINMANAGERY = SERVERY;
 	private static final int SOUNDY = MULTIPLAYERY;
 	
-	private GUIButton startButton, pluginManagerButton, soundButton, quitButton;
+	private GUIButton startButton, pluginManagerButton, soundButton, quitButton, bugButton;
 	
 	public GUIStartScreen(){
 		startButton = new GUIButton("Singleplayer", MIDDLE, SINGLEPLAYERY, new Callable<Void>(){
@@ -63,10 +67,18 @@ public class GUIStartScreen extends GUIScreen{
 				return null;
 			}
 		});
+		bugButton = new GUIButton("Report a bug", MIDDLE, BUGY, new Callable<Void>(){
+			@Override
+			public Void call() throws Exception {
+				Desktop.getDesktop().browse(new URI("https://gitreports.com/issue/Codepixl/GLCraft"));
+				return null;
+			}
+		});
 		this.addElement(quitButton);
 		this.addElement(startButton);
 		this.addElement(soundButton);
 		this.addElement(pluginManagerButton);
+		this.addElement(bugButton);
 	}
 	
 	@Override
