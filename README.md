@@ -5,6 +5,9 @@ Main website here: http://www.codepixl.net/GLCraft
 
 Gource: https://youtu.be/lSscChmX2JI made by Spike11302000
 
+*Texturepacks:*
+* Minecraft Textures: [Download](http://spike11302000.remotewebaccess.com/glcraft/texturepacks/minecraft.zip)
+
 Take a look at the wiki to see how you can make your own plugins for GLCraft.
 
 # Todo

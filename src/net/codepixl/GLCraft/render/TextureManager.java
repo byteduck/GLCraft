@@ -4,6 +4,7 @@ import java.awt.Graphics;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.net.URL;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -29,6 +30,8 @@ public class TextureManager {
 	private static String currentBoundTexture = "";
 	private static boolean madeAtlas = false;
 	private static BufferedImage noimg;
+	public static String currentTexturepack = "none";
+	
 	public static void addTexture(String name, String path){
 		textures.put(name.toLowerCase(),path.toLowerCase());
 	}
@@ -70,7 +73,12 @@ public class TextureManager {
 					if(next.getValue().startsWith("[EXTERNAL]")){
 						image = ImageIO.read(new File(next.getValue().substring(next.getValue().indexOf(']')+1)));
 					}else{
-						image = ImageIO.read(Texture.class.getClassLoader().getResourceAsStream(next.getValue()));
+						if(currentTexturepack.equals("none")){
+							image = ImageIO.read(Texture.class.getClassLoader().getResourceAsStream(next.getValue()));
+						}else{
+							File tp = new File(Constants.GLCRAFTDIR + "Texturepacks/tmp/"+next.getValue());
+							image = ImageIO.read(tp.getAbsoluteFile());
+						}
 					}
 					g.drawImage(image, x*16, y*16, null);
 					atlasCoords.put(next.getKey(), new float[]{(float)x*(1f/(float)maxWidth),(float)y*(1f/(float)maxWidth)});
