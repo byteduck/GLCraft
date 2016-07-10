@@ -37,22 +37,19 @@ import net.lingala.zip4j.exception.ZipException;
 
 public class TexturePackManagerWindow extends JFrame {
 	BufferedImage ogIcon;
-	
+
 	JLabel lblPackName;
 	final JLabel imageLabel = new JLabel("");
 
 	public TexturePackManagerWindow() {
 		setIconImage(Toolkit.getDefaultToolkit().getImage(TexturePackManagerWindow.class.getResource("/textures/icons/icon32.png")));
 		setTitle("Texture pack manager");
-		getContentPane().setLayout(new GridLayout(0, 2, 0, 0));
 
 		try {
 			ogIcon = ImageIO.read(TexturePackManagerWindow.class.getResourceAsStream("/textures/misc/DefaultRP.png"));
 		} catch (IOException e1) {
 			e1.printStackTrace();
 		}
-
-		JPanel listPanel = new JPanel();
 
 		File tpdir = new File(Constants.GLCRAFTDIR + "Texturepacks");
 		File[] tpacks = tpdir.listFiles();
@@ -66,6 +63,7 @@ public class TexturePackManagerWindow extends JFrame {
 					ZipFile zf = new ZipFile(tpack);
 					InputStream in = zf.getInputStream(zf.getEntry("preview.png"));
 					tpicon = ImageIO.read(in);
+					zf.close();
 				} catch (IOException e) {
 					e.printStackTrace();
 					tpicon = (BufferedImage) ogIcon.getScaledInstance(ogIcon.getWidth(), ogIcon.getHeight(), Image.SCALE_FAST);
@@ -73,10 +71,10 @@ public class TexturePackManagerWindow extends JFrame {
 				otpacks.put(tpname, tpicon);
 			}
 		}
-		
+
 		otpacks.put("Default textures", ogIcon);
 
-		listPanel.setLayout(new GridLayout(0, 1, 0, 0));
+		JPanel listPanel = new JPanel();
 
 		if (otpacks.size() > 0) {
 			listPanel.setLayout(new GridLayout(otpacks.size(), 0, 0, 0));
@@ -91,17 +89,24 @@ public class TexturePackManagerWindow extends JFrame {
 			label.setBorder(BorderFactory.createLineBorder(Color.black));
 			label.addMouseListener(new MouseAdapter() {
 				public void mouseClicked(MouseEvent e) {
-					setTexturePack(tpname,tpImage);
+					setTexturePack(tpname, tpImage);
 				}
 			});
 			listPanel.add(label);
 		}
+		getContentPane().setLayout(new BorderLayout(0, 0));
+
+		JPanel panel_2 = new JPanel();
+		getContentPane().add(panel_2, BorderLayout.CENTER);
+		panel_2.setLayout(new GridLayout(1, 0, 0, 0));
+
+		listPanel.setLayout(new GridLayout(0, 1, 0, 0));
 
 		JScrollPane scrollPane = new JScrollPane(listPanel);
-		getContentPane().add(scrollPane);
+		panel_2.add(scrollPane);
 
 		JPanel panel = new JPanel();
-		getContentPane().add(panel);
+		panel_2.add(panel);
 		panel.setLayout(new BorderLayout(0, 0));
 
 		JPanel panel_1 = new JPanel();
@@ -116,10 +121,13 @@ public class TexturePackManagerWindow extends JFrame {
 		lblPackName.setHorizontalAlignment(SwingConstants.CENTER);
 		panel_1.add(lblPackName);
 
-		
 		panel.add(imageLabel, BorderLayout.CENTER);
 
 		imageLabel.setHorizontalAlignment(SwingConstants.CENTER);
+
+		JLabel lblNewLabel = new JLabel("Texture packs are located at: " + Constants.GLCRAFTDIR + "Texturepacks");
+		getContentPane().add(lblNewLabel, BorderLayout.SOUTH);
+		lblNewLabel.setHorizontalAlignment(SwingConstants.CENTER);
 		File tpi = new File(Constants.GLCRAFTDIR + "Texturepacks/currentTP.txt");
 		if (tpi.exists()) {
 			try {
@@ -149,13 +157,11 @@ public class TexturePackManagerWindow extends JFrame {
 			}
 		});
 	}
-	
-
 
 	private void setTexturePack(String tpname, BufferedImage tpimage) {
 		try {
 			ogIcon = tpimage;
-			fitImage(tpimage,imageLabel);
+			fitImage(tpimage, imageLabel);
 			lblPackName.setText(tpname);
 			TexturePackManager.setTexturePack(tpname);
 		} catch (FileNotFoundException | UnsupportedEncodingException | ZipException e) {
