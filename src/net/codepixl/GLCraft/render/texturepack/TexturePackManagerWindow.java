@@ -116,9 +116,6 @@ public class TexturePackManagerWindow extends JFrame {
 		lblPackName.setHorizontalAlignment(SwingConstants.CENTER);
 		panel_1.add(lblPackName);
 
-		JButton btnOpenTexturePack = new JButton("Open texture pack folder");
-		panel.add(btnOpenTexturePack, BorderLayout.SOUTH);
-
 		
 		panel.add(imageLabel, BorderLayout.CENTER);
 
