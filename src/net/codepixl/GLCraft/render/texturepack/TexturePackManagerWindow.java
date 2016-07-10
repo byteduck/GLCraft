@@ -158,7 +158,7 @@ public class TexturePackManagerWindow extends JFrame {
 			fitImage(tpimage,imageLabel);
 			lblPackName.setText(tpname);
 			if(tpname.equals("Default textures")){
-				new File(System.getProperty("user.home")+"/GLCraft/Texturepacks/currentTP.txt").deleteOnExit();
+				new File(System.getProperty("user.home")+"/GLCraft/Texturepacks/currentTP.txt").delete();
 				JOptionPane.showMessageDialog(null, "You must restart GLCraft for changes to take effect.");
 			}else{
 				TexturePackManager.setTexturePack(tpname);

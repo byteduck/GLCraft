@@ -146,6 +146,7 @@ public class GLCraft extends Screen{
 			while ((sCurrentLine = br.readLine()) != null) {
 				TextureManager.currentTexturepack = sCurrentLine;
 			}
+			br.close();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}

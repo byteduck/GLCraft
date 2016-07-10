@@ -29,7 +29,7 @@ public class TexturePackManager {
 		}
 		PrintWriter writer = null;
 		writer = new PrintWriter(texturepackInfo.getAbsolutePath(), "UTF-8");
-		writer.println(TP.getName().substring(0, TP.getName().length()-4));
+		writer.print(TP.getName().substring(0, TP.getName().length()-4));
 		writer.close();
 		
 		JOptionPane.showMessageDialog(null, "You must restart GLCraft for changes to take effect.");
