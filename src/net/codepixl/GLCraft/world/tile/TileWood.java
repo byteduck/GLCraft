@@ -26,7 +26,7 @@ public class TileWood extends Tile{
 	
 	@Override
 	public String getFolderSuffix(){
-		return "wood";
+		return "wood/";
 	}
 	
 	@Override

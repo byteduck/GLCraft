@@ -191,35 +191,35 @@ public class Tile {
 						for(int i = 0; i < 128; i++){
 							for(String name : this.getMultiTextureNames((byte) i)){
 								if(!TextureManager.hasTexture("tiles."+name)){
-									TextureManager.addTexture("tiles."+name, TextureManager.TILES+this.getFolderSuffix()+"/"+name+".png");
+									TextureManager.addTexture("tiles."+name, TextureManager.TILES+this.getFolderSuffix()+name+".png");
 								}
 							}
 						}
 					}else{
 						for(String name : this.getMultiTextureNames()){
 							if(!TextureManager.hasTexture("tiles."+name)){
-								TextureManager.addTexture("tiles."+name, TextureManager.TILES+this.getFolderSuffix()+"/"+name+".png");
+								TextureManager.addTexture("tiles."+name, TextureManager.TILES+this.getFolderSuffix()+name+".png");
 							}
 						}
 					}
 				}else{
 					if(this.hasMetaTextures()){
 						for(int i = 0; i < 128; i++){
-							TextureManager.addTexture("tiles."+this.getTextureName((byte) i), TextureManager.TILES+this.getFolderSuffix()+"/"+this.getTextureName((byte) i)+".png");
+							TextureManager.addTexture("tiles."+this.getTextureName((byte) i), TextureManager.TILES+this.getFolderSuffix()+this.getTextureName((byte) i)+".png");
 						}
 					}else{
-						TextureManager.addTexture("tiles."+this.getTextureName(), TextureManager.TILES+this.getFolderSuffix()+"/"+this.getTextureName()+".png");
+						TextureManager.addTexture("tiles."+this.getTextureName(), TextureManager.TILES+this.getFolderSuffix()+this.getTextureName()+".png");
 					}
 				}
 				if(this.hasMetaTextures()){
 					for(int i = 0; i < 128; i++){
 						if(!TextureManager.hasTexture(this.getIconName((byte) i))){
-							TextureManager.addTexture("tiles."+this.getIconName((byte) i), TextureManager.TILES+this.getFolderSuffix()+"/"+this.getIconName((byte) i)+".png");
+							TextureManager.addTexture("tiles."+this.getIconName((byte) i), TextureManager.TILES+this.getFolderSuffix()+this.getIconName((byte) i)+".png");
 						}	
 					}
 				}else{
 					if(!TextureManager.hasTexture(this.getIconName())){
-						TextureManager.addTexture("tiles."+this.getIconName(), TextureManager.TILES+this.getFolderSuffix()+"/"+this.getIconName()+".png");
+						TextureManager.addTexture("tiles."+this.getIconName(), TextureManager.TILES+this.getFolderSuffix()+this.getIconName()+".png");
 					}
 				}
 			}

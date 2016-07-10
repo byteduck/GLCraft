@@ -31,7 +31,7 @@ public class TileLog extends Tile{
 	
 	@Override
 	public String getFolderSuffix(){
-		return "wood";
+		return "wood/";
 	}
 	
 	@Override
