@@ -39,15 +39,12 @@ import net.lingala.zip4j.core.ZipFile;
 public class GUIStartScreen extends GUIScreen{
 	
 	private static final int MIDDLE = Constants.WIDTH/2;
-	private static final int SINGLEPLAYERY = (int) (Constants.HEIGHT*0.1);
-	private static final int MULTIPLAYERY = (int) (Constants.HEIGHT*0.3);
-	private static final int SERVERY = (int) (Constants.HEIGHT*0.5);
-	private static final int BUGY = (int) (Constants.HEIGHT * 0.9);
-	private static final int TEXTUREY = (int) (Constants.HEIGHT * 0.7);
-	private static final int PLUGINMANAGERY = SERVERY;
-	private static final int SOUNDY = MULTIPLAYERY;
+	private static final int SINGLEPLAYERY = (int) (Constants.HEIGHT*0.2);
+	private static final int PLUGINMANAGERY = (int) (Constants.HEIGHT*0.4);
+	private static final int TEXTUREY = (int) (Constants.HEIGHT * 0.6);
+	private static final int BUGY = (int) (Constants.HEIGHT * 0.8);
 	
-	private GUIButton startButton, pluginManagerButton, soundButton, quitButton, bugButton,texturepackButton;
+	private GUIButton startButton, pluginManagerButton, quitButton, bugButton,texturepackButton;
 
 	public GUIStartScreen() {
 		startButton = new GUIButton("Singleplayer", MIDDLE, SINGLEPLAYERY, new Callable<Void>() {
@@ -60,15 +57,7 @@ public class GUIStartScreen extends GUIScreen{
 				return null;
 			}
 		});
-		soundButton = new GUIButton("Play a sound", MIDDLE, SOUNDY, new Callable<Void>() {
-
-			@Override
-			public Void call() throws Exception {
-				return null;
-			}
-
-		});
-		pluginManagerButton = new GUIButton("Plugin Manager", MIDDLE, SERVERY, new Callable<Void>() {
+		pluginManagerButton = new GUIButton("Plugin Manager", MIDDLE, PLUGINMANAGERY, new Callable<Void>() {
 			@Override
 			public Void call() throws Exception {
 				new PluginManagerWindow(GLCraft.getGLCraft().getPluginManager()).setVisible(true);
@@ -132,7 +121,6 @@ public class GUIStartScreen extends GUIScreen{
 		});
 		this.addElement(quitButton);
 		this.addElement(startButton);
-		this.addElement(soundButton);
 		this.addElement(pluginManagerButton);
 		this.addElement(bugButton);
 		this.addElement(texturepackButton);
