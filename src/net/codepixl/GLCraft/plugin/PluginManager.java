@@ -71,7 +71,7 @@ public class PluginManager {
 	
 	public String getResourceLocation(){
 		if(currentlyLoadingPlugin.mainClass.equals("dev")){
-			return currentlyLoadingPlugin.path+"/res/";
+			return "res/";
 		}else{
 			System.out.println(currentlyLoadingPlugin.path);
 			return currentlyLoadingPlugin.path;
