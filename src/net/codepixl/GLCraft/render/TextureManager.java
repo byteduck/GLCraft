@@ -106,7 +106,7 @@ public class TextureManager {
 				}
 			}
 			try {
-				File outputfile = new File(Constants.GLCRAFTDIR,"temp/atlas.png");
+				File outputfile = new File(Constants.GLCRAFTDIR,"/temp/atlas.png");
 				outputfile.getParentFile().mkdirs();
 				outputfile.createNewFile();
 				ImageIO.write(combined, "png", outputfile);
