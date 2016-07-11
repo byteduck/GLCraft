@@ -336,17 +336,17 @@ public class WorldManager {
 	}
 	
 	public void setMetaAtPos(int x, int y, int z, byte meta, boolean rebuild){
-		setMetaAtPos(x,y,z,meta,rebuild,true);
+		setMetaAtPos(x,y,z,meta,rebuild,true,true);
 	}
 	
-	public void setMetaAtPos(int x, int y, int z, byte meta, boolean rebuild, boolean blockUpdate){
+	public void setMetaAtPos(int x, int y, int z, byte meta, boolean rebuild, boolean blockUpdate, boolean updateSelf){
 		Iterator<Chunk> i = activeChunks.iterator();
 		while(i.hasNext()){
 			Chunk c = i.next();
 			if(x >= c.getPos().x && y >= c.getPos().y && z >= c.getPos().z && x <= c.getPos().x + 15 && y <= c.getPos().y + 15 && z <= c.getPos().z + 15){
 				c.setMetaAtPos(x-(int)c.getPos().x, y-(int)c.getPos().y, z-(int)c.getPos().z,meta, rebuild);
 				if(blockUpdate){
-					Tile.getTile((byte)getTileAtPos(x,y,z)).blockUpdate(x,y,z,this);
+					if(updateSelf) Tile.getTile((byte)getTileAtPos(x,y,z)).blockUpdate(x,y,z,this);
 					Tile.getTile((byte)getTileAtPos(x+1,y,z)).blockUpdate(x+1,y,z,this);
 					Tile.getTile((byte)getTileAtPos(x-1,y,z)).blockUpdate(x-1,y,z,this);
 					Tile.getTile((byte)getTileAtPos(x,y+1,z)).blockUpdate(x,y+1,z,this);

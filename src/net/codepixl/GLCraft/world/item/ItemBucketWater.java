@@ -21,7 +21,7 @@ public class ItemBucketWater extends Item{
 	
 	@Override
 	public void onClick(EntityPlayer p){
-		p.placeTile(Tile.Water);
+		p.placeTile(Tile.Water, (byte)1);
 		p.setSelectedItemStack(new ItemStack(Item.Bucket));
 	}
 }
