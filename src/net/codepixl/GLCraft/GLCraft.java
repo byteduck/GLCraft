@@ -32,33 +32,23 @@ import static org.lwjgl.opengl.GL11.glOrtho;
 import static org.lwjgl.opengl.GL11.glTexEnvi;
 import static org.lwjgl.opengl.GL11.glViewport;
 import static org.lwjgl.util.glu.GLU.gluPerspective;
-
 import java.awt.Font;
 import java.awt.FontFormatException;
 import java.awt.GraphicsEnvironment;
-import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
-import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.PrintStream;
-import java.io.PrintWriter;
-import java.io.UnsupportedEncodingException;
 import java.net.URL;
 import java.nio.ByteBuffer;
 import java.nio.file.FileSystemException;
 import java.nio.file.Files;
-
 import javax.swing.JOptionPane;
-
 import org.lwjgl.opengl.Display;
 import org.lwjgl.opengl.GL11;
 import org.newdawn.slick.opengl.PNGDecoder;
 import org.newdawn.slick.opengl.TextureImpl;
-
 import com.nishu.utils.GameLoop;
 import com.nishu.utils.Screen;
 import com.nishu.utils.Window;
@@ -100,6 +90,7 @@ public class GLCraft extends Screen{
 	}
 	
 	private void commonInitializer() throws IOException{
+		
 		glcraft = this;
 		Display.setIcon(new ByteBuffer[] {
 		        loadIcon(GLCraft.class.getResource("/textures/icons/icon16.png")),
@@ -112,11 +103,13 @@ public class GLCraft extends Screen{
 		gameLoop.setScreen(this); //THIS IS WHEN INITGL AND INIT ARE CALLED
 		gameLoop.setDebugMode(false);
 		gameLoop.start(60);
+		
 	}
 	
 	@Override
 	public void init() {
-		
+		Constants.getherSystemInfo();
+
 		TexturePackManager.initTexturePacks();
 		
 		/**To initialize Tiles and items because they are static*/
@@ -125,7 +118,7 @@ public class GLCraft extends Screen{
 		
 		initCamera();
 		world = new CentralManager();
-		String pluginsFolder = System.getProperty("user.home")+"/GLCraft/Plugins";
+		String pluginsFolder = Constants.GLCRAFTDIR+"/Plugins";
 		new File(pluginsFolder).mkdirs();
 		pluginManager = new PluginManager(pluginsFolder);
 		if(loadExtPlugins){
@@ -147,6 +140,7 @@ public class GLCraft extends Screen{
 
 	@Override
 	public void initGL() {
+		
 		GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
 		try {
 			ge.registerFont(Font.createFont(Font.TRUETYPE_FONT, getClass().getResourceAsStream("/font/GLCraft.ttf")));
@@ -225,6 +219,7 @@ public class GLCraft extends Screen{
 	
 	public static void main(String[] args) throws IOException{
 		Thread.setDefaultUncaughtExceptionHandler(new CrashHandler());
+		
 		try{
 			Files.deleteIfExists(new File(System.getProperty("user.home")+"/GLCraft/GLCraft.log").toPath());
 		}catch(FileSystemException e){
@@ -237,7 +232,9 @@ public class GLCraft extends Screen{
 		TeeOutputStream etos = new TeeOutputStream(System.err,lfos);
 		System.setErr(new PrintStream(etos));
 		System.setOut(new PrintStream(otos));
+		
 		glcraft = new GLCraft();
+		
 	}
 	
 	public static void devEnvironment(Plugin p, boolean loadExtPlugins){

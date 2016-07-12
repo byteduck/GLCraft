@@ -1,11 +1,6 @@
 package net.codepixl.GLCraft.util;
 
 import java.awt.Font;
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.net.MalformedURLException;
-import java.net.URL;
 import java.util.Arrays;
 import java.util.Random;
 import org.newdawn.slick.TrueTypeFont;
@@ -31,15 +26,45 @@ public class Constants {
 	public static final int START_SCREEN = 0;
 	public static final int GAME = 1;
 	public static final int SERVER = 2;
-	public static final String GLCRAFTDIR = System.getProperty("user.home") + "\\GLCraft\\";
+	public static final String GLCRAFTDIR = getGamePath();
 	public static int GAME_STATE = START_SCREEN;
 	public static CentralManager world;
 	public static int worldLength = CHUNKSIZE * viewDistance;
 	public static int WIDTH = 1000;
 	public static int HEIGHT = 700;
-	
-	
-	// System.out.println(results);
+	public static String[] SystemProperty = new String[54];
+	public static String[] SystemPropertyName = new String[] { "java.runtime.name", "sun.boot.library.path",
+			"java.vm.version", "java.vm.vendor", "java.vendor.url", "path.separator", "java.vm.name",
+			"file.encoding.pkg", "user.country", "sun.java.launcher", "sun.os.patch.level",
+			"java.vm.specification.name", "user.dir", "java.runtime.version", "java.awt.graphicsenv",
+			"java.endorsed.dirs", "os.arch", "java.io.tmpdir", "java.vm.specification.vendor",
+			"os.name", "sun.jnu.encoding", "java.library.path", "sun.awt.enableExtraMouseButtons",
+			"java.specification.name", "java.class.version", "sun.management.compiler", "os.version", "user.home",
+			"user.timezone", "java.awt.printerjob", "file.encoding", "java.specification.version", "user.name",
+			"java.class.path", "java.vm.specification.version", "sun.arch.data.model", "java.home", "sun.java.command",
+			"java.specification.vendor", "user.language", "awt.toolkit", "java.vm.info", "java.version",
+			"java.ext.dirs", "sun.boot.class.path", "java.vendor", "file.separator", "java.vendor.url.bug",
+			"sun.cpu.endian", "sun.io.unicode.encoding", "sun.font.fontmanager", "sun.desktop", "sun.cpu.isalist"};
+
+	public static void getherSystemInfo() {
+
+		Arrays.sort(SystemPropertyName);
+		System.out.println("Gethering System Info...\n");
+		for (int i = 0; i < SystemPropertyName.length; i++) {
+			SystemProperty[i] = System.getProperty(SystemPropertyName[i]);
+			System.out.println("	" + SystemPropertyName[i] + " = " + SystemProperty[i]);
+		}
+		System.out.println("\n");
+	}
+
+	public static String getGamePath() {
+		if ("Linux".equals(System.getProperty("os.name"))) {
+			return "~/GLCraft";
+		} else {
+			return System.getProperty("user.home") + "\\GLCraft\\";
+		}
+	}
+
 	public static void setDoneGenerating(boolean generating) {
 		doneGenerating = generating;
 	}

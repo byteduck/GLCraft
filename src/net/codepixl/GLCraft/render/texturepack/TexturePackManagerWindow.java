@@ -54,6 +54,7 @@ public class TexturePackManagerWindow extends JFrame {
 		File tpdir = new File(Constants.GLCRAFTDIR + "Texturepacks");
 		File[] tpacks = tpdir.listFiles();
 		HashMap<String, BufferedImage> otpacks = new HashMap<String, BufferedImage>();
+		if(tpacks !=null){
 		for (File tpack : tpacks) {
 			String ext = tpack.getName().substring(tpack.getName().lastIndexOf('.') + 1);
 			if (ext.equalsIgnoreCase("zip")) {
@@ -71,7 +72,7 @@ public class TexturePackManagerWindow extends JFrame {
 				otpacks.put(tpname, tpicon);
 			}
 		}
-
+		}
 		otpacks.put("Default textures", ogIcon);
 
 		JPanel listPanel = new JPanel();
