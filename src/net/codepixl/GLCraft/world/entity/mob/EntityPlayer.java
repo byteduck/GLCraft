@@ -67,6 +67,7 @@ public class EntityPlayer extends Mob {
 	private Vector3f prevSelect;
 	private boolean shouldPlaceTile;
 	private Tile tileToPlace;
+	private byte metaToPlace;
 	
 	public EntityPlayer(Vector3f pos, WorldManager w) {
 		super(pos, w);
@@ -572,7 +573,7 @@ public class EntityPlayer extends Mob {
 							while(worldManager.getTileAtPos(r.pos) != Tile.Air.getId() || AABB.testAABB(blockaabb, getAABB()) && worldManager.getEntityManager().getPlayer().getSelectedItemStack().getTile().canPlace((int) r.pos.x, (int) r.pos.y, (int) r.pos.z, worldManager)){
 								r.prev();
 							}
-							worldManager.setTileAtPos((int) r.pos.x, (int) r.pos.y, (int) r.pos.z, tileToPlace.getId(), true, (byte) 0);
+							worldManager.setTileAtPos((int) r.pos.x, (int) r.pos.y, (int) r.pos.z, tileToPlace.getId(), true, metaToPlace);
 							worldManager.getEntityManager().getPlayer().getSelectedItemStack().getTile().onPlace((int) r.pos.x, (int) r.pos.y, (int) r.pos.z, worldManager);
 							setBuildCooldown(0.2f);
 							r.next();
@@ -603,9 +604,10 @@ public class EntityPlayer extends Mob {
 		return coords;
 	}
 
-	public void placeTile(Tile tile) {
+	public void placeTile(Tile tile, byte meta) {
 		shouldPlaceTile = true;
 		tileToPlace = tile;
+		metaToPlace = meta;
 	}
 	
 }
