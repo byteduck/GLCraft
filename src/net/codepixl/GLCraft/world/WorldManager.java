@@ -212,7 +212,7 @@ public class WorldManager {
 			for(int i = 0; i < activeChunks.size(); i++){
 				if(Frustum.getFrustum().cubeInFrustum(activeChunks.get(i).getPos().getX(), activeChunks.get(i).getPos().getY(), activeChunks.get(i).getPos().getZ(), activeChunks.get(i).getPos().getX() + Constants.CHUNKSIZE, activeChunks.get(i).getPos().getY() + Constants.CHUNKSIZE, activeChunks.get(i).getPos().getZ() + Constants.CHUNKSIZE)){
 					float distance=(float) Math.sqrt(Math.pow(activeChunks.get(i).getCenter().getX()-entityManager.getPlayer().getX(),2) + Math.pow(activeChunks.get(i).getCenter().getY()-entityManager.getPlayer().getY(),2) + Math.pow(activeChunks.get(i).getCenter().getZ()-entityManager.getPlayer().getZ(),2));
-					if(distance < 10*Constants.CHUNKSIZE){
+					if(distance < Constants.viewDistance*Constants.CHUNKSIZE){
 						activeChunks.get(i).render();
 					}
 				}

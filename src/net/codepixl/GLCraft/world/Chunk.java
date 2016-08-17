@@ -293,10 +293,10 @@ public static void createCustomTree(int x, int y, int z,Tile trunk,Tile leaf, by
 	
 	public void render(){
 		if(type != CentralManager.AIRCHUNK){
-			shader.use();
+			//shader.use();
 			GL11.glPolygonOffset(1.0f,1.0f);
 			glCallList(vcID);
-			shader.release();
+			//shader.release();
 		}
 	}
 	
@@ -369,7 +369,7 @@ public static void createCustomTree(int x, int y, int z,Tile trunk,Tile leaf, by
 			for(int x = 0; x < sizeX; x++){
 				for(int y = 0; y < sizeY; y++){
 					for(int z = 0; z < sizeZ; z++){
-						if(tiles[x][y][z] != 0 && !checkTileNotInView(x,y,z)){
+						if(tiles[x][y][z] != 0 && !checkTileNotInView(x+(int)pos.getX(),y+(int)pos.getY(),z+(int)pos.getZ())){
 							/**if(tiles[x][y][z] != Tile.TallGrass.getId()){
 								//System.out.println(Tile.getTile(tiles[x][y][z]).getName());
 								//System.out.println(pos);
@@ -422,42 +422,18 @@ public static void createCustomTree(int x, int y, int z,Tile trunk,Tile leaf, by
 	
 	private boolean checkTileNotInView(int x, int y, int z){
 		boolean facesHidden[] = new boolean[6];
-		if(x > pos.getX()){
-			if(!Tile.getTile(tiles[x-1][y][z]).isTransparent()) facesHidden[0] = true;
-			else facesHidden[0] = false;
-		}else{
-			facesHidden[0] = false;
-		}
-		if(x < sizeX - 1){
-			if(!Tile.getTile(tiles[x+1][y][z]).isTransparent()) facesHidden[1] = true;
-			else facesHidden[1] = false;
-		}else{
-			facesHidden[1] = false;
-		}
-		if(y > pos.getY()){
-			if(!Tile.getTile(tiles[x][y-1][z]).isTransparent()) facesHidden[2] = true;
-			else facesHidden[2] = false;
-		}else{
-			facesHidden[2] = false;
-		}
-		if(y < sizeY - 1){
-			if(!Tile.getTile(tiles[x][y+1][z]).isTransparent()) facesHidden[3] = true;
-			else facesHidden[3] = false;
-		}else{
-			facesHidden[3] = false;
-		}
-		if(z > pos.getZ()){
-			if(!Tile.getTile(tiles[x][y][z-1]).isTransparent()) facesHidden[4] = true;
-			else facesHidden[4] = false;
-		}else{
-			facesHidden[4] = false;
-		}
-		if(z < sizeZ - 1){
-			if(!Tile.getTile(tiles[x][y][z+1]).isTransparent()) facesHidden[5] = true;
-			else facesHidden[5] = false;
-		}else{
-			facesHidden[5] = false;
-		}
+		if(!Tile.getTile((byte)worldManager.getTileAtPos(x-1,y,z)).isTransparent()) facesHidden[0] = true;
+		else facesHidden[0] = false;
+		if(!Tile.getTile((byte)worldManager.getTileAtPos(x+1,y,z)).isTransparent()) facesHidden[1] = true;
+		else facesHidden[1] = false;
+		if(!Tile.getTile((byte)worldManager.getTileAtPos(x,y-1,z)).isTransparent()) facesHidden[2] = true;
+		else facesHidden[2] = false;
+		if(!Tile.getTile((byte)worldManager.getTileAtPos(x,y+1,z)).isTransparent()) facesHidden[3] = true;
+		else facesHidden[3] = false;
+		if(!Tile.getTile((byte)worldManager.getTileAtPos(x,y,z-1)).isTransparent()) facesHidden[4] = true;
+		else facesHidden[4] = false;
+		if(!Tile.getTile((byte)worldManager.getTileAtPos(x,y,z+1)).isTransparent()) facesHidden[5] = true;
+		else facesHidden[5] = false;
 		
 		return facesHidden[0] && facesHidden[1] && facesHidden[2] && facesHidden[3] && facesHidden[4] && facesHidden[5];
 	}
