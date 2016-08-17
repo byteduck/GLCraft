@@ -72,7 +72,7 @@ public class WorldManager {
 				for(int z = 0; z < Constants.viewDistance; z++){
 					currentChunk++;
 					int progress = (int) (((float)currentChunk/(float)Math.pow(Constants.viewDistance, 3))*100f);
-					centralManager.renderSplashText("Generating Chunks...", progress+"%", progress);
+					centralManager.renderSplashText("Terraforming...", progress+"%", progress);
 					activeChunks.add(new Chunk(shader, 1, x * Constants.CHUNKSIZE, y * Constants.CHUNKSIZE, z * Constants.CHUNKSIZE, this));
 					//saveChunk(activeChunks.get(activeChunks.size() - 1));
 				}
@@ -84,23 +84,31 @@ public class WorldManager {
 		while(i.hasNext()){
 			this.currentChunk++;
 			int progress = (int) (((float)currentChunk/(float)Math.pow(Constants.viewDistance, 3))*100f);
-			centralManager.renderSplashText("Populating Chunks...", progress+"%", progress);
+			centralManager.renderSplashText("Planting...", progress+"%", progress);
 			i.next().populateChunk();
 		}
 		i = activeChunks.iterator();
 		
-		centralManager.renderSplashText("Hold on...","Finishing up a few things");
-		
+		this.currentChunk = 0;
 		while(i.hasNext()){
+			this.currentChunk++;
+			int progress = (int) (((float)currentChunk/(float)Math.pow(Constants.viewDistance, 3))*100f);
+			centralManager.renderSplashText("Lighting...", progress+"%", progress);
 			i.next().light();
 		}
 		
 		i = activeChunks.iterator();
+		
+		this.currentChunk = 0;
 		while(i.hasNext()){
+			this.currentChunk++;
+			int progress = (int) (((float)currentChunk/(float)Math.pow(Constants.viewDistance, 3))*100f);
+			centralManager.renderSplashText("Decorating...", progress+"%", progress);
 			Chunk c = i.next();
 			c.rebuild();
 			c.rebuildTickTiles();
 		}
+		centralManager.renderSplashText("Hold on...", "Beaming you down");
 		System.out.println("Done!");
 		doneGenerating = true;
 	}
@@ -204,25 +212,27 @@ public class WorldManager {
 	}
 	
 	public void render(){
-		DebugTimer.startTimer("chunk_render");
-		Spritesheet.atlas.bind();
-		getEntityManager().getPlayer().applyTranslations();
-		Vector3f pos = getEntityManager().getPlayer().getPos();
-		//if(getTileAtPos((int)pos.x,(int)pos.y+2,(int)pos.z) == 0 || getTileAtPos((int)pos.x,(int)pos.y+2,(int)pos.z) == -1 || getTileAtPos((int)pos.x,(int)pos.y+2,(int)pos.z) == 9 || getTileAtPos((int)pos.x,(int)pos.y+2,(int)pos.z) == 4){
-			for(int i = 0; i < activeChunks.size(); i++){
-				if(Frustum.getFrustum().cubeInFrustum(activeChunks.get(i).getPos().getX(), activeChunks.get(i).getPos().getY(), activeChunks.get(i).getPos().getZ(), activeChunks.get(i).getPos().getX() + Constants.CHUNKSIZE, activeChunks.get(i).getPos().getY() + Constants.CHUNKSIZE, activeChunks.get(i).getPos().getZ() + Constants.CHUNKSIZE)){
-					float distance=(float) Math.sqrt(Math.pow(activeChunks.get(i).getCenter().getX()-entityManager.getPlayer().getX(),2) + Math.pow(activeChunks.get(i).getCenter().getY()-entityManager.getPlayer().getY(),2) + Math.pow(activeChunks.get(i).getCenter().getZ()-entityManager.getPlayer().getZ(),2));
-					if(distance < Constants.viewDistance*Constants.CHUNKSIZE){
-						activeChunks.get(i).render();
+		if(doneGenerating){
+			DebugTimer.startTimer("chunk_render");
+			Spritesheet.atlas.bind();
+			getEntityManager().getPlayer().applyTranslations();
+			Vector3f pos = getEntityManager().getPlayer().getPos();
+			//if(getTileAtPos((int)pos.x,(int)pos.y+2,(int)pos.z) == 0 || getTileAtPos((int)pos.x,(int)pos.y+2,(int)pos.z) == -1 || getTileAtPos((int)pos.x,(int)pos.y+2,(int)pos.z) == 9 || getTileAtPos((int)pos.x,(int)pos.y+2,(int)pos.z) == 4){
+				for(int i = 0; i < activeChunks.size(); i++){
+					if(Frustum.getFrustum().cubeInFrustum(activeChunks.get(i).getPos().getX(), activeChunks.get(i).getPos().getY(), activeChunks.get(i).getPos().getZ(), activeChunks.get(i).getPos().getX() + Constants.CHUNKSIZE, activeChunks.get(i).getPos().getY() + Constants.CHUNKSIZE, activeChunks.get(i).getPos().getZ() + Constants.CHUNKSIZE)){
+						float distance=(float) Math.sqrt(Math.pow(activeChunks.get(i).getCenter().getX()-entityManager.getPlayer().getX(),2) + Math.pow(activeChunks.get(i).getCenter().getY()-entityManager.getPlayer().getY(),2) + Math.pow(activeChunks.get(i).getCenter().getZ()-entityManager.getPlayer().getZ(),2));
+						if(distance < Constants.viewDistance*Constants.CHUNKSIZE){
+							activeChunks.get(i).render();
+						}
 					}
 				}
-			}
-		//}
-		DebugTimer.endTimer("chunk_render");
-		//System.out.println(Raytracer.getScreenCenterRay());
-		DebugTimer.startTimer("entity_render");
-		entityManager.render();
-		DebugTimer.endTimer("entity_render");
+			//}
+			DebugTimer.endTimer("chunk_render");
+			//System.out.println(Raytracer.getScreenCenterRay());
+			DebugTimer.startTimer("entity_render");
+			entityManager.render();
+			DebugTimer.endTimer("entity_render");
+		}
 	}
 	
 	public EntityManager getEntityManager(){
