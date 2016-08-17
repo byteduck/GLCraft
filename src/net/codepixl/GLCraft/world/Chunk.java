@@ -14,23 +14,21 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.Iterator;
 
 import org.lwjgl.opengl.GL11;
-import org.lwjgl.opengl.GL20;
 import org.lwjgl.util.vector.Vector3f;
 
 import com.evilco.mc.nbt.stream.NbtInputStream;
 import com.evilco.mc.nbt.stream.NbtOutputStream;
 import com.evilco.mc.nbt.tag.TagByteArray;
 import com.evilco.mc.nbt.tag.TagCompound;
-import com.nishu.utils.Color4f;
 import com.nishu.utils.ShaderProgram;
 
 import net.codepixl.GLCraft.render.RenderType;
 import net.codepixl.GLCraft.render.Shape;
 import net.codepixl.GLCraft.util.Constants;
-import net.codepixl.GLCraft.util.TileAndPos;
 import net.codepixl.GLCraft.world.tile.Tile;
 import net.codepixl.GLCraft.world.tile.tick.TickHelper;
 
@@ -247,25 +245,25 @@ public class Chunk {
 public static void createCustomTree(int x, int y, int z,Tile trunk,Tile leaf, byte trunkMeta, byte leafMeta, WorldManager w){
 		
 		for(int i = 0; i < 5; i++){
-			w.setTileAtPos(x, y+i, z, trunk.getId(), true, trunkMeta);
+			w.setTileAtPos(x, y+i, z, trunk.getId(), false, trunkMeta);
 		}
-		w.setTileAtPos(x, y+3, z+1, leaf.getId(), true, leafMeta);
-		w.setTileAtPos(x+1, y+3, z+1, leaf.getId(), true, leafMeta);
-		w.setTileAtPos(x-1, y+3, z+1, leaf.getId(), true, leafMeta);
+		w.setTileAtPos(x, y+3, z+1, leaf.getId(), false, leafMeta);
+		w.setTileAtPos(x+1, y+3, z+1, leaf.getId(), false, leafMeta);
+		w.setTileAtPos(x-1, y+3, z+1, leaf.getId(), false, leafMeta);
 		
-		w.setTileAtPos(x, y+3, z-1, leaf.getId(), true, leafMeta);
-		w.setTileAtPos(x+1, y+3, z-1, leaf.getId(), true, leafMeta);
-		w.setTileAtPos(x-1, y+3, z-1, leaf.getId(), true, leafMeta);
+		w.setTileAtPos(x, y+3, z-1, leaf.getId(), false, leafMeta);
+		w.setTileAtPos(x+1, y+3, z-1, leaf.getId(), false, leafMeta);
+		w.setTileAtPos(x-1, y+3, z-1, leaf.getId(), false, leafMeta);
 		
-		w.setTileAtPos(x-1, y+3, z, leaf.getId(), true, leafMeta);
-		w.setTileAtPos(x+1, y+3, z, leaf.getId(), true, leafMeta);
+		w.setTileAtPos(x-1, y+3, z, leaf.getId(), false, leafMeta);
+		w.setTileAtPos(x+1, y+3, z, leaf.getId(), false, leafMeta);
 		
-		w.setTileAtPos(x, y+4, z+1, leaf.getId(), true, leafMeta);
-		w.setTileAtPos(x, y+4, z-1, leaf.getId(), true, leafMeta);
-		w.setTileAtPos(x+1, y+4, z, leaf.getId(), true, leafMeta);
-		w.setTileAtPos(x-1, y+4, z, leaf.getId(), true, leafMeta);
+		w.setTileAtPos(x, y+4, z+1, leaf.getId(), false, leafMeta);
+		w.setTileAtPos(x, y+4, z-1, leaf.getId(), false, leafMeta);
+		w.setTileAtPos(x+1, y+4, z, leaf.getId(), false, leafMeta);
+		w.setTileAtPos(x-1, y+4, z, leaf.getId(), false, leafMeta);
 		
-		w.setTileAtPos(x, y+5, z, leaf.getId(), true);
+		w.setTileAtPos(x, y+5, z, leaf.getId(), false);
 	}
 	
 	public void initGL(boolean bufChunk){
@@ -293,10 +291,10 @@ public static void createCustomTree(int x, int y, int z,Tile trunk,Tile leaf, by
 	
 	public void render(){
 		if(type != CentralManager.AIRCHUNK){
-			//shader.use();
+			shader.use();
 			GL11.glPolygonOffset(1.0f,1.0f);
 			glCallList(vcID);
-			//shader.release();
+			shader.release();
 		}
 	}
 	
@@ -494,6 +492,29 @@ public static void createCustomTree(int x, int y, int z,Tile trunk,Tile leaf, by
 				worldManager.getChunkAtCoords(MathUtils.coordsToChunkPos((int)ax-7, (int)ay+7, (int)az)).queueLight();
 				worldManager.getChunkAtCoords(MathUtils.coordsToChunkPos((int)ax+7, (int)ay-7, (int)az)).queueLight();
 				worldManager.getChunkAtCoords(MathUtils.coordsToChunkPos((int)ax-7, (int)ay-7, (int)az)).queueLight();**/
+				HashSet<Chunk> toRebuild = new HashSet<Chunk>();
+				if(x == 0){
+					toRebuild.add(worldManager.getChunkAtCoords(new Vector3f(pos.x-16,pos.y,pos.z)));
+				}
+				if(y == 0){
+					toRebuild.add(worldManager.getChunkAtCoords(new Vector3f(pos.x,pos.y-16,pos.z)));
+				}
+				if(z == 0){
+					toRebuild.add(worldManager.getChunkAtCoords(new Vector3f(pos.x,pos.y,pos.z-16)));
+				}
+				if(x == Constants.CHUNKSIZE-1){
+					toRebuild.add( worldManager.getChunkAtCoords(new Vector3f(pos.x+16,pos.y,pos.z)));
+				}
+				if(y == Constants.CHUNKSIZE-1){
+					toRebuild.add(worldManager.getChunkAtCoords(new Vector3f(pos.x,pos.y+16,pos.z)));
+				}
+				if(z == Constants.CHUNKSIZE-1){
+					toRebuild.add(worldManager.getChunkAtCoords(new Vector3f(pos.x,pos.y,pos.z+16)));
+				}
+				Iterator<Chunk> i = toRebuild.iterator();
+				while(i.hasNext()){
+					i.next().rebuild();
+				}
 			}
 		}
 	}
@@ -516,6 +537,7 @@ public static void createCustomTree(int x, int y, int z,Tile trunk,Tile leaf, by
 			}
 			tiles[x][y][z] = tile;
 			Tile.getTile(tile).onPlace((int)ax, (int)ay, (int)az, worldManager);
+			//ALWAYS assume that the rebuild argument will be false (except in special cases) because the setting of the meta rebuilds the chunk.
 			if(rebuild){
 				queueLight();
 				/**worldManager.getChunkAtCoords(MathUtils.coordsToChunkPos((int)ax-7, (int)ay, (int)az)).queueLight();

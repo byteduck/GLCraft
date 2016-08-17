@@ -13,6 +13,9 @@ import net.codepixl.GLCraft.util.GameObj;
 import net.codepixl.GLCraft.util.MathUtils;
 import net.codepixl.GLCraft.world.WorldManager;
 import net.codepixl.GLCraft.world.tile.Tile;
+import net.codepixl.GLCraft.world.tile.TileFire;
+import net.codepixl.GLCraft.world.tile.TileLava;
+import net.codepixl.GLCraft.world.tile.TileWater;
 
 public class Entity implements GameObj{
 	protected Vector3f pos, rot, vel;
@@ -156,6 +159,13 @@ public class Entity implements GameObj{
 		}
 		Tile t = Tile.getTile((byte)worldManager.getTileAtPos(pos));
 		t.onCollide((int)pos.x, (int)pos.y, (int)pos.z, worldManager, this);
+		if(t instanceof TileFire){
+			this.onFire = 7f;
+		}else if(t instanceof TileLava){
+			this.onFire = 7f;
+		}else if(t instanceof TileWater){
+			this.onFire = 0;
+		}
 		voidHurt();
 	}
 

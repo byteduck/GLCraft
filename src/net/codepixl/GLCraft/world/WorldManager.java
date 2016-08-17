@@ -397,7 +397,7 @@ public class WorldManager {
 				}
 			}
 		}
-		System.err.println("Coordinates must be divisible by 15!");
+		//System.err.println("Coordinates must be divisible by 15!");
 		return activeChunks.get(0);
 	}
 	
