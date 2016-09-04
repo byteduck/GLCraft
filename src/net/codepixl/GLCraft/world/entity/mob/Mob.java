@@ -21,7 +21,7 @@ import net.codepixl.GLCraft.world.tile.Tile;
 public class Mob extends EntitySolid implements GameObj{
 	
 	protected ItemStack[] inventory;
-	public float health, hurtTimer;
+	public float health, hurtTimer, eyeLevel, airLevel;
 	private float voidHurt = 0f;
 	protected float fallDistance = 0f;
 	protected float prevY = 0f;
@@ -34,6 +34,8 @@ public class Mob extends EntitySolid implements GameObj{
 		}
 		this.health = 20f;
 		this.hurtTimer = 0;
+		this.eyeLevel = getAABB().r[1]*2f*0.94f;
+		this.airLevel = 10f;
 	}
 	
 	@Override
@@ -93,6 +95,16 @@ public class Mob extends EntitySolid implements GameObj{
 			this.fallDistance+=this.prevY-this.getY();
 		}
 		this.prevY = this.getY();
+		if(!this.canBreathe())
+			this.airLevel -= Time.getDelta();
+		else
+			this.airLevel = 10f;
+		
+		if(this.airLevel < 0){
+			this.airLevel = 0;
+			hurt(2f,1);
+		}
+		
 		//getCamera().updateKeyboard(32, 2);
 		//getCamera().updateMouse();
 		DebugTimer.startTimer("ai_time");
@@ -101,7 +113,11 @@ public class Mob extends EntitySolid implements GameObj{
 	}
 	
 	public void jump(){
-		if(onGround) this.getVelocity().y = 0.9f;
+		if(onGround)
+			this.getVelocity().y = 0.9f;
+		else if(isInWater()){
+			this.getVelocity().y = 0.3f;
+		}
 	}
 	
 	public ItemStack getInventory(int index){
@@ -109,6 +125,10 @@ public class Mob extends EntitySolid implements GameObj{
 			return inventory[index];
 		else
 			return new ItemStack(Tile.Void);
+	}
+	
+	public boolean canBreathe(){
+		return !(Tile.getTile((byte) worldManager.getTileAtPos(pos.x,pos.y+eyeLevel,pos.z)) == Tile.Water);
 	}
 	
 	public void hurt(float amt){

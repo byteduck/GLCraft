@@ -6,6 +6,8 @@ import static org.lwjgl.opengl.GL11.glEnd;
 import static org.lwjgl.opengl.GL11.glPopMatrix;
 import static org.lwjgl.opengl.GL11.glPushMatrix;
 
+import java.util.Arrays;
+
 import org.lwjgl.util.vector.Vector3f;
 
 import com.nishu.utils.Color4f;
@@ -26,6 +28,13 @@ public class AABB {
 		r[1] = height * 0.5f;
 		r[2] = length * 0.5f;
 		vel = new Vector3f();
+	}
+
+	public AABB(AABB aabb) {
+		center = new Vector3f(aabb.center);
+		pos = new Vector3f(aabb.pos);
+		r = Arrays.copyOf(aabb.r, aabb.r.length);
+		vel = new Vector3f(aabb.vel);
 	}
 
 	public void update(final Vector3f position) {

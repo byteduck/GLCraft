@@ -81,6 +81,7 @@ public class EntityPlayer extends Mob {
 		selectedSlot = 0;
 		qPressed = false;
 		prevSelect = new Vector3f(-1, -1, -1);
+		eyeLevel = 1.6f;
 	}
 	
 	@Override
@@ -90,6 +91,7 @@ public class EntityPlayer extends Mob {
 	
 	public void update() {
 		super.update();
+		System.out.println(this.airLevel);
 		SoundManager.getMainManager().setPosAndRot(pos, rot);
 		this.rot.x = MathUtils.towardsZero(this.rot.x, (float) (Time.getDelta()*30f));
 		if(this.isDead()){
@@ -593,7 +595,7 @@ public class EntityPlayer extends Mob {
 	}
 	
 	public Tile tileAtEye(){
-		return Tile.getTile((byte)worldManager.getTileAtPos(this.pos.x,this.pos.y+1.6f,this.pos.z));
+		return Tile.getTile((byte)worldManager.getTileAtPos(this.pos.x,this.pos.y+1.52f,this.pos.z));
 	}
 	
 	private static float[] breakingTexCoords(float percent) {
@@ -608,6 +610,13 @@ public class EntityPlayer extends Mob {
 		shouldPlaceTile = true;
 		tileToPlace = tile;
 		metaToPlace = meta;
+	}
+
+	public float[] getTexCoordsForAirIndex(int i) {
+		if(this.airLevel-((float)i) > 0){
+			return TextureManager.texture("gui.bubble");
+		}
+		return TextureManager.texture("misc.nothing");
 	}
 	
 }

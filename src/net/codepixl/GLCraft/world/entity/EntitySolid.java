@@ -82,6 +82,17 @@ public class EntitySolid extends Entity{
 		return false;
 	}
 	
+	public boolean isInWater(){
+		Iterator<AABB> i = worldManager.BlockAABBForEntity(this, Tile.Water).iterator();
+		while(i.hasNext()){
+			AABB next = i.next();
+			if(AABB.testAABB(getAABB(), next)){
+				return true;
+			}
+		}
+		return false;
+	}
+	
 	private boolean testHitHead(Vector3f pos){
 		AABB headAABB = new AABB(this.aabb.getSize().x-0.05f,0,this.aabb.getSize().z-0.05f);
 		headAABB.update(pos);
@@ -104,7 +115,9 @@ public class EntitySolid extends Entity{
 			this.pos.y-=0.01f;
 		}
 		this.move((this.getVelocity().x * (float)Time.getDelta() * 10),(this.getVelocity().y * (float)Time.getDelta() * 10),(this.getVelocity().z * (float)Time.getDelta() * 10));
-		if(this.getVelocity().y > -3f && !onGround){
+		if(this.isInWater()){
+			this.getVelocity().y = MathUtils.towardsValue(this.getVelocity().y, (float)Time.getDelta()*3, -0.2f);
+		}else if(this.getVelocity().y > -3f && !onGround){
 			this.getVelocity().y -= Time.getDelta()*3;
 		}else if(!onGround){
 			this.getVelocity().y = -3f;

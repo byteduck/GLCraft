@@ -221,9 +221,17 @@ public class CentralManager extends Screen{
 		float HEARTSIZE = (float)Constants.WIDTH/36f;
 		float SPACING = (float)Constants.WIDTH/36f;
 		float HEARTSPACING = (float)Constants.WIDTH/72f;
+		float BUBBLESIZE = HEARTSIZE;
+		float BUBBLESPACING = HEARTSPACING;
 		EntityPlayer p = worldManager.getEntityManager().getPlayer();
 		Spritesheet.atlas.bind();
 		if(!p.tileAtEye().isTransparent()){
+			glPushMatrix();
+			glBegin(GL_QUADS);
+			Shape.createCenteredSquare(Constants.WIDTH/2f, Constants.HEIGHT/2f, new Color4f(1f,1f,1f,1f), p.tileAtEye().getIconCoords(), Constants.WIDTH);
+			glEnd();
+			glPopMatrix();
+		}else if(p.tileAtEye() == Tile.Water){
 			glPushMatrix();
 			glBegin(GL_QUADS);
 			Shape.createCenteredSquare(Constants.WIDTH/2f, Constants.HEIGHT/2f, new Color4f(1f,1f,1f,1f), p.tileAtEye().getIconCoords(), Constants.WIDTH);
@@ -259,7 +267,17 @@ public class CentralManager extends Screen{
 				TextureImpl.unbind();
 			}
 		}
+		
 		Spritesheet.atlas.bind();
+		
+		if(p.airLevel < 10f){
+			glBegin(GL_QUADS);
+			for(int i = 0; i < 10; i++){
+				Shape.createCenteredSquare((float)Constants.WIDTH/9f+i*BUBBLESIZE+i*BUBBLESPACING+BUBBLESIZE/2f,Constants.HEIGHT-(SIZE/2f)-BUBBLESIZE*3.5f, new Color4f(1,1,1,1), p.getTexCoordsForAirIndex(i), BUBBLESIZE);
+			}
+			glEnd();
+		}
+		
 		glBegin(GL_QUADS);
 		for(int i = 0; i < 10; i++){
 			Shape.createCenteredSquare((float)Constants.WIDTH/9f+i*HEARTSIZE+i*HEARTSPACING+HEARTSIZE/2f,Constants.HEIGHT-(SIZE/2f)-HEARTSIZE*2f, new Color4f(1,1,1,1), p.getTexCoordsForHealthIndex(i), HEARTSIZE);

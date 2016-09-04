@@ -21,6 +21,7 @@ public class GUIManager {
 		TextureManager.addTexture("gui.heart", TextureManager.GUIS+"heart.png");
 		TextureManager.addTexture("gui.heart_half", TextureManager.GUIS+"heart_half.png");
 		TextureManager.addTexture("gui.heart_empty", TextureManager.GUIS+"heart_empty.png");
+		TextureManager.addTexture("gui.bubble", TextureManager.GUIS+"bubble.png");
 	}
 	
 	public static void setMainManager(GUIManager manager){

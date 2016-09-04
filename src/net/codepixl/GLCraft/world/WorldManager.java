@@ -294,6 +294,24 @@ public class WorldManager {
 		return arraylist;
 	}
 	
+	public ArrayList<AABB> BlockAABBForEntity(EntitySolid entitySolid, Tile t){
+		ArrayList<AABB> arraylist = new ArrayList<AABB>();
+		AABB mAABB = entitySolid.getAABB();
+		for(int x = (int) (entitySolid.getX()-1); x < entitySolid.getX()+mAABB.getSize().x; x++){
+			for(int y = (int) (entitySolid.getY()-1); y < entitySolid.getY()+mAABB.getSize().y; y++){
+				for(int z = (int) (entitySolid.getZ()-1); z < entitySolid.getZ()+mAABB.getSize().z; z++){
+					if(Tile.getTile((byte)getTileAtPos(x,y,z)) == t){
+						AABB aabb = new AABB(1,1,1);
+						aabb.update(new Vector3f(x+0.5f,y,z+0.5f));
+						//if(!AABB.testAABB(aabb, mAABB))
+							arraylist.add(aabb);
+					}
+				}
+			}
+		}
+		return arraylist;
+	}
+	
 	public int getTileAtPos(int x, int y, int z){
 		Chunk c = getChunk(new Vector3f(x,y,z));
 		if(c == null)
