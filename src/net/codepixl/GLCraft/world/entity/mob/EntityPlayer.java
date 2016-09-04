@@ -91,7 +91,6 @@ public class EntityPlayer extends Mob {
 	
 	public void update() {
 		super.update();
-		System.out.println(this.airLevel);
 		SoundManager.getMainManager().setPosAndRot(pos, rot);
 		this.rot.x = MathUtils.towardsZero(this.rot.x, (float) (Time.getDelta()*30f));
 		if(this.isDead()){
