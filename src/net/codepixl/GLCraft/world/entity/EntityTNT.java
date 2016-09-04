@@ -74,8 +74,8 @@ public class EntityTNT extends EntitySolid{
 							for (float f1 = 0.3F; f > 0.0F; f -= 0.22500001F) {
 								Vector3f blockpos = new Vector3f(d4, d6, d8);
 								worldManager.setTileAtPos(blockpos, Tile.Air.getId(), false);
-								if (!affectedChunks.contains(worldManager.getChunkAtCoords(blockpos))) {
-									affectedChunks.add(worldManager.getChunkAtCoords(blockpos));
+								if (!affectedChunks.contains(worldManager.getChunk(blockpos))) {
+									affectedChunks.add(worldManager.getChunk(blockpos));
 								}
 								d4 += d0 * 0.30000001192092896D;
 								d6 += d1 * 0.30000001192092896D;

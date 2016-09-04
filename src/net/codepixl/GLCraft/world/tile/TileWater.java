@@ -6,6 +6,8 @@ import com.nishu.utils.Color4f;
 
 import net.codepixl.GLCraft.render.RenderType;
 import net.codepixl.GLCraft.render.Shape;
+import net.codepixl.GLCraft.render.TextureManager;
+import net.codepixl.GLCraft.util.EnumFacing;
 import net.codepixl.GLCraft.world.Chunk;
 import net.codepixl.GLCraft.world.WorldManager;
 import net.codepixl.GLCraft.world.tile.material.Material;
@@ -53,9 +55,46 @@ public class TileWater extends Tile{
 		GL11.glTranslatef(x, y, z);
 		GL11.glScalef(1, size, 1);
 		GL11.glBegin(GL11.GL_QUADS);
-		Shape.createCube(0, 0, 0, Color4f.WHITE, getTexCoords(), 1f);
+		/*
+		 * bottom - 0,1 (0)
+		 * top - 2,3 (1)
+		 * front - 4,5 (2)
+		 * back - 6,7 (3)
+		 * left - 8,9 (4)
+		 * right - 10,11 (5)
+		 */
+		float tempTexCoords[] = new float[12];
+		for(int i = 0; i < 6; i++){
+			if(sideShouldRender(i,x,y,z,w)){
+				tempTexCoords[i*2] = getTexCoords()[0];
+				tempTexCoords[i*2+1] = getTexCoords()[1];
+			}else{
+				tempTexCoords[i*2] = TextureManager.texture("misc.nothing")[0];
+				tempTexCoords[i*2+1] = TextureManager.texture("misc.nothing")[1];
+			}
+		}
+		Shape.createCube(0, 0, 0, Color4f.WHITE, tempTexCoords, 1f);
 		GL11.glEnd();
 		GL11.glPopMatrix();
+	}
+	
+	private boolean sideShouldRender(int f, float x, float y, float z, WorldManager w){
+		switch(f){
+			case 0: //BOTTOM
+				return w.getTileAtPos(x,y-1,z) != Tile.Water.getId();
+			case 1: //TOP
+				return w.getTileAtPos(x,y+1,z) != Tile.Water.getId();
+			case 2: //FRONT
+				return w.getTileAtPos(x,y,z-1) != Tile.Water.getId();
+			case 3: //BACK
+				return w.getTileAtPos(x,y,z+1) != Tile.Water.getId();
+			case 4: //LEFT
+				return w.getTileAtPos(x+1,y,z) != Tile.Water.getId();
+			case 5:
+				return w.getTileAtPos(x-1,y,z) != Tile.Water.getId();
+			default:
+				return false;
+		}
 	}
 
 	@Override

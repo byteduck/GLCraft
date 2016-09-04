@@ -3,6 +3,7 @@ package net.codepixl.GLCraft.world;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 
@@ -23,6 +24,7 @@ import net.codepixl.GLCraft.util.Frustum;
 import net.codepixl.GLCraft.util.MathUtils;
 import net.codepixl.GLCraft.util.OpenSimplexNoise;
 import net.codepixl.GLCraft.util.Spritesheet;
+import net.codepixl.GLCraft.util.Vector3i;
 import net.codepixl.GLCraft.world.entity.Entity;
 import net.codepixl.GLCraft.world.entity.EntityManager;
 import net.codepixl.GLCraft.world.entity.EntitySolid;
@@ -36,7 +38,7 @@ public class WorldManager {
 	public static OpenSimplexNoise noise;
 	public boolean doneGenerating = false;
 	public EntityManager entityManager;
-	private volatile ArrayList<Chunk> activeChunks;
+	private volatile HashMap<Vector3i,Chunk> activeChunks; //Vector3i because HashMap doesn't play well with floats (therefore vector3f)
 	private ShaderProgram shader;
 	public static Tile selectedBlock = Tile.Air;
 	public CentralManager centralManager;
@@ -58,7 +60,7 @@ public class WorldManager {
 	private void init(){
 		entityManager = new EntityManager(this);
 		entityManager.initPlayer();
-		activeChunks = new ArrayList<Chunk>();
+		activeChunks = new HashMap<Vector3i,Chunk>();
 		GUIManager.getMainManager().addGUI(new GUICrafting(entityManager.getPlayer()), "crafting");
 		GUIManager.getMainManager().addGUI(new GUICraftingAdvanced(entityManager.getPlayer()), "adv_crafting");
 	}
@@ -73,12 +75,13 @@ public class WorldManager {
 					currentChunk++;
 					int progress = (int) (((float)currentChunk/(float)Math.pow(Constants.viewDistance, 3))*100f);
 					centralManager.renderSplashText("Terraforming...", progress+"%", progress);
-					activeChunks.add(new Chunk(shader, 1, x * Constants.CHUNKSIZE, y * Constants.CHUNKSIZE, z * Constants.CHUNKSIZE, this));
+					Chunk c = new Chunk(shader, 1, x * Constants.CHUNKSIZE, y * Constants.CHUNKSIZE, z * Constants.CHUNKSIZE, this);
+					activeChunks.put(new Vector3i(c.getPos()), c);
 					//saveChunk(activeChunks.get(activeChunks.size() - 1));
 				}
 			}
 		}
-		Iterator<Chunk> i = activeChunks.iterator();
+		Iterator<Chunk> i = activeChunks.values().iterator();
 		System.out.println("Populating World...");
 		this.currentChunk = 0;
 		while(i.hasNext()){
@@ -87,7 +90,7 @@ public class WorldManager {
 			centralManager.renderSplashText("Planting...", progress+"%", progress);
 			i.next().populateChunk();
 		}
-		i = activeChunks.iterator();
+		i = activeChunks.values().iterator();
 		
 		this.currentChunk = 0;
 		while(i.hasNext()){
@@ -97,7 +100,7 @@ public class WorldManager {
 			i.next().light();
 		}
 		
-		i = activeChunks.iterator();
+		i = activeChunks.values().iterator();
 		
 		this.currentChunk = 0;
 		while(i.hasNext()){
@@ -120,7 +123,7 @@ public class WorldManager {
 				for(int z = 0; z < Constants.viewDistance; z++){
 					currentChunk++;
 					Chunk c = new Chunk(shader, CentralManager.MIXEDCHUNK, x * Constants.CHUNKSIZE, 0, z * Constants.CHUNKSIZE, this, true);
-					activeChunks.add(c);
+					activeChunks.put(new Vector3i(c.getPos()), c);
 					c.rebuild();
 				}
 			}
@@ -134,7 +137,7 @@ public class WorldManager {
 		DebugTimer.endTimer("entity_update");
 		
 		DebugTimer.startTimer("chunk_update");
-		Iterator<Chunk> i = activeChunks.iterator();
+		Iterator<Chunk> i = activeChunks.values().iterator();
 		while(i.hasNext()){
 			i.next().update();
 		}
@@ -145,7 +148,7 @@ public class WorldManager {
 		if(tick > 1.0f/20f){
 			DebugTimer.startTimer("chunk_tick");
 			tick = 0f;
-			i = activeChunks.iterator();
+			i = activeChunks.values().iterator();
 			while(i.hasNext()){
 				i.next().tick();
 			}
@@ -161,7 +164,7 @@ public class WorldManager {
 	private void loadUnload() {
 		EntityPlayer p = entityManager.getPlayer();
 		Vector3f pos = p.getPos();
-		Iterator<Chunk> i = activeChunks.iterator();
+		Iterator<Chunk> i = activeChunks.values().iterator();
 		List<Vector3f> chunkPos = getChunkPosInRadiusOfPlayer();
 		ArrayList<Vector3f> there = new ArrayList<Vector3f>();
 		while(i.hasNext()){
@@ -182,7 +185,7 @@ public class WorldManager {
 		if(toAdd.size() > 0){
 			Vector3f cpos = toAdd.get(0);
 			Chunk c = new Chunk(shader, 1, cpos, this);
-			activeChunks.add(c);
+			activeChunks.put(new Vector3i(c.getPos()), c);
 			c.rebuild();
 			c.populateChunk();
 			c.rebuild();
@@ -211,22 +214,35 @@ public class WorldManager {
 		entityManager.add(e);
 	}
 	
+	ArrayList<Chunk> toRender = new ArrayList<Chunk>();
+	
 	public void render(){
 		if(doneGenerating){
+			toRender.clear();
 			DebugTimer.startTimer("chunk_render");
 			Spritesheet.atlas.bind();
 			getEntityManager().getPlayer().applyTranslations();
 			Vector3f pos = getEntityManager().getPlayer().getPos();
 			//if(getTileAtPos((int)pos.x,(int)pos.y+2,(int)pos.z) == 0 || getTileAtPos((int)pos.x,(int)pos.y+2,(int)pos.z) == -1 || getTileAtPos((int)pos.x,(int)pos.y+2,(int)pos.z) == 9 || getTileAtPos((int)pos.x,(int)pos.y+2,(int)pos.z) == 4){
-				for(int i = 0; i < activeChunks.size(); i++){
-					if(Frustum.getFrustum().cubeInFrustum(activeChunks.get(i).getPos().getX(), activeChunks.get(i).getPos().getY(), activeChunks.get(i).getPos().getZ(), activeChunks.get(i).getPos().getX() + Constants.CHUNKSIZE, activeChunks.get(i).getPos().getY() + Constants.CHUNKSIZE, activeChunks.get(i).getPos().getZ() + Constants.CHUNKSIZE)){
-						float distance=(float) Math.sqrt(Math.pow(activeChunks.get(i).getCenter().getX()-entityManager.getPlayer().getX(),2) + Math.pow(activeChunks.get(i).getCenter().getY()-entityManager.getPlayer().getY(),2) + Math.pow(activeChunks.get(i).getCenter().getZ()-entityManager.getPlayer().getZ(),2));
+				Iterator<Chunk> i = activeChunks.values().iterator();
+				while(i.hasNext()){
+					Chunk c = i.next();
+					if(Frustum.getFrustum().cubeInFrustum(c.getPos().getX(), c.getPos().getY(), c.getPos().getZ(), c.getPos().getX() + Constants.CHUNKSIZE, c.getPos().getY() + Constants.CHUNKSIZE, c.getPos().getZ() + Constants.CHUNKSIZE)){
+						float distance=(float) Math.sqrt(Math.pow(c.getCenter().getX()-entityManager.getPlayer().getX(),2) + Math.pow(c.getCenter().getY()-entityManager.getPlayer().getY(),2) + Math.pow(c.getCenter().getZ()-entityManager.getPlayer().getZ(),2));
 						if(distance < Constants.viewDistance*Constants.CHUNKSIZE){
-							activeChunks.get(i).render();
+							toRender.add(c);
 						}
 					}
 				}
 			//}
+			i = toRender.iterator();
+			while(i.hasNext()){
+				i.next().render(false);
+			}
+			i = toRender.iterator();
+			while(i.hasNext()){
+				i.next().render(true);
+			}
 			DebugTimer.endTimer("chunk_render");
 			//System.out.println(Raytracer.getScreenCenterRay());
 			DebugTimer.startTimer("entity_render");
@@ -241,7 +257,7 @@ public class WorldManager {
 	
 	public void saveChunks() throws IOException{
 		Files.createParentDirs(new File("Chunks/test.chunk"));
-		Iterator<Chunk> i = this.activeChunks.iterator();
+		Iterator<Chunk> i = this.activeChunks.values().iterator();
 		int index = 0;
 		while(i.hasNext()){
 			Chunk c = i.next();
@@ -251,7 +267,7 @@ public class WorldManager {
 	}
 	
 	public void loadChunks() throws IOException{
-		Iterator<Chunk> i = this.activeChunks.iterator();
+		Iterator<Chunk> i = this.activeChunks.values().iterator();
 		int index = 0;
 		while(i.hasNext()){
 			Chunk c = i.next();
@@ -279,18 +295,14 @@ public class WorldManager {
 	}
 	
 	public int getTileAtPos(int x, int y, int z){
-		Iterator<Chunk> i = activeChunks.iterator();
-		while(i.hasNext()){
-			Chunk c = i.next();
-			if(x >= c.getPos().x && y >= c.getPos().y && z >= c.getPos().z && x <= c.getPos().x + 15 && y <= c.getPos().y + 15 && z <= c.getPos().z + 15){
-				return c.getTileAtCoord(x-(int)c.getPos().x, y-(int)c.getPos().y, z-(int)c.getPos().z);
-			}
-		}
-		return -1;
+		Chunk c = getChunk(new Vector3f(x,y,z));
+		if(c == null)
+			return -1;
+		return c.getTileAtCoord(x-(int)c.getPos().x, y-(int)c.getPos().y, z-(int)c.getPos().z);
 	}
 	
 	public boolean getIsTickTile(int x, int y, int z){
-		Iterator<Chunk> i = activeChunks.iterator();
+		Iterator<Chunk> i = activeChunks.values().iterator();
 		while(i.hasNext()){
 			Chunk c = i.next();
 			if(x >= c.getPos().x && y >= c.getPos().y && z >= c.getPos().z && x <= c.getPos().x + 15 && y <= c.getPos().y + 15 && z <= c.getPos().z + 15){
@@ -301,14 +313,8 @@ public class WorldManager {
 	}
 	
 	public byte getMetaAtPos(int x, int y, int z){
-		Iterator<Chunk> i = activeChunks.iterator();
-		while(i.hasNext()){
-			Chunk c = i.next();
-			if(x >= c.getPos().x && y >= c.getPos().y && z >= c.getPos().z && x <= c.getPos().x + 15 && y <= c.getPos().y + 15 && z <= c.getPos().z + 15){
-				return c.getMetaAtCoord(x-(int)c.getPos().x, y-(int)c.getPos().y, z-(int)c.getPos().z);
-			}
-		}
-		return -1;
+		Chunk c = getChunk(x,y,z);
+		return c.getMetaAtCoord(x-(int)c.getPos().x, y-(int)c.getPos().y, z-(int)c.getPos().z);
 	}
 	
 	public void setTileAtPos(int x, int y, int z, byte tile, boolean rebuild){
@@ -316,26 +322,21 @@ public class WorldManager {
 	}
 	
 	public void setTileAtPos(int x, int y, int z, byte tile, boolean rebuild, byte meta){
-		Iterator<Chunk> i = activeChunks.iterator();
-		while(i.hasNext()){
-			Chunk c = i.next();
-			if(x >= c.getPos().x && y >= c.getPos().y && z >= c.getPos().z && x <= c.getPos().x + 15 && y <= c.getPos().y + 15 && z <= c.getPos().z + 15){
-				c.setTileAtPos(x-(int)c.getPos().x, y-(int)c.getPos().y, z-(int)c.getPos().z, tile, false);
-				setMetaAtPos(x,y,z,meta,rebuild);
-				Tile.getTile((byte)getTileAtPos(x,y,z)).blockUpdate(x,y,z,this);
-				Tile.getTile((byte)getTileAtPos(x+1,y,z)).blockUpdate(x+1,y,z,this);
-				Tile.getTile((byte)getTileAtPos(x-1,y,z)).blockUpdate(x-1,y,z,this);
-				Tile.getTile((byte)getTileAtPos(x,y+1,z)).blockUpdate(x,y+1,z,this);
-				Tile.getTile((byte)getTileAtPos(x,y-1,z)).blockUpdate(x,y-1,z,this);
-				Tile.getTile((byte)getTileAtPos(x,y,z+1)).blockUpdate(x,y,z+1,this);
-				Tile.getTile((byte)getTileAtPos(x,y,z-1)).blockUpdate(x,y,z-1,this);
-				return;
-			}
-		}
+		Chunk c = getChunk(x,y,z);
+		c.setTileAtPos(x-(int)c.getPos().x, y-(int)c.getPos().y, z-(int)c.getPos().z, tile, false);
+		setMetaAtPos(x,y,z,meta,rebuild);
+		Tile.getTile((byte)getTileAtPos(x,y,z)).blockUpdate(x,y,z,this);
+		Tile.getTile((byte)getTileAtPos(x+1,y,z)).blockUpdate(x+1,y,z,this);
+		Tile.getTile((byte)getTileAtPos(x-1,y,z)).blockUpdate(x-1,y,z,this);
+		Tile.getTile((byte)getTileAtPos(x,y+1,z)).blockUpdate(x,y+1,z,this);
+		Tile.getTile((byte)getTileAtPos(x,y-1,z)).blockUpdate(x,y-1,z,this);
+		Tile.getTile((byte)getTileAtPos(x,y,z+1)).blockUpdate(x,y,z+1,this);
+		Tile.getTile((byte)getTileAtPos(x,y,z-1)).blockUpdate(x,y,z-1,this);
+		return;
 	}
 	
 	public void rebuildAtPos(int x, int y, int z){
-		Iterator<Chunk> i = activeChunks.iterator();
+		Iterator<Chunk> i = activeChunks.values().iterator();
 		while(i.hasNext()){
 			Chunk c = i.next();
 			if(x >= c.getPos().x && y >= c.getPos().y && z >= c.getPos().z && x <= c.getPos().x + 15 && y <= c.getPos().y + 15 && z <= c.getPos().z + 15){
@@ -350,41 +351,27 @@ public class WorldManager {
 	}
 	
 	public void setMetaAtPos(int x, int y, int z, byte meta, boolean rebuild, boolean blockUpdate, boolean updateSelf){
-		Iterator<Chunk> i = activeChunks.iterator();
-		while(i.hasNext()){
-			Chunk c = i.next();
-			if(x >= c.getPos().x && y >= c.getPos().y && z >= c.getPos().z && x <= c.getPos().x + 15 && y <= c.getPos().y + 15 && z <= c.getPos().z + 15){
-				c.setMetaAtPos(x-(int)c.getPos().x, y-(int)c.getPos().y, z-(int)c.getPos().z,meta, rebuild);
-				if(blockUpdate){
-					if(updateSelf) Tile.getTile((byte)getTileAtPos(x,y,z)).blockUpdate(x,y,z,this);
-					Tile.getTile((byte)getTileAtPos(x+1,y,z)).blockUpdate(x+1,y,z,this);
-					Tile.getTile((byte)getTileAtPos(x-1,y,z)).blockUpdate(x-1,y,z,this);
-					Tile.getTile((byte)getTileAtPos(x,y+1,z)).blockUpdate(x,y+1,z,this);
-					Tile.getTile((byte)getTileAtPos(x,y-1,z)).blockUpdate(x,y-1,z,this);
-					Tile.getTile((byte)getTileAtPos(x,y,z+1)).blockUpdate(x,y,z+1,this);
-					Tile.getTile((byte)getTileAtPos(x,y,z-1)).blockUpdate(x,y,z-1,this);
-				}
-				return;
-			}
+		Chunk c = getChunk(x,y,z);
+		c.setMetaAtPos(x-(int)c.getPos().x, y-(int)c.getPos().y, z-(int)c.getPos().z,meta, rebuild);
+		if(blockUpdate){
+			if(updateSelf) Tile.getTile((byte)getTileAtPos(x,y,z)).blockUpdate(x,y,z,this);
+			Tile.getTile((byte)getTileAtPos(x+1,y,z)).blockUpdate(x+1,y,z,this);
+			Tile.getTile((byte)getTileAtPos(x-1,y,z)).blockUpdate(x-1,y,z,this);
+			Tile.getTile((byte)getTileAtPos(x,y+1,z)).blockUpdate(x,y+1,z,this);
+			Tile.getTile((byte)getTileAtPos(x,y-1,z)).blockUpdate(x,y-1,z,this);
+			Tile.getTile((byte)getTileAtPos(x,y,z+1)).blockUpdate(x,y,z+1,this);
+			Tile.getTile((byte)getTileAtPos(x,y,z-1)).blockUpdate(x,y,z-1,this);
 		}
+		return;
 	}
 	
-	@Deprecated
 	public Chunk getChunk(int x, int y, int z){
-		Iterator<Chunk> i = activeChunks.iterator();
-		while(i.hasNext()){
-			Chunk c = i.next();
-			if(c.getPos().x <= x && c.getPos().y <= y && c.getPos().z <= z){
-				if(c.getPos().x+Constants.CHUNKSIZE >= x && c.getPos().y+Constants.CHUNKSIZE >= y && c.getPos().z+Constants.CHUNKSIZE >= z)
-					return c;
-			}
-		}
-		return null;
+		return getChunk(new Vector3f(x,y,z));
 	}
 	
 	@Deprecated
 	public void rebuildInRadius(int x, int y, int z, int rad){
-		Iterator<Chunk> i = activeChunks.iterator();
+		Iterator<Chunk> i = activeChunks.values().iterator();
 		while(i.hasNext()){
 			Chunk c = i.next();
 			if(MathUtils.distance(c.getCenter(),new Vector3f(x,y,z)) <= rad){
@@ -393,29 +380,24 @@ public class WorldManager {
 		}
 	}
 	
-	public Chunk getChunkAtCoords(Vector3f pos){
+	public Chunk getChunk(Vector3f pos){
+		Vector3f opos = pos;
 		pos = new Vector3f(pos);
-		pos.x = (float) (Math.floor(pos.x/16) * 16);
-		pos.y = (float) (Math.floor(pos.y/16) * 16);
-		pos.z = (float) (Math.floor(pos.z/16) * 16);
-		if(pos.x % 16 == 0 && pos.y % 16 == 0 && pos.z % 16 == 0){
-			Iterator<Chunk> i = activeChunks.iterator();
-			while(i.hasNext()){
-				Chunk c = i.next();
-				if(c.getPos().equals(pos)){
-					return c;
-				}
-			}
-		}
-		//System.err.println("Coordinates must be divisible by 15!");
-		return activeChunks.get(0);
+		pos.x = (float) ((int)pos.x/16*16);
+		pos.y = (float) ((int)pos.y/16*16);
+		pos.z = (float) ((int)pos.z/16*16);
+		Chunk c = activeChunks.get(new Vector3i(pos));
+		if(c != null)
+			return c;
+		else
+			return activeChunks.get(new Vector3i(0,0,0));
 	}
 	
 	public int getLight(int x, int y, int z,boolean ChunkCoords){
 		Vector3f posi = MathUtils.coordsToChunkPos(x, y, z);
-		if(getChunkAtCoords(posi) != null)
+		if(getChunk(posi) != null)
 			if(isInBounds(new Vector3f(x,y,z)))
-				return getChunkAtCoords(posi).getLight(new Vector3f(x,y,z),ChunkCoords);
+				return getChunk(posi).getLight(new Vector3f(x,y,z),ChunkCoords);
 		return 0;
 	}
 	
@@ -431,8 +413,8 @@ public class WorldManager {
 
 	public void setLight(int x, int y, int z, int light, boolean ChunkCoords) {
 		Vector3f posi = MathUtils.coordsToChunkPos(x, y, z);
-		if(getChunkAtCoords(posi) != null)
-		getChunkAtCoords(posi).setLight(new Vector3f(x,y,z),light,ChunkCoords);
+		if(getChunk(posi) != null)
+		getChunk(posi).setLight(new Vector3f(x,y,z),light,ChunkCoords);
 
 	}
 	

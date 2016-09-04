@@ -255,10 +255,10 @@ public class TileBluestone extends Tile{
 		Vector3f three = new Vector3f(x,y,z+1);
 		Vector3f four = new Vector3f(x,y,z-1);
 		//System.out.println(w.getChunkAtCoords(one)+""+w.getChunkAtCoords(two)+""+w.getChunkAtCoords(three)+""+w.getChunkAtCoords(four));
-		w.getChunkAtCoords(one).queueRebuild();
-		w.getChunkAtCoords(two).queueRebuild();
-		w.getChunkAtCoords(three).queueRebuild();
-		w.getChunkAtCoords(four).queueRebuild();
+		w.getChunk(one).queueRebuild();
+		w.getChunk(two).queueRebuild();
+		w.getChunk(three).queueRebuild();
+		w.getChunk(four).queueRebuild();
 	}
 	
 	@Override

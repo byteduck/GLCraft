@@ -52,6 +52,7 @@ public class TextureManager {
 			addTexture("misc.break_"+i,MISC+"break_"+i+".png");
 		}
 		addTexture("misc.break_8",MISC+"break_7.png");
+		addTexture("misc.nothing",MISC+"nothing.png");
 	}
 	public static void regenerateAtlas(){
 		atlasCoords = new HashMap<String,float[]>();

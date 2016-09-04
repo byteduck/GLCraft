@@ -40,7 +40,7 @@ public class Chunk {
 	private volatile int [][][] light;
 	private volatile byte [][][] meta;
 	private ShaderProgram shader;
-	public int vcID;
+	public int vcID, transvcID;
 	private int sizeX;
 	private int sizeY;
 	private int sizeZ;
@@ -270,7 +270,9 @@ public static void createCustomTree(int x, int y, int z,Tile trunk,Tile leaf, by
 		sizeX = Constants.CHUNKSIZE;
 		sizeY = Constants.CHUNKSIZE;
 		sizeZ = Constants.CHUNKSIZE;
-		vcID = glGenLists(1);
+		int tmp = glGenLists(1);
+		vcID = tmp*2;
+		transvcID = vcID+1;
 		tiles = new byte[sizeX][sizeY][sizeZ];
 		light = new int[sizeX][sizeY][sizeZ];
 		meta = new byte[sizeX][sizeY][sizeZ];
@@ -289,11 +291,14 @@ public static void createCustomTree(int x, int y, int z,Tile trunk,Tile leaf, by
 		
 	}
 	
-	public void render(){
+	public void render(boolean translucent){
 		if(type != CentralManager.AIRCHUNK){
 			shader.use();
 			GL11.glPolygonOffset(1.0f,1.0f);
-			glCallList(vcID);
+			if(translucent)
+				glCallList(transvcID);
+			else
+				glCallList(vcID);
 			shader.release();
 		}
 	}
@@ -362,12 +367,22 @@ public static void createCustomTree(int x, int y, int z,Tile trunk,Tile leaf, by
 	}
 	
 	public void rebuild(){
+		rebuildBase(false);
+		rebuildBase(true);
+	}
+	
+	private void rebuildBase(boolean translucent){
 		if(type != CentralManager.AIRCHUNK){
-			glNewList(vcID, GL_COMPILE);
+			if(translucent)
+				glNewList(transvcID, GL_COMPILE);
+			else
+				glNewList(vcID, GL_COMPILE);
 			for(int x = 0; x < sizeX; x++){
 				for(int y = 0; y < sizeY; y++){
 					for(int z = 0; z < sizeZ; z++){
-						if(tiles[x][y][z] != 0 && !checkTileNotInView(x+(int)pos.getX(),y+(int)pos.getY(),z+(int)pos.getZ())){
+						Tile t = Tile.getTile(tiles[x][y][z]);
+						boolean shouldRender = translucent ? t.isTranslucent() : !t.isTranslucent();
+						if(shouldRender && t != Tile.Air && !checkTileNotInView(x+(int)pos.getX(),y+(int)pos.getY(),z+(int)pos.getZ())){
 							/**if(tiles[x][y][z] != Tile.TallGrass.getId()){
 								//System.out.println(Tile.getTile(tiles[x][y][z]).getName());
 								//System.out.println(pos);
@@ -376,34 +391,33 @@ public static void createCustomTree(int x, int y, int z,Tile trunk,Tile leaf, by
 							}else{
 								Shape.createCross(pos.x+x, pos.y+y, pos.z+z, Tile.getTile(tiles[x][y][z]).getColor(), Tile.getTile(tiles[x][y][z]).getTexCoords(), 1);
 							}**/
-							Tile t = Tile.getTile(tiles[x][y][z]);
-								if(t.getRenderType() == RenderType.CUBE){
-									glBegin(GL_QUADS);
-									if(t.hasMetaTextures()){
-										Shape.createCube(pos.x+x, pos.y+y, pos.z+z, t.getColor(), t.getTexCoords(meta[x][y][z]), 1);
-									}else{
-										Shape.createCube(pos.x+x, pos.y+y, pos.z+z, t.getColor(), t.getTexCoords(), 1);
-									}
-									glEnd();
-								}else if(t.getRenderType() == RenderType.CROSS){
-									glBegin(GL_QUADS);
-									if(t.hasMetaTextures()){
-										Shape.createCross(pos.x+x, pos.y+y, pos.z+z, t.getColor(), t.getTexCoords(meta[x][y][z]), 1);
-									}else{
-										Shape.createCross(pos.x+x, pos.y+y, pos.z+z, t.getColor(), t.getTexCoords(), 1);
-									}
-									glEnd();
-								}else if(t.getRenderType() == RenderType.FLAT){
-									glBegin(GL_QUADS);
-									if(t.hasMetaTextures()){
-										Shape.createFlat(pos.x+x, pos.y+y+0.01f, pos.z+z, t.getColor(), t.getTexCoords(meta[x][y][z]), 1);
-									}else{
-										Shape.createFlat(pos.x+x, pos.y+y+0.01f, pos.z+z, t.getColor(), t.getTexCoords(), 1);
-									}
-									glEnd();
-								}else if(t.getRenderType() == RenderType.CUSTOM){
-									t.customRender(pos.x+x, pos.y+y, pos.z+z, worldManager, this);
+							if(t.getRenderType() == RenderType.CUBE){
+								glBegin(GL_QUADS);
+								if(t.hasMetaTextures()){
+									Shape.createCube(pos.x+x, pos.y+y, pos.z+z, t.getColor(), t.getTexCoords(meta[x][y][z]), 1);
+								}else{
+									Shape.createCube(pos.x+x, pos.y+y, pos.z+z, t.getColor(), t.getTexCoords(), 1);
 								}
+								glEnd();
+							}else if(t.getRenderType() == RenderType.CROSS){
+								glBegin(GL_QUADS);
+								if(t.hasMetaTextures()){
+									Shape.createCross(pos.x+x, pos.y+y, pos.z+z, t.getColor(), t.getTexCoords(meta[x][y][z]), 1);
+								}else{
+									Shape.createCross(pos.x+x, pos.y+y, pos.z+z, t.getColor(), t.getTexCoords(), 1);
+								}
+								glEnd();
+							}else if(t.getRenderType() == RenderType.FLAT){
+								glBegin(GL_QUADS);
+								if(t.hasMetaTextures()){
+									Shape.createFlat(pos.x+x, pos.y+y+0.01f, pos.z+z, t.getColor(), t.getTexCoords(meta[x][y][z]), 1);
+								}else{
+									Shape.createFlat(pos.x+x, pos.y+y+0.01f, pos.z+z, t.getColor(), t.getTexCoords(), 1);
+								}
+								glEnd();
+							}else if(t.getRenderType() == RenderType.CUSTOM){
+								t.customRender(pos.x+x, pos.y+y, pos.z+z, worldManager, this);
+							}
 						}else{
 							/**int posX = (int)pos.x+x;
 							int posY = (int)pos.y+y;
@@ -494,22 +508,22 @@ public static void createCustomTree(int x, int y, int z,Tile trunk,Tile leaf, by
 				worldManager.getChunkAtCoords(MathUtils.coordsToChunkPos((int)ax-7, (int)ay-7, (int)az)).queueLight();**/
 				HashSet<Chunk> toRebuild = new HashSet<Chunk>();
 				if(x == 0){
-					toRebuild.add(worldManager.getChunkAtCoords(new Vector3f(pos.x-16,pos.y,pos.z)));
+					toRebuild.add(worldManager.getChunk(new Vector3f(pos.x-16,pos.y,pos.z)));
 				}
 				if(y == 0){
-					toRebuild.add(worldManager.getChunkAtCoords(new Vector3f(pos.x,pos.y-16,pos.z)));
+					toRebuild.add(worldManager.getChunk(new Vector3f(pos.x,pos.y-16,pos.z)));
 				}
 				if(z == 0){
-					toRebuild.add(worldManager.getChunkAtCoords(new Vector3f(pos.x,pos.y,pos.z-16)));
+					toRebuild.add(worldManager.getChunk(new Vector3f(pos.x,pos.y,pos.z-16)));
 				}
 				if(x == Constants.CHUNKSIZE-1){
-					toRebuild.add( worldManager.getChunkAtCoords(new Vector3f(pos.x+16,pos.y,pos.z)));
+					toRebuild.add( worldManager.getChunk(new Vector3f(pos.x+16,pos.y,pos.z)));
 				}
 				if(y == Constants.CHUNKSIZE-1){
-					toRebuild.add(worldManager.getChunkAtCoords(new Vector3f(pos.x,pos.y+16,pos.z)));
+					toRebuild.add(worldManager.getChunk(new Vector3f(pos.x,pos.y+16,pos.z)));
 				}
 				if(z == Constants.CHUNKSIZE-1){
-					toRebuild.add(worldManager.getChunkAtCoords(new Vector3f(pos.x,pos.y,pos.z+16)));
+					toRebuild.add(worldManager.getChunk(new Vector3f(pos.x,pos.y,pos.z+16)));
 				}
 				Iterator<Chunk> i = toRebuild.iterator();
 				while(i.hasNext()){
