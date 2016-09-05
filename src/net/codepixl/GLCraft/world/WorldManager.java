@@ -67,7 +67,7 @@ public class WorldManager {
 	
 	public void createWorld(){
 		System.out.println("Creating Chunks...");
-		noise = new OpenSimplexNoise(10);
+		noise = new OpenSimplexNoise(Constants.rand.nextLong());
 		centralManager.initSplashText();
 		for(int x = 0; x < Constants.viewDistance; x++){
 			for(int y = 0; y < Constants.viewDistance; y++){
