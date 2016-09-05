@@ -5,6 +5,7 @@ import java.util.List;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.util.vector.Vector3f;
 
+import com.evilco.mc.nbt.tag.TagCompound;
 import com.nishu.utils.Color4f;
 
 import net.codepixl.GLCraft.render.Shape;
@@ -71,9 +72,9 @@ public class Particle extends Entity{
 		this.pos.x += this.Vel.x/10;
 		this.pos.y += this.Vel.y/10;
 		this.pos.z += this.Vel.z/10;
-		this.vel.x /= 2;
-		this.vel.y /= 2; 
-		this.vel.z /= 2;
+		this.getVel().x /= 2;
+		this.getVel().y /= 2; 
+		this.getVel().z /= 2;
 		List<Entity> e = worldManager.entityManager.getEntitiesInRadiusOfEntityOfType(this, EntityPlayer.class, 200f);
 		if(e.size() != 0){
 			EntityPlayer player = (EntityPlayer) e.get(0);
@@ -81,8 +82,13 @@ public class Particle extends Entity{
 			this.setRot(trot);
 		}
 	}
+	
 	public void RegisterParicle(){
 		
+	}
+	
+	public static Entity fromNBT(TagCompound t, WorldManager w){
+		return null;
 	}
 
 	

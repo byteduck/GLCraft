@@ -1,9 +1,23 @@
 package net.codepixl.GLCraft.world.entity.tileentity;
 
 import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+
+import org.lwjgl.util.vector.Vector3f;
+
+import com.evilco.mc.nbt.error.TagNotFoundException;
+import com.evilco.mc.nbt.error.UnexpectedTagTypeException;
+import com.evilco.mc.nbt.tag.TagByte;
+import com.evilco.mc.nbt.tag.TagCompound;
+import com.evilco.mc.nbt.tag.TagInteger;
+import com.evilco.mc.nbt.tag.TagList;
 
 import net.codepixl.GLCraft.world.WorldManager;
+import net.codepixl.GLCraft.world.entity.Entity;
 import net.codepixl.GLCraft.world.entity.EntityItem;
+import net.codepixl.GLCraft.world.entity.NBTUtil;
+import net.codepixl.GLCraft.world.item.Item;
 import net.codepixl.GLCraft.world.item.ItemStack;
 import net.codepixl.GLCraft.world.tile.Tile;
 
@@ -17,6 +31,11 @@ public class TileEntityContainer extends TileEntity{
 		for(int i = 0; i < inventory.length; i++){
 			inventory[i] = new ItemStack();
 		}
+	}
+	
+	public TileEntityContainer(int x, int y, int z, ItemStack[] inventory, WorldManager worldManager){
+		super(x,y,z,worldManager);
+		this.inventory = inventory;
 	}
 	
 	public ItemStack getSlot(int slot){
@@ -61,6 +80,50 @@ public class TileEntityContainer extends TileEntity{
 				inventory[i] = new ItemStack();
 			}
 		}
+	}
+	
+	public void writeToNBT(TagCompound t){
+		TagList inventory = new TagList("Inventory");
+		for(int i = 0; i < getInventory().length; i++){
+			ItemStack stack = getInventory()[i];
+			if(!stack.isNull()){
+				TagCompound slot = new TagCompound("");
+				slot.setTag(new TagInteger("slot",i));
+				slot.setTag(new TagByte("isItem",(byte) (stack.isItem() ? 1 : 0 )));
+				slot.setTag(new TagByte("id",stack.getId()));
+				slot.setTag(new TagByte("count",(byte)stack.count));
+				inventory.addTag(slot);
+			}
+		}
+		t.setTag (inventory);
+		TagInteger size = new TagInteger("size",getInventory().length);
+		t.setTag(size);
+	}
+	
+	public static Entity fromNBT(TagCompound t, WorldManager w) throws UnexpectedTagTypeException, TagNotFoundException {
+		Vector3f pos = NBTUtil.vecFromList("Pos",t);
+		if(t.getList("Inventory", TagCompound.class) != null){
+			List<TagCompound> inventory = t.getList("Inventory",TagCompound.class);
+			ItemStack[] is = new ItemStack[t.getInteger("size")];
+			for(int i = 0; i < t.getInteger("size"); i++)
+				is[i] = new ItemStack();
+			Iterator<TagCompound> i = inventory.iterator();
+			while(i.hasNext()){
+				TagCompound t2 = i.next();
+				int slot = t2.getInteger("slot");
+				ItemStack stack;
+				if(t2.getByte("isItem") == 0){
+					stack = new ItemStack(Tile.getTile(t2.getByte("id")));
+				}else{
+					stack = new ItemStack(Item.getItem(t2.getByte("id")));
+				}
+				stack.count = t2.getByte("count");
+				is[slot] = stack;
+			}
+			return new TileEntityChest((int)pos.x, (int)pos.y, (int)pos.z, is, w);
+		}
+		
+		return null;
 	}
 
 }

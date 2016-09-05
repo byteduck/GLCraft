@@ -1,5 +1,7 @@
 package net.codepixl.GLCraft.world.entity;
 
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.util.List;
 
 import org.lwjgl.util.vector.Vector3f;
@@ -10,17 +12,21 @@ import com.evilco.mc.nbt.tag.TagCompound;
 import com.evilco.mc.nbt.tag.TagFloat;
 
 import net.codepixl.GLCraft.world.WorldManager;
+import net.codepixl.GLCraft.world.entity.tileentity.TileEntityChest;
 
 public class NBTUtil {
-	public static Entity readEntity(TagCompound t, WorldManager w) throws UnexpectedTagTypeException, TagNotFoundException{
-		Vector3f pos = vecFromList("Pos",t);
-		Vector3f rot = vecFromList("Rot",t);
-		Vector3f vel = vecFromList("Vel",t);
+	public static Entity readEntity(TagCompound t, WorldManager w) throws UnexpectedTagTypeException, TagNotFoundException, NoSuchMethodException, SecurityException, IllegalAccessException, IllegalArgumentException, InvocationTargetException{
+		
 		if(t.getString("type") != null){
-			switch(t.getString("type")){
+			Class c = w.getEntityManager().getRegisteredEntity(t.getString("type"));
+			Method m = c.getMethod("fromNBT", TagCompound.class, WorldManager.class);
+			return (Entity) m.invoke(null, t, w);
+			/*switch(t.getString("type")){
 				case "EntityItem":
 					return new EntityItem(pos,rot,vel,t,w);
-			}
+				case "TileEntityChest":
+					return TileEntityChest.fromNBT(t,w);
+			}*/
 		}
 		return null;
 	}

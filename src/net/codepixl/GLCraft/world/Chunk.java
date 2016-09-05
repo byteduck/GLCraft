@@ -52,12 +52,23 @@ public class Chunk {
 	private ArrayList<Vector3f> tickTiles = new ArrayList<Vector3f>();
 	private ArrayList<Vector3f> tempTickTiles = new ArrayList<Vector3f>();
 	
-	public Chunk(ShaderProgram shader, int type, float x, float y, float z,WorldManager w, boolean fromBuf){
+	public Chunk(ShaderProgram shader, int type, float x, float y, float z, WorldManager w, boolean fromBuf){
 		this.pos = new Vector3f(x,y,z);
 		this.shader = shader;
 		this.type = type;
 		this.worldManager = w;
-		initGL(fromBuf);
+		initGL(fromBuf, false);
+		init();
+	}
+	
+	//new blank chunk
+	public Chunk(ShaderProgram shader, float x, float y, float z, WorldManager w){
+		this.pos = new Vector3f(x,y,z);
+		this.shader = shader;
+		this.type = type;
+		this.worldManager = w;
+		this.type = CentralManager.MIXEDCHUNK;
+		initGL(false, true);
 		init();
 	}
 	
@@ -66,7 +77,7 @@ public class Chunk {
 		this.shader = shader;
 		this.type = type;
 		this.worldManager = w;
-		initGL(false);
+		initGL(false, false);
 		init();
 	}
 	
@@ -75,7 +86,7 @@ public class Chunk {
 		this.pos = pos;
 		this.shader = shader;
 		this.type = type;
-		initGL(false);
+		initGL(false, false);
 		init();
 	}
 	
@@ -159,6 +170,7 @@ public class Chunk {
 			}
 		}
 		rebuild();
+		rebuildTickTiles();
 	}
 	
 	void populateChunk(){
@@ -266,7 +278,7 @@ public static void createCustomTree(int x, int y, int z,Tile trunk,Tile leaf, by
 		w.setTileAtPos(x, y+5, z, leaf.getId(), false);
 	}
 	
-	public void initGL(boolean bufChunk){
+	public void initGL(boolean bufChunk, boolean blank){
 		sizeX = Constants.CHUNKSIZE;
 		sizeY = Constants.CHUNKSIZE;
 		sizeZ = Constants.CHUNKSIZE;
@@ -276,9 +288,9 @@ public static void createCustomTree(int x, int y, int z,Tile trunk,Tile leaf, by
 		tiles = new byte[sizeX][sizeY][sizeZ];
 		light = new int[sizeX][sizeY][sizeZ];
 		meta = new byte[sizeX][sizeY][sizeZ];
-		if(!bufChunk){
+		if(!bufChunk && !blank){
 			createChunk();
-		}else{
+		}else if(!blank && bufChunk){
 			createBufChunk();
 		}
 	}

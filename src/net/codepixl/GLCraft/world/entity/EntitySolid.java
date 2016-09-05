@@ -111,7 +111,7 @@ public class EntitySolid extends Entity{
 		super.update();
 		aabb.update(new Vector3f(pos.x+aabb.r[0],pos.y,pos.z+aabb.r[2]));
 		while(testHitHead(new Vector3f(this.getX(),this.getY()+this.aabb.getSize().y+0.01f,this.getZ()))){
-			this.vel.y = 0f;
+			this.getVel().y = 0f;
 			this.pos.y-=0.01f;
 		}
 		this.move((this.getVelocity().x * (float)Time.getDelta() * 10),(this.getVelocity().y * (float)Time.getDelta() * 10),(this.getVelocity().z * (float)Time.getDelta() * 10));

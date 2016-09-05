@@ -8,15 +8,16 @@ import org.lwjgl.opengl.GL11;
 import net.codepixl.GLCraft.GUI.Elements.GUIButton;
 import net.codepixl.GLCraft.GUI.Inventory.Elements.GUISlot;
 import net.codepixl.GLCraft.util.Constants;
+import net.codepixl.GLCraft.world.WorldManager;
 
 public class GUIPauseMenu extends GUIScreen{
 	
 	private static final int BACKY = (int) (Constants.HEIGHT*0.3);
-	private static final int SLOTY = (int) (Constants.HEIGHT*0.5);
+	private static final int SAVEY = (int) (Constants.HEIGHT*0.5);
 	private static final int QUITY = (int) (Constants.HEIGHT*0.7);
 	private static final int MIDDLE = Constants.WIDTH/2;
 	
-	private GUIButton backButton,quitButton;
+	private GUIButton backButton,quitButton,saveButton;
 	
 	public GUIPauseMenu(){
 		backButton = new GUIButton("Back to game", MIDDLE, BACKY, new Callable<Void>(){
@@ -28,17 +29,28 @@ public class GUIPauseMenu extends GUIScreen{
 			}
 		});
 		
-		quitButton = new GUIButton("Quit", MIDDLE, QUITY, new Callable<Void>(){
+		quitButton = new GUIButton("Save and Quit", MIDDLE, QUITY, new Callable<Void>(){
 
 			@Override
 			public Void call() throws Exception {
+				WorldManager.saveWorld();
 				System.exit(0);
+				return null;
+			}
+		});
+		
+		saveButton = new GUIButton("Save", MIDDLE, SAVEY, new Callable<Void>(){
+
+			@Override
+			public Void call() throws Exception {
+				WorldManager.saveWorld();
 				return null;
 			}
 		});
 		
 		this.addElement(backButton);
 		this.addElement(quitButton);
+		this.addElement(saveButton);
 	}
 	
 	@Override

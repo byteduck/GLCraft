@@ -33,6 +33,7 @@ import net.codepixl.GLCraft.GLCraft;
 import net.codepixl.GLCraft.GUI.GUIManager;
 import net.codepixl.GLCraft.GUI.GUIPauseMenu;
 import net.codepixl.GLCraft.GUI.GUIServer;
+import net.codepixl.GLCraft.GUI.GUISinglePlayer;
 import net.codepixl.GLCraft.GUI.GUIStartScreen;
 import net.codepixl.GLCraft.render.Shape;
 import net.codepixl.GLCraft.render.TextureManager;
@@ -103,6 +104,7 @@ public class CentralManager extends Screen{
 		guiManager.addGUI(new GUIStartScreen(), "startScreen");
 		guiManager.addGUI(new GUIServer(), "server");
 		guiManager.addGUI(new GUIPauseMenu(), "pauseMenu");
+		guiManager.addGUI(new GUISinglePlayer(), "singleplayer");
 		guiManager.showGUI("startScreen");
 	}
 
@@ -130,10 +132,10 @@ public class CentralManager extends Screen{
 					renderDebug = !renderDebug;
 				}
 				if(Keyboard.isKeyDown(Keyboard.KEY_ESCAPE)){
-					if(guiManager.isGUIOpen()){
+					if(guiManager.isGUIOpen() && guiManager.getCurrentGUIName().equals("pauseMenu")){
 						guiManager.closeGUI();
 						Mouse.setGrabbed(true);
-					}else{
+					}else if(guiManager.getCurrentGUIName().equals("nogui")){
 						guiManager.showGUI("pauseMenu");
 					}
 				}

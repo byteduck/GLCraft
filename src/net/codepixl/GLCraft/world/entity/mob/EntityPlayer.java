@@ -12,26 +12,17 @@ import static org.lwjgl.opengl.GL11.glRotatef;
 import static org.lwjgl.opengl.GL11.glTranslatef;
 
 import java.io.FileInputStream;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.Iterator;
 import java.util.List;
-
-import javax.swing.JOptionPane;
 
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
 import org.lwjgl.util.vector.Vector3f;
 
 import com.evilco.mc.nbt.stream.NbtInputStream;
-import com.evilco.mc.nbt.stream.NbtOutputStream;
-import com.evilco.mc.nbt.tag.TagByte;
 import com.evilco.mc.nbt.tag.TagCompound;
 import com.evilco.mc.nbt.tag.TagFloat;
-import com.evilco.mc.nbt.tag.TagInteger;
-import com.evilco.mc.nbt.tag.TagList;
-import com.evilco.mc.nbt.tag.TagLong;
-import com.evilco.mc.nbt.tag.TagString;
 import com.nishu.utils.Color4f;
 import com.nishu.utils.Time;
 
@@ -45,12 +36,11 @@ import net.codepixl.GLCraft.util.Constants;
 import net.codepixl.GLCraft.util.MathUtils;
 import net.codepixl.GLCraft.util.Ray;
 import net.codepixl.GLCraft.util.Raytracer;
-import net.codepixl.GLCraft.util.Spritesheet;
+import net.codepixl.GLCraft.util.data.saves.SaveManager;
 import net.codepixl.GLCraft.world.WorldManager;
 import net.codepixl.GLCraft.world.entity.Entity;
 import net.codepixl.GLCraft.world.entity.EntityItem;
 import net.codepixl.GLCraft.world.entity.NBTUtil;
-import net.codepixl.GLCraft.world.entity.mob.animal.EntityTestAnimal;
 import net.codepixl.GLCraft.world.item.Item;
 import net.codepixl.GLCraft.world.item.ItemStack;
 import net.codepixl.GLCraft.world.item.tool.Tool;
@@ -195,16 +185,16 @@ public class EntityPlayer extends Mob {
 		boolean shift = Keyboard.isKeyDown(Keyboard.KEY_LSHIFT);
 		boolean ctrl = Keyboard.isKeyDown(Keyboard.KEY_LCONTROL);
 		boolean q = Keyboard.isKeyDown(Keyboard.KEY_Q);
-		if(q && !qPressed && !inventory[selectedSlot].isNull()) {
-			EntityItem e = new EntityItem(new ItemStack(inventory[selectedSlot], 1), getPos().x, getPos().y + 1.5f, getPos().z, worldManager);
+		if(q && !qPressed && !getInventory()[selectedSlot].isNull()) {
+			EntityItem e = new EntityItem(new ItemStack(getInventory()[selectedSlot], 1), getPos().x, getPos().y + 1.5f, getPos().z, worldManager);
 			e.setVelocity(MathUtils.RotToVel(this.getRot(), 1f));
 			if(ctrl) {
-				e.setCount(inventory[selectedSlot].count);
-				inventory[selectedSlot] = new ItemStack();
+				e.setCount(getInventory()[selectedSlot].count);
+				getInventory()[selectedSlot] = new ItemStack();
 			}else{
-				int sub = inventory[selectedSlot].subFromStack(1);
+				int sub = getInventory()[selectedSlot].subFromStack(1);
 				if(sub > 0) {
-					inventory[selectedSlot] = new ItemStack();
+					getInventory()[selectedSlot] = new ItemStack();
 				}
 			}
 			worldManager.spawnEntity(e);
@@ -241,107 +231,6 @@ public class EntityPlayer extends Mob {
 		}
 		if(space) {
 			this.jump();
-		}
-		
-		if(Keyboard.isKeyDown(Keyboard.KEY_K)) {
-			TagCompound compound = new TagCompound("Player");
-			TagList posList = new TagList("Pos");
-			posList.addTag(new TagFloat("",this.pos.x));
-			posList.addTag(new TagFloat("",this.pos.y));
-			posList.addTag(new TagFloat("",this.pos.z));
-			TagList rotList = new TagList("Rot");
-			rotList.addTag(new TagFloat("",this.rot.x));
-			rotList.addTag(new TagFloat("",this.rot.y));
-			rotList.addTag(new TagFloat("",this.rot.z));
-			TagList velList = new TagList("Vel");
-			velList.addTag(new TagFloat("",this.vel.x));
-			velList.addTag(new TagFloat("",this.vel.y));
-			velList.addTag(new TagFloat("",this.vel.z));
-			TagLong timeTag = new TagLong("TimeAlive",timeAlive);
-			TagString typeTag = new TagString("type",this.getClass().getSimpleName());
-			compound.setTag(posList);
-			compound.setTag(rotList);
-			compound.setTag(velList);
-			compound.setTag(timeTag);
-			compound.setTag(typeTag);
-			TagList inventory = new TagList("Inventory");
-			for(int i = 0; i < this.inventory.length; i++){
-				ItemStack stack = this.getInventory(i);
-				if(!stack.isNull()){
-					TagCompound slot = new TagCompound("");
-					slot.setTag(new TagInteger("slot",i));
-					slot.setTag(new TagByte("isItem",(byte) (stack.isItem() ? 1 : 0 )));
-					slot.setTag(new TagByte("id",stack.getId()));
-					slot.setTag(new TagByte("count",(byte)stack.count));
-					inventory.addTag(slot);
-				}
-			}
-			compound.setTag (inventory);
-			try{
-				worldManager.saveChunks();
-				FileOutputStream outputStream;
-				outputStream = new FileOutputStream("player.nbt");
-				NbtOutputStream nbtOutputStream = new NbtOutputStream(outputStream);
-				nbtOutputStream.write(compound);
-				nbtOutputStream.close();
-				this.worldManager.getEntityManager().save();
-			}catch(IOException e){
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-			
-		}
-		if(Keyboard.isKeyDown(Keyboard.KEY_L)){
-			try {
-				worldManager.loadChunks();
-				worldManager.entityManager.removeAll();
-				this.inventory = new ItemStack[9];
-				FileInputStream inputStream = new FileInputStream("player.nbt");
-				NbtInputStream nbtInputStream = new NbtInputStream(inputStream);
-				TagCompound tag = (TagCompound)nbtInputStream.readTag ();
-				if(tag != null){
-					if(tag.getList("Inventory", TagCompound.class) != null){
-						List<TagCompound> inventory = tag.getList("Inventory",TagCompound.class);
-						Iterator<TagCompound> i = inventory.iterator();
-						while(i.hasNext()){
-							TagCompound t = i.next();
-							int slot = t.getInteger("slot");
-							ItemStack stack;
-							if(t.getByte("isItem") == 0){
-								stack = new ItemStack(Tile.getTile(t.getByte("id")));
-							}else{
-								stack = new ItemStack(Item.getItem(t.getByte("id")));
-							}
-							stack.count = t.getByte("count");
-							this.inventory[slot] = stack;
-						}
-					}
-					List<TagFloat> pos = tag.getList("Pos", TagFloat.class);
-					this.pos = new Vector3f(pos.get(0).getValue(),pos.get(1).getValue(),pos.get(2).getValue());
-					List<TagFloat> rot = tag.getList("Rot", TagFloat.class);
-					this.rot = new Vector3f(rot.get(0).getValue(),rot.get(1).getValue(),rot.get(2).getValue());
-					List<TagFloat> vel = tag.getList("Vel", TagFloat.class);
-					this.vel = new Vector3f(vel.get(0).getValue(),vel.get(1).getValue(),vel.get(2).getValue());
-				}
-				inputStream = new FileInputStream("entities.nbt");
-				nbtInputStream = new NbtInputStream(inputStream);
-				tag = (TagCompound)nbtInputStream.readTag ();
-				List<TagCompound> l = tag.getList("Entities", TagCompound.class);
-				Iterator<TagCompound> i = l.iterator();
-				while(i.hasNext()){
-					TagCompound t = i.next();
-					Entity e = NBTUtil.readEntity(t, worldManager);
-					if(e != null){
-						worldManager.spawnEntity(e);
-					}else{
-						System.err.println("WARNING: ENTITY IN SAVE WAS NULL.");
-					}
-				}
-			} catch (IOException e) {
-				e.printStackTrace();
-			} catch (NullPointerException e){
-				e.printStackTrace();
-			}
 		}
 		
 		if(Keyboard.isKeyDown(Keyboard.KEY_1)) {
@@ -458,11 +347,11 @@ public class EntityPlayer extends Mob {
 	}
 	
 	public ItemStack getSelectedItemStack() {
-		return inventory[selectedSlot];
+		return getInventory()[selectedSlot];
 	}
 	
 	public void setSelectedItemStack(ItemStack stack) {
-		inventory[selectedSlot] = stack;
+		getInventory()[selectedSlot] = stack;
 	}
 	
 	public Vector3f getLookRayPos(){

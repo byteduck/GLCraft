@@ -3,11 +3,16 @@ package net.codepixl.GLCraft.world.entity.tileentity;
 import net.codepixl.GLCraft.GUI.tileentity.GUIChest;
 import net.codepixl.GLCraft.world.WorldManager;
 import net.codepixl.GLCraft.world.entity.mob.EntityPlayer;
+import net.codepixl.GLCraft.world.item.ItemStack;
 
 public class TileEntityChest extends TileEntityContainer{
 
 	public TileEntityChest(int x, int y, int z, int size, WorldManager worldManager) {
 		super(x, y, z, size, worldManager);
+	}
+	
+	public TileEntityChest(int x, int y, int z, ItemStack[] inventory, WorldManager worldManager){
+		super(x, y, z, inventory, worldManager);
 	}
 	
 	@Override

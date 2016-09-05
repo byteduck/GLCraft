@@ -35,7 +35,7 @@ public class GUIManager {
 	public void showGUI(GUIScreen gui) {
 		currentGUI = gui;
 		GUIOpen = true;
-		currentGUIName = "noname";
+		currentGUIName = "nogui";
 	}
 	
 	public boolean showGUI(String guiName){

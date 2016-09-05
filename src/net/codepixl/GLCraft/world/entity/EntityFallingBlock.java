@@ -3,6 +3,10 @@ package net.codepixl.GLCraft.world.entity;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.util.vector.Vector3f;
 
+import com.evilco.mc.nbt.error.TagNotFoundException;
+import com.evilco.mc.nbt.error.UnexpectedTagTypeException;
+import com.evilco.mc.nbt.tag.TagByte;
+import com.evilco.mc.nbt.tag.TagCompound;
 import com.nishu.utils.Color4f;
 
 import net.codepixl.GLCraft.render.Shape;
@@ -58,6 +62,17 @@ public class EntityFallingBlock extends EntitySolid{
 			}
 			setDead(true);
 		}
+	}
+	
+	@Override
+	public void writeToNBT(TagCompound t){
+		TagByte b = new TagByte("tile", tile.getId());
+		t.setTag(b);
+	}
+	
+	public static Entity fromNBT(TagCompound t, WorldManager w) throws UnexpectedTagTypeException, TagNotFoundException{
+		Vector3f pos = NBTUtil.vecFromList("Pos",t);
+		return new EntityFallingBlock(pos.x, pos.y, pos.z, w);
 	}
 
 }

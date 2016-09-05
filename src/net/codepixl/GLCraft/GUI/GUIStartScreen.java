@@ -34,6 +34,7 @@ import net.codepixl.GLCraft.render.texturepack.TexturePackManagerWindow;
 import net.codepixl.GLCraft.util.Constants;
 import net.codepixl.GLCraft.util.Spritesheet;
 import net.codepixl.GLCraft.util.logging.CrashHandler;
+import net.codepixl.GLCraft.world.WorldManager;
 import net.codepixl.GLCraft.world.tile.Tile;
 import net.lingala.zip4j.core.ZipFile;
 
@@ -51,10 +52,7 @@ public class GUIStartScreen extends GUIScreen{
 		startButton = new GUIButton("Singleplayer", MIDDLE, SINGLEPLAYERY, new Callable<Void>() {
 			@Override
 			public Void call() throws Exception {
-				Constants.setState(Constants.GAME);
-				Constants.world.getWorldManager().createWorld();
-				glDisable(GL_TEXTURE_2D);
-				GUIManager.getMainManager().closeGUI();
+				GUIManager.getMainManager().showGUI("singleplayer");
 				return null;
 			}
 		});

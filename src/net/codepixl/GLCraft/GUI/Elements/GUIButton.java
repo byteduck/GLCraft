@@ -116,19 +116,23 @@ public class GUIButton implements GUIElement{
 	@Override
 	public void input() {
 		if(testMouse()){
-			if(Mouse.isButtonDown(0)){
-				if(!pressed){
-					SoundManager.getMainManager().quickPlay("click");
-					try {
-						this.action.call();
-					} catch (Exception e) {
-						System.err.println("A button with text "+this.text+" tried to call a callable but failed. Stacktrace:");
-						e.printStackTrace();
+			while(Mouse.next()){
+				if(Mouse.getEventButtonState()){
+					if(Mouse.isButtonDown(0)){
+						if(!pressed){
+							SoundManager.getMainManager().quickPlay("click");
+							try {
+								this.action.call();
+							} catch (Exception e) {
+								System.err.println("A button with text "+this.text+" tried to call a callable but failed. Stacktrace:");
+								e.printStackTrace();
+							}
+						}
+						this.pressed = true;
+					}else{
+						this.pressed = false;
 					}
 				}
-				this.pressed = true;
-			}else{
-				this.pressed = false;
 			}
 			this.hovered = true;
 		}else{

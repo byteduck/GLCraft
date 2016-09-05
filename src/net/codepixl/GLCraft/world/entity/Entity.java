@@ -2,6 +2,8 @@ package net.codepixl.GLCraft.world.entity;
 
 import org.lwjgl.util.vector.Vector3f;
 
+import com.evilco.mc.nbt.error.TagNotFoundException;
+import com.evilco.mc.nbt.error.UnexpectedTagTypeException;
 import com.evilco.mc.nbt.tag.TagCompound;
 import com.evilco.mc.nbt.tag.TagFloat;
 import com.evilco.mc.nbt.tag.TagList;
@@ -18,7 +20,8 @@ import net.codepixl.GLCraft.world.tile.TileLava;
 import net.codepixl.GLCraft.world.tile.TileWater;
 
 public class Entity implements GameObj{
-	protected Vector3f pos, rot, vel;
+	protected Vector3f pos, rot;
+	private Vector3f vel;
 	protected int id;
 	public WorldManager worldManager;
 	protected boolean dead = false;
@@ -112,11 +115,11 @@ public class Entity implements GameObj{
 	}
 
 	public Vector3f getVelocity() {
-		return vel;
+		return getVel();
 	}
 
 	public void setVelocity(Vector3f vel) {
-		this.vel = vel;
+		this.setVel(vel);
 	}
 	
 	public final TagCompound mainWriteToNBT(){
@@ -130,9 +133,9 @@ public class Entity implements GameObj{
 		rotList.addTag(new TagFloat("",this.rot.y));
 		rotList.addTag(new TagFloat("",this.rot.z));
 		TagList velList = new TagList("Vel");
-		velList.addTag(new TagFloat("",this.vel.x));
-		velList.addTag(new TagFloat("",this.vel.y));
-		velList.addTag(new TagFloat("",this.vel.z));
+		velList.addTag(new TagFloat("",this.getVel().x));
+		velList.addTag(new TagFloat("",this.getVel().y));
+		velList.addTag(new TagFloat("",this.getVel().z));
 		TagLong timeTag = new TagLong("TimeAlive",timeAlive);
 		TagString typeTag = new TagString("type",this.getClass().getSimpleName());
 		t.setTag(posList);
@@ -146,6 +149,11 @@ public class Entity implements GameObj{
 	
 	public void writeToNBT(TagCompound t){
 		
+	}
+	
+	public static Entity fromNBT(TagCompound t, WorldManager w) throws UnexpectedTagTypeException, TagNotFoundException {
+		System.err.println("ENTITY "+t.getString("type")+" IS MISSING fromNBT METHOD!");
+		return null;
 	}
 
 	@Override
@@ -197,5 +205,13 @@ public class Entity implements GameObj{
 
 	public void setFire(float Time) {
 		this.onFire = Time;
+	}
+
+	public Vector3f getVel() {
+		return vel;
+	}
+
+	public void setVel(Vector3f vel) {
+		this.vel = vel;
 	}
 }

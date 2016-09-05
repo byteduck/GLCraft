@@ -4,13 +4,13 @@ import static org.lwjgl.opengl.GL11.glCallList;
 import static org.lwjgl.opengl.GL11.glDeleteLists;
 import static org.lwjgl.opengl.GL11.glGenLists;
 
+import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
 
 import org.lwjgl.util.vector.Vector3f;
 
@@ -18,16 +18,22 @@ import com.evilco.mc.nbt.stream.NbtOutputStream;
 import com.evilco.mc.nbt.tag.TagCompound;
 import com.evilco.mc.nbt.tag.TagList;
 
+import net.codepixl.GLCraft.util.Constants;
 import net.codepixl.GLCraft.util.DebugTimer;
 import net.codepixl.GLCraft.util.GameObj;
 import net.codepixl.GLCraft.util.MathUtils;
 import net.codepixl.GLCraft.world.WorldManager;
 import net.codepixl.GLCraft.world.entity.mob.EntityPlayer;
 import net.codepixl.GLCraft.world.entity.mob.PlayerMP;
+import net.codepixl.GLCraft.world.entity.mob.animal.EntityTestAnimal;
+import net.codepixl.GLCraft.world.entity.mob.hostile.EntityTestHostile;
+import net.codepixl.GLCraft.world.entity.particle.Particle;
 import net.codepixl.GLCraft.world.entity.tileentity.TileEntity;
+import net.codepixl.GLCraft.world.entity.tileentity.TileEntityChest;
 
 public class EntityManager implements GameObj{
 	
+	private static HashMap<String, Class> registeredEntities = new HashMap<String, Class>();
 	private ArrayList<Entity> entities;
 	private ArrayList<Entity> toAdd;
 	private ArrayList<Entity> toRemove;
@@ -52,7 +58,25 @@ public class EntityManager implements GameObj{
 		toAdd = new ArrayList<Entity>();
 		toRemove = new ArrayList<Entity>();
 		tileEntities = new ArrayList<TileEntity>();
+		registerEntities();
 		initGL();
+	}
+	
+	private static void registerEntities(){
+		registerEntity("EntityPlayer", EntityPlayer.class);
+		registerEntity("EntityItem", EntityItem.class);
+		registerEntity("EntityTestAnimal", EntityTestAnimal.class);
+		registerEntity("EntityTestHostile", EntityTestHostile.class);
+		registerEntity("Particle", Particle.class);
+		registerEntity("TileEntityChest", TileEntityChest.class);
+	}
+	
+	public static void registerEntity(String name, Class entity){
+		if(Entity.class.isAssignableFrom(entity)){
+			registeredEntities.put(name, entity);
+		}else{
+			System.err.println("ERROR REGISTERING ENTITY "+entity.getName()+": NOT AN ENTITY");
+		}
 	}
 	
 	public void initPlayer(){
@@ -69,9 +93,11 @@ public class EntityManager implements GameObj{
 		mobRenderID = glGenLists(1);
 	}
 	
-	public void save() throws IOException{
+	public void save(String name) throws IOException{
 		FileOutputStream outputStream;
-		outputStream = new FileOutputStream("entities.nbt");
+		File f = new File(Constants.GLCRAFTDIR+"saves/"+name+"/");
+		f.mkdirs();
+		outputStream = new FileOutputStream(new File(f,"entities.nbt"));
 		NbtOutputStream nbtOutputStream = new NbtOutputStream(outputStream);
 		TagCompound root = new TagCompound("");
 		TagList list = new TagList("Entities");
@@ -195,7 +221,10 @@ public class EntityManager implements GameObj{
 	}
 
 	public void add(Entity e) {
+		if(registeredEntities.containsValue(e.getClass()))
 			this.toAdd.add(e);
+		else
+			System.err.println("Tried to add unregistered entity "+e.getClass().getName());
 	}
 	
 	public void remove(Entity e){
@@ -221,6 +250,10 @@ public class EntityManager implements GameObj{
 			}
 		}
 		return ret;
+	}
+
+	public Class getRegisteredEntity(String name) {
+		return registeredEntities.get(name);
 	}
 
 }

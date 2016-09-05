@@ -15,12 +15,20 @@ import java.util.Iterator;
 
 import org.lwjgl.util.vector.Vector3f;
 
+import com.evilco.mc.nbt.error.TagNotFoundException;
+import com.evilco.mc.nbt.error.UnexpectedTagTypeException;
+import com.evilco.mc.nbt.tag.TagCompound;
 import com.nishu.utils.Color4f;
 
 public class EntityTNT extends EntitySolid{
 
 	public EntityTNT(int x, int y, int z, WorldManager worldManager) {
 		super(x+0.5f, y, z+0.5f, worldManager);
+	}
+	
+	public static Entity fromNBT(TagCompound t, WorldManager w) throws UnexpectedTagTypeException, TagNotFoundException{
+		Vector3f pos = NBTUtil.vecFromList("Pos",t);
+		return new EntityTNT((int)pos.x, (int)pos.y, (int)pos.z, w);
 	}
 	
 	@Override

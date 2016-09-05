@@ -25,6 +25,7 @@ import net.codepixl.GLCraft.util.MathUtils;
 import net.codepixl.GLCraft.util.OpenSimplexNoise;
 import net.codepixl.GLCraft.util.Spritesheet;
 import net.codepixl.GLCraft.util.Vector3i;
+import net.codepixl.GLCraft.util.data.saves.SaveManager;
 import net.codepixl.GLCraft.world.entity.Entity;
 import net.codepixl.GLCraft.world.entity.EntityManager;
 import net.codepixl.GLCraft.world.entity.EntitySolid;
@@ -44,9 +45,12 @@ public class WorldManager {
 	public CentralManager centralManager;
 	public float tick = 0f;
 	public int currentChunk = 0;
+	private static WorldManager cw;
+	public String worldName;
 	
 	public WorldManager(CentralManager w){
 		this.centralManager = w;
+		cw = this;
 		initGL();
 		init();
 		//createWorld();
@@ -65,8 +69,9 @@ public class WorldManager {
 		GUIManager.getMainManager().addGUI(new GUICraftingAdvanced(entityManager.getPlayer()), "adv_crafting");
 	}
 	
-	public void createWorld(){
+	public void createWorld(String name){
 		System.out.println("Creating Chunks...");
+		worldName = name;
 		noise = new OpenSimplexNoise(Constants.rand.nextLong());
 		centralManager.initSplashText();
 		for(int x = 0; x < Constants.viewDistance; x++){
@@ -112,6 +117,7 @@ public class WorldManager {
 			c.rebuildTickTiles();
 		}
 		centralManager.renderSplashText("Hold on...", "Beaming you down");
+		SaveManager.saveWorld(this, name);
 		System.out.println("Done!");
 		doneGenerating = true;
 	}
@@ -258,23 +264,25 @@ public class WorldManager {
 		return entityManager;
 	}
 	
-	public void saveChunks() throws IOException{
+	public void saveChunks(String name) throws IOException{
 		Files.createParentDirs(new File("Chunks/test.chunk"));
 		Iterator<Chunk> i = this.activeChunks.values().iterator();
 		int index = 0;
+		File f = new File(Constants.GLCRAFTDIR+"saves/"+name+"/chunks");
+		f.mkdirs();
 		while(i.hasNext()){
 			Chunk c = i.next();
-			c.save("Chunks/Chunk"+index+".nbt");
+			c.save(Constants.GLCRAFTDIR+"saves/"+name+"/chunks/chunk"+index+".nbt");
 			index++;
 		}
 	}
 	
-	public void loadChunks() throws IOException{
+	public void loadChunks(String name) throws IOException{
 		Iterator<Chunk> i = this.activeChunks.values().iterator();
 		int index = 0;
 		while(i.hasNext()){
 			Chunk c = i.next();
-			c.load("Chunks/Chunk"+index+".nbt");
+			c.load(Constants.GLCRAFTDIR+"saves/"+name+"/chunks/chunk"+index+".nbt");
 			index++;
 		}
 	}
@@ -486,6 +494,28 @@ public class WorldManager {
 	
 	public TileEntity getTileEntityAtPos(int x, int y, int z){
 		return entityManager.getTileEntityForPos(x, y, z);
+	}
+
+	public void loadWorld(String name) {
+		this.worldName = name;
+		centralManager.initSplashText();
+		centralManager.renderSplashText("Loading World...", "Hold on...");
+		for(int x = 0; x < Constants.viewDistance; x++){
+			for(int y = 0; y < Constants.viewDistance; y++){
+				for(int z = 0; z < Constants.viewDistance; z++){
+					Chunk c = new Chunk(shader, x * Constants.CHUNKSIZE, y * Constants.CHUNKSIZE, z * Constants.CHUNKSIZE, this);
+					activeChunks.put(new Vector3i(c.getPos()), c);
+				}
+			}
+		}
+		SaveManager.loadWorld(this, name);
+		doneGenerating = true;
+	}
+
+	public static void saveWorld() {
+		cw.centralManager.initSplashText();
+		cw.centralManager.renderSplashText("Saving World...", "Hold on...");
+		SaveManager.saveWorld(cw, cw.worldName);
 	}
 	
 }

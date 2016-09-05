@@ -40,7 +40,7 @@ public class EntityItem extends EntitySolid{
 	public EntityItem(Vector3f pos, Vector3f rot, Vector3f vel, TagCompound t, WorldManager w) throws UnexpectedTagTypeException, TagNotFoundException{
 		super(pos.x,pos.y,pos.z,w);
 		this.rot = rot;
-		this.vel = vel;
+		this.setVel(vel);
 		yPos = 0;
 		if(t.getByte("isItem") > 0){
 			itemstack = new ItemStack(Item.getItem(t.getByte("id")),(int)t.getByte("count"));
@@ -135,6 +135,13 @@ public class EntityItem extends EntitySolid{
 		t.setTag(new TagByte("isItem",(byte) (this.itemstack.isItem() ? 1 : 0 )));
 		t.setTag(new TagByte("id",this.itemstack.getId()));
 		t.setTag(new TagByte("count",(byte)this.itemstack.count));
+	}
+	
+	public static Entity fromNBT(TagCompound t, WorldManager w) throws UnexpectedTagTypeException, TagNotFoundException{
+		Vector3f pos = NBTUtil.vecFromList("Pos",t);
+		Vector3f rot = NBTUtil.vecFromList("Rot",t);
+		Vector3f vel = NBTUtil.vecFromList("Vel",t);
+		return new EntityItem(pos, rot, vel, t, w);
 	}
 	
 	public ItemStack getItemStack(){
