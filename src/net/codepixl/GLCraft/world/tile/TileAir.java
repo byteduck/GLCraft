@@ -45,5 +45,10 @@ public class TileAir extends Tile{
 	public void onBreak(int x, int y, int z, boolean drop, WorldManager w){
 		
 	}
+	
+	@Override
+	public boolean canBePlacedOver() {
+		return true;
+	}
 
 }

@@ -277,4 +277,8 @@ public class Tile {
 	public boolean canBeDestroyedByLiquid() {
 		return false;
 	}
+
+	public boolean canBePlacedOver() {
+		return false;
+	}
 }

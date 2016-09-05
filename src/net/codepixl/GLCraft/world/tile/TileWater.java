@@ -81,17 +81,17 @@ public class TileWater extends Tile{
 	private boolean sideShouldRender(int f, float x, float y, float z, WorldManager w){
 		switch(f){
 			case 0: //BOTTOM
-				return w.getTileAtPos(x,y-1,z) != Tile.Water.getId();
+				return (w.getTileAtPos(x,y-1,z) != Tile.Water.getId()) || (w.getTileAtPos(x,y-1,z) == Tile.Water.getId() && w.getMetaAtPos(x, y-1, z) > w.getMetaAtPos(x, y, z));
 			case 1: //TOP
-				return w.getTileAtPos(x,y+1,z) != Tile.Water.getId();
+				return (w.getTileAtPos(x,y+1,z) != Tile.Water.getId()) || (w.getTileAtPos(x,y+1,z) == Tile.Water.getId() && w.getMetaAtPos(x, y+1, z) > w.getMetaAtPos(x, y, z));
 			case 2: //FRONT
-				return w.getTileAtPos(x,y,z-1) != Tile.Water.getId();
+				return (w.getTileAtPos(x,y,z-1) != Tile.Water.getId()) || (w.getTileAtPos(x,y,z-1) == Tile.Water.getId() && w.getMetaAtPos(x, y, z-1) > w.getMetaAtPos(x, y, z));
 			case 3: //BACK
-				return w.getTileAtPos(x,y,z+1) != Tile.Water.getId();
+				return (w.getTileAtPos(x,y,z+1) != Tile.Water.getId()) || (w.getTileAtPos(x,y,z+1) == Tile.Water.getId() && w.getMetaAtPos(x, y, z+1) > w.getMetaAtPos(x, y, z));
 			case 4: //LEFT
-				return w.getTileAtPos(x+1,y,z) != Tile.Water.getId();
+				return (w.getTileAtPos(x+1,y,z) != Tile.Water.getId()) || (w.getTileAtPos(x+1,y,z) == Tile.Water.getId() && w.getMetaAtPos(x+1, y, z) > w.getMetaAtPos(x, y, z));
 			case 5:
-				return w.getTileAtPos(x-1,y,z) != Tile.Water.getId();
+				return (w.getTileAtPos(x-1,y,z) != Tile.Water.getId()) || (w.getTileAtPos(x-1,y,z) == Tile.Water.getId() && w.getMetaAtPos(x-1, y, z) > w.getMetaAtPos(x, y, z));
 			default:
 				return false;
 		}
@@ -221,5 +221,10 @@ public class TileWater extends Tile{
 				w.setMetaAtPos(x, y-1, z, (byte)1, false);
 			}
 		}
+	}
+	
+	@Override
+	public boolean canBePlacedOver() {
+		return true;
 	}
 }

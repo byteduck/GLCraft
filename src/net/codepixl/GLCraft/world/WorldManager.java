@@ -516,6 +516,7 @@ public class WorldManager {
 			}
 		}
 		SaveManager.loadWorld(this, name);
+		System.out.println("DOEN");
 		doneGenerating = true;
 	}
 
@@ -523,6 +524,10 @@ public class WorldManager {
 		cw.centralManager.initSplashText();
 		cw.centralManager.renderSplashText("Saving World...", "Hold on...");
 		SaveManager.saveWorld(cw, cw.worldName);
+	}
+
+	public int getMetaAtPos(float x, float y, float z) {
+		return getMetaAtPos((int)x,(int)y,(int)z);
 	}
 	
 }

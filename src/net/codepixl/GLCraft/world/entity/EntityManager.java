@@ -69,6 +69,7 @@ public class EntityManager implements GameObj{
 		registerEntity("EntityTestHostile", EntityTestHostile.class);
 		registerEntity("Particle", Particle.class);
 		registerEntity("TileEntityChest", TileEntityChest.class);
+		registerEntity("EntityFallingBlock", EntityFallingBlock.class);
 	}
 	
 	public static void registerEntity(String name, Class entity){

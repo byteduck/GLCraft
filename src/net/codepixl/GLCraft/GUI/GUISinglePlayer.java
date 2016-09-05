@@ -18,6 +18,7 @@ import net.codepixl.GLCraft.GUI.Elements.GUIButton;
 import net.codepixl.GLCraft.render.TextureManager;
 import net.codepixl.GLCraft.util.Constants;
 import net.codepixl.GLCraft.util.Spritesheet;
+import net.codepixl.GLCraft.util.data.saves.SaveLoadWindow;
 import net.codepixl.GLCraft.world.tile.Tile;
 
 public class GUISinglePlayer extends GUIScreen{
@@ -45,7 +46,7 @@ public class GUISinglePlayer extends GUIScreen{
 			@Override
 			public Void call() throws Exception {
 				Constants.setState(Constants.GAME);
-				String name = JOptionPane.showInputDialog("World Name:");
+				String name = SaveLoadWindow.loadWorld(Constants.world.getWorldManager());
 				Constants.world.getWorldManager().loadWorld(name);
 				glDisable(GL_TEXTURE_2D);
 				GUIManager.getMainManager().closeGUI();
