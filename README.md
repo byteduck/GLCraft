@@ -22,18 +22,19 @@ Italic means half completed.
 * ~~Better GUI System~~
  * ~~A GUI manager to make showing and hiding GUIs easier~~
  * ~~A GUIScreen class to make building guis easier~~
-  * Subclasses like ~~GUIButton~~, GUITextField, GUIImage, etc
+  * *Subclasses like ~~GUIButton~~, GUITextField, GUIImage, etc*
 * Lighting - I worked on it a while ago but due to all of the bugs I stopped.
 * Infinite world
 * ~~2x2 Crafting System~~
-* 3x3 Crafting System
+* ~~3x3 Crafting System~~
 * Re-add multiplayer
 * User accounts
-* Animals/Monsters
+* *Animals/Monsters*
 * *Sound*
-* Better menu
+* ~~Better menu~~
 * Options menu
-* Tile entities
-* Better collision system to allow for custom collision hit boxes
-* Make placing blocks actually work
+* ~~Tile entities~~
+* *Better collision system to allow for custom collision hit boxes*
+* ~Make placing blocks actually work~
+* ~~Saving and Loading worlds~~
 * Much, much more!
