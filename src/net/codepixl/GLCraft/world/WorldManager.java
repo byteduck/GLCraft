@@ -285,6 +285,13 @@ public class WorldManager {
 			c.load(Constants.GLCRAFTDIR+"saves/"+name+"/chunks/chunk"+index+".nbt");
 			index++;
 		}
+		i = this.activeChunks.values().iterator();
+		while(i.hasNext()){
+			Chunk c = i.next();
+			c.rebuild();
+			c.rebuildTickTiles();
+		}
+			
 	}
 	
 	public ArrayList<AABB> BlockAABBForEntity(EntitySolid entitySolid){

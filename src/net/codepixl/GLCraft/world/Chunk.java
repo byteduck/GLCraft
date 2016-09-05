@@ -169,8 +169,6 @@ public class Chunk {
 				}
 			}
 		}
-		rebuild();
-		rebuildTickTiles();
 	}
 	
 	void populateChunk(){
