@@ -1,23 +1,20 @@
 package net.codepixl.GLCraft.util.data.saves;
 
-import static org.lwjgl.opengl.GL11.GL_TEXTURE_2D;
-import static org.lwjgl.opengl.GL11.glDisable;
-
 import java.awt.BorderLayout;
+import java.awt.Dimension;
 import java.awt.GridLayout;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.File;
 import java.util.ArrayList;
 
+import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
-import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.SwingConstants;
 
-import net.codepixl.GLCraft.GUI.GUIManager;
 import net.codepixl.GLCraft.util.Constants;
 import net.codepixl.GLCraft.world.WorldManager;
 
@@ -59,14 +56,19 @@ public class SaveLoadWindow extends JFrame{
 			if(saves.size() > 0){
 				listPanel.setLayout(new GridLayout(saves.size(), 0, 0, 0));
 				for(final String s : saves){
+					JPanel jp = new JPanel();
+					jp.setLayout(new BorderLayout());
 					JLabel j = new JLabel(s);
-					j.addMouseListener(new MouseAdapter() {
+					jp.add(j, BorderLayout.WEST);
+					JButton jb = new JButton("Load");
+					jb.addMouseListener(new MouseAdapter() {
 						public void mouseClicked(MouseEvent e) {
 							jf.setVisible(false);
 							loadWorld(s);
 						}
 					});
-					listPanel.add(j);
+					jp.add(jb, BorderLayout.EAST);
+					listPanel.add(jp);
 				}
 			}
 		}

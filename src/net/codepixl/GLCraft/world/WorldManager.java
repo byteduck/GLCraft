@@ -1,6 +1,7 @@
 package net.codepixl.GLCraft.world;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -9,6 +10,8 @@ import java.util.List;
 
 import org.lwjgl.util.vector.Vector3f;
 
+import com.evilco.mc.nbt.stream.NbtInputStream;
+import com.evilco.mc.nbt.tag.TagCompound;
 import com.google.common.io.Files;
 import com.nishu.utils.Shader;
 import com.nishu.utils.ShaderProgram;
@@ -278,14 +281,15 @@ public class WorldManager {
 	}
 	
 	public void loadChunks(String name) throws IOException{
-		Iterator<Chunk> i = this.activeChunks.values().iterator();
-		int index = 0;
-		while(i.hasNext()){
-			Chunk c = i.next();
-			c.load(Constants.GLCRAFTDIR+"saves/"+name+"/chunks/chunk"+index+".nbt");
-			index++;
+		for(int i = 0; i < activeChunks.size(); i++){
+			NbtInputStream in = new NbtInputStream(new FileInputStream(Constants.GLCRAFTDIR+"saves/"+name+"/chunks/chunk"+i+".nbt"));
+			TagCompound t = (TagCompound) in.readTag();
+			TagCompound post = t.getCompound("pos");
+			Vector3i pos = new Vector3i(post.getFloat("x"), post.getFloat("y"), post.getFloat("z"));
+			activeChunks.get(pos).load(t);
 		}
-		i = this.activeChunks.values().iterator();
+		
+		Iterator<Chunk> i = this.activeChunks.values().iterator();
 		while(i.hasNext()){
 			Chunk c = i.next();
 			c.rebuild();

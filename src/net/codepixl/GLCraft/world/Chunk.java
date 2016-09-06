@@ -165,9 +165,7 @@ public class Chunk {
 		out.close();
 	}
 	
-	public void load(String filename) throws IOException{
-		NbtInputStream in = new NbtInputStream(new FileInputStream(filename));
-		TagCompound t = (TagCompound) in.readTag();
+	public void load(TagCompound t) throws IOException{
 		TagCompound pos = t.getCompound("pos");
 		this.pos.x = pos.getFloat("x");
 		this.pos.y = pos.getFloat("y");
