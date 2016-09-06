@@ -71,7 +71,7 @@ public class GUIStartScreen extends GUIScreen{
 				return null;
 			}
 		});
-		quitButton = new GUIButton("Quit", (Constants.FONT.getWidth("quit") + 40) / 2, Constants.BTNHEIGHT / 2 + 10, new Callable<Void>() {
+		quitButton = new GUIButton("Quit", (Constants.FONT.getWidth("quit") + 40) / 2, GUIButton.BTNHEIGHT / 2 + 10, new Callable<Void>() {
 			@Override
 			public Void call() throws Exception {
 				System.exit(0);

@@ -20,12 +20,20 @@ import com.nishu.utils.Color4f;
 import net.codepixl.GLCraft.sound.SoundManager;
 import net.codepixl.GLCraft.util.Constants;
 
-public class GUIButton implements GUIElement{
+public class GUIButton extends GUIElement{
+
+	public static final int BTNHEIGHT = 30;
+	public static final int BTNPADDING = 10;
+	public static final Color4f BTNCOLOR = new Color4f(0f, 0f, 0f, 1f);
+	public static final Color4f BTNHOVERCOLOR = new Color4f(0.25f, 0.25f, 0.25f, 1f);
+	public static final Color4f BTNPRESSEDCOLOR = new Color4f(0.35f, 0.35f, 0.35f, 1f);
+	public static final Color4f BTNTEXTCOLOR = new Color4f(1f, 1f, 1f, 1f);
+	public static final Color4f BTNDISABLEDCOLOR = new Color4f(0.8f,0.8f,0.8f,1f);
 	
 	private String text;
 	private int x,y,height,padding;
-	private Color4f color,hoverColor,pressedColor,textColor;
-	private boolean hovered,pressed;
+	private Color4f color,hoverColor,pressedColor,textColor,disabledColor;
+	private boolean hovered,pressed,enabled;
 	private int width;
 	private Callable<Void> action;
 	
@@ -33,14 +41,16 @@ public class GUIButton implements GUIElement{
 		this.text = text;
 		this.x = x;
 		this.y = y;
-		this.height = Constants.BTNHEIGHT;
-		this.padding = Constants.BTNPADDING;
-		this.color = Constants.BTNCOLOR;
-		this.hoverColor = Constants.BTNHOVERCOLOR;
-		this.pressedColor = Constants.BTNPRESSEDCOLOR;
-		this.textColor = Constants.BTNTEXTCOLOR;
+		this.height = BTNHEIGHT;
+		this.padding = BTNPADDING;
+		this.color = BTNCOLOR;
+		this.hoverColor = BTNHOVERCOLOR;
+		this.pressedColor = BTNPRESSEDCOLOR;
+		this.textColor = BTNTEXTCOLOR;
+		this.disabledColor = BTNDISABLEDCOLOR;
 		this.width = Constants.FONT.getWidth(text) + padding*2;
 		this.action = action;
+		this.enabled = true;
 	}
 	
 	public GUIButton(String text, int x, int y, Callable<Void> action, int height, int padding){
@@ -49,26 +59,30 @@ public class GUIButton implements GUIElement{
 		this.y = y;
 		this.height = height;
 		this.padding = padding;
-		this.color = Constants.BTNCOLOR;
-		this.hoverColor = Constants.BTNHOVERCOLOR;
-		this.pressedColor = Constants.BTNPRESSEDCOLOR;
-		this.textColor = Constants.BTNTEXTCOLOR;
+		this.color = BTNCOLOR;
+		this.hoverColor = BTNHOVERCOLOR;
+		this.pressedColor = BTNPRESSEDCOLOR;
+		this.textColor = BTNTEXTCOLOR;
+		this.disabledColor = BTNDISABLEDCOLOR;
 		this.width = Constants.FONT.getWidth(text) + padding*2;
 		this.action = action;
+		this.enabled = true;
 	}
 	
-	public GUIButton(String text, int x, int y, Callable<Void> action, Color4f color, Color4f hoverColor, Color4f pressedColor, Color4f textColor){
+	public GUIButton(String text, int x, int y, Callable<Void> action, Color4f color, Color4f hoverColor, Color4f pressedColor, Color4f textColor, Color4f disabledColor){
 		this.text = text;
 		this.x = x;
 		this.y = y;
-		this.height = Constants.BTNHEIGHT;
-		this.padding = Constants.BTNPADDING;
+		this.height = BTNHEIGHT;
+		this.padding = BTNPADDING;
 		this.color = color;
 		this.hoverColor = hoverColor;
 		this.pressedColor = pressedColor;
 		this.textColor = textColor;
+		this.disabledColor = disabledColor;
 		this.width = Constants.FONT.getWidth(text) + padding*2;
 		this.action = action;
+		this.enabled = true;
 	}
 	
 	public GUIButton(String text, int x, int y, Callable<Void> action, int height, int padding, Color4f color, Color4f hoverColor, Color4f pressedColor, Color4f textColor){
@@ -83,6 +97,7 @@ public class GUIButton implements GUIElement{
 		this.textColor = textColor;
 		this.width = Constants.FONT.getWidth(text) + padding*2;
 		this.action = action;
+		this.enabled = true;
 	}
 	
 	@Override
@@ -90,10 +105,12 @@ public class GUIButton implements GUIElement{
 		glDisable(GL_TEXTURE_2D);
 		int width = Constants.FONT.getWidth(text) + padding*2;
 		glBegin(GL_QUADS);
-			if(hovered && !pressed){
+			if(hovered && !pressed && enabled){
 				glColor3f(hoverColor.r,hoverColor.g,hoverColor.b);
-			}else if(pressed){
+			}else if(pressed && enabled){
 				glColor3f(pressedColor.r,pressedColor.g,pressedColor.b);
+			}else if(!enabled){
+				glColor3f(disabledColor.r, disabledColor.g, disabledColor.b);
 			}else{
 				glColor3f(color.r,color.g,color.b);
 			}
@@ -119,7 +136,7 @@ public class GUIButton implements GUIElement{
 			while(Mouse.next()){
 				if(Mouse.getEventButtonState()){
 					if(Mouse.isButtonDown(0)){
-						if(!pressed){
+						if(!pressed && enabled){
 							SoundManager.getMainManager().quickPlay("click");
 							try {
 								this.action.call();
@@ -151,6 +168,14 @@ public class GUIButton implements GUIElement{
 			}
 		}
 		return false;
+	}
+	
+	public void setEnabled(boolean enabled){
+		this.enabled = enabled;
+	}
+	
+	public boolean getEnabled(){
+		return this.enabled;
 	}
 	
 }

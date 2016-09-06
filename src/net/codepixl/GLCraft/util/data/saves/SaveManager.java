@@ -1,18 +1,23 @@
 package net.codepixl.GLCraft.util.data.saves;
 
+import java.awt.TrayIcon.MessageType;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 
 import org.lwjgl.util.vector.Vector3f;
 
+import com.evilco.mc.nbt.error.TagNotFoundException;
+import com.evilco.mc.nbt.error.UnexpectedTagTypeException;
 import com.evilco.mc.nbt.stream.NbtInputStream;
 import com.evilco.mc.nbt.stream.NbtOutputStream;
 import com.evilco.mc.nbt.tag.TagByte;
@@ -35,6 +40,7 @@ import net.codepixl.GLCraft.world.tile.Tile;
 
 public class SaveManager {
 	
+	public static String formatV0 = "GLCWorldv0";
 	public static String currentFormat = "GLCWorldv1";
 	
 	public static void saveWorld(WorldManager worldManager, String name){
@@ -105,18 +111,15 @@ public class SaveManager {
 			TagCompound tag;
 			
 			//METADATA LOADING
-			if(new File(Constants.GLCRAFTDIR+"saves/"+name+"/world.nbt").exists()){
-				inputStream = new FileInputStream(Constants.GLCRAFTDIR+"saves/"+name+"/world.nbt");
-				nbtInputStream = new NbtInputStream(inputStream);
-				tag = (TagCompound)nbtInputStream.readTag();
-				if(!tag.getString("format").equals(currentFormat)){
-					JOptionPane.showMessageDialog(null, "Unsupported world format", "Error", JOptionPane.ERROR_MESSAGE);
-					nbtInputStream.close();
+			Save s = getSave(name);
+			if(s != null){
+				if(!s.format.equals(currentFormat)){
+					JOptionPane.showMessageDialog(null, "Unsupported world format: "+s.format, "Error", JOptionPane.ERROR_MESSAGE);
 					return false;
 				}
-				nbtInputStream.close();
 			}else{
-				writeMetadata(name);
+				JOptionPane.showMessageDialog(null, "Unknown error loading the world.", "Error", JOptionPane.ERROR_MESSAGE);
+				return false;
 			}
 			
 			EntityPlayer p = worldManager.getEntityManager().getPlayer();
@@ -188,6 +191,7 @@ public class SaveManager {
 		} catch (InvocationTargetException e1) {
 			e1.printStackTrace();
 		}
+		JOptionPane.showMessageDialog(null, "Unknown error loading the world.", "Error", JOptionPane.ERROR_MESSAGE);
 		return false;
 	}
 
@@ -203,5 +207,32 @@ public class SaveManager {
 		t.setTag(formatTag);
 		nbtOutputStream.write(t);
 		nbtOutputStream.close();
+	}
+	
+	public static Save getSave(String name) throws IOException{
+		if(new File(Constants.GLCRAFTDIR+"saves/"+name+"/world.nbt").exists()){
+			FileInputStream inputStream = new FileInputStream(Constants.GLCRAFTDIR+"saves/"+name+"/world.nbt");
+			NbtInputStream nbtInputStream = new NbtInputStream(inputStream);
+			TagCompound tag = (TagCompound)nbtInputStream.readTag();
+			nbtInputStream.close();
+			return new Save(name,tag.getString("name"),tag.getString("version"),tag.getString("format"));
+		}else if(new File(Constants.GLCRAFTDIR+"saves/"+name+"/player.nbt").exists()){ //No metadata file, check if player.nbt exists
+			return new Save(name,name,"?",formatV0);
+		}else{
+			return null;
+		}
+	}
+	
+	public static Save[] getSaves() throws IOException{
+		ArrayList<Save> saves = new ArrayList<Save>();
+		File savesDir = new File(Constants.GLCRAFTDIR+"saves/");
+		if(savesDir.exists()){
+			for(File f : savesDir.listFiles()){
+				Save s = getSave(f.getName());
+				if(s != null)
+					saves.add(getSave(f.getName()));
+			}
+		}
+		return (Save[]) saves.toArray(new Save[saves.size()]);
 	}
 }

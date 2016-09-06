@@ -23,7 +23,7 @@ import net.codepixl.GLCraft.world.item.Item;
 import net.codepixl.GLCraft.world.item.ItemStack;
 import net.codepixl.GLCraft.world.tile.Tile;
 
-public class GUISlot implements GUIElement{
+public class GUISlot extends GUIElement{
 	
 	public ItemStack itemstack;
 	private int x,y;

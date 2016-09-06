@@ -8,6 +8,7 @@ import static org.lwjgl.opengl.GL11.glEnd;
 import static org.lwjgl.opengl.GL11.glTexCoord2f;
 import static org.lwjgl.opengl.GL11.glVertex2f;
 
+import java.io.IOException;
 import java.util.concurrent.Callable;
 
 import javax.swing.JOptionPane;
@@ -15,22 +16,27 @@ import javax.swing.JOptionPane;
 import org.lwjgl.input.Keyboard;
 
 import net.codepixl.GLCraft.GUI.Elements.GUIButton;
+import net.codepixl.GLCraft.GUI.Elements.GUILabel;
 import net.codepixl.GLCraft.render.TextureManager;
 import net.codepixl.GLCraft.util.Constants;
 import net.codepixl.GLCraft.util.Spritesheet;
+import net.codepixl.GLCraft.util.data.saves.Save;
 import net.codepixl.GLCraft.util.data.saves.SaveLoadWindow;
+import net.codepixl.GLCraft.util.data.saves.SaveManager;
 import net.codepixl.GLCraft.world.tile.Tile;
 
 public class GUISinglePlayer extends GUIScreen{
 	
 	private static final int MIDDLE = Constants.WIDTH/2;
-	private static final int NEWWORLDY = (int) (Constants.HEIGHT*0.4);
-	private static final int LOADWORLDY = (int) (Constants.HEIGHT*0.6);
+	private static final int NEWWORLDX = (int) (Constants.WIDTH*0.3);
+	private static final int NEWWORLDY = (int) (Constants.HEIGHT*0.8);
+	private static final int LOADWORLDX = (int) (Constants.WIDTH*0.7);
+	private static final int LOADWORLDY = (int) (Constants.HEIGHT*0.8);
 	
 	GUIButton newWorld, loadWorld;
 	
 	public GUISinglePlayer(){
-		newWorld = new GUIButton("New World", MIDDLE, NEWWORLDY, new Callable<Void>() {
+		newWorld = new GUIButton("New World", NEWWORLDX, NEWWORLDY, new Callable<Void>() {
 			@Override
 			public Void call() throws Exception {
 				String name = JOptionPane.showInputDialog("World Name:", "GLCraft");
@@ -44,7 +50,7 @@ public class GUISinglePlayer extends GUIScreen{
 			}
 		});
 		
-		loadWorld = new GUIButton("Load World", MIDDLE, LOADWORLDY, new Callable<Void>() {
+		loadWorld = new GUIButton("Load World", LOADWORLDX, LOADWORLDY, new Callable<Void>() {
 			@Override
 			public Void call() throws Exception {
 				String name = SaveLoadWindow.loadWorld(Constants.world.getWorldManager());
@@ -60,6 +66,22 @@ public class GUISinglePlayer extends GUIScreen{
 		
 		addElement(newWorld);
 		addElement(loadWorld);
+		
+		/*try {
+			Save[] saves = SaveManager.getSaves();
+			int i = 0;
+			for(Save save : saves){
+				GUILabel lbl = new GUILabel(save.dispName);
+				lbl.x = 0;
+				lbl.y = i*100;
+				addElement(lbl);
+				i++;
+			}
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}*/
+		
 	}
 	
 	@Override

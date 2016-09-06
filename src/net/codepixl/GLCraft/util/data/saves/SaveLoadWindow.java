@@ -84,4 +84,5 @@ public class SaveLoadWindow extends JFrame{
 	public void loadWorld(String s){
 		worldName = s;
 	}
+	
 }

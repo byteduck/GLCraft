@@ -16,12 +16,6 @@ public class Constants {
 	public static final int CHUNKSIZE = 16;
 	public static final float textSize = 0.5f;
 	public static boolean doneGenerating = false;
-	public static final int BTNHEIGHT = 30;
-	public static final int BTNPADDING = 10;
-	public static final Color4f BTNCOLOR = new Color4f(0f, 0f, 0f, 1f);
-	public static final Color4f BTNHOVERCOLOR = new Color4f(0.25f, 0.25f, 0.25f, 1f);
-	public static final Color4f BTNPRESSEDCOLOR = new Color4f(0.35f, 0.35f, 0.35f, 1f);
-	public static final Color4f BTNTEXTCOLOR = new Color4f(1f, 1f, 1f, 1f);
 	public static TrueTypeFont FONT = new TrueTypeFont(new Font("GLCraft", Font.PLAIN, 16), true);
 	public static final int START_SCREEN = 0;
 	public static final int GAME = 1;

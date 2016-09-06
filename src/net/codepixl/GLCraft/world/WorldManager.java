@@ -8,6 +8,8 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 
+import javax.swing.JOptionPane;
+
 import org.lwjgl.util.vector.Vector3f;
 
 import com.evilco.mc.nbt.stream.NbtInputStream;
