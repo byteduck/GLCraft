@@ -33,7 +33,7 @@ public class GUISinglePlayer extends GUIScreen{
 		newWorld = new GUIButton("New World", MIDDLE, NEWWORLDY, new Callable<Void>() {
 			@Override
 			public Void call() throws Exception {
-				String name = JOptionPane.showInputDialog("World Name:");
+				String name = JOptionPane.showInputDialog("World Name:", "GLCraft");
 				if(name == null || name.trim().equals("")){}else{
 					Constants.setState(Constants.GAME);
 					Constants.world.getWorldManager().createWorld(name);
@@ -47,9 +47,11 @@ public class GUISinglePlayer extends GUIScreen{
 		loadWorld = new GUIButton("Load World", MIDDLE, LOADWORLDY, new Callable<Void>() {
 			@Override
 			public Void call() throws Exception {
-				Constants.setState(Constants.GAME);
 				String name = SaveLoadWindow.loadWorld(Constants.world.getWorldManager());
-				Constants.world.getWorldManager().loadWorld(name);
+				if(!Constants.world.getWorldManager().loadWorld(name)){
+					return null;
+				}
+				Constants.setState(Constants.GAME);
 				glDisable(GL_TEXTURE_2D);
 				GUIManager.getMainManager().closeGUI();
 				return null;

@@ -507,7 +507,7 @@ public class WorldManager {
 		return entityManager.getTileEntityForPos(x, y, z);
 	}
 
-	public void loadWorld(String name) {
+	public boolean loadWorld(String name) {
 		this.worldName = name;
 		centralManager.initSplashText();
 		centralManager.renderSplashText("Loading World...", "Hold on...");
@@ -519,9 +519,13 @@ public class WorldManager {
 				}
 			}
 		}
-		SaveManager.loadWorld(this, name);
-		System.out.println("DOEN");
-		doneGenerating = true;
+		boolean success = SaveManager.loadWorld(this, name);
+		if(success){
+			this.doneGenerating = true;
+			return true;
+		}else{
+			return false;
+		}
 	}
 
 	public static void saveWorld() {
