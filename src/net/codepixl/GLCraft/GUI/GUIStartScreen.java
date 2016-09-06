@@ -127,4 +127,9 @@ public class GUIStartScreen extends GUIScreen{
 			TextureManager.setAtlas = false;
 		}
 	}
+	
+	@Override
+	public boolean canBeExited() {
+		return false;
+	}
 }

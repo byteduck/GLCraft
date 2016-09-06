@@ -50,4 +50,12 @@ public class GUIScreen extends GUIElement{
 		
 	}
 	
+	public void onClose() {
+		
+	}
+	
+	public boolean canBeExited() {
+		return true;
+	}
+	
 }

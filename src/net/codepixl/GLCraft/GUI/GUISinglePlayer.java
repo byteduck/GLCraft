@@ -111,10 +111,8 @@ public class GUISinglePlayer extends GUIScreen{
 	}
 	
 	@Override
-	public void input(){
-		super.input();
-		if(Keyboard.isKeyDown(Keyboard.KEY_ESCAPE))
-			GUIManager.getMainManager().showGUI("startScreen");
+	public void onClose(){
+		GUIManager.getMainManager().showGUI("startScreen");
 	}
 	
 }

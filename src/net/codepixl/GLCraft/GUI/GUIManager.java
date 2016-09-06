@@ -35,7 +35,7 @@ public class GUIManager {
 	public void showGUI(GUIScreen gui) {
 		currentGUI = gui;
 		GUIOpen = true;
-		currentGUIName = "nogui";
+		currentGUIName = "othergui";
 	}
 	
 	public boolean showGUI(String guiName){
@@ -68,6 +68,10 @@ public class GUIManager {
 		GUIOpen = false;
 		currentGUI = null;
 		currentGUIName = "nogui";
+	}
+	
+	public GUIScreen getCurrentGUI(){
+		return currentGUI;
 	}
 
 	public void render() {

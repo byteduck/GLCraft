@@ -161,7 +161,7 @@ public class TileWater extends Tile{
 				noWater = false;
 			}
 			if(noWater == false){
-				if(lmeta+1 != meta && lmeta < 16) w.setMetaAtPos(x, y, z, (byte) (lmeta+1), true, true, true);
+				if(lmeta+1 != meta && lmeta < 16 && meta > 1) w.setMetaAtPos(x, y, z, (byte) (lmeta+1), true, true, true);
 				if(lmeta+1 > 15){ w.setTileAtPos(x,y,z,Tile.Air.getId(),true); w.setMetaAtPos(x, y, z, (byte)0, false);}
 			}else{
 				if(w.getTileAtPos(x+1, y, z) == Tile.Air.getId() || Tile.getTile((byte) w.getTileAtPos(x+1, y, z)).canBeDestroyedByLiquid()){
@@ -181,44 +181,40 @@ public class TileWater extends Tile{
 		}else{
 			if(w.getTileAtPos(x+1, y, z) == Tile.Air.getId() || Tile.getTile((byte) w.getTileAtPos(x+1, y, z)).canBeDestroyedByLiquid()){
 				w.setMetaAtPos(x, y, z, (byte)1, false);
-			}
-			if(w.getTileAtPos(x-1, y, z) == Tile.Air.getId() || Tile.getTile((byte) w.getTileAtPos(x-1, y, z)).canBeDestroyedByLiquid()){
+			}else if(w.getTileAtPos(x-1, y, z) == Tile.Air.getId() || Tile.getTile((byte) w.getTileAtPos(x-1, y, z)).canBeDestroyedByLiquid()){
 				w.setMetaAtPos(x, y, z, (byte)1, false);
-			}
-			if(w.getTileAtPos(x, y, z+1) == Tile.Air.getId() || Tile.getTile((byte) w.getTileAtPos(x, y, z+1)).canBeDestroyedByLiquid()){
+			}else if(w.getTileAtPos(x, y, z+1) == Tile.Air.getId() || Tile.getTile((byte) w.getTileAtPos(x, y, z+1)).canBeDestroyedByLiquid()){
 				w.setMetaAtPos(x, y, z, (byte)1, false);
-			}
-			if(w.getTileAtPos(x, y, z-1) == Tile.Air.getId() || Tile.getTile((byte) w.getTileAtPos(x, y, z-1)).canBeDestroyedByLiquid()){
+			}else if(w.getTileAtPos(x, y, z-1) == Tile.Air.getId() || Tile.getTile((byte) w.getTileAtPos(x, y, z-1)).canBeDestroyedByLiquid()){
 				w.setMetaAtPos(x, y, z, (byte)1, false);
-			}
-			if(w.getTileAtPos(x, y-1, z) == Tile.Air.getId() || Tile.getTile((byte) w.getTileAtPos(x, y-1, z)).canBeDestroyedByLiquid()){
+			}else if(w.getTileAtPos(x, y-1, z) == Tile.Air.getId() || Tile.getTile((byte) w.getTileAtPos(x, y-1, z)).canBeDestroyedByLiquid()){
 				w.setMetaAtPos(x, y, z, (byte)1, false);
 			}
 		}
 	}
 	
 	@Override
+	public void onPlace(int x, int y, int z, WorldManager w){
+		this.blockUpdate(x, y, z, w);
+	}
+	
+	@Override
 	public void tick(int x, int y, int z, WorldManager w){
 		if(w.getMetaAtPos(x,y,z) != 0 && w.getMetaAtPos(x, y, z) < 15){
 			if(w.getTileAtPos(x+1, y, z) == Tile.Air.getId() || Tile.getTile((byte) w.getTileAtPos(x+1, y, z)).canBeDestroyedByLiquid()){
-				w.setTileAtPos(x+1, y, z, getId(), true);
-				w.setMetaAtPos(x+1, y, z, (byte)1, false);
+				w.setTileAtPos(x+1, y, z, getId(), true, (byte)2);
 			}
 			if(w.getTileAtPos(x-1, y, z) == Tile.Air.getId() || Tile.getTile((byte) w.getTileAtPos(x-1, y, z)).canBeDestroyedByLiquid()){
-				w.setTileAtPos(x-1, y, z, getId(), true);
-				w.setMetaAtPos(x-1, y, z, (byte)1, false);
+				w.setTileAtPos(x-1, y, z, getId(), true, (byte)2);
 			}
 			if(w.getTileAtPos(x, y, z+1) == Tile.Air.getId() || Tile.getTile((byte) w.getTileAtPos(x, y, z+1)).canBeDestroyedByLiquid()){
-				w.setTileAtPos(x, y, z+1, getId(), true);
-				w.setMetaAtPos(x, y, z+1, (byte)1, false);
+				w.setTileAtPos(x, y, z+1, getId(), true, (byte)2);
 			}
 			if(w.getTileAtPos(x, y, z-1) == Tile.Air.getId() || Tile.getTile((byte) w.getTileAtPos(x, y, z+1)).canBeDestroyedByLiquid()){
-				w.setTileAtPos(x, y, z-1, getId(), true);
-				w.setMetaAtPos(x, y, z-1, (byte)1, false);
+				w.setTileAtPos(x, y, z-1, getId(), true, (byte)2);
 			}
 			if(w.getTileAtPos(x, y-1, z) == Tile.Air.getId() || Tile.getTile((byte) w.getTileAtPos(x, y-1, z)).canBeDestroyedByLiquid()){
-				w.setTileAtPos(x, y-1, z, getId(), true);
-				w.setMetaAtPos(x, y-1, z, (byte)1, false);
+				w.setTileAtPos(x, y-1, z, getId(), true, (byte)2);
 			}
 		}
 	}

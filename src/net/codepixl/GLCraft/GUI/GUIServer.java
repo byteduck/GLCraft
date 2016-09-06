@@ -41,4 +41,9 @@ public class GUIServer extends GUIScreen{
 			glVertex2f(Constants.WIDTH,0);
 		glEnd();
 	}
+	
+	@Override
+	public void onClose(){
+		GUIManager.getMainManager().showGUI("startScreen");
+	}
 }
