@@ -34,10 +34,12 @@ public class GUISinglePlayer extends GUIScreen{
 			@Override
 			public Void call() throws Exception {
 				String name = JOptionPane.showInputDialog("World Name:");
-				Constants.setState(Constants.GAME);
-				Constants.world.getWorldManager().createWorld(name);
-				glDisable(GL_TEXTURE_2D);
-				GUIManager.getMainManager().closeGUI();
+				if(name == null || name.trim().equals("")){}else{
+					Constants.setState(Constants.GAME);
+					Constants.world.getWorldManager().createWorld(name);
+					glDisable(GL_TEXTURE_2D);
+					GUIManager.getMainManager().closeGUI();
+				}
 				return null;
 			}
 		});

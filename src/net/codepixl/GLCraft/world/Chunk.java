@@ -24,6 +24,7 @@ import com.evilco.mc.nbt.stream.NbtInputStream;
 import com.evilco.mc.nbt.stream.NbtOutputStream;
 import com.evilco.mc.nbt.tag.TagByteArray;
 import com.evilco.mc.nbt.tag.TagCompound;
+import com.evilco.mc.nbt.tag.TagFloat;
 import com.nishu.utils.ShaderProgram;
 
 import net.codepixl.GLCraft.render.RenderType;
@@ -139,7 +140,7 @@ public class Chunk {
 	
 	public void save(String filename) throws IOException{
 		NbtOutputStream out = new NbtOutputStream(new FileOutputStream(filename));
-		TagCompound t = new TagCompound(""+pos.getX()+","+pos.getY()+","+pos.getZ());
+		TagCompound t = new TagCompound("chunk");
 		byte[] buf = new byte[this.sizeX*this.sizeY*this.sizeZ];
 		int i = 0;
 		for(int x = 0; x < this.sizeX; x++){
@@ -150,7 +151,15 @@ public class Chunk {
 				}
 			}
 		}
-		TagByteArray tiles = new TagByteArray("Tiles",buf);
+		TagByteArray tiles = new TagByteArray("tiles",buf);
+		TagCompound pos = new TagCompound("pos");
+		TagFloat x = new TagFloat("x",this.pos.x);
+		TagFloat y = new TagFloat("y",this.pos.y);
+		TagFloat z = new TagFloat("z",this.pos.z);
+		pos.setTag(x);
+		pos.setTag(y);
+		pos.setTag(z);
+		t.setTag(pos);
 		t.setTag(tiles);
 		out.write(t);
 		out.close();
@@ -159,7 +168,11 @@ public class Chunk {
 	public void load(String filename) throws IOException{
 		NbtInputStream in = new NbtInputStream(new FileInputStream(filename));
 		TagCompound t = (TagCompound) in.readTag();
-		byte[] buf = t.getByteArray("Tiles");
+		TagCompound pos = t.getCompound("pos");
+		this.pos.x = pos.getFloat("x");
+		this.pos.y = pos.getFloat("y");
+		this.pos.z = pos.getFloat("z");
+		byte[] buf = t.getByteArray("tiles");
 		int i = 0;
 		for(int x = 0; x < this.sizeX; x++){
 			for(int y = 0; y < this.sizeY; y++){

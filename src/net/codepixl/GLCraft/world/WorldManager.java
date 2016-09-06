@@ -265,7 +265,7 @@ public class WorldManager {
 	}
 	
 	public void saveChunks(String name) throws IOException{
-		Files.createParentDirs(new File("Chunks/test.chunk"));
+		Files.createParentDirs(new File("chunks/test.chunk"));
 		Iterator<Chunk> i = this.activeChunks.values().iterator();
 		int index = 0;
 		File f = new File(Constants.GLCRAFTDIR+"saves/"+name+"/chunks");

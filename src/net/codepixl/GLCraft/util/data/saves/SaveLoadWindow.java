@@ -71,6 +71,8 @@ public class SaveLoadWindow extends JFrame{
 			}
 		}
 
+		this.setLocationRelativeTo(null);
+		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		this.setTitle("Load World");
 		this.setSize(640,480);
 		this.setVisible(true);
