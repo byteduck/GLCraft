@@ -20,7 +20,7 @@ import net.codepixl.GLCraft.util.Constants;
 public class GUILabel extends GUIElement{
 	public static Color4f LBLTEXTCOLOR = new Color4f(1f,1f,1f,1f);
 	public static Alignment LBLALIGNMENT = Alignment.LEFT;
-	public static float LBLSIZE = 2.0f;
+	public static float LBLSIZE = 1.5f;
 	
 	public Color4f textColor = LBLTEXTCOLOR;
 	public String text;
@@ -44,8 +44,8 @@ public class GUILabel extends GUIElement{
 	@Override
 	public void render(){
 		GL11.glPushMatrix();
-		GL11.glScalef(size, size, 0);
 		GL11.glTranslatef(x, y, 0);
+		GL11.glScalef(size, size, 0);
 		int width = Constants.FONT.getWidth(text);
 		int height = Constants.FONT.getHeight(text);
 		glColor4f(textColor.r,textColor.g,textColor.b,textColor.a);
@@ -54,10 +54,10 @@ public class GUILabel extends GUIElement{
 			Constants.FONT.drawString(0, 0, text);
 			break;
 		case CENTER:
-			Constants.FONT.drawString(width/2, height/2, text);
+			Constants.FONT.drawString(-width/2, 0, text);
 			break;
 		case RIGHT:
-			Constants.FONT.drawString(-width, -height, text);
+			Constants.FONT.drawString(-width, 0, text);
 			break;
 		}
 		TextureImpl.unbind();

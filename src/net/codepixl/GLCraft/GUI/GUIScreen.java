@@ -32,6 +32,8 @@ public class GUIScreen extends GUIElement{
 		}
 	}
 	public void input(){
+		if(!enabled)
+			return;
 		Iterator<GUIElement> it = elements.iterator();
 		while(it.hasNext()){
 			it.next().input();

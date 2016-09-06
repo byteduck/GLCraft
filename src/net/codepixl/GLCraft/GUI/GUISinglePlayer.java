@@ -17,6 +17,7 @@ import org.lwjgl.input.Keyboard;
 
 import net.codepixl.GLCraft.GUI.Elements.GUIButton;
 import net.codepixl.GLCraft.GUI.Elements.GUILabel;
+import net.codepixl.GLCraft.GUI.Elements.GUILabel.Alignment;
 import net.codepixl.GLCraft.render.TextureManager;
 import net.codepixl.GLCraft.util.Constants;
 import net.codepixl.GLCraft.util.Spritesheet;
@@ -34,6 +35,8 @@ public class GUISinglePlayer extends GUIScreen{
 	private static final int LOADWORLDY = (int) (Constants.HEIGHT*0.8);
 	
 	GUIButton newWorld, loadWorld;
+	GUILabel title;
+	private GUISave selectedSave;
 	
 	public GUISinglePlayer(){
 		newWorld = new GUIButton("New World", NEWWORLDX, NEWWORLDY, new Callable<Void>() {
@@ -53,8 +56,7 @@ public class GUISinglePlayer extends GUIScreen{
 		loadWorld = new GUIButton("Load World", LOADWORLDX, LOADWORLDY, new Callable<Void>() {
 			@Override
 			public Void call() throws Exception {
-				String name = SaveLoadWindow.loadWorld(Constants.world.getWorldManager());
-				if(!Constants.world.getWorldManager().loadWorld(name)){
+				if(!Constants.world.getWorldManager().loadWorld(selectedSave.save.name)){
 					return null;
 				}
 				Constants.setState(Constants.GAME);
@@ -63,24 +65,33 @@ public class GUISinglePlayer extends GUIScreen{
 				return null;
 			}
 		});
+		loadWorld.setEnabled(false);
+		
+		title = new GUILabel("Singleplayer");
+		title.size = 2.0f;
+		title.alignment = Alignment.CENTER;
+		title.x = MIDDLE;
+		title.y = 10;
 		
 		addElement(newWorld);
 		addElement(loadWorld);
+		addElement(title);
 		
-		/*try {
+		try {
 			Save[] saves = SaveManager.getSaves();
 			int i = 0;
 			for(Save save : saves){
-				GUILabel lbl = new GUILabel(save.dispName);
-				lbl.x = 0;
-				lbl.y = i*100;
-				addElement(lbl);
+				GUISave s = new GUISave(save, this);
+				s.y = i*120+Constants.FONT.getHeight()*2+20;
+				s.x = 100;
+				s.width = Constants.WIDTH-200;
+				addElement(s);
 				i++;
 			}
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-		}*/
+		}
 		
 	}
 	
@@ -113,6 +124,15 @@ public class GUISinglePlayer extends GUIScreen{
 	@Override
 	public void onClose(){
 		GUIManager.getMainManager().showGUI("startScreen");
+	}
+	
+	public void setSelectedSave(GUISave s){
+		if(selectedSave !=null)
+			selectedSave.selected = false;
+		else
+			loadWorld.setEnabled(true);
+		selectedSave = s;
+		selectedSave.selected = true;
 	}
 	
 }

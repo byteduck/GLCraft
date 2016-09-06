@@ -33,7 +33,7 @@ public class GUIButton extends GUIElement{
 	private String text;
 	private int x,y,height,padding;
 	private Color4f color,hoverColor,pressedColor,textColor,disabledColor;
-	private boolean hovered,pressed,enabled;
+	private boolean hovered,pressed;
 	private int width;
 	private Callable<Void> action;
 	

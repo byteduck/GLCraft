@@ -26,6 +26,8 @@ import javax.swing.filechooser.FileNameExtensionFilter;
 
 import net.codepixl.GLCraft.GLCraft;
 import net.codepixl.GLCraft.GUI.Elements.GUIButton;
+import net.codepixl.GLCraft.GUI.Elements.GUILabel;
+import net.codepixl.GLCraft.GUI.Elements.GUILabel.Alignment;
 import net.codepixl.GLCraft.GUI.Inventory.Elements.GUISlot;
 import net.codepixl.GLCraft.plugin.PluginManager;
 import net.codepixl.GLCraft.plugin.PluginManagerWindow;
@@ -47,6 +49,7 @@ public class GUIStartScreen extends GUIScreen{
 	private static final int BUGY = (int) (Constants.HEIGHT * 0.8);
 	
 	private GUIButton startButton, pluginManagerButton, quitButton, bugButton,texturepackButton;
+	private GUILabel title;
 
 	public GUIStartScreen() {
 		startButton = new GUIButton("Singleplayer", MIDDLE, SINGLEPLAYERY, new Callable<Void>() {
@@ -85,6 +88,14 @@ public class GUIStartScreen extends GUIScreen{
 				return null;
 			}
 		});
+		
+		title = new GUILabel("GLCraft");
+		title.size = 2.0f;
+		title.alignment = Alignment.CENTER;
+		title.x = MIDDLE;
+		title.y = 10;
+		
+		this.addElement(title);
 		this.addElement(quitButton);
 		this.addElement(startButton);
 		this.addElement(pluginManagerButton);
