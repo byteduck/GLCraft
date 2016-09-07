@@ -43,8 +43,8 @@ public class GUIChest extends GUIScreen{
 	}
 	
 	@Override
-	public void input(){
-		super.input();
+	public void input(int xof, int yof){
+		super.input(xof, yof);
 		GUISlot hoveredSlot = getHoveredSlot();
 		if(hoveredSlot != null){
 			while(Mouse.next()){

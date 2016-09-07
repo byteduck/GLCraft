@@ -131,8 +131,8 @@ public class GUIButton extends GUIScreen{
 	}
 
 	@Override
-	public void input() {
-		if(testMouse()){
+	public void input(int xof, int yof) {
+		if(testMouse(xof, yof)){
 			while(Mouse.next()){
 				if(Mouse.getEventButtonState()){
 					if(Mouse.isButtonDown(0)){
@@ -158,9 +158,9 @@ public class GUIButton extends GUIScreen{
 		}
 	}
 	
-	public boolean testMouse(){
-		int mouseY = Mouse.getY();
-		int mouseX = Mouse.getX();
+	public boolean testMouse(int xof, int yof){
+		int mouseY = Mouse.getY()+xof;
+		int mouseX = Mouse.getX()+yof;
 		mouseY = -mouseY+Constants.HEIGHT;
 		if(mouseY <= y+height/2 && mouseY >= y-height/2){
 			if(mouseX <= x+width/2 && mouseX >= x-width/2){
