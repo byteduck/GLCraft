@@ -14,16 +14,14 @@ import org.newdawn.slick.opengl.TextureImpl;
 
 import com.nishu.utils.Color4f;
 
-import net.codepixl.GLCraft.GUI.Elements.GUIElement;
+import net.codepixl.GLCraft.GUI.GUIScreen;
 import net.codepixl.GLCraft.render.Shape;
 import net.codepixl.GLCraft.render.TextureManager;
 import net.codepixl.GLCraft.util.Constants;
 import net.codepixl.GLCraft.util.Spritesheet;
-import net.codepixl.GLCraft.world.item.Item;
 import net.codepixl.GLCraft.world.item.ItemStack;
-import net.codepixl.GLCraft.world.tile.Tile;
 
-public class GUISlot extends GUIElement{
+public class GUISlot extends GUIScreen{
 	
 	public ItemStack itemstack;
 	private int x,y;

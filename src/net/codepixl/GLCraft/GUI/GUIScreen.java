@@ -5,10 +5,11 @@ import java.util.Iterator;
 
 import org.lwjgl.opengl.GL11;
 
-import net.codepixl.GLCraft.GUI.Elements.GUIElement;
-
-public class GUIScreen extends GUIElement{
-	private ArrayList<GUIElement> elements = new ArrayList<GUIElement>();
+public class GUIScreen{
+	public int x = 0;
+	public int y = 0;
+	public boolean enabled = true;
+	private ArrayList<GUIScreen> elements = new ArrayList<GUIScreen>();
 	public boolean mouseGrabbed = false;
 	public boolean playerInput = false;
 	
@@ -16,7 +17,7 @@ public class GUIScreen extends GUIElement{
 		GL11.glPushMatrix();
 		GL11.glTranslatef(x, y, 0);
 		drawBG();
-		Iterator<GUIElement> it = elements.iterator();
+		Iterator<GUIScreen> it = elements.iterator();
 		while(it.hasNext()){
 			it.next().render();
 		}
@@ -26,7 +27,7 @@ public class GUIScreen extends GUIElement{
 		
 	}
 	public void update(){
-		Iterator<GUIElement> it = elements.iterator();
+		Iterator<GUIScreen> it = elements.iterator();
 		while(it.hasNext()){
 			it.next().update();
 		}
@@ -34,7 +35,7 @@ public class GUIScreen extends GUIElement{
 	public void input(){
 		if(!enabled)
 			return;
-		Iterator<GUIElement> it = elements.iterator();
+		Iterator<GUIScreen> it = elements.iterator();
 		while(it.hasNext()){
 			it.next().input();
 		}
@@ -44,7 +45,7 @@ public class GUIScreen extends GUIElement{
 		
 	}
 	
-	public void addElement(GUIElement element){
+	public void addElement(GUIScreen element){
 		this.elements.add(element);
 	}
 	
