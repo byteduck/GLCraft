@@ -7,26 +7,41 @@ import static org.lwjgl.opengl.GL11.glVertex2f;
 import java.util.ArrayList;
 import java.util.Iterator;
 
+import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.GL11;
+
+import net.codepixl.GLCraft.util.Constants;
 
 public class GUIScrollBox extends GUIScreen{
 	public int spacing;
 	private ArrayList<GUIScreen> items = new ArrayList<GUIScreen>();
+	private int currentY, scrollY;
+	private float barY = 0;
 	
 	public GUIScrollBox(int spacing){
 		this.spacing = spacing;
+		this.currentY = spacing;
+		this.scrollY = 0;
 	}
 	
 	public void addItem(GUIScreen i){
 		items.add(i);
+		i.y = currentY;
+		currentY+=i.height+spacing;
 	}
 	
 	public boolean removeItem(GUIScreen i){
-		return items.remove(i);
+		boolean ret = items.remove(i);
+		if(ret)
+			currentY-=i.height;
+		return ret;
 	}
 	
 	public boolean removeItem(int i){
-		return items.remove(i) != null;
+		GUIScreen ret = items.remove(i);
+		if(ret != null)
+			currentY-=ret.height;
+		return ret != null;
 	}
 	
 	@Override
@@ -53,10 +68,22 @@ public class GUIScrollBox extends GUIScreen{
         GL11.glStencilMask(0x00);
         GL11.glStencilFunc(GL11.GL_EQUAL, 1, 0xFF);
         
+        GL11.glTranslatef(0, -scrollY, 0);
+        
         Iterator<GUIScreen> i = items.iterator();
         while(i.hasNext()){
         	i.next().renderMain();
         }
+        
+        GL11.glTranslatef(0, scrollY, 0);
+        
+        GL11.glDisable(GL11.GL_TEXTURE_2D);
+        GL11.glBegin(GL11.GL_QUADS);
+        	glVertex2f(width-20, barY);
+        	glVertex2f(width-20, barY+40);
+        	glVertex2f(width, barY+40);
+        	glVertex2f(width, barY);
+        GL11.glEnd();
         
         GL11.glDisable(GL11.GL_STENCIL_TEST);
 	}
@@ -79,11 +106,56 @@ public class GUIScrollBox extends GUIScreen{
 		GL11.glEnable(GL11.GL_TEXTURE_2D);
 	}
 	
+	private boolean grabbed = false;
+	
+	private void scrollBarUpdate(int xof, int yof){
+		int mouseY = Mouse.getY()+yof;
+		int mouseX = Mouse.getX()-xof;
+		mouseY = -mouseY+Constants.HEIGHT;
+		if(mouseY <= barY+40 && mouseY >= barY){
+			if(mouseX <= width && mouseX >= width-20){
+				if(Mouse.isButtonDown(0)){
+			    	grabbed = true;
+				}
+			}
+		}
+		
+		if(grabbed){
+			float dy = Mouse.getDY();
+			barY-=dy;
+			if(barY<0)
+	    		barY=0;
+	    	else if(barY>height-40)
+	    		barY=height-40;
+			if(!Mouse.isButtonDown(0))
+				grabbed = false;
+		}
+	}
+	
 	@Override
 	public void input(int xof, int yof){
-		Iterator<GUIScreen> i = items.iterator();
-        while(i.hasNext()){
-        	i.next().input(xof+x,yof+y);
-        }
+        scrollBarUpdate(xof+x, yof+y);
+		if(testMouse(xof, yof)){
+			Iterator<GUIScreen> i = items.iterator();
+	        while(i.hasNext()){
+	        	i.next().input(xof+x,yof+y-scrollY);
+	        }
+	        
+	        if(Mouse.hasWheel()){
+	        	barY+=Mouse.getDWheel();
+	        	if(barY<0)
+	        		barY=0;
+	        	else if(barY>height-40)
+	        		barY=height-40;
+	        }
+		}
+	}
+	
+	@Override
+	public void update(){
+		super.update();
+    	float currentY = this.currentY-height;
+    	float height = this.height;
+		scrollY = (int)((barY*currentY)/(height-40));
 	}
 }

@@ -90,9 +90,8 @@ public class GUISinglePlayer extends GUIScreen{
 			int i = 0;
 			for(Save save : saves){
 				GUISave s = new GUISave(save, this);
-				s.y = i*120+10;
 				s.x = 10;
-				s.width = Constants.WIDTH-220;
+				s.width = Constants.WIDTH-240;
 				scrollBox.addItem(s);
 				i++;
 			}
