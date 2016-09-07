@@ -13,6 +13,7 @@ import static org.lwjgl.opengl.GL11.glVertex2f;
 import java.util.concurrent.Callable;
 
 import org.lwjgl.input.Mouse;
+import org.lwjgl.opengl.GL11;
 import org.newdawn.slick.opengl.TextureImpl;
 
 import com.nishu.utils.Color4f;
@@ -32,10 +33,9 @@ public class GUIButton extends GUIScreen{
 	public static final Color4f BTNDISABLEDCOLOR = new Color4f(0.8f,0.8f,0.8f,1f);
 	
 	private String text;
-	private int x,y,height,padding;
+	private int x,y,padding;
 	private Color4f color,hoverColor,pressedColor,textColor,disabledColor;
 	private boolean hovered,pressed;
-	private int width;
 	private Callable<Void> action;
 	
 	public GUIButton(String text, int x, int y, Callable<Void> action){
@@ -103,8 +103,7 @@ public class GUIButton extends GUIScreen{
 	
 	@Override
 	public void render() {
-		glDisable(GL_TEXTURE_2D);
-		int width = Constants.FONT.getWidth(text) + padding*2;
+		GL11.glDisable(GL11.GL_TEXTURE_2D);
 		glBegin(GL_QUADS);
 			if(hovered && !pressed && enabled){
 				glColor3f(hoverColor.r,hoverColor.g,hoverColor.b);

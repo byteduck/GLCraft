@@ -48,8 +48,11 @@ import java.nio.file.Files;
 
 import javax.swing.JOptionPane;
 
+import org.lwjgl.LWJGLException;
 import org.lwjgl.opengl.Display;
+import org.lwjgl.opengl.DisplayMode;
 import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.PixelFormat;
 import org.newdawn.slick.opengl.PNGDecoder;
 import org.newdawn.slick.opengl.TextureImpl;
 
@@ -63,7 +66,6 @@ import net.codepixl.GLCraft.render.TextureManager;
 import net.codepixl.GLCraft.render.texturepack.TexturePackManager;
 import net.codepixl.GLCraft.util.Constants;
 import net.codepixl.GLCraft.util.DebugTimer;
-import net.codepixl.GLCraft.util.Vector3i;
 import net.codepixl.GLCraft.util.logging.CrashHandler;
 import net.codepixl.GLCraft.util.logging.TeeOutputStream;
 import net.codepixl.GLCraft.world.CentralManager;
@@ -84,25 +86,27 @@ public class GLCraft extends Screen{
 		return glcraft;
 	}
 	
-	public GLCraft() throws IOException{
+	public GLCraft() throws IOException, LWJGLException{
 		commonInitializer();
 	}
 	
-	private GLCraft(Plugin p) throws IOException{
+	private GLCraft(Plugin p) throws IOException, LWJGLException{
 		devPlugin = p;
 		commonInitializer();
 		
 	}
 	
-	private void commonInitializer() throws IOException{
+	private void commonInitializer() throws IOException, LWJGLException{
 		
 		glcraft = this;
 		Display.setIcon(new ByteBuffer[] {
 		        loadIcon(GLCraft.class.getResource("/textures/icons/icon16.png")),
 		        loadIcon(GLCraft.class.getResource("/textures/icons/icon32.png")),
 		});
-		Window.createWindow(1000, 700, "GLCraft", false);
-		Display.setResizable(true);
+		
+		Display.setDisplayMode(new DisplayMode(1000, 700));
+		Display.setTitle("GLCraft");
+		Display.create(new PixelFormat(8,8,8));
 		
 		gameLoop = new GameLoop();
 		gameLoop.setScreen(this); //THIS IS WHEN INITGL AND INIT ARE CALLED
@@ -222,7 +226,7 @@ public class GLCraft extends Screen{
 		world.dispose();
 	}
 	
-	public static void main(String[] args) throws IOException{
+	public static void main(String[] args) throws IOException, LWJGLException{
 		Thread.setDefaultUncaughtExceptionHandler(new CrashHandler());
 		
 		try{
@@ -242,7 +246,7 @@ public class GLCraft extends Screen{
 		
 	}
 	
-	public static void devEnvironment(Plugin p, boolean loadExtPlugins){
+	public static void devEnvironment(Plugin p, boolean loadExtPlugins) throws LWJGLException{
 		try {
 			isDevEnvironment = true;
 			GLCraft.loadExtPlugins = loadExtPlugins;
