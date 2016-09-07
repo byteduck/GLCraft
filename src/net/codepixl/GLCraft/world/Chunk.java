@@ -115,11 +115,15 @@ public class Chunk {
 							}else{
 								tiles[x][y][z] = Tile.Stone.getId();
 							}
-						}else if(posY-1f <= noise){
+						}else if(posY-3f <= noise){
 							if(posY <= Constants.seaLevel+1){
 								tiles[x][y][z] = Tile.Sand.getId();
 							}else{
-								tiles[x][y][z] = Tile.Grass.getId();
+								if(posY-2f <=noise){
+									tiles[x][y][z] = Tile.Dirt.getId();
+								}else{
+									tiles[x][y][z] = Tile.Grass.getId();
+								}
 							}
 						}else{
 							if(posY <= Constants.seaLevel){

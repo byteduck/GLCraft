@@ -51,6 +51,7 @@ public class Tile {
 	public static Tile Workbench = new TileWorkbench();
 	public static Tile Bedrock = new TileBedrock();
 	public static Tile Chest = new TileChest();
+	public static Tile Dirt = new TileDirt();
 	//TILES
 	
 	public String getName(){
