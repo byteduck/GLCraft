@@ -76,5 +76,10 @@ public class TileFire extends Tile{
 			((Mob) e).setFire(10);
 		}
 	}
+	
+	@Override
+	public boolean canBeDestroyedByLiquid(){
+		return true;
+	}
 
 }

@@ -104,8 +104,8 @@ public class GLCraft extends Screen{
 		        loadIcon(GLCraft.class.getResource("/textures/icons/icon32.png")),
 		});
 		
-		Display.setDisplayMode(new DisplayMode(1000, 700));
-		Display.setTitle("GLCraft");
+		Display.setFullscreen(false);
+		Display.setDisplayMode(new DisplayMode(1000,700));
 		Display.create(new PixelFormat(8,8,8));
 		
 		gameLoop = new GameLoop();
