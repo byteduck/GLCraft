@@ -3,10 +3,7 @@ package net.codepixl.GLCraft.GUI;
 import java.util.ArrayList;
 import java.util.Iterator;
 
-import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.GL11;
-
-import net.codepixl.GLCraft.util.Constants;
 
 public class GUIScreen{
 	public int x = 0;
@@ -37,31 +34,18 @@ public class GUIScreen{
 	public void initGL(){
 		
 	}
-	
-	public boolean testMouse(int xof, int yof){
-		int mouseY = Mouse.getY()+yof;
-		int mouseX = Mouse.getX()-xof;
-		mouseY = -mouseY+Constants.HEIGHT;
-		if(mouseY <= y+height && mouseY >= y){
-			if(mouseX <= x+width && mouseX >= x){
-				return true;
-			}
-		}
-		return false;
-	}
-	
 	public void update(){
 		Iterator<GUIScreen> it = elements.iterator();
 		while(it.hasNext()){
 			it.next().update();
 		}
 	}
-	public void input(int xOffset, int yOffset){
+	public void input(){
 		if(!enabled)
 			return;
 		Iterator<GUIScreen> it = elements.iterator();
 		while(it.hasNext()){
-			it.next().input(xOffset+x, yOffset+y);
+			it.next().input();
 		}
 	}
 	

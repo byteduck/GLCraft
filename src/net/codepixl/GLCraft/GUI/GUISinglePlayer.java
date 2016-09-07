@@ -34,10 +34,9 @@ public class GUISinglePlayer extends GUIScreen{
 	private static final int LOADWORLDX = (int) (Constants.WIDTH*0.7);
 	private static final int LOADWORLDY = (int) (Constants.HEIGHT*0.8);
 	
-	private GUIButton newWorld, loadWorld;
-	private GUILabel title;
+	GUIButton newWorld, loadWorld;
+	GUILabel title;
 	private GUISave selectedSave;
-	private GUIScrollBox scrollBox;
 	
 	public GUISinglePlayer(){
 		newWorld = new GUIButton("New World", NEWWORLDX, NEWWORLDY, new Callable<Void>() {
@@ -74,26 +73,19 @@ public class GUISinglePlayer extends GUIScreen{
 		title.x = MIDDLE;
 		title.y = 10;
 		
-		scrollBox = new GUIScrollBox(10);
-		scrollBox.x = 100;
-		scrollBox.y = Constants.FONT.getHeight()*2+20;
-		scrollBox.width = Constants.WIDTH-200;
-		scrollBox.height = (int) (Constants.HEIGHT*0.75f-scrollBox.y);
-		
 		addElement(newWorld);
 		addElement(loadWorld);
 		addElement(title);
-		addElement(scrollBox);
 		
 		try {
 			Save[] saves = SaveManager.getSaves();
 			int i = 0;
 			for(Save save : saves){
 				GUISave s = new GUISave(save, this);
-				s.y = i*120+10;
-				s.x = 10;
-				s.width = Constants.WIDTH-220;
-				scrollBox.addItem(s);
+				s.y = i*120+Constants.FONT.getHeight()*2+20;
+				s.x = 100;
+				s.width = Constants.WIDTH-200;
+				addElement(s);
 				i++;
 			}
 		} catch (IOException e) {

@@ -73,18 +73,17 @@ public class GUISlot extends GUIScreen{
 	}
 
 	@Override
-	public void input(int xof, int yof) {
-		if(testMouse(xof,yof)){
+	public void input() {
+		if(testMouse()){
 			this.hover = true;
 		}else{
 			this.hover = false;
 		}
 	}
 	
-	@Override
-	public boolean testMouse(int xof, int yof){
-		int mouseY = Mouse.getY()-yof;
-		int mouseX = Mouse.getX()-xof;
+	public boolean testMouse(){
+		int mouseY = Mouse.getY();
+		int mouseX = Mouse.getX();
 		mouseY = -mouseY+Constants.HEIGHT;
 		if(mouseY <= y+size/2 && mouseY >= y-size/2){
 			if(mouseX <= x+size/2 && mouseX >= x-size/2){

@@ -12,6 +12,7 @@ import net.codepixl.GLCraft.sound.SoundManager;
 public class GUISave extends GUIScreen{
 	
 	public Save save;
+	public int width, height;
 	public boolean selected = false;
 	GUILabel dispName;
 	GUILabel name;
@@ -57,10 +58,22 @@ public class GUISave extends GUIScreen{
 		GL11.glEnable(GL11.GL_TEXTURE_2D);
 	}
 	
+	public boolean testMouse(){
+		int mouseY = Mouse.getY();
+		int mouseX = Mouse.getX();
+		mouseY = -mouseY+Constants.HEIGHT;
+		if(mouseY <= y+height && mouseY >= y-height){
+			if(mouseX <= x+width && mouseX >= x-width){
+				return true;
+			}
+		}
+		return false;
+	}
+	
 	@Override
-	public void input(int xof, int yof){
-		super.input(xof, yof);
-		if(testMouse(xof,yof)){
+	public void input(){
+		super.input();
+		if(testMouse()){
 			while(Mouse.next()){
 				if(Mouse.getEventButtonState()){
 					if(Mouse.isButtonDown(0)){

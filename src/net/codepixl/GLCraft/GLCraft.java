@@ -105,8 +105,7 @@ public class GLCraft extends Screen{
 		});
 		
 		Display.setFullscreen(false);
-		Display.setDisplayMode(new DisplayMode(1000, 700));
-		Display.setTitle("GLCraft");
+		Display.setDisplayMode(new DisplayMode(1000,700));
 		Display.create(new PixelFormat(8,8,8));
 		
 		gameLoop = new GameLoop();
@@ -118,7 +117,7 @@ public class GLCraft extends Screen{
 	
 	@Override
 	public void init() {
-		Constants.gatherSystemInfo();
+		Constants.getherSystemInfo();
 
 		TexturePackManager.initTexturePacks();
 		

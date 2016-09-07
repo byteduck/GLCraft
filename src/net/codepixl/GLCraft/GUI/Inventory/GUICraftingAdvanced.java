@@ -75,8 +75,8 @@ public class GUICraftingAdvanced extends GUIScreen{
 	}
 	
 	@Override
-	public void input(int xof, int yof){
-		super.input(xof,yof);
+	public void input(){
+		super.input();
 		GUISlot hoveredSlot = getHoveredSlot();
 		if(hoveredSlot != null){
 			while(Mouse.next()){
