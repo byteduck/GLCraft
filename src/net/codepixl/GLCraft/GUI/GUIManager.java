@@ -92,7 +92,7 @@ public class GUIManager {
 
 	public void input() {
 		if (GUIOpen)
-			currentGUI.input();
+			currentGUI.input(0,0);
 	}
 
 	public boolean mouseShouldBeGrabbed() {

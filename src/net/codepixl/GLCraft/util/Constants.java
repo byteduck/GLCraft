@@ -40,10 +40,10 @@ public class Constants {
 			"java.ext.dirs", "sun.boot.class.path", "java.vendor", "file.separator", "java.vendor.url.bug",
 			"sun.cpu.endian", "sun.io.unicode.encoding", "sun.font.fontmanager", "sun.desktop", "sun.cpu.isalist"};
 
-	public static void getherSystemInfo() {
+	public static void gatherSystemInfo() {
 
 		Arrays.sort(SystemPropertyName);
-		System.out.println("Gethering System Info...\n");
+		System.out.println("Gathering System Info...\n");
 		for (int i = 0; i < SystemPropertyName.length; i++) {
 			SystemProperty[i] = System.getProperty(SystemPropertyName[i]);
 			System.out.println("	" + SystemPropertyName[i] + " = " + SystemProperty[i]);
@@ -88,6 +88,10 @@ public class Constants {
 	public static float randFloat(float min, float max) {
 		float randomNum = rand.nextFloat() * (max - min) + min;
 		return randomNum;
+	}
+	
+	public static void initConstants(){
+		
 	}
 
 }
