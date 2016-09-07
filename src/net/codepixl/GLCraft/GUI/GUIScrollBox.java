@@ -49,7 +49,7 @@ public class GUIScrollBox extends GUIScreen{
         GL11.glEnd();
         
         GL11.glColorMask(true, true, true, true);
-        GL11.glDepthMask(false);
+        GL11.glDepthMask(true);
         GL11.glStencilMask(0x00);
         GL11.glStencilFunc(GL11.GL_EQUAL, 1, 0xFF);
         
