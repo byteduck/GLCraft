@@ -76,7 +76,7 @@ public class GUIManager {
 
 	public void render() {
 		if (GUIOpen)
-			currentGUI.render();
+			currentGUI.renderMain();
 	}
 
 	public void update() {

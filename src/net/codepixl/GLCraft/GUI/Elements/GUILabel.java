@@ -45,7 +45,6 @@ public class GUILabel extends GUIScreen{
 	@Override
 	public void render(){
 		GL11.glPushMatrix();
-		GL11.glTranslatef(x, y, 0);
 		GL11.glScalef(size, size, 0);
 		int width = Constants.FONT.getWidth(text);
 		int height = Constants.FONT.getHeight(text);
