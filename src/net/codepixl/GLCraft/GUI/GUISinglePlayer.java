@@ -13,16 +13,15 @@ import java.util.concurrent.Callable;
 
 import javax.swing.JOptionPane;
 
-import org.lwjgl.input.Keyboard;
-
 import net.codepixl.GLCraft.GUI.Elements.GUIButton;
 import net.codepixl.GLCraft.GUI.Elements.GUILabel;
 import net.codepixl.GLCraft.GUI.Elements.GUILabel.Alignment;
+import net.codepixl.GLCraft.GUI.Elements.GUIScrollBox;
+import net.codepixl.GLCraft.GUI.Elements.GUITextBox;
 import net.codepixl.GLCraft.render.TextureManager;
 import net.codepixl.GLCraft.util.Constants;
 import net.codepixl.GLCraft.util.Spritesheet;
 import net.codepixl.GLCraft.util.data.saves.Save;
-import net.codepixl.GLCraft.util.data.saves.SaveLoadWindow;
 import net.codepixl.GLCraft.util.data.saves.SaveManager;
 import net.codepixl.GLCraft.world.tile.Tile;
 
@@ -33,17 +32,19 @@ public class GUISinglePlayer extends GUIScreen{
 	private static final int NEWWORLDY = (int) (Constants.HEIGHT*0.8);
 	private static final int LOADWORLDX = (int) (Constants.WIDTH*0.7);
 	private static final int LOADWORLDY = (int) (Constants.HEIGHT*0.8);
+	private static final int TEXTBOXY = (int) (Constants.HEIGHT*0.9);
 	
 	private GUIButton newWorld, loadWorld;
 	private GUILabel title;
 	private GUISave selectedSave;
 	private GUIScrollBox scrollBox;
+	private GUITextBox textBox;
 	
 	public GUISinglePlayer(){
 		newWorld = new GUIButton("New World", NEWWORLDX, NEWWORLDY, new Callable<Void>() {
 			@Override
 			public Void call() throws Exception {
-				String name = JOptionPane.showInputDialog("World Name:", "GLCraft");
+				String name = textBox.getText();
 				if(name == null || name.trim().equals("")){}else{
 					Constants.setState(Constants.GAME);
 					Constants.world.getWorldManager().createWorld(name);
@@ -80,10 +81,15 @@ public class GUISinglePlayer extends GUIScreen{
 		scrollBox.width = Constants.WIDTH-200;
 		scrollBox.height = (int) (Constants.HEIGHT*0.75f-scrollBox.y);
 		
+		final String tbp = "   Enter New World Name   ";
+		int tbtwidth = Constants.FONT.getWidth(tbp);
+		textBox = new GUITextBox(MIDDLE-(tbtwidth+20)/2, TEXTBOXY, tbtwidth, tbp);
+		
 		addElement(newWorld);
 		addElement(loadWorld);
 		addElement(title);
 		addElement(scrollBox);
+		addElement(textBox);
 		
 		try {
 			Save[] saves = SaveManager.getSaves();
@@ -140,6 +146,10 @@ public class GUISinglePlayer extends GUIScreen{
 			loadWorld.setEnabled(true);
 		selectedSave = s;
 		selectedSave.selected = true;
+	}
+
+	public void loadSave(GUISave guiSave) {
+		loadWorld.invokeClick();
 	}
 	
 }

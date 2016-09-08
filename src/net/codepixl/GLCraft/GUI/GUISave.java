@@ -64,7 +64,10 @@ public class GUISave extends GUIScreen{
 			while(Mouse.next()){
 				if(Mouse.getEventButtonState()){
 					if(Mouse.isButtonDown(0)){
-						pgui.setSelectedSave(this);
+						if(!selected)
+							pgui.setSelectedSave(this);
+						else
+							pgui.loadSave(this);
 					}
 				}
 			}

@@ -178,4 +178,13 @@ public class GUIButton extends GUIScreen{
 		return this.enabled;
 	}
 	
+	public void invokeClick(){
+		try {
+			this.action.call();
+		} catch (Exception e) {
+			System.err.println("A button with text "+this.text+" tried to call a callable but failed. Stacktrace:");
+			e.printStackTrace();
+		}
+	}
+	
 }

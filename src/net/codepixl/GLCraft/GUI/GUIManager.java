@@ -6,8 +6,10 @@ import static org.lwjgl.opengl.GL11.glVertex2f;
 
 import java.util.HashMap;
 
+import org.lwjgl.input.Keyboard;
 import org.lwjgl.opengl.GL11;
 
+import net.codepixl.GLCraft.GUI.Elements.GUITextBox;
 import net.codepixl.GLCraft.render.TextureManager;
 
 public class GUIManager {
@@ -17,6 +19,7 @@ public class GUIManager {
 	private HashMap<String,GUIScreen> staticGUIs = new HashMap<String,GUIScreen>();
 	private static GUIManager mainManager;
 	private String currentGUIName = "nogui";
+	private GUITextBox focusedTextBox;
 
 	public GUIManager(){
 		initTextures();
@@ -70,7 +73,7 @@ public class GUIManager {
 		staticGUIs.put(guiName, gui);
 	}
 
-	public void closeGUI() {
+	public void closeGUI(){
 		GUIOpen = false;
 		currentGUI = null;
 		currentGUIName = "nogui";
@@ -85,17 +88,33 @@ public class GUIManager {
 			currentGUI.renderMain();
 	}
 
-	public void update() {
+	public void update(){
 		if (GUIOpen)
 			currentGUI.update();
 	}
 
-	public void input() {
+	public void input(){
 		if (GUIOpen)
 			currentGUI.input(0,0);
+		if(focusedTextBox != null){
+			Keyboard.enableRepeatEvents(true);
+			while(Keyboard.next()){
+				if(Keyboard.getEventKeyState()){
+					char c = Keyboard.getEventCharacter();
+					int k = Keyboard.getEventKey();
+					if(k == Keyboard.KEY_ESCAPE || k == Keyboard.KEY_RETURN){
+						this.focusedTextBox.setFocused(false);
+						this.focusedTextBox = null;
+					}else{
+						this.focusedTextBox.textInput(k,c);
+					}
+				}
+			}
+			Keyboard.enableRepeatEvents(false);
+		}
 	}
 
-	public boolean mouseShouldBeGrabbed() {
+	public boolean mouseShouldBeGrabbed(){
 		if(GUIOpen){
 			return currentGUI.mouseGrabbed;
 		}else{
@@ -111,7 +130,18 @@ public class GUIManager {
 		}
 	}
 
-	public String getCurrentGUIName() {
+	public String getCurrentGUIName(){
 		return currentGUIName;
+	}
+
+	public void setFocusedTextBox(GUITextBox textBox){
+		this.focusedTextBox = textBox;
+		textBox.setFocused(true);
+	}
+	
+	public void unfocusTextBox(){
+		if(this.focusedTextBox != null)
+			this.focusedTextBox.setFocused(false);
+		this.focusedTextBox = null;
 	}
 }

@@ -1,4 +1,4 @@
-package net.codepixl.GLCraft.GUI;
+package net.codepixl.GLCraft.GUI.Elements;
 
 import static org.lwjgl.opengl.GL11.GL_TEXTURE_2D;
 import static org.lwjgl.opengl.GL11.glDisable;
@@ -10,6 +10,8 @@ import java.util.Iterator;
 import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.GL11;
 
+import net.codepixl.GLCraft.GUI.GUIScreen;
+import net.codepixl.GLCraft.render.util.Tesselator;
 import net.codepixl.GLCraft.util.Constants;
 
 public class GUIScrollBox extends GUIScreen{
@@ -46,27 +48,9 @@ public class GUIScrollBox extends GUIScreen{
 	
 	@Override
 	public void render(){
-		glDisable(GL_TEXTURE_2D);
-		GL11.glEnable(GL11.GL_STENCIL_TEST);
-		GL11.glColorMask(false, false, false, false);
-		GL11.glDepthMask(false);
-		GL11.glClearStencil(0);
-		GL11.glStencilFunc(GL11.GL_NEVER, 1, 0xFF);  //Always fail the stencil test
-		GL11.glStencilOp(GL11.GL_REPLACE, GL11.GL_KEEP, GL11.GL_KEEP);   //Set the pixels which failed to 1
-		GL11.glStencilMask(0xFF);
-		GL11.glClear(GL11.GL_STENCIL_BUFFER_BIT);
-        
-        GL11.glBegin(GL11.GL_QUADS);
-        glVertex2f(0,0);
-		glVertex2f(0,height);
-		glVertex2f(width,height);
-		glVertex2f(width,0);
-        GL11.glEnd();
-        
-        GL11.glColorMask(true, true, true, true);
-        GL11.glDepthMask(true);
-        GL11.glStencilMask(0x00);
-        GL11.glStencilFunc(GL11.GL_EQUAL, 1, 0xFF);
+		GL11.glPushMatrix();
+		
+        Tesselator.stencilArea(0, 0, width, height);
         
         GL11.glTranslatef(0, -scrollY, 0);
         
@@ -78,14 +62,27 @@ public class GUIScrollBox extends GUIScreen{
         GL11.glTranslatef(0, scrollY, 0);
         
         GL11.glDisable(GL11.GL_TEXTURE_2D);
-        GL11.glBegin(GL11.GL_QUADS);
-        	glVertex2f(width-20, barY);
-        	glVertex2f(width-20, barY+40);
-        	glVertex2f(width, barY+40);
-        	glVertex2f(width, barY);
+        
+        if(currentY > height){
+	        GL11.glBegin(GL11.GL_QUADS);
+	        	glVertex2f(width-21, barY);
+	        	glVertex2f(width-21, barY+40);
+	        	glVertex2f(width-1, barY+40);
+	        	glVertex2f(width-1, barY);
+	        GL11.glEnd();
+	        
+        }
+        
+        GL11.glBegin(GL11.GL_LINES);
+        glVertex2f(width-21,0);
+        glVertex2f(width-21,height);
         GL11.glEnd();
         
-        GL11.glDisable(GL11.GL_STENCIL_TEST);
+        GL11.glEnable(GL11.GL_TEXTURE_2D);
+        
+        Tesselator.stencilFinish();
+        
+        GL11.glPopMatrix();
 	}
 	
 	@Override
@@ -134,15 +131,17 @@ public class GUIScrollBox extends GUIScreen{
 	
 	@Override
 	public void input(int xof, int yof){
-        scrollBarUpdate(xof+x, yof+y);
+		if(currentY > height)
+        	scrollBarUpdate(xof+x, yof+y);
+        
 		if(testMouse(xof, yof)){
 			Iterator<GUIScreen> i = items.iterator();
 	        while(i.hasNext()){
 	        	i.next().input(xof+x,yof+y-scrollY);
 	        }
 	        
-	        if(Mouse.hasWheel()){
-	        	barY+=Mouse.getDWheel();
+	        if(Mouse.hasWheel() && currentY > height){
+	        	barY-=Mouse.getDWheel();
 	        	if(barY<0)
 	        		barY=0;
 	        	else if(barY>height-40)

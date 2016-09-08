@@ -295,6 +295,14 @@ public class Shape {
 		glVertex2f(x + size, y + size);
 		glVertex2f(x + size, y);
 	}
+	
+	public static void createTexturelessRect(float x, float y, float width, float height, Color4f color){
+		glColor4f(color.r, color.g, color.b, color.a);
+		glVertex2f(x, y);
+		glVertex2f(x, y + height);
+		glVertex2f(x + width, y + height);
+		glVertex2f(x + width, y);
+	}
 
 	public static void createCenteredSquare(float x, float y, Color4f color, float[] texCoords, float size) {
 		size = size / 2f;
@@ -346,6 +354,7 @@ public class Shape {
 		glTexCoord2f(texCoords[0] + currentSpritesheet.uniformSize(), texCoords[1]);
 		glVertex3f(x, y, z);
 	}
+	
 	public static void createSprite(float x, float y, float z, Color4f color, float[] texCoords, float size){ //one sided plane
 		glColor4f(color.r, color.g, color.b, color.a);
 		glTexCoord2f(texCoords[0], texCoords[1]);

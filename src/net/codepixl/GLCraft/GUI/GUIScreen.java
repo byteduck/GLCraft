@@ -30,6 +30,9 @@ public class GUIScreen{
 		GL11.glPopMatrix();
 	}
 	
+	/**
+	 * IMPORTANT: Once this method is called, glTranslate has already been called with this GUIScreen's x and y position.
+	 */
 	public void render(){
 		
 	}
@@ -45,6 +48,19 @@ public class GUIScreen{
 		if(mouseY <= y+height && mouseY >= y){
 			if(mouseX <= x+width && mouseX >= x){
 				return true;
+			}
+		}
+		return false;
+	}
+	
+	public boolean testClick(int xof, int yof, int button){
+		if(testMouse(xof,yof)){
+			while(Mouse.next()){
+				if(Mouse.getEventButtonState()){
+					if(Mouse.isButtonDown(button)){
+						return true;
+					}
+				}
 			}
 		}
 		return false;
