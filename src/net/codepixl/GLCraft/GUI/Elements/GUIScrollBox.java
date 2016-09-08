@@ -39,6 +39,11 @@ public class GUIScrollBox extends GUIScreen{
 		return ret;
 	}
 	
+	public void clearItems(){
+		items.clear();
+		currentY = spacing;
+	}
+	
 	public boolean removeItem(int i){
 		GUIScreen ret = items.remove(i);
 		if(ret != null)

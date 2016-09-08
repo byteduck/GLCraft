@@ -43,7 +43,12 @@ public class SaveManager {
 	public static String formatV0 = "GLCWorldv0";
 	public static String currentFormat = "GLCWorldv1";
 	
-	public static void saveWorld(WorldManager tworldManager, String tname, boolean tquit){
+	public static boolean saveWorld(WorldManager tworldManager, String tname, boolean tquit){
+		for(char c : tname.toCharArray()){
+			if(!Character.isLetterOrDigit(c))
+				return false;
+		}
+		
     	System.out.println("Saving world...");
 		final WorldManager worldManager = tworldManager;
 		final String name = tname;
@@ -117,6 +122,7 @@ public class SaveManager {
 		};
 		
 		new Thread(r).start();
+		return true;
 	}
 
 	public static boolean loadWorld(WorldManager worldManager, String name) {

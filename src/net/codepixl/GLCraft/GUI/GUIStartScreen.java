@@ -33,9 +33,10 @@ public class GUIStartScreen extends GUIScreen{
 	
 	private GUIButton startButton, pluginManagerButton, quitButton, bugButton, texturepackButton, multiplayerButton;
 	private GUILabel title;
-	private float[][][] bgTexCoords;
 
 	public GUIStartScreen() {
+		setDrawStoneBackground(true);
+		
 		startButton = new GUIButton("Singleplayer", MIDDLE, MIDDLEY-GUIButton.BTNHEIGHT*2-20, new Callable<Void>() {
 			@Override
 			public Void call() throws Exception {
@@ -101,49 +102,6 @@ public class GUIStartScreen extends GUIScreen{
 		this.addElement(bugButton);
 		this.addElement(texturepackButton);
 		this.addElement(multiplayerButton);
-	}
-	
-	@Override
-	public void onOpen(){
-		int howManyWide = (Constants.WIDTH/64)+1;
-		int howManyTall = (Constants.HEIGHT/64)+1;
-		bgTexCoords = new float[howManyWide][howManyTall][2];
-		for(int x = 0; x < howManyWide; x++){
-			for(int y = 0; y < howManyTall; y++){
-				int rand = Constants.randInt(0, 25);
-				switch(rand){
-				case 0:
-					bgTexCoords[x][y] = TextureManager.tile(Tile.CoalOre);
-					break;
-				case 1:
-					bgTexCoords[x][y] = TextureManager.tile(Tile.GoldOre);
-					break;
-				case 2:
-					bgTexCoords[x][y] = TextureManager.tile(Tile.IronOre);
-					break;
-				default:
-					bgTexCoords[x][y] = TextureManager.tile(Tile.Stone);
-				}
-			}
-		}
-	}
-
-	@Override
-	public void drawBG() {
-		try{
-			Spritesheet.atlas.bind();
-			int howManyWide = (Constants.WIDTH/64)+1;
-			int howManyTall = (Constants.HEIGHT/64)+1;
-			for(int x = 0; x < howManyWide*64; x+=64){
-				for(int y = 0; y < howManyTall*64; y+=64){
-					glBegin(GL_QUADS);
-					Shape.createSquare(x, y, Color4f.WHITE, bgTexCoords[x/64][y/64], 64);
-					glEnd();
-				}
-			}
-		}catch(NullPointerException e){
-			//This happens if we're in the middle of changing texturepacks
-		}
 	}
 	
 	@Override

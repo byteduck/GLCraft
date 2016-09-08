@@ -530,9 +530,12 @@ public class WorldManager {
 		}
 	}
 
-	public static void saveWorld(boolean quit) {
+	public static boolean saveWorld(boolean quit) {
 		if(!cw.isSaving() && cw.doneGenerating)
-			SaveManager.saveWorld(cw, cw.worldName, quit);
+			return SaveManager.saveWorld(cw, cw.worldName, quit);
+		else if(quit)
+			System.exit(0);
+		return true;
 	}
 
 	public int getMetaAtPos(float x, float y, float z) {

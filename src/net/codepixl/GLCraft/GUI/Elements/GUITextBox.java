@@ -133,10 +133,9 @@ public class GUITextBox extends GUIScreen{
 	
 	public void textInput(int k, char c){
 		if(c == '\b'){
-			if(text.length() > 1){
+			if(index > 1){
 				text = text.substring(0, index-1) + text.substring(index, text.length());
-				if(index > 0)
-					index--;
+				index--;
 			}else{
 				text = "";
 				index = 0;

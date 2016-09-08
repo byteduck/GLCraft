@@ -31,7 +31,7 @@ public class GUIPauseMenu extends GUIScreen{
 			@Override
 			public Void call() throws Exception {
 				Mouse.setGrabbed(true);
-				GUIManager.getMainManager().closeGUI();
+				GUIManager.getMainManager().closeGUI(true);
 				return null;
 			}
 		});

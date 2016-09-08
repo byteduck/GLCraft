@@ -170,8 +170,7 @@ public class CentralManager extends Screen{
 				if(Keyboard.isKeyDown(Keyboard.KEY_ESCAPE)){
 					GUIScreen g = guiManager.getCurrentGUI();
 					if(guiManager.isGUIOpen() && g.canBeExited()){
-						guiManager.closeGUI();
-						g.onClose();
+						guiManager.closeGUI(true);
 						Mouse.setGrabbed(true);
 					}else if(guiManager.getCurrentGUIName().equals("nogui")){
 						guiManager.showGUI("pauseMenu");
@@ -179,7 +178,7 @@ public class CentralManager extends Screen{
 				}
 				if(Keyboard.isKeyDown(Keyboard.KEY_E)){
 					if(guiManager.getCurrentGUIName() == "crafting" || guiManager.getCurrentGUIName() == "adv_crafting"){
-						guiManager.closeGUI();
+						guiManager.closeGUI(true);
 						Mouse.setGrabbed(true);
 					}else{
 						guiManager.showGUI("crafting");

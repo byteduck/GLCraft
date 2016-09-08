@@ -75,10 +75,13 @@ public class GUIManager {
 		staticGUIs.put(guiName, gui);
 	}
 
-	public void closeGUI(){
+	public void closeGUI(boolean onClose){
+		GUIScreen tmp = currentGUI;
 		GUIOpen = false;
 		currentGUI = null;
 		currentGUIName = "nogui";
+		if(tmp != null && onClose)
+			tmp.onClose();
 	}
 	
 	public GUIScreen getCurrentGUI(){

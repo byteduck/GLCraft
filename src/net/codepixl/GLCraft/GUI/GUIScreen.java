@@ -1,24 +1,40 @@
 package net.codepixl.GLCraft.GUI;
 
+import static org.lwjgl.opengl.GL11.GL_QUADS;
+import static org.lwjgl.opengl.GL11.glBegin;
+import static org.lwjgl.opengl.GL11.glEnd;
+
 import java.util.ArrayList;
 import java.util.Iterator;
 
 import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.GL11;
 
+import com.nishu.utils.Color4f;
+
+import net.codepixl.GLCraft.render.Shape;
+import net.codepixl.GLCraft.render.TextureManager;
 import net.codepixl.GLCraft.util.Constants;
+import net.codepixl.GLCraft.util.Spritesheet;
+import net.codepixl.GLCraft.world.tile.Tile;
 
 public class GUIScreen{
 	public int x = 0;
 	public int y = 0;
-	public int width = 0;
-	public int height = 0;
+	public int width = Constants.WIDTH;
+	public int height = Constants.HEIGHT;
 	public boolean enabled = true;
 	private ArrayList<GUIScreen> elements = new ArrayList<GUIScreen>();
 	public boolean mouseGrabbed = false;
 	public boolean playerInput = false;
 	public boolean visible = true;
-	
+	private float[][][] bgTexCoords;
+	private boolean drawStoneBackground = false;
+
+	public void setDrawStoneBackground(boolean drawStoneBackground) {
+		this.drawStoneBackground = drawStoneBackground;
+	}
+
 	public void renderMain(){
 		GL11.glPushMatrix();
 		GL11.glTranslatef(x, y, 0);
@@ -94,8 +110,28 @@ public class GUIScreen{
 		this.elements.add(element);
 	}
 	
+	public void addElements(GUIScreen...guiScreens){
+		for(GUIScreen s : guiScreens)
+			this.elements.add(s);
+	}
+	
 	public void drawBG() {
-		
+		if(drawStoneBackground){
+			try{
+				Spritesheet.atlas.bind();
+				int howManyWide = (width/64)+1;
+				int howManyTall = (height/64)+1;
+				for(int x = 0; x < howManyWide*64; x+=64){
+					for(int y = 0; y < howManyTall*64; y+=64){
+						glBegin(GL_QUADS);
+						Shape.createSquare(x, y, Color4f.WHITE, bgTexCoords[x/64][y/64], 64);
+						glEnd();
+					}
+				}
+			}catch(NullPointerException e){
+				//This happens if we're in the middle of changing texturepacks
+			}
+		}
 	}
 	
 	public void onClose() {
@@ -103,9 +139,34 @@ public class GUIScreen{
 	}
 	
 	public void onOpen() {
-		
+		if(drawStoneBackground)
+			generateRandomTiles();
 	}
 	
+	private void generateRandomTiles() {
+		int howManyWide = (Constants.WIDTH/64)+1;
+		int howManyTall = (Constants.HEIGHT/64)+1;
+		bgTexCoords = new float[howManyWide][howManyTall][2];
+		for(int x = 0; x < howManyWide; x++){
+			for(int y = 0; y < howManyTall; y++){
+				int rand = Constants.randInt(0, 25);
+				switch(rand){
+				case 0:
+					bgTexCoords[x][y] = TextureManager.tile(Tile.CoalOre);
+					break;
+				case 1:
+					bgTexCoords[x][y] = TextureManager.tile(Tile.GoldOre);
+					break;
+				case 2:
+					bgTexCoords[x][y] = TextureManager.tile(Tile.IronOre);
+					break;
+				default:
+					bgTexCoords[x][y] = TextureManager.tile(Tile.Stone);
+				}
+			}
+		}
+	}
+
 	public boolean canBeExited() {
 		return true;
 	}

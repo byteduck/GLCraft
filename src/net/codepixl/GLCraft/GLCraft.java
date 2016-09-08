@@ -71,6 +71,7 @@ import net.codepixl.GLCraft.util.DebugTimer;
 import net.codepixl.GLCraft.util.logging.CrashHandler;
 import net.codepixl.GLCraft.util.logging.TeeOutputStream;
 import net.codepixl.GLCraft.world.CentralManager;
+import net.codepixl.GLCraft.world.WorldManager;
 import net.codepixl.GLCraft.world.item.Item;
 import net.codepixl.GLCraft.world.tile.Tile;
 
@@ -128,6 +129,8 @@ public class GLCraft extends Screen{
 			Time.setDelta((Time.getTime()-ltime)/(double)Time.SECOND);
 			ltime = Time.getTime();
 		}
+		
+		WorldManager.saveWorld(true);
 		
 	}
 	
