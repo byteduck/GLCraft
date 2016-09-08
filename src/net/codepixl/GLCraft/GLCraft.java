@@ -58,6 +58,7 @@ import org.newdawn.slick.opengl.TextureImpl;
 
 import com.nishu.utils.GameLoop;
 import com.nishu.utils.Screen;
+import com.nishu.utils.Time;
 import com.nishu.utils.Window;
 
 import net.codepixl.GLCraft.plugin.Plugin;
@@ -109,10 +110,23 @@ public class GLCraft extends Screen{
 		Display.setTitle("GLCraft");
 		Display.create(new PixelFormat(8,8,8));
 		
-		gameLoop = new GameLoop();
-		gameLoop.setScreen(this); //THIS IS WHEN INITGL AND INIT ARE CALLED
-		gameLoop.setDebugMode(false);
-		gameLoop.start(60);
+		initGL();
+		init();
+		long ltime = Time.getTime();
+		double secondCounter = 0;
+		while(!Display.isCloseRequested()){
+			update();
+			render();
+			Window.update();
+			Display.sync(60);
+			secondCounter+=Time.getDelta();
+			if(secondCounter > 1){
+				Constants.FPS = (int) (1d/Time.getDelta());
+				secondCounter = 0;
+			}
+			Time.setDelta((Time.getTime()-ltime)/(double)Time.SECOND);
+			ltime = Time.getTime();
+		}
 		
 	}
 	

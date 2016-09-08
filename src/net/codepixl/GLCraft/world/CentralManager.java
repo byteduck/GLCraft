@@ -356,7 +356,7 @@ public class CentralManager extends Screen{
 			EntityPlayer p = getEntityManager().getPlayer();
 			Constants.FONT.drawString(10,Constants.FONT.getLineHeight()+10, "X:"+(int)p.getX()+" Y:"+(int)p.getY()+" Z:"+(int)p.getZ());
 			Constants.FONT.drawString(10,Constants.FONT.getLineHeight()*2+10, "RotX:"+(int)p.getRot().x+" RotY:"+(int)p.getRot().y+" RotZ:"+(int)p.getRot().z);
-			Constants.FONT.drawString(10,Constants.FONT.getLineHeight()*3+10, "FPS:"+GameLoop.getFPS());
+			Constants.FONT.drawString(10,Constants.FONT.getLineHeight()*3+10, "FPS:"+Constants.FPS);
 			Constants.FONT.drawString(10,Constants.FONT.getLineHeight()*4+10, "Entities:"+worldManager.entityManager.totalEntities());
 			Iterator<DebugTimer> i = DebugTimer.getTimers().iterator();
 			int ind = 5;

@@ -39,6 +39,7 @@ public class Constants {
 			"java.specification.vendor", "user.language", "awt.toolkit", "java.vm.info", "java.version",
 			"java.ext.dirs", "sun.boot.class.path", "java.vendor", "file.separator", "java.vendor.url.bug",
 			"sun.cpu.endian", "sun.io.unicode.encoding", "sun.font.fontmanager", "sun.desktop", "sun.cpu.isalist"};
+	public static int FPS = 0;
 
 	public static void gatherSystemInfo() {
 
