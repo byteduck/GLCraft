@@ -43,6 +43,7 @@ public class GUIManager {
 
 	public void showGUI(GUIScreen gui) {
 		currentGUI = gui;
+		gui.onOpen();
 		GUIOpen = true;
 		currentGUIName = "othergui";
 	}
@@ -50,6 +51,7 @@ public class GUIManager {
 	public boolean showGUI(String guiName){
 		if(staticGUIs.containsKey(guiName)){
 			currentGUI = staticGUIs.get(guiName);
+			staticGUIs.get(guiName).onOpen();
 			GUIOpen = true;
 			currentGUIName = guiName;
 			return true;

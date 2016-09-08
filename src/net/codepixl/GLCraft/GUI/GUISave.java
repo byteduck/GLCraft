@@ -21,13 +21,10 @@ public class GUISave extends GUIScreen{
 		this.pgui = pgui;
 		this.save = s;
 		
-		this.dispName = new GUILabel(s.dispName);
-		this.dispName.x = 10;
+		this.dispName = new GUILabel(10, 0, s.dispName);
 		
-		this.name = new GUILabel("(Saved in '"+s.name+"')");
+		this.name = new GUILabel(10, (int) (100-(Constants.FONT.getHeight()+10)), "(Saved in '"+s.name+"')");
 		this.name.size = 1f;
-		this.name.y = (int) (100-(Constants.FONT.getHeight()*this.name.size+10));
-		this.name.x = 10;
 		
 		this.width = 100;
 		this.height = 100;

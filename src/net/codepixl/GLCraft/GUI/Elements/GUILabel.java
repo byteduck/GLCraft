@@ -28,14 +28,18 @@ public class GUILabel extends GUIScreen{
 	public Alignment alignment = LBLALIGNMENT;
 	public float size = LBLSIZE;
 	
-	public GUILabel(String text){
+	public GUILabel(int x, int y, String text){
+		this.x = x;
+		this.y = y;
 		this.text = text;
 	}
 	
-	public GUILabel(String text, Color4f textColor, Alignment alignment, float size){
+	public GUILabel(int x, int y, String text, Color4f textColor, Alignment alignment, float size){
+		this.x = x;
+		this.y = y;
 		this.text = text;
 		this.textColor = textColor;
-		this.LBLSIZE = size;
+		this.size = size;
 	}
 	
 	public enum Alignment{

@@ -61,6 +61,7 @@ import com.nishu.utils.Screen;
 import com.nishu.utils.Time;
 import com.nishu.utils.Window;
 
+import net.codepixl.GLCraft.GUI.GUIManager;
 import net.codepixl.GLCraft.plugin.Plugin;
 import net.codepixl.GLCraft.plugin.PluginManager;
 import net.codepixl.GLCraft.render.TextureManager;
@@ -152,6 +153,7 @@ public class GLCraft extends Screen{
 			pluginManager.addDevPlugin(devPlugin);
 		}
 		TextureManager.generateAtlas(false);
+		GUIManager.getMainManager().showGUI("startScreen");
 	}
 	
 	private void initCamera(){

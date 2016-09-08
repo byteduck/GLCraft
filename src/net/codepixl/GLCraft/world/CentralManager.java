@@ -142,7 +142,6 @@ public class CentralManager extends Screen{
 		guiManager.addGUI(new GUIServer(), "server");
 		guiManager.addGUI(new GUIPauseMenu(), "pauseMenu");
 		guiManager.addGUI(new GUISinglePlayer(), "singleplayer");
-		guiManager.showGUI("startScreen");
 	}
 
 	@Override

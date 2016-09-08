@@ -70,11 +70,9 @@ public class GUISinglePlayer extends GUIScreen{
 		});
 		loadWorld.setEnabled(false);
 		
-		title = new GUILabel("Singleplayer");
+		title = new GUILabel(MIDDLE, 10, "Singleplayer");
 		title.size = 2.0f;
 		title.alignment = Alignment.CENTER;
-		title.x = MIDDLE;
-		title.y = 10;
 		
 		scrollBox = new GUIScrollBox(10);
 		scrollBox.x = 100;

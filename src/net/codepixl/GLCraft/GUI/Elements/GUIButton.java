@@ -30,7 +30,7 @@ public class GUIButton extends GUIScreen{
 	public static final Color4f BTNHOVERCOLOR = new Color4f(0.25f, 0.25f, 0.25f, 1f);
 	public static final Color4f BTNPRESSEDCOLOR = new Color4f(0.35f, 0.35f, 0.35f, 1f);
 	public static final Color4f BTNTEXTCOLOR = new Color4f(1f, 1f, 1f, 1f);
-	public static final Color4f BTNDISABLEDCOLOR = new Color4f(0.8f,0.8f,0.8f,1f);
+	public static final Color4f BTNDISABLEDCOLOR = new Color4f(0.5f,0.5f,0.5f,1f);
 	
 	private String text;
 	private int x,y,padding;

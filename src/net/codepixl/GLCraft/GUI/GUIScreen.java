@@ -102,6 +102,10 @@ public class GUIScreen{
 		
 	}
 	
+	public void onOpen() {
+		
+	}
+	
 	public boolean canBeExited() {
 		return true;
 	}
