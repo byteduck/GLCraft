@@ -18,5 +18,6 @@
 	<classpathentry kind="lib" path="res/jar/lwjgl_util.jar"/>
 	<classpathentry kind="lib" path="res/jar/GLUtils.jar"/>
 	<classpathentry kind="lib" path="res/jar/json-20151123.jar"/>
+	<classpathentry kind="lib" path="res/jar/guava-19.0.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
