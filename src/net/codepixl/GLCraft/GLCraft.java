@@ -75,7 +75,6 @@ import net.codepixl.GLCraft.world.tile.Tile;
 
 public class GLCraft extends Screen{
 	private CentralManager world;
-	private GameLoop gameLoop;
 	private PluginManager pluginManager;
 	private static GLCraft glcraft;
 	public static boolean isDevEnvironment = false;

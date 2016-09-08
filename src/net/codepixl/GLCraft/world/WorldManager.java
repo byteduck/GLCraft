@@ -10,13 +10,10 @@ import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 
-import javax.swing.JOptionPane;
-
 import org.lwjgl.util.vector.Vector3f;
 
 import com.evilco.mc.nbt.stream.NbtInputStream;
 import com.evilco.mc.nbt.tag.TagCompound;
-import com.google.common.io.Files;
 import com.nishu.utils.Shader;
 import com.nishu.utils.ShaderProgram;
 import com.nishu.utils.Time;
@@ -274,7 +271,6 @@ public class WorldManager {
 	}
 	
 	public void saveChunks(String name) throws IOException{
-		Files.createParentDirs(new File("chunks/test.chunk"));
 		Iterator<Chunk> i = this.activeChunks.values().iterator();
 		int index = 0;
 		File f = new File(Constants.GLCRAFTDIR+"saves/"+name+"/chunks");

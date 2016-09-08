@@ -2,8 +2,6 @@
 <classpath>
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="src" path="res"/>
-	<classpathentry kind="lib" path="res/jar/JSplashScreen.jar"/>
-	<classpathentry kind="lib" path="res/jar/lwjgl_util.jar"/>
 	<classpathentry kind="lib" path="res/jar/lwjgl.jar">
 		<attributes>
 			<attribute name="org.eclipse.jdt.launching.CLASSPATH_ATTR_LIBRARY_PATH_ENTRY" value="GLCraft/res/natives"/>
@@ -12,15 +10,13 @@
 	<classpathentry kind="lib" path="res/jar/slick-util.jar"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry kind="lib" path="res/jar/commons-lang3-3.1.jar"/>
-	<classpathentry kind="lib" path="res/jar/guava-18.0.jar"/>
 	<classpathentry kind="lib" path="res/jar/nbt.jar"/>
-	<classpathentry kind="lib" path="res/jar/json-20151123.jar"/>
 	<classpathentry kind="lib" path="res/jar/zip4j_1.3.2.jar"/>
-	<classpathentry kind="lib" path="res/jar/jgoodies-common-1.8.0.jar"/>
-	<classpathentry kind="lib" path="res/jar/jgoodies-forms-1.8.0.jar"/>
 	<classpathentry kind="lib" path="res/jar/LibraryLWJGLOpenAL.jar"/>
 	<classpathentry kind="lib" path="res/jar/SoundSystem.jar"/>
 	<classpathentry kind="lib" path="res/jar/CodecWav.jar"/>
+	<classpathentry kind="lib" path="res/jar/lwjgl_util.jar"/>
 	<classpathentry kind="lib" path="res/jar/GLUtils.jar"/>
+	<classpathentry kind="lib" path="res/jar/json-20151123.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
