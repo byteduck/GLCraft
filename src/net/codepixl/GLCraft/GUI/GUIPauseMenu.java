@@ -5,6 +5,8 @@ import java.util.concurrent.Callable;
 import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.GL11;
 
+import com.sun.corba.se.impl.orbutil.closure.Constant;
+
 import net.codepixl.GLCraft.GUI.Elements.GUIButton;
 import net.codepixl.GLCraft.GUI.Elements.GUILabel;
 import net.codepixl.GLCraft.GUI.Elements.GUISlider;
@@ -22,7 +24,6 @@ public class GUIPauseMenu extends GUIScreen{
 	
 	private GUIButton backButton,quitButton,saveButton;
 	private GUITexture savingIcon;
-	private GUILabel fpsLabel;
 	private GUISlider fpsSlider;
 	
 	public GUIPauseMenu(){
@@ -56,19 +57,25 @@ public class GUIPauseMenu extends GUIScreen{
 		savingIcon = new GUITexture("misc.floppy", Constants.WIDTH-42, 10, 32);
 		savingIcon.visible = false;
 		
-		fpsLabel = new GUILabel("Max refresh rate");
-		fpsLabel.x = MIDDLE;
-		fpsLabel.y = FPSY;
-		fpsLabel.alignment = GUILabel.LBLALIGNMENT.CENTER;
-		
-		fpsSlider = new GUISlider(MIDDLE-(300/2), FPSSY, 300, 10, 120);
+		fpsSlider = new GUISlider("Max FPS",MIDDLE-(300/2), FPSSY, 300, 10, 121, new Callable<Void>(){
+			public Void call(){
+				int rate = fpsSlider.getVal();
+				if(rate > 120){
+					Constants.maxFPS = -1;
+				}else{
+					Constants.maxFPS = fpsSlider.getVal();
+				}
+				return null;
+			}
+		});
+		fpsSlider.setVal(Constants.maxFPS);
+		fpsSlider.maxlbl = "No limit";
 		
 		this.addElement(backButton);
 		this.addElement(quitButton);
 		this.addElement(saveButton);
 		this.addElement(savingIcon);
 		this.addElement(fpsSlider);
-		this.addElement(fpsLabel);
 	}
 	
 	@Override

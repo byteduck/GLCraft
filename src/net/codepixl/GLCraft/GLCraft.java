@@ -117,7 +117,8 @@ public class GLCraft extends Screen{
 			update();
 			render();
 			Window.update();
-			Display.sync(Constants.SyncRate);
+			if(Constants.maxFPS > 1)
+				Display.sync(Constants.maxFPS);
 			secondCounter+=Time.getDelta();
 			if(secondCounter > 1){
 				Constants.FPS = (int) (1d/Time.getDelta());

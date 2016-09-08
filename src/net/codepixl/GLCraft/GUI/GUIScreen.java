@@ -75,12 +75,14 @@ public class GUIScreen{
 			it.next().update();
 		}
 	}
+	
 	public void input(int xOffset, int yOffset){
 		if(!enabled)
 			return;
 		Iterator<GUIScreen> it = elements.iterator();
 		while(it.hasNext()){
-			it.next().input(xOffset+x, yOffset+y);
+			GUIScreen s = it.next();
+			s.input(xOffset, yOffset);
 		}
 	}
 	

@@ -1,7 +1,11 @@
 package net.codepixl.GLCraft.GUI.Elements;
 
+import java.util.concurrent.Callable;
+
 import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.GL11;
+import org.newdawn.slick.Color;
+import org.newdawn.slick.opengl.TextureImpl;
 
 import com.nishu.utils.Color4f;
 
@@ -11,40 +15,48 @@ import net.codepixl.GLCraft.util.Constants;
 
 public class GUISlider extends GUIScreen{
 	
-	private int LBLWIDTH;
 	private float val;
 	private int max;
 	private int min;
 	private boolean grabbed = false;
+	private Callable<Void> callback;
+	public String maxlbl = "";
+	public String lbl;
 	
-	public GUISlider(int x, int y, int length, int min, int max){
+	public GUISlider(String lbl, int x, int y, int length, int min, int max, Callable<Void> callback){
 		this.x = x;
 		this.y = y;
 		this.height = 20;
 		this.width = length;
-		this.setMin(min);
-		this.setMax(max);
+		this.min = min;
+		this.max = max;
 		this.val = min;
+		this.callback = callback;
+		this.lbl = lbl;
 	}
 	
 	@Override
 	public void render(){
 		GL11.glDisable(GL11.GL_TEXTURE_2D);
 		
+		GL11.glBegin(GL11.GL_QUADS);
+		Shape.createTexturelessRect(0, 0, width, height, Color4f.BLACK);
+		GL11.glEnd();
+		
 		GL11.glBegin(GL11.GL_LINE_LOOP);
-		GL11.glVertex2f(0, 0);
-		GL11.glVertex2f(0, height);
-		GL11.glVertex2f(width-LBLWIDTH-5, height);
-		GL11.glVertex2f(width-LBLWIDTH-5, 0);
+		Shape.createTexturelessRect(0, 0, width, height, Color4f.GRAY);
 		GL11.glEnd();
 		
 		GL11.glBegin(GL11.GL_QUADS);
-		Shape.createTexturelessSquare(((float)val/(float)max)*(width-height-LBLWIDTH-5), 0, Color4f.WHITE, height);
+		Shape.createTexturelessRect(((float)(val-min)/(float)(max-min))*(width-10), 0, 10f, height, Color4f.WHITE);
 		GL11.glEnd();
 		
 		GL11.glEnable(GL11.GL_TEXTURE_2D);
 		
-		Constants.FONT.drawString(width-LBLWIDTH, 0, Integer.toString((int) val));
+		String lblend = (!maxlbl.equals("") && val == max) ? maxlbl : Integer.toString((int) val);
+		String fulllbl = lbl+":"+lblend;
+		Constants.FONT.drawString(width/2-Constants.FONT.getWidth(fulllbl)/2, height/2-Constants.FONT.getHeight()/2, fulllbl, Color.gray);
+		TextureImpl.unbind();
 	}
 	
 	public int getVal(){
@@ -59,7 +71,7 @@ public class GUISlider extends GUIScreen{
 		int mouseY = Mouse.getY()+yof;
 		int mouseX = Mouse.getX()-xof;
 		mouseY = -mouseY+Constants.HEIGHT;
-		float barX = ((float)val/(float)max)*(width-height-LBLWIDTH);
+		float barX = ((float)val/(float)max)*(width-height);
 		if(mouseY <= height && mouseY >= 0){
 			if(mouseX <= barX+20 && mouseX >= barX){
 				if(Mouse.isButtonDown(0)){
@@ -75,6 +87,14 @@ public class GUISlider extends GUIScreen{
 	    		val=min;
 	    	else if(val>max)
 	    		val=max;
+			if(dx != 0){
+				try {
+					callback.call();
+				} catch (Exception e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
 			if(!Mouse.isButtonDown(0))
 				grabbed = false;
 		}
@@ -82,7 +102,7 @@ public class GUISlider extends GUIScreen{
 	
 	@Override
 	public void input(int xof, int yof){
-		sliderUpdate(xof, yof);
+		sliderUpdate(xof+x, yof+y);
 	}
 	
 	public float getMax() {
@@ -91,11 +111,6 @@ public class GUISlider extends GUIScreen{
 	
 	public void setMax(int max) {
 		this.max = max;
-		String tmp = "";
-		for(int i = 0; i < String.valueOf(max).length(); i++){
-			tmp+="0";
-		}
-		this.LBLWIDTH = Constants.FONT.getWidth(tmp);
 	}
 	
 	public float getMin() {
