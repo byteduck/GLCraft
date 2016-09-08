@@ -21,6 +21,7 @@ public class Constants {
 	public static final int GAME = 1;
 	public static final int SERVER = 2;
 	public static final String GLCRAFTDIR = getGamePath();
+	public static int SyncRate = 60;
 	public static int GAME_STATE = START_SCREEN;
 	public static CentralManager world;
 	public static int worldLength = CHUNKSIZE * viewDistance;

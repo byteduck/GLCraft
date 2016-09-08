@@ -7,6 +7,7 @@ import org.lwjgl.opengl.GL11;
 
 import net.codepixl.GLCraft.GUI.Elements.GUIButton;
 import net.codepixl.GLCraft.GUI.Elements.GUILabel;
+import net.codepixl.GLCraft.GUI.Elements.GUISlider;
 import net.codepixl.GLCraft.util.Constants;
 import net.codepixl.GLCraft.world.WorldManager;
 
@@ -15,10 +16,14 @@ public class GUIPauseMenu extends GUIScreen{
 	private static final int BACKY = (int) (Constants.HEIGHT*0.3);
 	private static final int SAVEY = (int) (Constants.HEIGHT*0.5);
 	private static final int QUITY = (int) (Constants.HEIGHT*0.7);
+	private static final int FPSY = (int) (Constants.HEIGHT*0.9);
+	private static final int FPSSY = (int) (Constants.HEIGHT*0.9)+Constants.FONT.getHeight()+10;
 	private static final int MIDDLE = Constants.WIDTH/2;
 	
 	private GUIButton backButton,quitButton,saveButton;
 	private GUITexture savingIcon;
+	private GUILabel fpsLabel;
+	private GUISlider fpsSlider;
 	
 	public GUIPauseMenu(){
 		backButton = new GUIButton("Back to game", MIDDLE, BACKY, new Callable<Void>(){
@@ -51,10 +56,19 @@ public class GUIPauseMenu extends GUIScreen{
 		savingIcon = new GUITexture("misc.floppy", Constants.WIDTH-42, 10, 32);
 		savingIcon.visible = false;
 		
+		fpsLabel = new GUILabel("Max refresh rate");
+		fpsLabel.x = MIDDLE;
+		fpsLabel.y = FPSY;
+		fpsLabel.alignment = GUILabel.LBLALIGNMENT.CENTER;
+		
+		fpsSlider = new GUISlider(MIDDLE-(300/2), FPSSY, 300, 10, 120);
+		
 		this.addElement(backButton);
 		this.addElement(quitButton);
 		this.addElement(saveButton);
 		this.addElement(savingIcon);
+		this.addElement(fpsSlider);
+		this.addElement(fpsLabel);
 	}
 	
 	@Override
