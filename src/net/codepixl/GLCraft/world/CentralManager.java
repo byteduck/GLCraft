@@ -230,11 +230,23 @@ public class CentralManager extends Screen{
 			renderClouds();
 			renderText();
 			renderInventory();
+			renderEtc();
 		}
 		render2D();
 		guiManager.render();
 		glDisable(GL_TEXTURE_2D);
 		DebugTimer.getTimer("total_render").end();
+	}
+
+	private void renderEtc() {
+		render2D();
+		if(worldManager.isSaving()){
+			Spritesheet.atlas.bind();
+			GL11.glEnable(GL11.GL_TEXTURE_2D);
+			GL11.glBegin(GL11.GL_QUADS);
+			Shape.createSquare(Constants.WIDTH-42, 10, Color4f.WHITE, TextureManager.texture("misc.floppy"), 32);
+			GL11.glEnd();
+		}
 	}
 
 	private int raycast(){
@@ -459,7 +471,7 @@ public class CentralManager extends Screen{
 		int HCENTER = Constants.HEIGHT/2;
 		glClearColor(0,0,0,1);
 		GL11.glClear(GL11.GL_COLOR_BUFFER_BIT);
-		String ltext = "GLCraft is generating the world...";
+		String ltext = "GLCraft is loading...";
 		Constants.FONT.drawString(CENTER-Constants.FONT.getWidth(ltext)/2,30, ltext);
 		Constants.FONT.drawString(CENTER-Constants.FONT.getWidth(line1)/2,HCENTER-Constants.FONT.getHeight(line1), line1);
 		Constants.FONT.drawString(CENTER-Constants.FONT.getWidth(line2)/2,HCENTER+Constants.FONT.getHeight(line2), line2);

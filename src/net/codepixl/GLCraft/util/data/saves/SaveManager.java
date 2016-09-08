@@ -43,65 +43,80 @@ public class SaveManager {
 	public static String formatV0 = "GLCWorldv0";
 	public static String currentFormat = "GLCWorldv1";
 	
-	public static void saveWorld(WorldManager worldManager, String name){
-		
-		//PLAYER SAVING
-		EntityPlayer p = worldManager.getEntityManager().getPlayer();
-		TagCompound compound = new TagCompound("Player");
-		TagList posList = new TagList("Pos");
-		posList.addTag(new TagFloat("",p.getPos().x));
-		posList.addTag(new TagFloat("",p.getPos().y));
-		posList.addTag(new TagFloat("",p.getPos().z));
-		TagList rotList = new TagList("Rot");
-		rotList.addTag(new TagFloat("",p.getRot().x));
-		rotList.addTag(new TagFloat("",p.getRot().y));
-		rotList.addTag(new TagFloat("",p.getRot().z));
-		TagList velList = new TagList("Vel");
-		velList.addTag(new TagFloat("",p.getVel().x));
-		velList.addTag(new TagFloat("",p.getVel().y));
-		velList.addTag(new TagFloat("",p.getVel().z));
-		TagLong timeTag = new TagLong("TimeAlive", p.timeAlive);
-		TagString typeTag = new TagString("type", EntityPlayer.class.getSimpleName());
-		compound.setTag(posList);
-		compound.setTag(rotList);
-		compound.setTag(velList);
-		compound.setTag(timeTag);
-		compound.setTag(typeTag);
-		TagList inventory = new TagList("Inventory");
-		for(int i = 0; i < p.getInventory().length; i++){
-			ItemStack stack = p.getInventory(i);
-			if(!stack.isNull()){
-				TagCompound slot = new TagCompound("");
-				slot.setTag(new TagInteger("slot",i));
-				slot.setTag(new TagByte("isItem",(byte) (stack.isItem() ? 1 : 0 )));
-				slot.setTag(new TagByte("id",stack.getId()));
-				slot.setTag(new TagByte("count",(byte)stack.count));
-				inventory.addTag(slot);
+	public static void saveWorld(WorldManager tworldManager, String tname, boolean tquit){
+    	System.out.println("Saving world...");
+		final WorldManager worldManager = tworldManager;
+		final String name = tname;
+		final boolean quit = tquit;
+		worldManager.setSaving(true);
+		Runnable r = new Runnable(){
+			@Override
+			public void run() {
+				// TODO Auto-generated method stub
+				//PLAYER SAVING
+				EntityPlayer p = worldManager.getEntityManager().getPlayer();
+				TagCompound compound = new TagCompound("Player");
+				TagList posList = new TagList("Pos");
+				posList.addTag(new TagFloat("",p.getPos().x));
+				posList.addTag(new TagFloat("",p.getPos().y));
+				posList.addTag(new TagFloat("",p.getPos().z));
+				TagList rotList = new TagList("Rot");
+				rotList.addTag(new TagFloat("",p.getRot().x));
+				rotList.addTag(new TagFloat("",p.getRot().y));
+				rotList.addTag(new TagFloat("",p.getRot().z));
+				TagList velList = new TagList("Vel");
+				velList.addTag(new TagFloat("",p.getVel().x));
+				velList.addTag(new TagFloat("",p.getVel().y));
+				velList.addTag(new TagFloat("",p.getVel().z));
+				TagLong timeTag = new TagLong("TimeAlive", p.timeAlive);
+				TagString typeTag = new TagString("type", EntityPlayer.class.getSimpleName());
+				compound.setTag(posList);
+				compound.setTag(rotList);
+				compound.setTag(velList);
+				compound.setTag(timeTag);
+				compound.setTag(typeTag);
+				TagList inventory = new TagList("Inventory");
+				for(int i = 0; i < p.getInventory().length; i++){
+					ItemStack stack = p.getInventory(i);
+					if(!stack.isNull()){
+						TagCompound slot = new TagCompound("");
+						slot.setTag(new TagInteger("slot",i));
+						slot.setTag(new TagByte("isItem",(byte) (stack.isItem() ? 1 : 0 )));
+						slot.setTag(new TagByte("id",stack.getId()));
+						slot.setTag(new TagByte("count",(byte)stack.count));
+						inventory.addTag(slot);
+					}
+				}
+				compound.setTag (inventory);
+				
+				try{
+					File f = new File(Constants.GLCRAFTDIR+"saves/"+name+"/");
+					f.mkdirs();
+					FileOutputStream outputStream;
+					outputStream = new FileOutputStream(new File(f,"player.nbt"));
+					NbtOutputStream nbtOutputStream = new NbtOutputStream(outputStream);
+					nbtOutputStream.write(compound);
+					nbtOutputStream.close();
+					
+					//WORLD SAVING
+					worldManager.saveChunks(name);
+					
+					//ENTITY SAVING
+					worldManager.getEntityManager().save(name);
+					
+					//METADATA SAVING
+					writeMetadata(name);
+					
+				}catch(IOException e){
+					e.printStackTrace();
+				}
+				worldManager.setSaving(false);
+				if(quit)
+					System.exit(0);
 			}
-		}
-		compound.setTag (inventory);
+		};
 		
-		try{
-			File f = new File(Constants.GLCRAFTDIR+"saves/"+name+"/");
-			f.mkdirs();
-			FileOutputStream outputStream;
-			outputStream = new FileOutputStream(new File(f,"player.nbt"));
-			NbtOutputStream nbtOutputStream = new NbtOutputStream(outputStream);
-			nbtOutputStream.write(compound);
-			nbtOutputStream.close();
-			
-			//WORLD SAVING
-			worldManager.saveChunks(name);
-			
-			//ENTITY SAVING
-			worldManager.getEntityManager().save(name);
-			
-			//METADATA SAVING
-			writeMetadata(name);
-			
-		}catch(IOException e){
-			e.printStackTrace();
-		}
+		new Thread(r).start();
 	}
 
 	public static boolean loadWorld(WorldManager worldManager, String name) {

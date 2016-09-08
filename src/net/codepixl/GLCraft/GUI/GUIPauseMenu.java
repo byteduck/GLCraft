@@ -6,7 +6,7 @@ import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.GL11;
 
 import net.codepixl.GLCraft.GUI.Elements.GUIButton;
-import net.codepixl.GLCraft.GUI.Inventory.Elements.GUISlot;
+import net.codepixl.GLCraft.GUI.Elements.GUILabel;
 import net.codepixl.GLCraft.util.Constants;
 import net.codepixl.GLCraft.world.WorldManager;
 
@@ -18,6 +18,7 @@ public class GUIPauseMenu extends GUIScreen{
 	private static final int MIDDLE = Constants.WIDTH/2;
 	
 	private GUIButton backButton,quitButton,saveButton;
+	private GUITexture savingIcon;
 	
 	public GUIPauseMenu(){
 		backButton = new GUIButton("Back to game", MIDDLE, BACKY, new Callable<Void>(){
@@ -33,8 +34,7 @@ public class GUIPauseMenu extends GUIScreen{
 
 			@Override
 			public Void call() throws Exception {
-				WorldManager.saveWorld();
-				System.exit(0);
+				WorldManager.saveWorld(true);
 				return null;
 			}
 		});
@@ -43,14 +43,18 @@ public class GUIPauseMenu extends GUIScreen{
 
 			@Override
 			public Void call() throws Exception {
-				WorldManager.saveWorld();
+				WorldManager.saveWorld(false);
 				return null;
 			}
 		});
 		
+		savingIcon = new GUITexture("misc.floppy", Constants.WIDTH-42, 10, 32);
+		savingIcon.visible = false;
+		
 		this.addElement(backButton);
 		this.addElement(quitButton);
 		this.addElement(saveButton);
+		this.addElement(savingIcon);
 	}
 	
 	@Override
@@ -64,5 +68,10 @@ public class GUIPauseMenu extends GUIScreen{
 			GL11.glVertex2f(Constants.WIDTH,0);
 		GL11.glEnd();
 		GL11.glEnable(GL11.GL_TEXTURE_2D);
+	}
+	
+	@Override
+	public void update(){
+		this.savingIcon.visible = Constants.world.getWorldManager().isSaving();
 	}
 }

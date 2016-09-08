@@ -53,6 +53,7 @@ public class TextureManager {
 		}
 		addTexture("misc.break_8",MISC+"break_7.png");
 		addTexture("misc.nothing",MISC+"nothing.png");
+		addTexture("misc.floppy",MISC+"floppy.png");
 	}
 	public static void regenerateAtlas(){
 		atlasCoords = new HashMap<String,float[]>();

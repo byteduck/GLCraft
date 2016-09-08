@@ -17,6 +17,7 @@ public class GUIScreen{
 	private ArrayList<GUIScreen> elements = new ArrayList<GUIScreen>();
 	public boolean mouseGrabbed = false;
 	public boolean playerInput = false;
+	public boolean visible = true;
 	
 	public void renderMain(){
 		GL11.glPushMatrix();
@@ -25,7 +26,9 @@ public class GUIScreen{
 		this.render();
 		Iterator<GUIScreen> it = elements.iterator();
 		while(it.hasNext()){
-			it.next().renderMain();
+			GUIScreen next = it.next();
+			if(next.visible)
+				next.renderMain();
 		}
 		GL11.glPopMatrix();
 	}

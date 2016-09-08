@@ -7,6 +7,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import javax.swing.JOptionPane;
 
@@ -52,12 +54,14 @@ public class WorldManager {
 	public int currentChunk = 0;
 	private static WorldManager cw;
 	public String worldName;
+	private boolean saving = false;
 	
 	public WorldManager(CentralManager w){
 		this.centralManager = w;
 		cw = this;
 		initGL();
 		init();
+		scheduleSaving();
 		//createWorld();
 	}
 	
@@ -122,7 +126,7 @@ public class WorldManager {
 			c.rebuildTickTiles();
 		}
 		centralManager.renderSplashText("Hold on...", "Beaming you down");
-		SaveManager.saveWorld(this, name);
+		SaveManager.saveWorld(this, name, false);
 		System.out.println("Done!");
 		doneGenerating = true;
 	}
@@ -530,14 +534,32 @@ public class WorldManager {
 		}
 	}
 
-	public static void saveWorld() {
-		cw.centralManager.initSplashText();
-		cw.centralManager.renderSplashText("Saving World...", "Hold on...");
-		SaveManager.saveWorld(cw, cw.worldName);
+	public static void saveWorld(boolean quit) {
+		if(!cw.isSaving() && cw.doneGenerating)
+			SaveManager.saveWorld(cw, cw.worldName, quit);
 	}
 
 	public int getMetaAtPos(float x, float y, float z) {
 		return getMetaAtPos((int)x,(int)y,(int)z);
+	}
+
+	public void setSaving(boolean saving) {
+		this.saving = saving;
+	}
+
+	public boolean isSaving() {
+		return saving;
+	}
+	
+	private void scheduleSaving(){
+		int MINUTES = 3;
+		Timer timer = new Timer();
+		timer.schedule(new TimerTask() {
+		    @Override
+		    public void run(){
+		    	saveWorld(false);
+		    }
+		 }, 0, 1000 * 60 * MINUTES);
 	}
 	
 }
