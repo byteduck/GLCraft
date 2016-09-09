@@ -54,12 +54,7 @@ public class GUISinglePlayer extends GUIScreen{
 			@Override
 			public Void call() throws Exception {
 				String name = textBox.getText();
-				boolean valid = true;
-				for(char c : name.toCharArray()){
-					if(!Character.isLetterOrDigit(c))
-						valid = false;
-				}
-				if(name == null || name.trim().equals("") || !valid){}else{
+				if(name == null || name.trim().equals("")){}else{
 					Constants.setState(Constants.GAME);
 					Constants.world.getWorldManager().createWorld(name);
 					glDisable(GL_TEXTURE_2D);
@@ -72,7 +67,7 @@ public class GUISinglePlayer extends GUIScreen{
 		loadWorld = new GUIButton("Load World", LOADWORLDX, LOADWORLDY, new Callable<Void>() {
 			@Override
 			public Void call() throws Exception {
-				if(!Constants.world.getWorldManager().loadWorld(selectedSave.save.name)){
+				if(!Constants.world.getWorldManager().loadWorld(selectedSave.save)){
 					return null;
 				}
 				Constants.setState(Constants.GAME);

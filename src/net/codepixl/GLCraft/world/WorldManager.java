@@ -18,6 +18,7 @@ import com.nishu.utils.Shader;
 import com.nishu.utils.ShaderProgram;
 import com.nishu.utils.Time;
 
+import net.codepixl.GLCraft.GLCraft;
 import net.codepixl.GLCraft.GUI.GUIManager;
 import net.codepixl.GLCraft.GUI.Inventory.GUICrafting;
 import net.codepixl.GLCraft.GUI.Inventory.GUICraftingAdvanced;
@@ -29,6 +30,7 @@ import net.codepixl.GLCraft.util.MathUtils;
 import net.codepixl.GLCraft.util.OpenSimplexNoise;
 import net.codepixl.GLCraft.util.Spritesheet;
 import net.codepixl.GLCraft.util.Vector3i;
+import net.codepixl.GLCraft.util.data.saves.Save;
 import net.codepixl.GLCraft.util.data.saves.SaveManager;
 import net.codepixl.GLCraft.world.entity.Entity;
 import net.codepixl.GLCraft.world.entity.EntityManager;
@@ -50,8 +52,8 @@ public class WorldManager {
 	public float tick = 0f;
 	public int currentChunk = 0;
 	private static WorldManager cw;
-	public String worldName;
 	private boolean saving = false;
+	private Save currentSave;
 	
 	public WorldManager(CentralManager w){
 		this.centralManager = w;
@@ -77,7 +79,6 @@ public class WorldManager {
 	
 	public void createWorld(String name){
 		System.out.println("Creating Chunks...");
-		worldName = name;
 		noise = new OpenSimplexNoise(Constants.rand.nextLong());
 		centralManager.initSplashText();
 		for(int x = 0; x < Constants.viewDistance; x++){
@@ -123,9 +124,15 @@ public class WorldManager {
 			c.rebuildTickTiles();
 		}
 		centralManager.renderSplashText("Hold on...", "Beaming you down");
-		SaveManager.saveWorld(this, name, false);
 		System.out.println("Done!");
 		doneGenerating = true;
+		String saveName = name.replaceAll("[^ a-zA-Z0-9.-]", "_");
+		this.currentSave = new Save(saveName, name, GLCraft.version, SaveManager.currentFormat);
+		if(!SaveManager.saveWorld(this, currentSave, false)){
+			doneGenerating = false;
+			centralManager.renderSplashText("ERROR", "There was an error saving.");
+			while(true){}
+		}
 	}
 	
 	public void worldFromBuf(){
@@ -282,9 +289,9 @@ public class WorldManager {
 		}
 	}
 	
-	public void loadChunks(String name) throws IOException{
+	public void loadChunks(Save s) throws IOException{
 		for(int i = 0; i < activeChunks.size(); i++){
-			NbtInputStream in = new NbtInputStream(new FileInputStream(Constants.GLCRAFTDIR+"saves/"+name+"/chunks/chunk"+i+".nbt"));
+			NbtInputStream in = new NbtInputStream(new FileInputStream(Constants.GLCRAFTDIR+"saves/"+s.name+"/chunks/chunk"+i+".nbt"));
 			TagCompound t = (TagCompound) in.readTag();
 			TagCompound post = t.getCompound("pos");
 			Vector3i pos = new Vector3i(post.getFloat("x"), post.getFloat("y"), post.getFloat("z"));
@@ -509,8 +516,8 @@ public class WorldManager {
 		return entityManager.getTileEntityForPos(x, y, z);
 	}
 
-	public boolean loadWorld(String name) {
-		this.worldName = name;
+	public boolean loadWorld(Save s) {
+		this.currentSave = s;
 		centralManager.initSplashText();
 		centralManager.renderSplashText("Loading World...", "Hold on...");
 		for(int x = 0; x < Constants.viewDistance; x++){
@@ -521,7 +528,7 @@ public class WorldManager {
 				}
 			}
 		}
-		boolean success = SaveManager.loadWorld(this, name);
+		boolean success = SaveManager.loadWorld(this, s.name);
 		if(success){
 			this.doneGenerating = true;
 			return true;
@@ -532,7 +539,7 @@ public class WorldManager {
 
 	public static boolean saveWorld(boolean quit) {
 		if(!cw.isSaving() && cw.doneGenerating)
-			return SaveManager.saveWorld(cw, cw.worldName, quit);
+			return SaveManager.saveWorld(cw, cw.currentSave, quit);
 		else if(quit)
 			System.exit(0);
 		return true;

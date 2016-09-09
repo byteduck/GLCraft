@@ -145,17 +145,20 @@ public class Chunk {
 	public void save(String filename) throws IOException{
 		NbtOutputStream out = new NbtOutputStream(new FileOutputStream(filename));
 		TagCompound t = new TagCompound("chunk");
-		byte[] buf = new byte[this.sizeX*this.sizeY*this.sizeZ];
+		byte[] tbuf = new byte[this.sizeX*this.sizeY*this.sizeZ];
+		byte[] mbuf = new byte[this.sizeX*this.sizeY*this.sizeZ];
 		int i = 0;
 		for(int x = 0; x < this.sizeX; x++){
 			for(int y = 0; y < this.sizeY; y++){
 				for(int z = 0; z < this.sizeZ; z++){
-					buf[i] = tiles[x][y][z];
+					tbuf[i] = tiles[x][y][z];
+					mbuf[i] = meta[x][y][z];
 					i++;
 				}
 			}
 		}
-		TagByteArray tiles = new TagByteArray("tiles",buf);
+		TagByteArray tiles = new TagByteArray("tiles",tbuf);
+		TagByteArray meta = new TagByteArray("meta",mbuf);
 		TagCompound pos = new TagCompound("pos");
 		TagFloat x = new TagFloat("x",this.pos.x);
 		TagFloat y = new TagFloat("y",this.pos.y);
@@ -165,6 +168,7 @@ public class Chunk {
 		pos.setTag(z);
 		t.setTag(pos);
 		t.setTag(tiles);
+		t.setTag(meta);
 		out.write(t);
 		out.close();
 	}
@@ -174,12 +178,14 @@ public class Chunk {
 		this.pos.x = pos.getFloat("x");
 		this.pos.y = pos.getFloat("y");
 		this.pos.z = pos.getFloat("z");
-		byte[] buf = t.getByteArray("tiles");
+		byte[] tbuf = t.getByteArray("tiles");
+		byte[] mbuf = t.getByteArray("meta");
 		int i = 0;
 		for(int x = 0; x < this.sizeX; x++){
 			for(int y = 0; y < this.sizeY; y++){
 				for(int z = 0; z < this.sizeZ; z++){
-					tiles[x][y][z] = buf[i];
+					tiles[x][y][z] = tbuf[i];
+					meta[x][y][z] = mbuf[i];
 					i++;
 				}
 			}
