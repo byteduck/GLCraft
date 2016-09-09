@@ -81,11 +81,11 @@ public class WorldManager {
 		System.out.println("Creating Chunks...");
 		noise = new OpenSimplexNoise(Constants.rand.nextLong());
 		centralManager.initSplashText();
-		for(int x = 0; x < Constants.viewDistance; x++){
-			for(int y = 0; y < Constants.viewDistance; y++){
-				for(int z = 0; z < Constants.viewDistance; z++){
+		for(int x = 0; x < Constants.worldLengthChunks; x++){
+			for(int y = 0; y < Constants.worldLengthChunks; y++){
+				for(int z = 0; z < Constants.worldLengthChunks; z++){
 					currentChunk++;
-					int progress = (int) (((float)currentChunk/(float)Math.pow(Constants.viewDistance, 3))*100f);
+					int progress = (int) (((float)currentChunk/(float)Math.pow(Constants.worldLengthChunks, 3))*100f);
 					centralManager.renderSplashText("Terraforming...", progress+"%", progress);
 					Chunk c = new Chunk(shader, 1, x * Constants.CHUNKSIZE, y * Constants.CHUNKSIZE, z * Constants.CHUNKSIZE, this);
 					activeChunks.put(new Vector3i(c.getPos()), c);
@@ -98,7 +98,7 @@ public class WorldManager {
 		this.currentChunk = 0;
 		while(i.hasNext()){
 			this.currentChunk++;
-			int progress = (int) (((float)currentChunk/(float)Math.pow(Constants.viewDistance, 3))*100f);
+			int progress = (int) (((float)currentChunk/(float)Math.pow(Constants.worldLengthChunks, 3))*100f);
 			centralManager.renderSplashText("Planting...", progress+"%", progress);
 			i.next().populateChunk();
 		}
@@ -107,7 +107,7 @@ public class WorldManager {
 		this.currentChunk = 0;
 		while(i.hasNext()){
 			this.currentChunk++;
-			int progress = (int) (((float)currentChunk/(float)Math.pow(Constants.viewDistance, 3))*100f);
+			int progress = (int) (((float)currentChunk/(float)Math.pow(Constants.worldLengthChunks, 3))*100f);
 			centralManager.renderSplashText("Lighting...", progress+"%", progress);
 			i.next().light();
 		}
@@ -117,7 +117,7 @@ public class WorldManager {
 		this.currentChunk = 0;
 		while(i.hasNext()){
 			this.currentChunk++;
-			int progress = (int) (((float)currentChunk/(float)Math.pow(Constants.viewDistance, 3))*100f);
+			int progress = (int) (((float)currentChunk/(float)Math.pow(Constants.worldLengthChunks, 3))*100f);
 			centralManager.renderSplashText("Decorating...", progress+"%", progress);
 			Chunk c = i.next();
 			c.rebuild();
@@ -137,9 +137,9 @@ public class WorldManager {
 	
 	public void worldFromBuf(){
 		centralManager.initSplashText();
-		for(int x = 0; x < Constants.viewDistance; x++){
-			for(int y = 0; y < Constants.viewDistance; y++){
-				for(int z = 0; z < Constants.viewDistance; z++){
+		for(int x = 0; x < Constants.worldLengthChunks; x++){
+			for(int y = 0; y < Constants.worldLengthChunks; y++){
+				for(int z = 0; z < Constants.worldLengthChunks; z++){
 					currentChunk++;
 					Chunk c = new Chunk(shader, CentralManager.MIXEDCHUNK, x * Constants.CHUNKSIZE, 0, z * Constants.CHUNKSIZE, this, true);
 					activeChunks.put(new Vector3i(c.getPos()), c);
@@ -188,7 +188,7 @@ public class WorldManager {
 		ArrayList<Vector3f> there = new ArrayList<Vector3f>();
 		while(i.hasNext()){
 			Chunk c = i.next();
-			if(MathUtils.distance(pos, new Vector3f(c.getPos().x,pos.y,c.getPos().z)) > Constants.viewDistance*Constants.CHUNKSIZE){
+			if(MathUtils.distance(pos, new Vector3f(c.getPos().x,pos.y,c.getPos().z)) > Constants.worldLengthChunks*Constants.CHUNKSIZE){
 				i.remove();
 			}
 			there.add(c.getPos());
@@ -215,9 +215,9 @@ public class WorldManager {
 		ArrayList<Vector3f> ret = new ArrayList<Vector3f>();
 		EntityPlayer p = entityManager.getPlayer();
 		Vector3f pos = p.getPos();
-		for(int x = -Constants.viewDistance * Constants.CHUNKSIZE; x < Constants.viewDistance * Constants.CHUNKSIZE; x+=Constants.CHUNKSIZE){
-			for(int y = -Constants.viewDistance * Constants.CHUNKSIZE; y < Constants.viewDistance * Constants.CHUNKSIZE; y+=Constants.CHUNKSIZE){
-				for(int z = -Constants.viewDistance * Constants.CHUNKSIZE; z < Constants.viewDistance * Constants.CHUNKSIZE; z+=Constants.CHUNKSIZE){
+		for(int x = -Constants.worldLengthChunks * Constants.CHUNKSIZE; x < Constants.worldLengthChunks * Constants.CHUNKSIZE; x+=Constants.CHUNKSIZE){
+			for(int y = -Constants.worldLengthChunks * Constants.CHUNKSIZE; y < Constants.worldLengthChunks * Constants.CHUNKSIZE; y+=Constants.CHUNKSIZE){
+				for(int z = -Constants.worldLengthChunks * Constants.CHUNKSIZE; z < Constants.worldLengthChunks * Constants.CHUNKSIZE; z+=Constants.CHUNKSIZE){
 					Vector3f add = MathUtils.round(new Vector3f(x+pos.x-(Math.round(pos.x) % 16),y+pos.y-(Math.round(pos.y) % 16),z+pos.z-(Math.round(pos.z) % 16)));
 					if(add.x >= 0)
 						if(add.y >= 0)
@@ -248,7 +248,7 @@ public class WorldManager {
 					Chunk c = i.next();
 					if(Frustum.getFrustum().cubeInFrustum(c.getPos().getX(), c.getPos().getY(), c.getPos().getZ(), c.getPos().getX() + Constants.CHUNKSIZE, c.getPos().getY() + Constants.CHUNKSIZE, c.getPos().getZ() + Constants.CHUNKSIZE)){
 						float distance=(float) Math.sqrt(Math.pow(c.getCenter().getX()-entityManager.getPlayer().getX(),2) + Math.pow(c.getCenter().getY()-entityManager.getPlayer().getY(),2) + Math.pow(c.getCenter().getZ()-entityManager.getPlayer().getZ(),2));
-						if(distance < Constants.viewDistance*Constants.CHUNKSIZE){
+						if(distance < Constants.renderDistance*Constants.CHUNKSIZE){
 							toRender.add(c);
 						}
 					}
@@ -520,9 +520,9 @@ public class WorldManager {
 		this.currentSave = s;
 		centralManager.initSplashText();
 		centralManager.renderSplashText("Loading World...", "Hold on...");
-		for(int x = 0; x < Constants.viewDistance; x++){
-			for(int y = 0; y < Constants.viewDistance; y++){
-				for(int z = 0; z < Constants.viewDistance; z++){
+		for(int x = 0; x < Constants.worldLengthChunks; x++){
+			for(int y = 0; y < Constants.worldLengthChunks; y++){
+				for(int z = 0; z < Constants.worldLengthChunks; z++){
 					Chunk c = new Chunk(shader, x * Constants.CHUNKSIZE, y * Constants.CHUNKSIZE, z * Constants.CHUNKSIZE, this);
 					activeChunks.put(new Vector3i(c.getPos()), c);
 				}

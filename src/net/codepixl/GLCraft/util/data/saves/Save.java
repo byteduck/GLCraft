@@ -19,6 +19,6 @@ public class Save {
 	
 	@Override
 	public String toString(){
-		return "Name: "+name+" Display Name: "+dispName+" Version: "+version+" Format: "+format;
+		return "|Name: "+name+"|Display Name: "+dispName+"|Version: "+version+"|Format: "+format+"|";
 	}
 }

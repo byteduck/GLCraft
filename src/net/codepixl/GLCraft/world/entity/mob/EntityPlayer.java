@@ -123,7 +123,7 @@ public class EntityPlayer extends Mob {
 	}
 	
 	public void respawn(){
-		this.setPos(new Vector3f(Constants.CHUNKSIZE*(Constants.viewDistance/2f),Constants.CHUNKSIZE*Constants.viewDistance,Constants.CHUNKSIZE*(Constants.viewDistance/2f)));
+		this.setPos(new Vector3f(Constants.CHUNKSIZE*(Constants.worldLengthChunks/2f),Constants.CHUNKSIZE*Constants.worldLengthChunks,Constants.CHUNKSIZE*(Constants.worldLengthChunks/2f)));
 		this.health = 20f;
 	}
 	
