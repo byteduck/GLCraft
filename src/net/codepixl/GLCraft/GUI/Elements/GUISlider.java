@@ -71,9 +71,9 @@ public class GUISlider extends GUIScreen{
 		int mouseY = Mouse.getY()+yof;
 		int mouseX = Mouse.getX()-xof;
 		mouseY = -mouseY+Constants.HEIGHT;
-		float barX = ((float)val/(float)max)*(width-height);
+		float barX = (((float)val-min)/((float)max-min))*(width-10);
 		if(mouseY <= height && mouseY >= 0){
-			if(mouseX <= barX+20 && mouseX >= barX){
+			if(mouseX <= barX+10 && mouseX >= barX){
 				if(Mouse.isButtonDown(0)){
 			    	grabbed = true;
 				}

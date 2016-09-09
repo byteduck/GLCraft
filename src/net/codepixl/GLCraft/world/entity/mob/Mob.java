@@ -34,7 +34,7 @@ public class Mob extends EntitySolid implements GameObj{
 		}
 		this.health = 20f;
 		this.hurtTimer = 0;
-		this.eyeLevel = getAABB().r[1]*2f*0.94f;
+		this.eyeLevel = (float) (getAABB().r[1]*2f*0.94f);
 		this.airLevel = 10f;
 	}
 	

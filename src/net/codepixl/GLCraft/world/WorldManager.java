@@ -33,6 +33,7 @@ import net.codepixl.GLCraft.util.Vector3i;
 import net.codepixl.GLCraft.util.data.saves.Save;
 import net.codepixl.GLCraft.util.data.saves.SaveManager;
 import net.codepixl.GLCraft.world.entity.Entity;
+import net.codepixl.GLCraft.world.entity.EntityFallingBlock;
 import net.codepixl.GLCraft.world.entity.EntityManager;
 import net.codepixl.GLCraft.world.entity.EntitySolid;
 import net.codepixl.GLCraft.world.entity.mob.EntityPlayer;
@@ -310,6 +311,7 @@ public class WorldManager {
 	public ArrayList<AABB> BlockAABBForEntity(EntitySolid entitySolid){
 		ArrayList<AABB> arraylist = new ArrayList<AABB>();
 		AABB mAABB = entitySolid.getAABB();
+		mAABB.render();
 		for(int x = (int) (entitySolid.getX()-1); x < entitySolid.getX()+mAABB.getSize().x; x++){
 			for(int y = (int) (entitySolid.getY()-1); y < entitySolid.getY()+mAABB.getSize().y; y++){
 				for(int z = (int) (entitySolid.getZ()-1); z < entitySolid.getZ()+mAABB.getSize().z; z++){

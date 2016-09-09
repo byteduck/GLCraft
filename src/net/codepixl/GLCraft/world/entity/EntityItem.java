@@ -106,8 +106,8 @@ public class EntityItem extends EntitySolid{
 		if(this.getCount() <= 0){
 			this.setDead(true);
 		}
-		if(!Tile.getTile((byte)worldManager.getTileAtPos(this.getPos())).canPassThrough()){
-			this.setY((float) (this.getY()+Time.getDelta()*2));
+		while(!Tile.getTile((byte)worldManager.getTileAtPos(this.getPos())).canPassThrough()){
+			this.setY((float) (this.getY()+0.1f));
 		}
 		if(timeAlive % 2000 <=1000){
 			yPos = MathUtils.easeInOutQuad((float)timeAlive/1000f, 0f, 0.3f, 1f);

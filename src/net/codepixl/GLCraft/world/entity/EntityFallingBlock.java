@@ -29,26 +29,24 @@ public class EntityFallingBlock extends EntitySolid{
 	}
 	
 	public EntityFallingBlock(float x, float y, float z, WorldManager worldManager) {
-		super(x, y, z, worldManager);
+		super(x+0.5f, y, z+0.5f, worldManager);
 	}
 	
 	@Override
 	public void render(){
-		//getAABB().render();
 		GL11.glBegin(GL11.GL_QUADS);
-		Shape.createCube(pos.x, pos.y, pos.z, Color4f.WHITE, tile.getTexCoords(), 1f);
+		Shape.createCube(pos.x-0.5f, pos.y, pos.z-0.5f, Color4f.WHITE, tile.getTexCoords(), 1f);
 		GL11.glEnd();
 	}
 	
 	@Override
 	public AABB getDefaultAABB() {
-		return new AABB(1f,1f,1f);
+		return new AABB(0.95f,0.95f,0.95f);
 	}
 	
 	@Override
 	public void update(){
 		super.update();
-		
 		if(onGround && !doneFalling){
 			doneFalling = true;
 			if(Tile.getTile((byte) worldManager.getTileAtPos(pos)) != Tile.Air){

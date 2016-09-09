@@ -109,7 +109,7 @@ public class EntitySolid extends Entity{
 	@Override
 	public void update(){
 		super.update();
-		aabb.update(new Vector3f(pos.x+aabb.r[0],pos.y,pos.z+aabb.r[2]));
+		aabb.update(new Vector3f(pos.x+(float)aabb.r[0],pos.y,pos.z+(float)aabb.r[2]));
 		while(testHitHead(new Vector3f(this.getX(),this.getY()+this.aabb.getSize().y+0.01f,this.getZ()))){
 			this.getVel().y = 0f;
 			this.pos.y-=0.01f;

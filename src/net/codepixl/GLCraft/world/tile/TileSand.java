@@ -36,7 +36,7 @@ public class TileSand extends Tile{
 	public void blockUpdate(int x, int y, int z, WorldManager w){
 		if(Tile.getTile((byte) w.getTileAtPos(x, y-1, z)).canPassThrough()){
 			w.setTileAtPos(x, y, z, Tile.Air.getId(), true);
-			EntityFallingBlock e = new EntityFallingBlock(x, y-0.01f, z, w);
+			EntityFallingBlock e = new EntityFallingBlock(x, y, z, w);
 			w.entityManager.add(e);
 		}
 	}
