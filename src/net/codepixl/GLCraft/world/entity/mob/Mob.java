@@ -75,6 +75,9 @@ public class Mob extends EntitySolid implements GameObj{
 		if(this.onFire > 0f){
 			this.hurt(0.5f,1);
 		}
+		if(this.isInWater()){
+			this.fallDistance = 0;
+		}
 		if(this.health<=0f){
 			this.setDead(true);
 		}
