@@ -30,6 +30,7 @@ import com.nishu.utils.ShaderProgram;
 import net.codepixl.GLCraft.render.RenderType;
 import net.codepixl.GLCraft.render.Shape;
 import net.codepixl.GLCraft.util.Constants;
+import net.codepixl.GLCraft.util.Vector3i;
 import net.codepixl.GLCraft.world.tile.Tile;
 import net.codepixl.GLCraft.world.tile.tick.TickHelper;
 
@@ -52,6 +53,7 @@ public class Chunk {
 	private boolean needsRebuild = false;
 	private ArrayList<Vector3f> tickTiles = new ArrayList<Vector3f>();
 	private ArrayList<Vector3f> tempTickTiles = new ArrayList<Vector3f>();
+	private ArrayList<Vector3f> scheduledBlockUpdates = new ArrayList<Vector3f>();
 	
 	public Chunk(ShaderProgram shader, int type, float x, float y, float z, WorldManager w, boolean fromBuf){
 		this.pos = new Vector3f(x,y,z);
@@ -132,10 +134,10 @@ public class Chunk {
 								tiles[x][y][z] = Tile.Air.getId();
 							}
 						}
-						/**noise = (float) worldManager.noise.eval((double)posX/2d, (double)posY/2d, (double)posZ/2d);
-						if(noise > 0f){
+						/*noise = (float) worldManager.noise.eval((double)posX/20d, (double)posY/20d, (double)posZ/20d);
+						if(noise > 0f && y != 0){
 							tiles[x][y][z] = Tile.Air.getId();
-						}**/
+						}*/
 					}
 				}
 			}
@@ -337,7 +339,8 @@ public static void createCustomTree(int x, int y, int z,Tile trunk,Tile leaf, by
 	public void update(){
 		if(needsRebuild){
 			light();
-			rebuild();
+			rebuildBase(true);
+			rebuildBase(false);
 			needsRebuild = false;
 		}
 		Iterator<Vector3f> it = tempTickTiles.iterator();
@@ -350,18 +353,12 @@ public static void createCustomTree(int x, int y, int z,Tile trunk,Tile leaf, by
 				tickTiles.add(v);
 			}
 		}
-		for(int i = 0; i < 3; i++){
-			int x = Constants.rand.nextInt(sizeX);
-			int y = Constants.rand.nextInt(sizeY);
-			int z = Constants.rand.nextInt(sizeZ);
-			Tile.getTile(tiles[x][y][z]).randomTick(x+(int)pos.x, y+(int)pos.y, z+(int)pos.z, worldManager);
-		}
 	}
 	
 	public void tick(){
-		Iterator<Vector3f> i = tickTiles.iterator();
-		while(i.hasNext()){
-			Vector3f next = i.next();
+		Iterator<Vector3f> it = tickTiles.iterator();
+		while(it.hasNext()){
+			Vector3f next = it.next();
 			float x = next.x;
 			float y = next.y;
 			float z = next.z;
@@ -377,6 +374,22 @@ public static void createCustomTree(int x, int y, int z,Tile trunk,Tile leaf, by
 			}else{
 				t.tick((int)(x+pos.x), (int)(y+pos.y), (int)(z+pos.z), worldManager);
 			}
+		}
+		
+		for(int i = 0; i < 3; i++){
+			int x = Constants.rand.nextInt(sizeX);
+			int y = Constants.rand.nextInt(sizeY);
+			int z = Constants.rand.nextInt(sizeZ);
+			Tile.getTile(tiles[x][y][z]).randomTick(x+(int)pos.x, y+(int)pos.y, z+(int)pos.z, worldManager);
+		}
+		
+		it = new ArrayList<Vector3f>(scheduledBlockUpdates).iterator();
+		while(it.hasNext()){
+			Vector3f tmp = it.next();
+			Vector3i v = new Vector3i(tmp);
+			scheduledBlockUpdates.remove(tmp);
+			Vector3i local = new Vector3i(v.x-getPos().x, v.y-getPos().y, v.z-getPos().z);
+			Tile.getTile(tiles[local.x][local.y][local.z]).blockUpdate(v.x, v.y, v.z, worldManager);
 		}
 	}
 	
@@ -398,8 +411,7 @@ public static void createCustomTree(int x, int y, int z,Tile trunk,Tile leaf, by
 	}
 	
 	public void rebuild(){
-		rebuildBase(false);
-		rebuildBase(true);
+		queueRebuild();
 	}
 	
 	private void rebuildBase(boolean translucent){
@@ -504,9 +516,8 @@ public static void createCustomTree(int x, int y, int z,Tile trunk,Tile leaf, by
 		boolean inBoundsTwo = (y >= 0) && (y < meta[0].length);
 		boolean inBoundsThree = (z >= 0) && (z < meta[0][0].length);
 		boolean inBounds = inBoundsOne && inBoundsTwo && inBoundsThree;
-		if(inBounds){
+		if(inBounds)
 			return meta[x][y][z];
-		}
 		return -1;
 	}
 	
@@ -679,5 +690,16 @@ public static void createCustomTree(int x, int y, int z,Tile trunk,Tile leaf, by
 				}
 			}
 		}**/
+	}
+
+	/**
+	 * Position is in WORLD coordinates.
+	 */
+	public void blockUpdate(int x, int y, int z) {
+		boolean inBoundsOne = (x-getPos().x >= 0) && (x-getPos().x < tiles.length);
+		boolean inBoundsTwo = (y-getPos().y >= 0) && (y-getPos().y < tiles[0].length);
+		boolean inBoundsThree = (z-getPos().z >= 0) && (z-getPos().z < tiles[0][0].length);
+		if(inBoundsOne && inBoundsTwo && inBoundsThree)
+			scheduledBlockUpdates.add(new Vector3f(x,y,z));
 	}
 }

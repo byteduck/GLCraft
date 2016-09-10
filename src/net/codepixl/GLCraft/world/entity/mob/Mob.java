@@ -44,6 +44,19 @@ public class Mob extends EntitySolid implements GameObj{
 		t.setTag(healthTag);
 	}
 	
+	@Override
+	public void move(float x, float y, float z){
+		if(!isInWater()){
+			moveMain(x,0,0);
+			moveMain(0,y,0);
+			moveMain(0,0,z);
+		}else{
+			moveMain(x*0.3f,0,0);
+			moveMain(0,y,0);
+			moveMain(0,0,z*0.3f);
+		}
+	}
+	
 	public void handleAI(){
 		
 	}

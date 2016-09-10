@@ -377,15 +377,16 @@ public class WorldManager {
 		Chunk c = getChunk(x,y,z);
 		c.setTileAtPos(x-(int)c.getPos().x, y-(int)c.getPos().y, z-(int)c.getPos().z, tile, false);
 		setMetaAtPos(x,y,z,meta,rebuild);
-		Tile.getTile((byte)getTileAtPos(x,y,z)).blockUpdate(x,y,z,this);
-		Tile.getTile((byte)getTileAtPos(x+1,y,z)).blockUpdate(x+1,y,z,this);
-		Tile.getTile((byte)getTileAtPos(x-1,y,z)).blockUpdate(x-1,y,z,this);
-		Tile.getTile((byte)getTileAtPos(x,y+1,z)).blockUpdate(x,y+1,z,this);
-		Tile.getTile((byte)getTileAtPos(x,y-1,z)).blockUpdate(x,y-1,z,this);
-		Tile.getTile((byte)getTileAtPos(x,y,z+1)).blockUpdate(x,y,z+1,this);
-		Tile.getTile((byte)getTileAtPos(x,y,z-1)).blockUpdate(x,y,z-1,this);
+		blockUpdate(x+1,y,z);
+		blockUpdate(x-1,y,z);
+		blockUpdate(x,y+1,z);
+		blockUpdate(x,y-1,z);
+		blockUpdate(x,y,z+1);
+		blockUpdate(x,y,z-1);
 		return;
 	}
+	
+	
 	
 	public void rebuildAtPos(int x, int y, int z){
 		Iterator<Chunk> i = activeChunks.values().iterator();
@@ -406,15 +407,19 @@ public class WorldManager {
 		Chunk c = getChunk(x,y,z);
 		c.setMetaAtPos(x-(int)c.getPos().x, y-(int)c.getPos().y, z-(int)c.getPos().z,meta, rebuild);
 		if(blockUpdate){
-			if(updateSelf) Tile.getTile((byte)getTileAtPos(x,y,z)).blockUpdate(x,y,z,this);
-			Tile.getTile((byte)getTileAtPos(x+1,y,z)).blockUpdate(x+1,y,z,this);
-			Tile.getTile((byte)getTileAtPos(x-1,y,z)).blockUpdate(x-1,y,z,this);
-			Tile.getTile((byte)getTileAtPos(x,y+1,z)).blockUpdate(x,y+1,z,this);
-			Tile.getTile((byte)getTileAtPos(x,y-1,z)).blockUpdate(x,y-1,z,this);
-			Tile.getTile((byte)getTileAtPos(x,y,z+1)).blockUpdate(x,y,z+1,this);
-			Tile.getTile((byte)getTileAtPos(x,y,z-1)).blockUpdate(x,y,z-1,this);
+			if(updateSelf) blockUpdate(x,y,z);
+			blockUpdate(x+1,y,z);
+			blockUpdate(x-1,y,z);
+			blockUpdate(x,y+1,z);
+			blockUpdate(x,y-1,z);
+			blockUpdate(x,y,z+1);
+			blockUpdate(x,y,z-1);
 		}
 		return;
+	}
+	
+	public void blockUpdate(int x, int y, int z){
+		getChunk(x,y,z).blockUpdate(x,y,z);
 	}
 	
 	public Chunk getChunk(int x, int y, int z){
@@ -569,6 +574,10 @@ public class WorldManager {
 		    	saveWorld(false);
 		    }
 		 }, 0, 1000 * 60 * MINUTES);
+	}
+
+	public byte getMetaAtPos(Vector3f pos) {
+		return getMetaAtPos((int)pos.x, (int)pos.y, (int)pos.z);
 	}
 	
 }

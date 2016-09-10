@@ -31,13 +31,13 @@ public class EntitySolid extends Entity{
 		this.setAABB(this.getDefaultAABB());
 	}
 	
-	public final void move(float x, float y, float z){
+	public void move(float x, float y, float z){
 		moveMain(x,0,0);
 		moveMain(0,y,0);
 		moveMain(0,0,z);
 	}
 	
-	private final void moveMain(float x, float y, float z){
+	protected final void moveMain(float x, float y, float z){
 		Vector3f toPos = new Vector3f(this.getX()+x,this.getY()+y,this.getZ()+z);
 		AABB toAABB = new AABB(this.aabb.getSize().x,this.aabb.getSize().y,this.aabb.getSize().z);
 		toAABB.update(toPos);

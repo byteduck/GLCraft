@@ -47,6 +47,11 @@ public class TileAir extends Tile{
 	}
 	
 	@Override
+	public boolean canBeDestroyedByLiquid(){
+		return true;
+	}
+	
+	@Override
 	public boolean canBePlacedOver() {
 		return true;
 	}

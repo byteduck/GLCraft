@@ -80,6 +80,7 @@ public class GUIManager {
 		GUIOpen = false;
 		currentGUI = null;
 		currentGUIName = "nogui";
+		focusedTextBox = null;
 		if(tmp != null && onClose)
 			tmp.onClose();
 	}
