@@ -13,6 +13,7 @@ import com.evilco.mc.nbt.tag.TagCompound;
 import com.evilco.mc.nbt.tag.TagInteger;
 import com.evilco.mc.nbt.tag.TagList;
 
+import net.codepixl.GLCraft.util.Constants;
 import net.codepixl.GLCraft.world.WorldManager;
 import net.codepixl.GLCraft.world.entity.Entity;
 import net.codepixl.GLCraft.world.entity.EntityItem;
@@ -76,7 +77,8 @@ public class TileEntityContainer extends TileEntity{
 	public void dropAllItems(){
 		for(int i = 0; i < inventory.length; i++){
 			if(!inventory[i].isNull()){
-				worldManager.spawnEntity(new EntityItem(inventory[i],this.pos,worldManager));
+				Vector3f pos = new Vector3f(this.pos.x+Constants.randFloat(0, 1), this.pos.y+Constants.randFloat(0, 1), this.pos.z+Constants.randFloat(0, 1));
+				worldManager.spawnEntity(new EntityItem(inventory[i],pos,worldManager));
 				inventory[i] = new ItemStack();
 			}
 		}

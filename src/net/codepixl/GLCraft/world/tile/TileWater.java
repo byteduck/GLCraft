@@ -86,17 +86,17 @@ public class TileWater extends Tile{
 			return true;
 		switch(f){
 			case 0: //BOTTOM
-				return (w.getTileAtPos(x,y-1,z) != Tile.Water.getId()) || (w.getTileAtPos(x,y-1,z) == Tile.Water.getId() && w.getMetaAtPos(x, y-1, z) > w.getMetaAtPos(x, y, z));
+				return (w.getTileAtPos(x,y-1,z) != getId()) || (w.getTileAtPos(x,y-1,z) == getId() && w.getMetaAtPos(x, y-1, z) > w.getMetaAtPos(x, y, z));
 			case 1: //TOP
-				return (w.getTileAtPos(x,y+1,z) != Tile.Water.getId()) || (w.getTileAtPos(x,y+1,z) == Tile.Water.getId() && w.getMetaAtPos(x, y+1, z) > w.getMetaAtPos(x, y, z));
+				return (w.getTileAtPos(x,y+1,z) != getId()) || (w.getTileAtPos(x,y+1,z) == getId() && w.getMetaAtPos(x, y+1, z) > w.getMetaAtPos(x, y, z));
 			case 2: //FRONT
-				return (w.getTileAtPos(x,y,z-1) != Tile.Water.getId()) || (w.getTileAtPos(x,y,z-1) == Tile.Water.getId() && w.getMetaAtPos(x, y, z-1) > w.getMetaAtPos(x, y, z));
+				return (w.getTileAtPos(x,y,z-1) != getId()) || (w.getTileAtPos(x,y,z-1) == getId() && w.getMetaAtPos(x, y, z-1) > w.getMetaAtPos(x, y, z));
 			case 3: //BACK
-				return (w.getTileAtPos(x,y,z+1) != Tile.Water.getId()) || (w.getTileAtPos(x,y,z+1) == Tile.Water.getId() && w.getMetaAtPos(x, y, z+1) > w.getMetaAtPos(x, y, z));
+				return (w.getTileAtPos(x,y,z+1) != getId()) || (w.getTileAtPos(x,y,z+1) == getId() && w.getMetaAtPos(x, y, z+1) > w.getMetaAtPos(x, y, z));
 			case 4: //LEFT
-				return (w.getTileAtPos(x+1,y,z) != Tile.Water.getId()) || (w.getTileAtPos(x+1,y,z) == Tile.Water.getId() && w.getMetaAtPos(x+1, y, z) > w.getMetaAtPos(x, y, z));
+				return (w.getTileAtPos(x+1,y,z) != getId()) || (w.getTileAtPos(x+1,y,z) == getId() && w.getMetaAtPos(x+1, y, z) > w.getMetaAtPos(x, y, z));
 			case 5:
-				return (w.getTileAtPos(x-1,y,z) != Tile.Water.getId()) || (w.getTileAtPos(x-1,y,z) == Tile.Water.getId() && w.getMetaAtPos(x-1, y, z) > w.getMetaAtPos(x, y, z));
+				return (w.getTileAtPos(x-1,y,z) != getId()) || (w.getTileAtPos(x-1,y,z) == getId() && w.getMetaAtPos(x-1, y, z) > w.getMetaAtPos(x, y, z));
 			default:
 				return false;
 		}

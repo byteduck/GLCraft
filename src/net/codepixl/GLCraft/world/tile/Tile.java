@@ -20,6 +20,7 @@ import net.codepixl.GLCraft.world.item.ItemStack;
 import net.codepixl.GLCraft.world.tile.material.Material;
 import net.codepixl.GLCraft.world.tile.tick.TickHelper;
 import net.codepixl.GLCraft.world.tile.tileentity.TileChest;
+import net.codepixl.GLCraft.world.tile.tileentity.TileFurnace;
 
 public class Tile {
 
@@ -52,6 +53,8 @@ public class Tile {
 	public static Tile Bedrock = new TileBedrock();
 	public static Tile Chest = new TileChest();
 	public static Tile Dirt = new TileDirt();
+	public static Tile Furnace = new TileFurnace();
+	public static Tile Cobblestone = new TileCobblestone();
 	//TILES
 	
 	public String getName(){
@@ -102,18 +105,22 @@ public class Tile {
 		return false;
 	}
 	
+	public ItemStack getDrop(int x, int y, int z, WorldManager w){
+		return new ItemStack(this, 1, w.getMetaAtPos(x, y, z));
+	}
+	
 	public void onBreak(int x, int y, int z, boolean drop, WorldManager worldManager){
 		if(drop){
-			worldManager.spawnEntity(new EntityItem(new ItemStack(this,worldManager.getMetaAtPos(x, y, z)),(float)x+0.5f,(float)y+0.5f,(float)z+0.5f,worldManager));
+			ItemStack is = getDrop(x, y, z, worldManager);
+			worldManager.spawnEntity(new EntityItem(is,(float)x+0.5f,(float)y+0.5f,(float)z+0.5f,worldManager));
 			for(int i=1; i<5; i++){
-				Particle particle = new Particle(new Vector3f(x+.5f,y+.5f,z+.5f), new Vector3f(Constants.randFloat(-0.1f, 0.1f),0,Constants.randFloat(-0.1f, 0.1f)), worldManager);
+				Particle particle = new Particle(new Vector3f(x+Constants.randFloat(0,1),y+Constants.randFloat(0,1),z+Constants.randFloat(0,1)), new Vector3f(Constants.randFloat(-0.1f, 0.1f),0,Constants.randFloat(-0.1f, 0.1f)), worldManager);
 				if(this.hasMetaTextures() == false){
 					particle.setTexCoords(this.getIconCoords());
 				}else{
 					particle.setTexCoords(this.getIconCoords(worldManager.getMetaAtPos(x, y, z)));
 				}
-				particle.setLifeTime(Constants.randFloat(2, 10));
-				particle.hasGravity(true);
+				particle.setLifeTime(Constants.randFloat(0.3f,0.7f));
 				worldManager.entityManager.add(particle);
 			}
 		}

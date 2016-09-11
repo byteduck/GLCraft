@@ -2,6 +2,8 @@ package net.codepixl.GLCraft.world.tile;
 
 import com.nishu.utils.Color4f;
 
+import net.codepixl.GLCraft.world.WorldManager;
+import net.codepixl.GLCraft.world.item.ItemStack;
 import net.codepixl.GLCraft.world.tile.material.Material;
 
 public class TileStone extends Tile{
@@ -33,17 +35,10 @@ public class TileStone extends Tile{
 	public float getHardness(){
 		return 4f;
 	}
-
+	
 	@Override
-	public boolean isTransparent() {
-		// TODO Auto-generated method stub
-		return false;
-	}
-
-	@Override
-	public boolean canPassThrough() {
-		// TODO Auto-generated method stub
-		return false;
+	public ItemStack getDrop(int x, int y, int z, WorldManager w){
+		return new ItemStack(Tile.Cobblestone, 1);
 	}
 
 }

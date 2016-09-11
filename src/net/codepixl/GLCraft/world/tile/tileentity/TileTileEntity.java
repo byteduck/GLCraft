@@ -20,6 +20,6 @@ public class TileTileEntity extends Tile{
 	@Override
 	public void onBreak(int x, int y, int z, boolean drop, WorldManager worldManager){
 		super.onBreak(x, y, z, drop, worldManager);
-		worldManager.getTileEntityAtPos(x, y, z).setDead(true);
+		if(worldManager.getTileEntityAtPos(x, y, z) != null) worldManager.getTileEntityAtPos(x, y, z).setDead(true);
 	}
 }

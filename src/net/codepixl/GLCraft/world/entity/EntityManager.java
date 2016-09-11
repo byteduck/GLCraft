@@ -22,6 +22,7 @@ import net.codepixl.GLCraft.util.Constants;
 import net.codepixl.GLCraft.util.DebugTimer;
 import net.codepixl.GLCraft.util.GameObj;
 import net.codepixl.GLCraft.util.MathUtils;
+import net.codepixl.GLCraft.util.Vector3i;
 import net.codepixl.GLCraft.world.WorldManager;
 import net.codepixl.GLCraft.world.entity.mob.EntityPlayer;
 import net.codepixl.GLCraft.world.entity.mob.PlayerMP;
@@ -30,6 +31,7 @@ import net.codepixl.GLCraft.world.entity.mob.hostile.EntityTestHostile;
 import net.codepixl.GLCraft.world.entity.particle.Particle;
 import net.codepixl.GLCraft.world.entity.tileentity.TileEntity;
 import net.codepixl.GLCraft.world.entity.tileentity.TileEntityChest;
+import net.codepixl.GLCraft.world.entity.tileentity.TileEntityFurnace;
 
 public class EntityManager implements GameObj{
 	
@@ -70,6 +72,7 @@ public class EntityManager implements GameObj{
 		registerEntity("Particle", Particle.class);
 		registerEntity("TileEntityChest", TileEntityChest.class);
 		registerEntity("EntityFallingBlock", EntityFallingBlock.class);
+		registerEntity("TileEntityFurnace", TileEntityFurnace.class);
 	}
 	
 	public static void registerEntity(String name, Class entity){
@@ -246,7 +249,7 @@ public class EntityManager implements GameObj{
 		TileEntity ret = null;
 		while(i.hasNext()){
 			TileEntity e = i.next();
-			if(e.pos.equals(new Vector3f(x,y,z))){
+			if(e.getBlockpos().equals(new Vector3i(x,y,z))){
 				ret = e;
 			}
 		}

@@ -49,8 +49,6 @@ public class EntityTestHostile extends Hostile{
 			Particle particle = new Particle(new Vector3f(this.getX()+Constants.randFloat(-1f, 1f),this.getY()+.5f+Constants.randFloat(-1f, 1f),this.getZ()+Constants.randFloat(-1f, 1f)), new Vector3f(0,0.5f,0), worldManager);
 			
 			particle.setTexCoords(Tile.Lava.getIconCoords());
-			particle.setLifeTime(Constants.randFloat(2, 5));
-			particle.hasGravity(true);
 			particle.setSize(.2f);
 			worldManager.entityManager.add(particle);
 		}

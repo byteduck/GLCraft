@@ -9,9 +9,14 @@ import net.codepixl.GLCraft.world.tile.Tile;
 
 public class CraftingManager {
 	private static ArrayList<Recipe> recipes = new ArrayList<Recipe>();
+	private static ArrayList<FurnaceRecipe> furnaceRecipes = new ArrayList<FurnaceRecipe>();
 	
 	public static void addRecipe(Recipe r){
 		recipes.add(r);
+	}
+	
+	public static void addRecipe(FurnaceRecipe r){
+		furnaceRecipes.add(r);
 	}
 	
 	public static ItemStack checkRecipe(Recipe r){
@@ -59,6 +64,18 @@ public class CraftingManager {
 		}
 		return result;
 	}
+	
+	/**
+	 *  Furnace Recipe
+	**/
+	public static FurnaceRecipe checkRecipe(ItemStack i){
+		for(FurnaceRecipe r : furnaceRecipes){
+			if(r.checkRecipe(i))
+				return r;
+		}
+		
+		return null;
+	}
 
 	public static void initRecipes() {
 		/**Wood**/
@@ -68,9 +85,15 @@ public class CraftingManager {
 		/**Workbench**/addRecipe(new Recipe(new ItemStack(Tile.Wood),new ItemStack(Tile.Wood),new ItemStack(Tile.Wood),new ItemStack(Tile.Wood),new ItemStack(Tile.Workbench,1)));
 		/**Sticks**/addRecipe(new Recipe(new ItemStack(Tile.Wood),new ItemStack(),new ItemStack(Tile.Wood),new ItemStack(),new ItemStack(Item.Stick,4)));
 		/**Wood Pick**/addRecipe(new Recipe(new ItemStack(Tile.Wood),new ItemStack(Tile.Wood),new ItemStack(Tile.Wood),new ItemStack(),new ItemStack(Item.Stick),new ItemStack(),new ItemStack(),new ItemStack(Item.Stick),new ItemStack(),new ItemStack(Item.WoodPick,1)));
-		/**Stone Pick**/addRecipe(new Recipe(new ItemStack(Tile.Stone),new ItemStack(Tile.Stone),new ItemStack(Tile.Stone),new ItemStack(),new ItemStack(Item.Stick),new ItemStack(),new ItemStack(),new ItemStack(Item.Stick),new ItemStack(),new ItemStack(Item.StonePick,1)));
+		/**Stone Pick**/addRecipe(new Recipe(new ItemStack(Tile.Cobblestone),new ItemStack(Tile.Cobblestone),new ItemStack(Tile.Cobblestone),new ItemStack(),new ItemStack(Item.Stick),new ItemStack(),new ItemStack(),new ItemStack(Item.Stick),new ItemStack(),new ItemStack(Item.StonePick,1)));
 		/**Chest**/addRecipe(new Recipe(new ItemStack(Tile.Wood),new ItemStack(Tile.Wood),new ItemStack(Tile.Wood),new ItemStack(Tile.Wood),new ItemStack(),new ItemStack(Tile.Wood),new ItemStack(Tile.Wood),new ItemStack(Tile.Wood),new ItemStack(Tile.Wood),new ItemStack(Tile.Chest,1)));
 		/**Bucket**/addRecipe(new Recipe(new ItemStack(),new ItemStack(),new ItemStack(),new ItemStack(Tile.Wood),new ItemStack(),new ItemStack(Tile.Wood),new ItemStack(),new ItemStack(Tile.Wood),new ItemStack(),new ItemStack(Item.Bucket,1)));
+		/**Furnace**/addRecipe(new Recipe(new ItemStack(Tile.Cobblestone),new ItemStack(Tile.Cobblestone),new ItemStack(Tile.Cobblestone),new ItemStack(Tile.Cobblestone),new ItemStack(),new ItemStack(Tile.Cobblestone),new ItemStack(Tile.Cobblestone),new ItemStack(Tile.Cobblestone),new ItemStack(Tile.Cobblestone),new ItemStack(Tile.Furnace,1)));
+		
+		/* FURNACE RECIPES */
+		
+		/**Stone**/addRecipe(new FurnaceRecipe(new ItemStack(Tile.Cobblestone), new ItemStack(Tile.Stone)));
+		/**Glass**/addRecipe(new FurnaceRecipe(new ItemStack(Tile.Sand), new ItemStack(Tile.Glass), 1.5f));
 	}
 	
 }
