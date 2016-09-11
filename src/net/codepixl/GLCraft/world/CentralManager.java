@@ -38,15 +38,12 @@ import static org.lwjgl.opengl.GL11.glMatrixMode;
 import static org.lwjgl.opengl.GL11.glOrtho;
 import static org.lwjgl.opengl.GL11.glPopMatrix;
 import static org.lwjgl.opengl.GL11.glPushMatrix;
-import static org.lwjgl.opengl.GL11.glScalef;
 import static org.lwjgl.opengl.GL11.glShadeModel;
 import static org.lwjgl.opengl.GL11.glTexEnvi;
-import static org.lwjgl.opengl.GL11.glTranslatef;
 import static org.lwjgl.opengl.GL11.glVertex2f;
 import static org.lwjgl.opengl.GL11.glViewport;
 import static org.lwjgl.util.glu.GLU.gluPerspective;
 
-import java.awt.Color;
 import java.io.PipedInputStream;
 import java.nio.ByteBuffer;
 import java.nio.FloatBuffer;
@@ -62,7 +59,6 @@ import org.newdawn.slick.TrueTypeFont;
 import org.newdawn.slick.opengl.TextureImpl;
 
 import com.nishu.utils.Color4f;
-import com.nishu.utils.GameLoop;
 import com.nishu.utils.Screen;
 import com.nishu.utils.Time;
 
@@ -73,9 +69,9 @@ import net.codepixl.GLCraft.GUI.GUIScreen;
 import net.codepixl.GLCraft.GUI.GUIServer;
 import net.codepixl.GLCraft.GUI.GUISinglePlayer;
 import net.codepixl.GLCraft.GUI.GUIStartScreen;
+import net.codepixl.GLCraft.GUI.Inventory.Elements.GUISlot;
 import net.codepixl.GLCraft.render.Shape;
 import net.codepixl.GLCraft.render.TextureManager;
-import net.codepixl.GLCraft.render.util.Tesselator;
 import net.codepixl.GLCraft.sound.SoundManager;
 import net.codepixl.GLCraft.util.Constants;
 import net.codepixl.GLCraft.util.DebugTimer;
@@ -298,34 +294,11 @@ public class CentralManager extends Screen{
 			glPopMatrix();
 		}
 		for(float i = 0; i < 9f; i++){
-			Spritesheet.atlas.bind();
-			glBegin(GL_QUADS);
-			if(i == p.getSelectedSlot()){
-				Shape.createCenteredSquare((float)Constants.WIDTH/9f+i*SIZE+i*SPACING+SIZE/2f,Constants.HEIGHT-(SIZE/2f), new Color4f(1,1,1,1), TextureManager.texture("gui.guislot"), (float)Constants.WIDTH/18f);
-			}else{
-				Shape.createCenteredSquare((float)Constants.WIDTH/9f+i*SIZE+i*SPACING+SIZE/2f,Constants.HEIGHT-(SIZE/2f), new Color4f(0,0,0,1), TextureManager.texture("gui.guislot"), (float)Constants.WIDTH/18f);
-			}
-			glEnd();
-			if(!p.getInventory((int)i).isNull()){
-				glPushMatrix();
-				glTranslatef((float)Constants.WIDTH/9f+i*SIZE+i*SPACING+SIZE/2f,(float)Constants.HEIGHT-(SIZE/2f),0f);
-				glScalef(0.7f,0.7f,0.7f);
-					glBegin(GL_QUADS);
-						if(p.getInventory((int)i).isTile()){
-							if(p.getInventory((int)i).getTile().hasMetaTextures()){
-								Shape.createCenteredSquare(0,0, new Color4f(1f,1f,1f,1f), p.getInventory((int)i).getTile().getIconCoords(p.getInventory((int)i).getMeta()), (float)Constants.WIDTH/18f);
-							}else{
-								Shape.createCenteredSquare(0,0, new Color4f(1f,1f,1f,1f), p.getInventory((int)i).getTile().getIconCoords(), (float)Constants.WIDTH/18f);
-							}
-						}else{
-							Shape.createCenteredSquare(0,0, new Color4f(1f,1f,1f,1f), p.getInventory((int)i).getItem().getTexCoords(), (float)Constants.WIDTH/18f);
-						}
-					glEnd();
-				glPopMatrix();
-				if(p.getInventory((int)i).count != 1)
-					Tesselator.drawTextWithShadow((float)Constants.WIDTH/9f+i*SIZE+i*SPACING+SIZE/2f, Constants.HEIGHT-(SIZE/2f), Integer.toString(p.getInventory((int)i).count));
-				TextureImpl.unbind();
-			}
+			GUISlot s = new GUISlot((int)(Constants.WIDTH/9f+i*SIZE+i*SPACING+SIZE/2f),(int)(Constants.HEIGHT-(SIZE/2f)));
+			s.itemstack = p.getInventory((int)i);
+			if(p.getSelectedSlot() == i)
+				s.hover = true;
+			s.render();
 		}
 		
 		Spritesheet.atlas.bind();

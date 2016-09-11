@@ -47,19 +47,25 @@ public class GUISlot extends GUIScreen{
 		GL11.glBegin(GL11.GL_QUADS);
 		Shape.createCenteredSquare(x,y, color, TextureManager.texture("gui.guislot"), size);
 		GL11.glEnd();
+		float size = Constants.WIDTH/18f;
 		if(!itemstack.isNull()){
 			glPushMatrix();
-			glTranslatef(x,y,0);
-			glScalef(0.7f,0.7f,0.7f);
-				glBegin(GL_QUADS);
 					if(itemstack.isTile()){
+						glTranslatef(x-size/2,y-size/2,0);
+						glScalef(0.5f,0.5f,0.5f);
+						GL11.glRotatef(140f,1.0f,0.0f,0.0f);
+						GL11.glRotatef(45f,0.0f,1.0f,0.0f);
+						glBegin(GL_QUADS);
 						if(itemstack.getTile().hasMetaTextures()){
-							Shape.createCenteredSquare(0,0, new Color4f(1f,1f,1f,1f), itemstack.getTile().getIconCoords(itemstack.getMeta()), (float)Constants.WIDTH/18f);
+							Shape.createCube(size/2f,-size*1.5f,0, new Color4f(1f,1f,1f,1f), itemstack.getTile().getTexCoords(itemstack.getMeta()), size);
 						}else{
-							Shape.createCenteredSquare(0,0, new Color4f(1f,1f,1f,1f), itemstack.getTile().getIconCoords(), (float)Constants.WIDTH/18f);
+							Shape.createCube(size/2f,-size*1.5f,0, new Color4f(1f,1f,1f,1f), itemstack.getTile().getTexCoords(), size);
 						}
 					}else{
-						Shape.createCenteredSquare(0,0, new Color4f(1f,1f,1f,1f), itemstack.getItem().getTexCoords(), (float)Constants.WIDTH/18f);
+						glTranslatef(x,y,0);
+						glScalef(0.7f, 0.7f, 0.7f);
+						glBegin(GL_QUADS);
+						Shape.createCenteredSquare(0,0, new Color4f(1f,1f,1f,1f), itemstack.getItem().getTexCoords(), size);
 					}
 				glEnd();
 			glPopMatrix();
