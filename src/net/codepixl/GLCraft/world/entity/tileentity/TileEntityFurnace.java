@@ -41,6 +41,8 @@ public class TileEntityFurnace extends TileEntityContainer{
 				getInventory()[1] = new ItemStack(currentRecipe.getOut());
 			else
 				getInventory()[1].addToStack(currentRecipe.getOut().count);
+			if(getInventory()[0].subFromStack(1) == 1)
+				getInventory()[0] = new ItemStack();
 		}
 		
 		if(!cooking){
@@ -49,12 +51,12 @@ public class TileEntityFurnace extends TileEntityContainer{
 				if(getInventory()[1].isNull() || getInventory()[1].addToStack(currentRecipe.getOut().count) == 0){
 					getInventory()[1].subFromStack(currentRecipe.getOut().count);
 					cooking = true;
-					if(getInventory()[0].subFromStack(1) == 1){
-						getInventory()[0] = new ItemStack();
-					}
 				}
 			}
 		}
+		
+		if(cooking && CraftingManager.checkRecipe(getInventory()[0]) != currentRecipe)
+			cooking = false;
 		
 		if(cooking)
 			progress += Time.getDelta();
@@ -70,9 +72,22 @@ public class TileEntityFurnace extends TileEntityContainer{
 		return progress;
 	}
 	
+	public int getProgressPercent(){
+		if(progress == 0)
+			return 0;
+		else
+			return (int) ((progress/currentRecipe.getCookTime())*100);
+	}
+	
 	public static Entity fromNBT(TagCompound t, WorldManager w) throws UnexpectedTagTypeException, TagNotFoundException {
-		System.out.println("GOTTA MAKE FURNACE FROM NBT WORK MAN");
-		return null;
+		TileEntityContainer c = (TileEntityContainer) TileEntityContainer.fromNBT(t, w);
+		TileEntityFurnace f = new TileEntityFurnace(c.getBlockpos().x, c.getBlockpos().y, c.getBlockpos().z, w);
+		f.setInventory(c.getInventory());
+		return f;
+	}
+	
+	public void writeToNBT(TagCompound t, WorldManager w){
+		super.writeToNBT(t);
 	}
 
 }

@@ -28,19 +28,19 @@ public class TileEntityContainer extends TileEntity{
 	
 	public TileEntityContainer(int x, int y, int z, int size, WorldManager worldManager) {
 		super(x, y, z, worldManager);
-		inventory = new ItemStack[size];
-		for(int i = 0; i < inventory.length; i++){
-			inventory[i] = new ItemStack();
+		setInventory(new ItemStack[size]);
+		for(int i = 0; i < getInventory().length; i++){
+			getInventory()[i] = new ItemStack();
 		}
 	}
 	
 	public TileEntityContainer(int x, int y, int z, ItemStack[] inventory, WorldManager worldManager){
 		super(x,y,z,worldManager);
-		this.inventory = inventory;
+		this.setInventory(inventory);
 	}
 	
 	public ItemStack getSlot(int slot){
-		return inventory[slot];
+		return getInventory()[slot];
 	}
 	
 	public ItemStack[] getInventory(){
@@ -51,16 +51,16 @@ public class TileEntityContainer extends TileEntity{
 		int c = s.count;
 		ArrayList<Integer> blankSlots = new ArrayList<Integer>();
 		ArrayList<Integer> compatibleSlots = new ArrayList<Integer>();
-		for(int i = 0; i < inventory.length; i++){
-			if(inventory[i].isNull()){
+		for(int i = 0; i < getInventory().length; i++){
+			if(getInventory()[i].isNull()){
 				blankSlots.add(i);
-			}else if(inventory[i].compatible(s)){
+			}else if(getInventory()[i].compatible(s)){
 				compatibleSlots.add(i);
 			}
 		}
 		
 		for(int i = 0; i < compatibleSlots.size(); i++){
-			int cr = inventory[compatibleSlots.get(i)].addToStack(c);
+			int cr = getInventory()[compatibleSlots.get(i)].addToStack(c);
 			c=cr;
 			if(cr == 0){
 				return 0;
@@ -68,18 +68,18 @@ public class TileEntityContainer extends TileEntity{
 		}
 		
 		if(blankSlots.size() > 0){
-			inventory[blankSlots.get(0)] = new ItemStack(s);
+			getInventory()[blankSlots.get(0)] = new ItemStack(s);
 			return 0;
 		}
 		return c;
 	}
 	
 	public void dropAllItems(){
-		for(int i = 0; i < inventory.length; i++){
-			if(!inventory[i].isNull()){
+		for(int i = 0; i < getInventory().length; i++){
+			if(!getInventory()[i].isNull()){
 				Vector3f pos = new Vector3f(this.pos.x+Constants.randFloat(0, 1), this.pos.y+Constants.randFloat(0, 1), this.pos.z+Constants.randFloat(0, 1));
-				worldManager.spawnEntity(new EntityItem(inventory[i],pos,worldManager));
-				inventory[i] = new ItemStack();
+				worldManager.spawnEntity(new EntityItem(getInventory()[i],pos,worldManager));
+				getInventory()[i] = new ItemStack();
 			}
 		}
 	}
@@ -122,10 +122,14 @@ public class TileEntityContainer extends TileEntity{
 				stack.count = t2.getByte("count");
 				is[slot] = stack;
 			}
-			return new TileEntityChest((int)pos.x, (int)pos.y, (int)pos.z, is, w);
+			return new TileEntityContainer((int)pos.x, (int)pos.y, (int)pos.z, is, w);
 		}
 		
 		return null;
+	}
+
+	public void setInventory(ItemStack[] inventory) {
+		this.inventory = inventory;
 	}
 
 }

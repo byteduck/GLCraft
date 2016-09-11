@@ -19,12 +19,6 @@ public class TileFurnace extends TileTileEntity{
 		// TODO Auto-generated method stub
 		return "Furnace";
 	}
-	
-	@Override
-	public String getTextureName() {
-		// TODO Auto-generated method stub
-		return "stone";
-	}
 
 	@Override
 	public TileEntity getSpawnTileEntity(int x, int y, int z, WorldManager w){
@@ -46,6 +40,28 @@ public class TileFurnace extends TileTileEntity{
 		if(((TileEntityFurnace)worldManager.getTileEntityAtPos(x, y, z)) != null){
 			((TileEntityFurnace)worldManager.getTileEntityAtPos(x, y, z)).dropAllItems();
 		}
+	}
+	
+	@Override
+	public String getIconName(){
+		return "furnace_front";
+	}
+	
+	@Override
+	public boolean hasMultipleTextures(){
+		return true;
+	}
+	
+	@Override
+	public String[] getMultiTextureNames(){
+		return new String[]{
+			"furnace_side",
+			"furnace_side",
+			"furnace_front",
+			"furnace_side",
+			"furnace_side",
+			"furnace_side"
+		};
 	}
 	
 }

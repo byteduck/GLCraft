@@ -245,6 +245,7 @@ public class CentralManager extends Screen{
 			Shape.createSquare(Constants.WIDTH-42, 10, Color4f.WHITE, TextureManager.texture("misc.floppy"), 32);
 			GL11.glEnd();
 		}
+		drawCrosshair();
 	}
 
 	private int raycast(){
@@ -319,7 +320,8 @@ public class CentralManager extends Screen{
 						}
 					glEnd();
 				glPopMatrix();
-				Constants.FONT.drawString((float)Constants.WIDTH/9f+i*SIZE+i*SPACING+SIZE/2f, Constants.HEIGHT-(SIZE/2f), Integer.toString(p.getInventory((int)i).count));
+				if(p.getInventory((int)i).count != 1)
+					Constants.FONT.drawString((float)Constants.WIDTH/9f+i*SIZE+i*SPACING+SIZE/2f, Constants.HEIGHT-(SIZE/2f), Integer.toString(p.getInventory((int)i).count));
 				TextureImpl.unbind();
 			}
 		}
@@ -349,7 +351,6 @@ public class CentralManager extends Screen{
 			String toolTip = "Block: "+Tile.getTile((byte)currentBlock).getName();
 			Constants.FONT.drawString(Constants.WIDTH/2-Constants.FONT.getWidth(toolTip)/2, 10, toolTip);
 		}
-		Constants.FONT.drawString(Constants.WIDTH/2, Constants.HEIGHT/2, "+");
 		if(renderDebug){
 			EntityPlayer p = getEntityManager().getPlayer();
 			Constants.FONT.drawString(10,Constants.FONT.getLineHeight()+10, "X:"+(int)p.getX()+" Y:"+(int)p.getY()+" Z:"+(int)p.getZ());
@@ -367,6 +368,25 @@ public class CentralManager extends Screen{
 		TextureImpl.unbind();
 	}
 	
+	private void drawCrosshair() {
+		GL11.glLineWidth(2f);
+		GL11.glLogicOp(GL11.GL_INVERT);
+		GL11.glEnable(GL11.GL_COLOR_LOGIC_OP);
+		GL11.glBegin(GL11.GL_LINES);
+		GL11.glVertex2d(Constants.WIDTH/2-5, Constants.HEIGHT/2);
+		GL11.glVertex2d(Constants.WIDTH/2+5, Constants.HEIGHT/2);
+		GL11.glEnd();
+		GL11.glBegin(GL11.GL_LINES);
+		GL11.glVertex2d(Constants.WIDTH/2, Constants.HEIGHT/2-5);
+		GL11.glVertex2d(Constants.WIDTH/2, Constants.HEIGHT/2-2);
+		GL11.glEnd();
+		GL11.glBegin(GL11.GL_LINES);
+		GL11.glVertex2d(Constants.WIDTH/2, Constants.HEIGHT/2+5);
+		GL11.glVertex2d(Constants.WIDTH/2, Constants.HEIGHT/2+2);
+		GL11.glEnd();
+		GL11.glDisable(GL11.GL_COLOR_LOGIC_OP);
+	}
+
 	public void render2D(){
 		glCullFace(GL_BACK);
 		glClearDepth(1);

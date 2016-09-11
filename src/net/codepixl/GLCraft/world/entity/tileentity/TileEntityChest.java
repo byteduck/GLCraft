@@ -1,7 +1,12 @@
 package net.codepixl.GLCraft.world.entity.tileentity;
 
+import com.evilco.mc.nbt.error.TagNotFoundException;
+import com.evilco.mc.nbt.error.UnexpectedTagTypeException;
+import com.evilco.mc.nbt.tag.TagCompound;
+
 import net.codepixl.GLCraft.GUI.tileentity.GUIChest;
 import net.codepixl.GLCraft.world.WorldManager;
+import net.codepixl.GLCraft.world.entity.Entity;
 import net.codepixl.GLCraft.world.entity.mob.EntityPlayer;
 import net.codepixl.GLCraft.world.item.ItemStack;
 
@@ -22,6 +27,13 @@ public class TileEntityChest extends TileEntityContainer{
 	
 	public void openGUI(WorldManager w, EntityPlayer p){
 		w.centralManager.guiManager.showGUI(new GUIChest(this, p));
+	}
+	
+	public static Entity fromNBT(TagCompound t, WorldManager w) throws UnexpectedTagTypeException, TagNotFoundException{
+		TileEntityContainer c = (TileEntityContainer) TileEntityContainer.fromNBT(t, w);
+		TileEntityChest f = new TileEntityChest(c.getBlockpos().x, c.getBlockpos().y, c.getBlockpos().z, c.getInventory().length, w);
+		f.setInventory(c.getInventory());
+		return f;
 	}
 
 }

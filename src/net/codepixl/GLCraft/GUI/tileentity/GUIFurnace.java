@@ -4,6 +4,7 @@ import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
 
 import net.codepixl.GLCraft.GUI.GUIScreen;
+import net.codepixl.GLCraft.GUI.Elements.GUIProgressBar;
 import net.codepixl.GLCraft.GUI.Inventory.Elements.GUISlot;
 import net.codepixl.GLCraft.util.Constants;
 import net.codepixl.GLCraft.world.entity.mob.EntityPlayer;
@@ -15,25 +16,29 @@ public class GUIFurnace extends GUIScreen{
 	private TileEntityFurnace furnace;
 	private EntityPlayer player;
 	private GUISlot in,out;
+	private GUIProgressBar progressBar;
 	
 	private static final int HMIDDLE = Constants.WIDTH/2;
 	private static final int VMIDDLE = Constants.HEIGHT/2;
 	private static final int HSIZE = (int) (GUISlot.size/2f);
+	private static final int PBSIZE = 100;
 	
 	
 	public GUIFurnace(TileEntityFurnace furnace, EntityPlayer player) {
 		this.furnace = furnace;
 		this.player = player;
-		in = new GUISlot(HMIDDLE-HSIZE,VMIDDLE);
-		out = new GUISlot(HMIDDLE+HSIZE,VMIDDLE);
+		in = new GUISlot(HMIDDLE-HSIZE-PBSIZE/2-10,VMIDDLE);
+		out = new GUISlot(HMIDDLE+HSIZE+PBSIZE/2+10,VMIDDLE);
+		progressBar = new GUIProgressBar(HMIDDLE-PBSIZE/2, VMIDDLE-GUIProgressBar.PB_HEIGHT/2, PBSIZE);
 		
-		addElements(in,out);
+		addElements(in,out, progressBar);
 	}
 	
 	@Override
 	public void update(){
 		in.itemstack = furnace.getSlot(0);
 		out.itemstack = furnace.getSlot(1);
+		progressBar.setProgress(furnace.getProgressPercent());
 	}
 	
 	@Override
@@ -46,15 +51,18 @@ public class GUIFurnace extends GUIScreen{
 						ItemStack tempStack = in.itemstack;
 						in.itemstack = player.getSelectedItemStack();
 						player.setSelectedItemStack(tempStack);
+						furnace.getInventory()[0] = in.itemstack;
 					}
 					if(Mouse.isButtonDown(1)){
 						if(player.getSelectedItemStack().compatible(in.itemstack)){
 							int c = player.getSelectedItemStack().addToStack(in.itemstack.count);
 							in.itemstack.count = c;
+							furnace.getInventory()[0] = in.itemstack;
 						}else if(player.getSelectedItemStack().isNull()){
 							ItemStack tempStack = in.itemstack;
 							in.itemstack = player.getSelectedItemStack();
 							player.setSelectedItemStack(tempStack);
+							furnace.getInventory()[0] = in.itemstack;
 						}
 					}
 				}
