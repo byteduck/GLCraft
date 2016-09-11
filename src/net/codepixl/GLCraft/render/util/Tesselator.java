@@ -1,10 +1,11 @@
 package net.codepixl.GLCraft.render.util;
 
-import static org.lwjgl.opengl.GL11.GL_TEXTURE_2D;
-import static org.lwjgl.opengl.GL11.glDisable;
 import static org.lwjgl.opengl.GL11.glVertex2f;
 
 import org.lwjgl.opengl.GL11;
+import org.newdawn.slick.Color;
+
+import net.codepixl.GLCraft.util.Constants;
 
 public class Tesselator{
 	/**
@@ -39,5 +40,14 @@ public class Tesselator{
 	 **/
 	public static void stencilFinish(){
 		GL11.glDisable(GL11.GL_STENCIL_TEST);
+	}
+	
+	public static void drawTextWithShadow(float x, float y, String text, Color color, Color shadowColor){
+		Constants.FONT.drawString(x+2, y+2, text, shadowColor);
+		Constants.FONT.drawString(x, y, text, color);
+	}
+
+	public static void drawTextWithShadow(float x, float y, String text) {
+		drawTextWithShadow(x,y,text,Color.white,Color.darkGray);
 	}
 }

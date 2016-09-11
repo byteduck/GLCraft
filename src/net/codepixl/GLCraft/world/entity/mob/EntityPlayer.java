@@ -378,6 +378,7 @@ public class EntityPlayer extends Mob {
 					r.next();
 				}else{
 					tile = worldManager.getTileAtPos((int) r.pos.x, (int) r.pos.y, (int) r.pos.z);
+					Vector3f tpos = new Vector3f(r.pos);
 					if(Tile.getTile((byte)tile).customHitbox()){
 						AABB ray = new AABB(0,0,0);
 						ray.update(r.pos);
@@ -436,7 +437,7 @@ public class EntityPlayer extends Mob {
 					r.prev();
 					//BUILD
 					if(Mouse.isButtonDown(1) && GUIManager.getMainManager().sendPlayerInput() && worldManager.getEntityManager().getPlayer().getBuildCooldown() == 0f/** && worldManager.getTileAtPos(r.pos) == 0**/) {
-						if(Tile.getTile((byte) tile).onClick((int)r.pos.x, (int)r.pos.y, (int)r.pos.z, this, worldManager)){}else{
+						if(Tile.getTile((byte) tile).onClick((int)tpos.x, (int)tpos.y, (int)tpos.z, this, worldManager)){}else{
 							if(!worldManager.getEntityManager().getPlayer().getSelectedItemStack().isNull() && worldManager.getEntityManager().getPlayer().getSelectedItemStack().isTile()){
 								AABB blockaabb = new AABB(1, 1, 1);
 								blockaabb.update(new Vector3f(((int) r.pos.x) + 0.5f, (int) r.pos.y, ((int) r.pos.z) + 0.5f));

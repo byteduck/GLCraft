@@ -17,6 +17,7 @@ import com.nishu.utils.Color4f;
 import net.codepixl.GLCraft.GUI.GUIScreen;
 import net.codepixl.GLCraft.render.Shape;
 import net.codepixl.GLCraft.render.TextureManager;
+import net.codepixl.GLCraft.render.util.Tesselator;
 import net.codepixl.GLCraft.util.Constants;
 import net.codepixl.GLCraft.util.Spritesheet;
 import net.codepixl.GLCraft.world.item.ItemStack;
@@ -62,7 +63,8 @@ public class GUISlot extends GUIScreen{
 					}
 				glEnd();
 			glPopMatrix();
-			Constants.FONT.drawString(x, y, Integer.toString(itemstack.count));
+			if(itemstack.count != 1)
+				Tesselator.drawTextWithShadow(x, y, Integer.toString(itemstack.count));
 			TextureImpl.unbind();
 		}
 	}

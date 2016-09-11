@@ -46,6 +46,7 @@ import static org.lwjgl.opengl.GL11.glVertex2f;
 import static org.lwjgl.opengl.GL11.glViewport;
 import static org.lwjgl.util.glu.GLU.gluPerspective;
 
+import java.awt.Color;
 import java.io.PipedInputStream;
 import java.nio.ByteBuffer;
 import java.nio.FloatBuffer;
@@ -74,6 +75,7 @@ import net.codepixl.GLCraft.GUI.GUISinglePlayer;
 import net.codepixl.GLCraft.GUI.GUIStartScreen;
 import net.codepixl.GLCraft.render.Shape;
 import net.codepixl.GLCraft.render.TextureManager;
+import net.codepixl.GLCraft.render.util.Tesselator;
 import net.codepixl.GLCraft.sound.SoundManager;
 import net.codepixl.GLCraft.util.Constants;
 import net.codepixl.GLCraft.util.DebugTimer;
@@ -321,7 +323,7 @@ public class CentralManager extends Screen{
 					glEnd();
 				glPopMatrix();
 				if(p.getInventory((int)i).count != 1)
-					Constants.FONT.drawString((float)Constants.WIDTH/9f+i*SIZE+i*SPACING+SIZE/2f, Constants.HEIGHT-(SIZE/2f), Integer.toString(p.getInventory((int)i).count));
+					Tesselator.drawTextWithShadow((float)Constants.WIDTH/9f+i*SIZE+i*SPACING+SIZE/2f, Constants.HEIGHT-(SIZE/2f), Integer.toString(p.getInventory((int)i).count));
 				TextureImpl.unbind();
 			}
 		}
