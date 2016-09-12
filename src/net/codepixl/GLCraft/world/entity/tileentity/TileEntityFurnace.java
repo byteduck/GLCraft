@@ -1,17 +1,26 @@
 package net.codepixl.GLCraft.world.entity.tileentity;
 
+import java.util.Iterator;
+import java.util.List;
+
+import org.lwjgl.util.vector.Vector3f;
+
 import com.evilco.mc.nbt.error.TagNotFoundException;
 import com.evilco.mc.nbt.error.UnexpectedTagTypeException;
 import com.evilco.mc.nbt.tag.TagCompound;
 import com.nishu.utils.Time;
 
+import net.codepixl.GLCraft.GUI.tileentity.GUIChest;
 import net.codepixl.GLCraft.GUI.tileentity.GUIFurnace;
 import net.codepixl.GLCraft.world.WorldManager;
 import net.codepixl.GLCraft.world.entity.Entity;
+import net.codepixl.GLCraft.world.entity.NBTUtil;
 import net.codepixl.GLCraft.world.entity.mob.EntityPlayer;
+import net.codepixl.GLCraft.world.item.Item;
 import net.codepixl.GLCraft.world.item.ItemStack;
 import net.codepixl.GLCraft.world.item.crafting.CraftingManager;
 import net.codepixl.GLCraft.world.item.crafting.FurnaceRecipe;
+import net.codepixl.GLCraft.world.tile.Tile;
 
 public class TileEntityFurnace extends TileEntityContainer{
 	

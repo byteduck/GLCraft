@@ -1,13 +1,14 @@
 package net.codepixl.GLCraft.world.entity;
 
-import static org.lwjgl.opengl.GL11.GL_ADD;
-import static org.lwjgl.opengl.GL11.GL_MODULATE;
-import static org.lwjgl.opengl.GL11.GL_QUADS;
-import static org.lwjgl.opengl.GL11.GL_TEXTURE_ENV;
-import static org.lwjgl.opengl.GL11.GL_TEXTURE_ENV_MODE;
-import static org.lwjgl.opengl.GL11.glBegin;
-import static org.lwjgl.opengl.GL11.glEnd;
-import static org.lwjgl.opengl.GL11.glTexEnvi;
+import net.codepixl.GLCraft.render.Shape;
+import net.codepixl.GLCraft.util.AABB;
+import net.codepixl.GLCraft.util.Constants;
+import net.codepixl.GLCraft.util.MathUtils;
+import net.codepixl.GLCraft.world.Chunk;
+import net.codepixl.GLCraft.world.WorldManager;
+import net.codepixl.GLCraft.world.tile.Tile;
+
+import static org.lwjgl.opengl.GL11.*;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -18,14 +19,6 @@ import com.evilco.mc.nbt.error.TagNotFoundException;
 import com.evilco.mc.nbt.error.UnexpectedTagTypeException;
 import com.evilco.mc.nbt.tag.TagCompound;
 import com.nishu.utils.Color4f;
-
-import net.codepixl.GLCraft.render.Shape;
-import net.codepixl.GLCraft.util.AABB;
-import net.codepixl.GLCraft.util.Constants;
-import net.codepixl.GLCraft.util.MathUtils;
-import net.codepixl.GLCraft.world.Chunk;
-import net.codepixl.GLCraft.world.WorldManager;
-import net.codepixl.GLCraft.world.tile.Tile;
 
 public class EntityTNT extends EntitySolid{
 

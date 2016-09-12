@@ -1,6 +1,7 @@
 package net.codepixl.GLCraft.util.data.saves;
 
 import java.awt.BorderLayout;
+import java.awt.Dimension;
 import java.awt.GridLayout;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;

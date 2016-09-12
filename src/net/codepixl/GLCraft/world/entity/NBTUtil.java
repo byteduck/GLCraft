@@ -12,6 +12,7 @@ import com.evilco.mc.nbt.tag.TagCompound;
 import com.evilco.mc.nbt.tag.TagFloat;
 
 import net.codepixl.GLCraft.world.WorldManager;
+import net.codepixl.GLCraft.world.entity.tileentity.TileEntityChest;
 
 public class NBTUtil {
 	public static Entity readEntity(TagCompound t, WorldManager w) throws UnexpectedTagTypeException, TagNotFoundException, NoSuchMethodException, SecurityException, IllegalAccessException, IllegalArgumentException, InvocationTargetException{
