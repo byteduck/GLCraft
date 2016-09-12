@@ -11,18 +11,12 @@ import static org.lwjgl.opengl.GL11.glPushAttrib;
 import static org.lwjgl.opengl.GL11.glRotatef;
 import static org.lwjgl.opengl.GL11.glTranslatef;
 
-import java.io.FileInputStream;
-import java.io.IOException;
 import java.util.Iterator;
-import java.util.List;
 
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
 import org.lwjgl.util.vector.Vector3f;
 
-import com.evilco.mc.nbt.stream.NbtInputStream;
-import com.evilco.mc.nbt.tag.TagCompound;
-import com.evilco.mc.nbt.tag.TagFloat;
 import com.nishu.utils.Color4f;
 import com.nishu.utils.Time;
 
@@ -36,11 +30,9 @@ import net.codepixl.GLCraft.util.Constants;
 import net.codepixl.GLCraft.util.MathUtils;
 import net.codepixl.GLCraft.util.Ray;
 import net.codepixl.GLCraft.util.Raytracer;
-import net.codepixl.GLCraft.util.data.saves.SaveManager;
 import net.codepixl.GLCraft.world.WorldManager;
 import net.codepixl.GLCraft.world.entity.Entity;
 import net.codepixl.GLCraft.world.entity.EntityItem;
-import net.codepixl.GLCraft.world.entity.NBTUtil;
 import net.codepixl.GLCraft.world.item.Item;
 import net.codepixl.GLCraft.world.item.ItemStack;
 import net.codepixl.GLCraft.world.item.tool.Tool;

@@ -6,7 +6,6 @@ import org.lwjgl.opengl.GL11;
 import org.lwjgl.util.vector.Vector3f;
 
 import com.nishu.utils.Color4f;
-import com.nishu.utils.Time;
 
 import net.codepixl.GLCraft.render.Shape;
 import net.codepixl.GLCraft.world.WorldManager;

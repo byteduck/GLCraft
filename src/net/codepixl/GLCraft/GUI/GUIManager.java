@@ -1,13 +1,8 @@
 package net.codepixl.GLCraft.GUI;
 
-import static org.lwjgl.opengl.GL11.GL_TEXTURE_2D;
-import static org.lwjgl.opengl.GL11.glDisable;
-import static org.lwjgl.opengl.GL11.glVertex2f;
-
 import java.util.HashMap;
 
 import org.lwjgl.input.Keyboard;
-import org.lwjgl.opengl.GL11;
 
 import net.codepixl.GLCraft.GUI.Elements.GUITextBox;
 import net.codepixl.GLCraft.render.TextureManager;
