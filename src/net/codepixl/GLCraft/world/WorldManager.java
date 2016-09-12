@@ -335,7 +335,7 @@ public class WorldManager {
 			for(int y = (int) (entitySolid.getY()-1); y < entitySolid.getY()+mAABB.getSize().y; y++){
 				for(int z = (int) (entitySolid.getZ()-1); z < entitySolid.getZ()+mAABB.getSize().z; z++){
 					if(Tile.getTile((byte)getTileAtPos(x,y,z)) == t){
-						AABB aabb = new AABB(1,1,1);
+						AABB aabb = Tile.getTile((byte)getTileAtPos(x,y,z)).getAABB(getMetaAtPos(x,y,z));
 						aabb.update(new Vector3f(x+0.5f,y,z+0.5f));
 						//if(!AABB.testAABB(aabb, mAABB))
 							arraylist.add(aabb);

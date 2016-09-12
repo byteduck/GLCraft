@@ -286,10 +286,10 @@ public class CentralManager extends Screen{
 			Shape.createCenteredSquare(Constants.WIDTH/2f, Constants.HEIGHT/2f, new Color4f(1f,1f,1f,1f), texCoords, Constants.WIDTH);
 			glEnd();
 			glPopMatrix();
-		}else if(p.tileAtEye() == Tile.Water){
+		}else if(!p.canBreathe()){
 			glPushMatrix();
 			glBegin(GL_QUADS);
-			Shape.createCenteredSquare(Constants.WIDTH/2f, Constants.HEIGHT/2f, new Color4f(1f,1f,1f,1f), p.tileAtEye().getIconCoords(), Constants.WIDTH);
+			Shape.createCenteredSquare(Constants.WIDTH/2f, Constants.HEIGHT/2f, new Color4f(1f,1f,1f,1f), Tile.Water.getIconCoords(), Constants.WIDTH);
 			glEnd();
 			glPopMatrix();
 		}

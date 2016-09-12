@@ -69,7 +69,7 @@ public class Tile {
 		return false;
 	}
 	
-	public AABB getAABB(){
+	public AABB getAABB(byte meta){
 		return new AABB(1,1,1);
 	}
 	

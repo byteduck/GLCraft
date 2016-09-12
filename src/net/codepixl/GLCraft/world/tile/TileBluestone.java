@@ -54,7 +54,7 @@ public class TileBluestone extends Tile{
 	}
 	
 	@Override
-	public AABB getAABB(){
+	public AABB getAABB(byte meta){
 		return new AABB(1,0.1f,1);
 	}
 	

@@ -273,7 +273,7 @@ public class EntityPlayer extends Mob {
 	}
 	
 	public void render() {
-	
+		
 	}
 	
 	public void dispose() {
@@ -382,7 +382,7 @@ public class EntityPlayer extends Mob {
 					if(Tile.getTile((byte)tile).customHitbox()){
 						AABB ray = new AABB(0,0,0);
 						ray.update(r.pos);
-						AABB block = Tile.getTile((byte)tile).getAABB();
+						AABB block = Tile.getTile((byte)tile).getAABB(worldManager.getMetaAtPos(tpos));
 						block.update(new Vector3f((int)r.pos.x+0.5f,(int)r.pos.y,(int)r.pos.z+0.5f));
 						if(!AABB.testAABB(block, ray)){
 							r.next();

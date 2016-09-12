@@ -84,6 +84,7 @@ public class EntitySolid extends Entity{
 	
 	public boolean isInWater(){
 		Iterator<AABB> i = worldManager.BlockAABBForEntity(this, Tile.Water).iterator();
+		getAABB().update(pos);
 		while(i.hasNext()){
 			AABB next = i.next();
 			if(AABB.testAABB(getAABB(), next)){

@@ -8,13 +8,12 @@ import com.evilco.mc.nbt.tag.TagCompound;
 import com.evilco.mc.nbt.tag.TagFloat;
 import com.nishu.utils.Time;
 
+import net.codepixl.GLCraft.util.AABB;
 import net.codepixl.GLCraft.util.DebugTimer;
 import net.codepixl.GLCraft.util.GameObj;
-import net.codepixl.GLCraft.util.Ray;
 import net.codepixl.GLCraft.world.WorldManager;
 import net.codepixl.GLCraft.world.entity.EntityItem;
 import net.codepixl.GLCraft.world.entity.EntitySolid;
-import net.codepixl.GLCraft.world.entity.mob.animal.EntityTestAnimal;
 import net.codepixl.GLCraft.world.item.ItemStack;
 import net.codepixl.GLCraft.world.tile.Tile;
 
@@ -155,7 +154,13 @@ public class Mob extends EntitySolid implements GameObj{
 	}
 
 	public boolean canBreathe(){
-		return !(Tile.getTile((byte) worldManager.getTileAtPos(pos.x,pos.y+eyeLevel,pos.z)) == Tile.Water);
+		AABB eyeAABB = new AABB(getAABB().getSize().x,0.1f,getAABB().getSize().z);
+		eyeAABB.update(new Vector3f(pos.getX(), pos.getY()+eyeLevel, pos.getZ()));
+		for(AABB aabb : worldManager.BlockAABBForEntity(this, Tile.Water)){
+			if(AABB.testAABB(aabb, eyeAABB))
+				return false;
+		}
+		return true;
 	}
 	
 	public void hurt(float amt){

@@ -1,14 +1,14 @@
 package net.codepixl.GLCraft.world.tile;
 
 import org.lwjgl.opengl.GL11;
-import org.lwjgl.util.vector.Vector3f;
 
 import com.nishu.utils.Color4f;
 
 import net.codepixl.GLCraft.render.RenderType;
 import net.codepixl.GLCraft.render.Shape;
 import net.codepixl.GLCraft.render.TextureManager;
-import net.codepixl.GLCraft.util.EnumFacing;
+import net.codepixl.GLCraft.util.AABB;
+import net.codepixl.GLCraft.util.Spritesheet;
 import net.codepixl.GLCraft.world.Chunk;
 import net.codepixl.GLCraft.world.WorldManager;
 import net.codepixl.GLCraft.world.tile.material.Material;
@@ -17,7 +17,6 @@ public class TileWater extends Tile{
 
 	@Override
 	public String getName() {
-		// TODO Auto-generated method stub
 		return "Water";
 	}
 	
@@ -28,13 +27,11 @@ public class TileWater extends Tile{
 	
 	@Override
 	public byte getId() {
-		// TODO Auto-generated method stub
 		return 3;
 	}
 
 	@Override
 	public Color4f getColor() {
-		// TODO Auto-generated method stub
 		return Color4f.WHITE;
 	}
 	
@@ -45,19 +42,9 @@ public class TileWater extends Tile{
 	
 	@Override
 	public void customRender(float x, float y, float z, WorldManager w, Chunk c){
-		float size;
-		byte meta = w.getMetaAtPos((int)x, (int)y, (int)z);
-		if(meta == 0){
-			size = 1f;
-		}else if(meta == 8){
-			size = 1f;
-		}else{
-			size = (7f-((float)meta-1f))/7f;
-		}
+		float size = getHeight(w.getMetaAtPos(x,y,z));
 		GL11.glPushMatrix();
 		GL11.glTranslatef(x, y, z);
-		GL11.glScalef(1, size, 1);
-		GL11.glBegin(GL11.GL_QUADS);
 		/*
 		 * bottom - 0,1 (0)
 		 * top - 2,3 (1)
@@ -66,45 +53,180 @@ public class TileWater extends Tile{
 		 * left - 8,9 (4)
 		 * right - 10,11 (5)
 		 */
-		float tempTexCoords[] = new float[12];
-		for(int i = 0; i < 6; i++){
-			if(sideShouldRender(i,x,y,z,w)){
-				tempTexCoords[i*2] = getTexCoords()[0];
-				tempTexCoords[i*2+1] = getTexCoords()[1];
-			}else{
-				tempTexCoords[i*2] = TextureManager.texture("misc.nothing")[0];
-				tempTexCoords[i*2+1] = TextureManager.texture("misc.nothing")[1];
-			}
+		float[] cornerHeight = new float[4];
+		for(int i = 0; i < 4; i++)
+			cornerHeight[i] = getCornerHeight(i,x,y,z,w);
+
+		if(sideShouldRender(0,x,y,z,w)){
+			GL11.glBegin(GL11.GL_QUADS);
+			GL11.glTexCoord2f(this.getTexCoords()[0], this.getTexCoords()[1]);
+			GL11.glVertex3f(0, 0, 0);
+			GL11.glTexCoord2f(this.getTexCoords()[0]+Spritesheet.atlas.uniformSize(), this.getTexCoords()[1]);
+			GL11.glVertex3f(0, 0, 1);
+			GL11.glTexCoord2f(this.getTexCoords()[0]+Spritesheet.atlas.uniformSize(), this.getTexCoords()[1]+Spritesheet.atlas.uniformSize());
+			GL11.glVertex3f(1, 0, 1);
+			GL11.glTexCoord2f(this.getTexCoords()[0], this.getTexCoords()[1]+Spritesheet.atlas.uniformSize());
+			GL11.glVertex3f(1, 0, 0);
+			GL11.glEnd();
 		}
-		Shape.createCube(0, 0, 0, Color4f.WHITE, tempTexCoords, 1f);
-		GL11.glEnd();
+		if(sideShouldRender(1,x,y,z,w)){
+			GL11.glBegin(GL11.GL_QUADS);
+			GL11.glTexCoord2f(this.getTexCoords()[0], this.getTexCoords()[1]);
+			GL11.glVertex3f(0, cornerHeight[0], 0);
+			GL11.glTexCoord2f(this.getTexCoords()[0]+Spritesheet.atlas.uniformSize(), this.getTexCoords()[1]);
+			GL11.glVertex3f(1, cornerHeight[1], 0);
+			GL11.glTexCoord2f(this.getTexCoords()[0]+Spritesheet.atlas.uniformSize(), this.getTexCoords()[1]+Spritesheet.atlas.uniformSize());
+			GL11.glVertex3f(1, cornerHeight[2], 1);
+			GL11.glTexCoord2f(this.getTexCoords()[0], this.getTexCoords()[1]+Spritesheet.atlas.uniformSize());
+			GL11.glVertex3f(0, cornerHeight[3], 1);
+			GL11.glEnd();
+		}
+		if(sideShouldRender(3,x,y,z,w)){
+			GL11.glBegin(GL11.GL_QUADS);
+			GL11.glTexCoord2f(this.getTexCoords()[0], this.getTexCoords()[1]);
+			GL11.glVertex3f(0, 0, 1);
+			GL11.glTexCoord2f(this.getTexCoords()[0]+Spritesheet.atlas.uniformSize(), this.getTexCoords()[1]);
+			GL11.glVertex3f(0, cornerHeight[3], 1);
+			GL11.glTexCoord2f(this.getTexCoords()[0]+Spritesheet.atlas.uniformSize(), this.getTexCoords()[1]+Spritesheet.atlas.uniformSize());
+			GL11.glVertex3f(1, cornerHeight[2], 1);
+			GL11.glTexCoord2f(this.getTexCoords()[0], this.getTexCoords()[1]+Spritesheet.atlas.uniformSize());
+			GL11.glVertex3f(1, 0, 1);
+			GL11.glEnd();
+		}
+		
 		GL11.glPopMatrix();
 	}
 	
+	//0: 0,0
+	//1: 1,0
+	//2: 1,1
+	//3: 0,1
+	private float getCornerHeight(int corner, float x, float y, float z, WorldManager w){
+		int num = 1;
+		float total = 0;
+		float ret = 1;
+		switch(corner){
+			case 0:
+				if(w.getTileAtPos(x-1,y+1,z) == getId() || w.getTileAtPos(x,y+1,z-1) == getId() || w.getTileAtPos(x-1,y+1,z-1) == getId()){
+					ret = 1;
+				}else{
+					if(w.getTileAtPos(x-1,y,z) == getId()){
+						num++;
+						total+=getHeight(w.getMetaAtPos(x-1, y, z));
+					}
+					if(w.getTileAtPos(x,y,z-1) == getId()){
+						num++;
+						total+=getHeight(w.getMetaAtPos(x, y, z-1));
+					}
+					if(w.getTileAtPos(x-1,y,z-1) == getId()){
+						num++;
+						total+=getHeight(w.getMetaAtPos(x-1, y, z-1));
+					}
+					total+=getHeight(w.getMetaAtPos(x, y, z));
+					ret = total/(float)num;
+				}
+				break;
+			case 1:
+				if(w.getTileAtPos(x+1,y+1,z) == getId() || w.getTileAtPos(x,y+1,z-1) == getId() || w.getTileAtPos(x+1,y+1,z-1) == getId()){
+					ret = 1;
+				}else{
+					if(w.getTileAtPos(x+1,y,z) == getId()){
+						num++;
+						total+=getHeight(w.getMetaAtPos(x+1, y, z));
+					}
+					if(w.getTileAtPos(x,y,z-1) == getId()){
+						num++;
+						total+=getHeight(w.getMetaAtPos(x, y, z-1));
+					}
+					if(w.getTileAtPos(x+1,y,z-1) == getId()){
+						num++;
+						total+=getHeight(w.getMetaAtPos(x+1, y, z-1));
+					}
+					total+=getHeight(w.getMetaAtPos(x, y, z));
+					ret = total/(float)num;
+				}
+				break;
+			case 2:
+				if(w.getTileAtPos(x+1,y+1,z) == getId() || w.getTileAtPos(x,y+1,z+1) == getId() || w.getTileAtPos(x+1,y+1,z+1) == getId()){
+					ret = 1;
+				}else{
+					if(w.getTileAtPos(x+1,y,z) == getId()){
+						num++;
+						total+=getHeight(w.getMetaAtPos(x+1, y, z));
+					}
+					if(w.getTileAtPos(x,y,z+1) == getId()){
+						num++;
+						total+=getHeight(w.getMetaAtPos(x, y, z+1));
+					}
+					if(w.getTileAtPos(x+1,y,z+1) == getId()){
+						num++;
+						total+=getHeight(w.getMetaAtPos(x+1, y, z+1));
+					}
+					total+=getHeight(w.getMetaAtPos(x, y, z));
+					ret = total/(float)num;
+				}
+				break;
+			case 3:
+				if(w.getTileAtPos(x-1,y+1,z) == getId() || w.getTileAtPos(x,y+1,z+1) == getId() || w.getTileAtPos(x-1,y+1,z+1) == getId()){
+					ret = 1;
+				}else{
+					if(w.getTileAtPos(x-1,y,z) == getId()){
+						num++;
+						total+=getHeight(w.getMetaAtPos(x-1, y, z));
+					}
+					if(w.getTileAtPos(x,y,z+1) == getId()){
+						num++;
+						total+=getHeight(w.getMetaAtPos(x, y, z+1));
+					}
+					if(w.getTileAtPos(x-1,y,z+1) == getId()){
+						num++;
+						total+=getHeight(w.getMetaAtPos(x-1, y, z+1));
+					}
+					total+=getHeight(w.getMetaAtPos(x, y, z));
+					ret = total/(float)num;
+				}
+				break;
+		}
+		
+		return ret;
+	}
+	
 	private boolean sideShouldRender(int f, float x, float y, float z, WorldManager w){
-		if(w.getMetaAtPos(x, y, z) == 8)
-			return true;
+		byte meta = (byte) w.getMetaAtPos(x,y,z);
+		if(meta == 8 || meta == 0)
+			meta = 1;
 		switch(f){
 			case 0: //BOTTOM
-				return (w.getTileAtPos(x,y-1,z) != getId()) || (w.getTileAtPos(x,y-1,z) == getId() && w.getMetaAtPos(x, y-1, z) > w.getMetaAtPos(x, y, z));
+				return (w.getTileAtPos(x,y-1,z) != getId());
 			case 1: //TOP
-				return (w.getTileAtPos(x,y+1,z) != getId()) || (w.getTileAtPos(x,y+1,z) == getId() && w.getMetaAtPos(x, y+1, z) > w.getMetaAtPos(x, y, z));
+				return (w.getTileAtPos(x,y+1,z) != getId());
 			case 2: //FRONT
-				return (w.getTileAtPos(x,y,z-1) != getId()) || (w.getTileAtPos(x,y,z-1) == getId() && w.getMetaAtPos(x, y, z-1) > w.getMetaAtPos(x, y, z));
+				return (w.getTileAtPos(x,y,z-1) != getId());
 			case 3: //BACK
-				return (w.getTileAtPos(x,y,z+1) != getId()) || (w.getTileAtPos(x,y,z+1) == getId() && w.getMetaAtPos(x, y, z+1) > w.getMetaAtPos(x, y, z));
+				return (w.getTileAtPos(x,y,z+1) != getId());
 			case 4: //LEFT
-				return (w.getTileAtPos(x+1,y,z) != getId()) || (w.getTileAtPos(x+1,y,z) == getId() && w.getMetaAtPos(x+1, y, z) > w.getMetaAtPos(x, y, z));
+				return (w.getTileAtPos(x+1,y,z) != getId());
 			case 5:
-				return (w.getTileAtPos(x-1,y,z) != getId()) || (w.getTileAtPos(x-1,y,z) == getId() && w.getMetaAtPos(x-1, y, z) > w.getMetaAtPos(x, y, z));
+				return (w.getTileAtPos(x-1,y,z) != getId());
 			default:
 				return false;
 		}
 	}
+	
+	private float getHeight(int i){
+		float size;
+		if(i == 0){
+			size = 1f;
+		}else if(i == 8){
+			size = 1f;
+		}else{
+			size = (7f-((float)i-1f))/7f;
+		}
+		return size;
+	}
 
 	@Override
 	public boolean isTransparent() {
-		// TODO Auto-generated method stub
 		return true;
 	}
 	
@@ -115,7 +237,6 @@ public class TileWater extends Tile{
 
 	@Override
 	public boolean canPassThrough() {
-		// TODO Auto-generated method stub
 		return true;
 	}
 	@Override
@@ -131,6 +252,19 @@ public class TileWater extends Tile{
 	@Override
 	public boolean needsConstantTick(){
 		return true;
+	}
+	
+	@Override
+	public AABB getAABB(byte meta){
+		float size = 0;
+		if(meta == 0){
+			size = 1f;
+		}else if(meta == 8){
+			size = 1f;
+		}else{
+			size = (7f-((float)meta-1f))/7f;
+		}
+		return new AABB(1,size,1);
 	}
 	
 	@Override
