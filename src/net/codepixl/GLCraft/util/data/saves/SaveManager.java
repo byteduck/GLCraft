@@ -1,9 +1,7 @@
 package net.codepixl.GLCraft.util.data.saves;
 
-import java.awt.TrayIcon.MessageType;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
@@ -11,13 +9,10 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 
 import org.lwjgl.util.vector.Vector3f;
 
-import com.evilco.mc.nbt.error.TagNotFoundException;
-import com.evilco.mc.nbt.error.UnexpectedTagTypeException;
 import com.evilco.mc.nbt.stream.NbtInputStream;
 import com.evilco.mc.nbt.stream.NbtOutputStream;
 import com.evilco.mc.nbt.tag.TagByte;

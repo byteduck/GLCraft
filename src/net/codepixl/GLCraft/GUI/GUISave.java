@@ -1,13 +1,11 @@
 package net.codepixl.GLCraft.GUI;
 
-import net.codepixl.GLCraft.util.Constants;
-import net.codepixl.GLCraft.util.data.saves.Save;
-
 import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.GL11;
 
 import net.codepixl.GLCraft.GUI.Elements.GUILabel;
-import net.codepixl.GLCraft.sound.SoundManager;
+import net.codepixl.GLCraft.util.Constants;
+import net.codepixl.GLCraft.util.data.saves.Save;
 
 public class GUISave extends GUIScreen{
 	

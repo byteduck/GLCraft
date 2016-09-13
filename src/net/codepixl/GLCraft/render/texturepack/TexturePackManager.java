@@ -8,8 +8,6 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
 
-import javax.swing.JOptionPane;
-
 import net.codepixl.GLCraft.render.TextureManager;
 import net.codepixl.GLCraft.util.Constants;
 import net.lingala.zip4j.core.ZipFile;

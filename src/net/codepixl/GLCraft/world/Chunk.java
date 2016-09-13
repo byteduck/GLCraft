@@ -10,7 +10,6 @@ import static org.lwjgl.opengl.GL11.glEndList;
 import static org.lwjgl.opengl.GL11.glGenLists;
 import static org.lwjgl.opengl.GL11.glNewList;
 
-import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -20,7 +19,6 @@ import java.util.Iterator;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.util.vector.Vector3f;
 
-import com.evilco.mc.nbt.stream.NbtInputStream;
 import com.evilco.mc.nbt.stream.NbtOutputStream;
 import com.evilco.mc.nbt.tag.TagByteArray;
 import com.evilco.mc.nbt.tag.TagCompound;
