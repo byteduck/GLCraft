@@ -5,9 +5,8 @@ import java.util.List;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.util.vector.Vector3f;
 
-import com.nishu.utils.Color4f;
-
 import net.codepixl.GLCraft.render.Shape;
+import net.codepixl.GLCraft.util.Color4f;
 import net.codepixl.GLCraft.world.WorldManager;
 import net.codepixl.GLCraft.world.entity.Entity;
 import net.codepixl.GLCraft.world.entity.mob.EntityPlayer;

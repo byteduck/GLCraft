@@ -1,5 +1,19 @@
 package net.codepixl.GLCraft;
 
+import static org.lwjgl.glfw.GLFW.GLFW_CONTEXT_VERSION_MAJOR;
+import static org.lwjgl.glfw.GLFW.GLFW_CONTEXT_VERSION_MINOR;
+import static org.lwjgl.glfw.GLFW.GLFW_OPENGL_CORE_PROFILE;
+import static org.lwjgl.glfw.GLFW.GLFW_OPENGL_PROFILE;
+import static org.lwjgl.glfw.GLFW.GLFW_RESIZABLE;
+import static org.lwjgl.glfw.GLFW.glfwCreateWindow;
+import static org.lwjgl.glfw.GLFW.glfwDestroyWindow;
+import static org.lwjgl.glfw.GLFW.glfwMakeContextCurrent;
+import static org.lwjgl.glfw.GLFW.glfwPollEvents;
+import static org.lwjgl.glfw.GLFW.glfwSetWindowIcon;
+import static org.lwjgl.glfw.GLFW.glfwShowWindow;
+import static org.lwjgl.glfw.GLFW.glfwSwapBuffers;
+import static org.lwjgl.glfw.GLFW.glfwWindowHint;
+import static org.lwjgl.glfw.GLFW.glfwWindowShouldClose;
 import static org.lwjgl.opengl.GL11.GL_BACK;
 import static org.lwjgl.opengl.GL11.GL_BLEND;
 import static org.lwjgl.opengl.GL11.GL_COLOR_BUFFER_BIT;
@@ -31,7 +45,6 @@ import static org.lwjgl.opengl.GL11.glMatrixMode;
 import static org.lwjgl.opengl.GL11.glOrtho;
 import static org.lwjgl.opengl.GL11.glTexEnvi;
 import static org.lwjgl.opengl.GL11.glViewport;
-import static org.lwjgl.util.glu.GLU.gluPerspective;
 
 import java.awt.Font;
 import java.awt.FontFormatException;
@@ -48,17 +61,15 @@ import java.nio.file.Files;
 
 import javax.swing.JOptionPane;
 
-import org.lwjgl.LWJGLException;
-import org.lwjgl.opengl.Display;
-import org.lwjgl.opengl.DisplayMode;
+import org.lwjgl.glfw.GLFW;
+import org.lwjgl.glfw.GLFWErrorCallback;
+import org.lwjgl.glfw.GLFWImage.Buffer;
+import org.lwjgl.glfw.GLFWWindowSizeCallback;
+import org.lwjgl.opengl.GL;
 import org.lwjgl.opengl.GL11;
-import org.lwjgl.opengl.PixelFormat;
+import org.lwjgl.util.glu.GLU;
 import org.newdawn.slick.opengl.PNGDecoder;
 import org.newdawn.slick.opengl.TextureImpl;
-
-import com.nishu.utils.Screen;
-import com.nishu.utils.Time;
-import com.nishu.utils.Window;
 
 import net.codepixl.GLCraft.GUI.GUIManager;
 import net.codepixl.GLCraft.plugin.Plugin;
@@ -67,6 +78,7 @@ import net.codepixl.GLCraft.render.TextureManager;
 import net.codepixl.GLCraft.render.texturepack.TexturePackManager;
 import net.codepixl.GLCraft.util.Constants;
 import net.codepixl.GLCraft.util.DebugTimer;
+import net.codepixl.GLCraft.util.Time;
 import net.codepixl.GLCraft.util.logging.CrashHandler;
 import net.codepixl.GLCraft.util.logging.TeeOutputStream;
 import net.codepixl.GLCraft.world.CentralManager;
@@ -74,7 +86,7 @@ import net.codepixl.GLCraft.world.WorldManager;
 import net.codepixl.GLCraft.world.item.Item;
 import net.codepixl.GLCraft.world.tile.Tile;
 
-public class GLCraft extends Screen{
+public class GLCraft{
 	private CentralManager world;
 	private PluginManager pluginManager;
 	private static GLCraft glcraft;
@@ -82,44 +94,62 @@ public class GLCraft extends Screen{
 	public static boolean loadExtPlugins = true;
 	public static String version = "0.0.9dev";
 	private Plugin devPlugin;
+	public long window;
 	
 	public static GLCraft getGLCraft(){
 		return glcraft;
 	}
 	
-	public GLCraft() throws IOException, LWJGLException{
-		commonInitializer();
+	public GLCraft() throws IOException{
+		try{
+			commonInitializer();
+		}catch(Exception e){
+			e.printStackTrace();
+		}
 	}
 	
-	private GLCraft(Plugin p) throws IOException, LWJGLException{
+	private GLCraft(Plugin p) throws IOException{
 		devPlugin = p;
 		commonInitializer();
 		
 	}
 	
-	private void commonInitializer() throws IOException, LWJGLException{
+	private void commonInitializer() throws IOException{
 		
 		glcraft = this;
-		Display.setIcon(new ByteBuffer[] {
-		        loadIcon(GLCraft.class.getResource("/textures/icons/icon16.png")),
-		        loadIcon(GLCraft.class.getResource("/textures/icons/icon32.png")),
-		});
 		
-		Display.setFullscreen(false);
-		Display.setDisplayMode(new DisplayMode(1000, 700));
-		Display.setTitle("GLCraft");
-		Display.create(new PixelFormat(8,8,8));
+		GLFW.glfwSetErrorCallback(GLFWErrorCallback.createPrint(System.err));
+		
+		GLFW.glfwInit();
+		
+		glfwWindowHint(GLFW_RESIZABLE, GL11.GL_FALSE);
+		glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
+		glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
+		glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+		window = glfwCreateWindow(1000, 700, "GLCraft", 0, 0);
+		if(window == 0) {
+		    throw new RuntimeException("Failed to create window.");
+		}
+		//glfwSetWindowIcon(window, new Buffer(loadIcon(GLCraft.class.getResource("/textures/icons/icon16.png"))));
+		glfwMakeContextCurrent(window);
+		GLFW.glfwSetWindowSizeCallback(window, new GLFWWindowSizeCallback(){
+			@Override
+			public void invoke(long window, int width, int height) {
+				Constants.WIDTH = width;
+				Constants.HEIGHT = height;
+			}
+		});
 		
 		initGL();
 		init();
 		long ltime = Time.getTime();
 		double secondCounter = 0;
-		while(!Display.isCloseRequested()){
+		while(!glfwWindowShouldClose(window)){
 			update();
 			render();
-			Window.update();
-			if(Constants.maxFPS > 1)
-				Display.sync(Constants.maxFPS);
+			updateDisplay();
+			//if(Constants.maxFPS > 1)
+			//	Display.sync(Constants.maxFPS);  TODO reimplement
 			secondCounter+=Time.getDelta();
 			if(secondCounter > 1){
 				Constants.FPS = (int) (1d/Time.getDelta());
@@ -129,11 +159,17 @@ public class GLCraft extends Screen{
 			ltime = Time.getTime();
 		}
 		
+		glfwDestroyWindow(window);
+		
 		WorldManager.saveWorld(true);
 		
 	}
 	
-	@Override
+	public static void updateDisplay(){
+		glfwPollEvents();
+		glfwSwapBuffers(getGLCraft().window);
+	}
+	
 	public void init() {
 		Constants.gatherSystemInfo();
 
@@ -166,8 +202,16 @@ public class GLCraft extends Screen{
 		return pluginManager;
 	}
 
-	@Override
 	public void initGL() {
+		
+		System.out.println("Init GL...");
+		
+		GL.createCapabilities();
+		glfwShowWindow(window);
+		
+		System.out.println("Created OpenGL capabilities...");
+		
+		System.out.println("OpenGL Version: "+GL11.glGetString(GL11.GL_VERSION));
 		
 		GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
 		try {
@@ -176,11 +220,15 @@ public class GLCraft extends Screen{
 			e.printStackTrace();
 		}
 		
-		glViewport(0,0,Display.getWidth(),Display.getHeight());
-		glMatrixMode(GL_PROJECTION);
+		System.out.println("Created Font...");
+		
+		glViewport(0,0,1000,700);
 		glLoadIdentity();
-		gluPerspective(67f,Constants.WIDTH/Constants.HEIGHT,0.001f, 1000f);
+		glMatrixMode(GL_PROJECTION);
+		GLU.gluPerspective(67f,Constants.WIDTH/Constants.HEIGHT,0.001f, 1000f);
 		glMatrixMode(GL_MODELVIEW);
+		
+		System.out.println("Created Viewport...");
 
 		glEnable(GL_DEPTH_TEST);
 		glHint(GL_PERSPECTIVE_CORRECTION_HINT, GL_NICEST);
@@ -216,10 +264,9 @@ public class GLCraft extends Screen{
 		Constants.FONT.drawString(Constants.WIDTH/2-Constants.FONT.getWidth(line1)/2,Constants.HEIGHT/2-Constants.FONT.getHeight(line1), line1);
 		Constants.FONT.drawString(Constants.WIDTH/2-Constants.FONT.getWidth(line2)/2,Constants.HEIGHT/2+Constants.FONT.getHeight(line2), line2);
 		TextureImpl.unbind();
-		Display.update();
+		updateDisplay();
 	}
 
-	@Override
 	public void update() {
 		DebugTimer.startTimer("loop_time");
 		world.update();
@@ -227,25 +274,19 @@ public class GLCraft extends Screen{
 		// TODO Auto-generated method stub
 	}
 
-	@Override
 	public void render() {
-		if(Display.wasResized()){
-			Constants.WIDTH = Display.getWidth();
-			Constants.HEIGHT = Display.getHeight();
-		}
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		glClearColor(0.0f,0.749019608f,1.0f,0.0f);
 		world.render();
 		DebugTimer.endTimer("loop_time");
 	}
 
-	@Override
 	public void dispose() {
 		// TODO Auto-generated method stub
 		world.dispose();
 	}
 	
-	public static void main(String[] args) throws IOException, LWJGLException{
+	public static void main(String[] args) throws IOException{
 		Thread.setDefaultUncaughtExceptionHandler(new CrashHandler());
 		
 		try{
@@ -265,7 +306,7 @@ public class GLCraft extends Screen{
 		
 	}
 	
-	public static void devEnvironment(Plugin p, boolean loadExtPlugins) throws LWJGLException{
+	public static void devEnvironment(Plugin p, boolean loadExtPlugins){
 		try {
 			isDevEnvironment = true;
 			GLCraft.loadExtPlugins = loadExtPlugins;

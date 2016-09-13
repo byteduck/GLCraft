@@ -6,11 +6,11 @@ import org.lwjgl.opengl.GL11;
 import org.lwjgl.util.vector.Vector3f;
 
 import com.evilco.mc.nbt.tag.TagCompound;
-import com.nishu.utils.Color4f;
-import com.nishu.utils.Time;
 
 import net.codepixl.GLCraft.render.Shape;
 import net.codepixl.GLCraft.util.AABB;
+import net.codepixl.GLCraft.util.Color4f;
+import net.codepixl.GLCraft.util.Time;
 import net.codepixl.GLCraft.world.WorldManager;
 import net.codepixl.GLCraft.world.entity.Entity;
 import net.codepixl.GLCraft.world.entity.EntitySolid;

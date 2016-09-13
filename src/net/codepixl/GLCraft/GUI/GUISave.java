@@ -1,10 +1,10 @@
 package net.codepixl.GLCraft.GUI;
 
-import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.GL11;
 
 import net.codepixl.GLCraft.GUI.Elements.GUILabel;
 import net.codepixl.GLCraft.util.Constants;
+import net.codepixl.GLCraft.util.Mouse;
 import net.codepixl.GLCraft.util.data.saves.Save;
 
 public class GUISave extends GUIScreen{
@@ -56,15 +56,9 @@ public class GUISave extends GUIScreen{
 	public void input(int xof, int yof){
 		super.input(xof, yof);
 		if(testMouse(xof,yof)){
-			while(Mouse.next()){
-				if(Mouse.getEventButtonState()){
-					if(Mouse.isButtonDown(0)){
-						if(!selected)
-							pgui.setSelectedSave(this);
-						else
-							pgui.loadSave(this);
-					}
-				}
+			if(Mouse.isButtonDown(0)){
+				if(!selected)
+					pgui.setSelectedSave(this);
 			}
 		}
 	}

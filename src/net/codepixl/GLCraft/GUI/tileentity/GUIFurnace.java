@@ -1,12 +1,12 @@
 package net.codepixl.GLCraft.GUI.tileentity;
 
-import org.lwjgl.input.Keyboard;
-import org.lwjgl.input.Mouse;
 
 import net.codepixl.GLCraft.GUI.GUIScreen;
 import net.codepixl.GLCraft.GUI.Elements.GUIProgressBar;
 import net.codepixl.GLCraft.GUI.Inventory.Elements.GUISlot;
 import net.codepixl.GLCraft.util.Constants;
+import net.codepixl.GLCraft.util.Keyboard;
+import net.codepixl.GLCraft.util.Mouse;
 import net.codepixl.GLCraft.world.entity.mob.EntityPlayer;
 import net.codepixl.GLCraft.world.entity.tileentity.TileEntityFurnace;
 import net.codepixl.GLCraft.world.item.ItemStack;
@@ -45,8 +45,8 @@ public class GUIFurnace extends GUIScreen{
 	public void input(int xof, int yof){
 		super.input(xof, yof);
 		if(in.hover){
-			while(Mouse.next()){
-				if(Mouse.getEventButtonState()){
+			//while(Mouse.next()){
+			//	if(Mouse.getEventButtonState()){
 					if(Mouse.isButtonDown(0)){
 						ItemStack tempStack = in.itemstack;
 						in.itemstack = player.getSelectedItemStack();
@@ -65,10 +65,10 @@ public class GUIFurnace extends GUIScreen{
 							furnace.getInventory()[0] = in.itemstack;
 						}
 					}
-				}
-			}
-			int dWheel = Mouse.getDWheel();
-			if(Mouse.hasWheel()) {
+			//	}
+			//} TODO implement
+			int dWheel = (int) Mouse.getDWheel();
+			//if(Mouse.hasWheel()) {
 				if(player.getSelectedItemStack().isNull()){
 					player.setSelectedItemStack(new ItemStack(in.itemstack));
 					player.getSelectedItemStack().count = 0;
@@ -100,18 +100,18 @@ public class GUIFurnace extends GUIScreen{
 					in.itemstack = new ItemStack();
 					furnace.getInventory()[0] = in.itemstack;
 				}
-			}
+			//}
 		}else if(out.hover && !out.itemstack.isNull()){
-			while(Mouse.next()){
-				if(Mouse.getEventButtonState()){
+			//while(Mouse.next()){
+			//	if(Mouse.getEventButtonState()){
 					if(Mouse.isButtonDown(0)){
 						out.itemstack.count = player.addToInventory(out.itemstack);
 						if(out.itemstack.count == 0)
 							out.itemstack = new ItemStack();
 						furnace.getInventory()[1] = out.itemstack;
 					}
-				}
-			}
+			//	} TODO implement
+			//}
 		}
 		
 		if(Keyboard.isKeyDown(Keyboard.KEY_1)){

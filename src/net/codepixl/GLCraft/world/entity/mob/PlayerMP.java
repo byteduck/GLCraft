@@ -10,9 +10,8 @@ import static org.lwjgl.opengl.GL11.glTranslatef;
 
 import org.lwjgl.util.vector.Vector3f;
 
-import com.nishu.utils.Color4f;
-
 import net.codepixl.GLCraft.render.Shape;
+import net.codepixl.GLCraft.util.Color4f;
 import net.codepixl.GLCraft.util.Spritesheet;
 import net.codepixl.GLCraft.world.WorldManager;
 

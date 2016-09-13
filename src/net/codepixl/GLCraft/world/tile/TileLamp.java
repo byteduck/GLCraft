@@ -1,6 +1,6 @@
 package net.codepixl.GLCraft.world.tile;
 
-import com.nishu.utils.Color4f;
+import net.codepixl.GLCraft.util.Color4f;
 
 public class TileLamp extends Tile{
 

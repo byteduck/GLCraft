@@ -1,8 +1,7 @@
 package net.codepixl.GLCraft.world.tile;
 
-import com.nishu.utils.Color4f;
-
 import net.codepixl.GLCraft.render.RenderType;
+import net.codepixl.GLCraft.util.Color4f;
 import net.codepixl.GLCraft.util.Constants;
 import net.codepixl.GLCraft.world.Chunk;
 import net.codepixl.GLCraft.world.WorldManager;

@@ -45,9 +45,9 @@ public class Frustum {
 		this._modl.clear();
 		this._clip.clear();
 
-		GL11.glGetFloat(2983, this._proj);
+		GL11.glGetFloatv(2983, this._proj);
 
-		GL11.glGetFloat(2982, this._modl);
+		GL11.glGetFloatv(2982, this._modl);
 
 		this._proj.flip().limit(16);
 		this._proj.get(this.proj);

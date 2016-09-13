@@ -5,12 +5,12 @@ import static org.lwjgl.opengl.GL11.glVertex2f;
 import java.util.ArrayList;
 import java.util.Iterator;
 
-import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.GL11;
 
 import net.codepixl.GLCraft.GUI.GUIScreen;
 import net.codepixl.GLCraft.render.util.Tesselator;
 import net.codepixl.GLCraft.util.Constants;
+import net.codepixl.GLCraft.util.Mouse;
 
 public class GUIScrollBox extends GUIScreen{
 	public int spacing;
@@ -143,7 +143,7 @@ public class GUIScrollBox extends GUIScreen{
 	        	i.next().input(xof+x,yof+y-scrollY);
 	        }
 	        
-	        if(Mouse.hasWheel() && currentY > height){
+	        if(currentY > height){
 	        	barY-=Mouse.getDWheel();
 	        	if(barY<0)
 	        		barY=0;

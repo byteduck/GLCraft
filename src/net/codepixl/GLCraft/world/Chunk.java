@@ -23,10 +23,10 @@ import com.evilco.mc.nbt.stream.NbtOutputStream;
 import com.evilco.mc.nbt.tag.TagByteArray;
 import com.evilco.mc.nbt.tag.TagCompound;
 import com.evilco.mc.nbt.tag.TagFloat;
-import com.nishu.utils.ShaderProgram;
 
 import net.codepixl.GLCraft.render.RenderType;
 import net.codepixl.GLCraft.render.Shape;
+import net.codepixl.GLCraft.render.util.ShaderProgram;
 import net.codepixl.GLCraft.util.Constants;
 import net.codepixl.GLCraft.util.Vector3i;
 import net.codepixl.GLCraft.world.tile.Tile;

@@ -4,7 +4,7 @@ import java.util.ArrayList;
 
 import org.lwjgl.util.vector.Vector3f;
 
-import com.nishu.utils.ShaderProgram;
+import net.codepixl.GLCraft.render.util.ShaderProgram;
 
 public class WorldLoadJobList{
 	Chunk cChunk;

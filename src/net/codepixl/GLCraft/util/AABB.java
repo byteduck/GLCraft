@@ -10,8 +10,6 @@ import java.util.Arrays;
 
 import org.lwjgl.util.vector.Vector3f;
 
-import com.nishu.utils.Color4f;
-
 import net.codepixl.GLCraft.render.Shape;
 
 public class AABB {

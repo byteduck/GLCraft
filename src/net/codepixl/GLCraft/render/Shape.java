@@ -7,8 +7,7 @@ import static org.lwjgl.opengl.GL11.glVertex3f;
 
 import org.lwjgl.util.vector.Vector3f;
 
-import com.nishu.utils.Color4f;
-
+import net.codepixl.GLCraft.util.Color4f;
 import net.codepixl.GLCraft.util.Spritesheet;;
 
 public class Shape {

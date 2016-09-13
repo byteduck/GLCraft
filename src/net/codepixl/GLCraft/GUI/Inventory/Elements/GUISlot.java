@@ -8,17 +8,16 @@ import static org.lwjgl.opengl.GL11.glPushMatrix;
 import static org.lwjgl.opengl.GL11.glScalef;
 import static org.lwjgl.opengl.GL11.glTranslatef;
 
-import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.GL11;
 import org.newdawn.slick.opengl.TextureImpl;
-
-import com.nishu.utils.Color4f;
 
 import net.codepixl.GLCraft.GUI.GUIScreen;
 import net.codepixl.GLCraft.render.Shape;
 import net.codepixl.GLCraft.render.TextureManager;
 import net.codepixl.GLCraft.render.util.Tesselator;
+import net.codepixl.GLCraft.util.Color4f;
 import net.codepixl.GLCraft.util.Constants;
+import net.codepixl.GLCraft.util.Mouse;
 import net.codepixl.GLCraft.util.Spritesheet;
 import net.codepixl.GLCraft.world.item.ItemStack;
 

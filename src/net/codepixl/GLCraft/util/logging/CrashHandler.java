@@ -1,12 +1,12 @@
 package net.codepixl.GLCraft.util.logging;
 
-import com.nishu.utils.Window;
+import net.codepixl.GLCraft.GLCraft;
 
 public class CrashHandler implements Thread.UncaughtExceptionHandler{
 	
 	@Override
 	public void uncaughtException(Thread t, Throwable e) {
-		Window.dispose();
+		GLCraft.getGLCraft().dispose();
 		new CrashHandlerWindow(t,e);
 	}
 	

@@ -2,10 +2,9 @@ package net.codepixl.GLCraft.GUI;
 
 import org.lwjgl.opengl.GL11;
 
-import com.nishu.utils.Color4f;
-
 import net.codepixl.GLCraft.render.Shape;
 import net.codepixl.GLCraft.render.TextureManager;
+import net.codepixl.GLCraft.util.Color4f;
 import net.codepixl.GLCraft.util.Spritesheet;
 
 public class GUITexture extends GUIScreen{

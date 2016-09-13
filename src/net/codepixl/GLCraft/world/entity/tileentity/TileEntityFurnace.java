@@ -3,9 +3,9 @@ package net.codepixl.GLCraft.world.entity.tileentity;
 import com.evilco.mc.nbt.error.TagNotFoundException;
 import com.evilco.mc.nbt.error.UnexpectedTagTypeException;
 import com.evilco.mc.nbt.tag.TagCompound;
-import com.nishu.utils.Time;
 
 import net.codepixl.GLCraft.GUI.tileentity.GUIFurnace;
+import net.codepixl.GLCraft.util.Time;
 import net.codepixl.GLCraft.world.WorldManager;
 import net.codepixl.GLCraft.world.entity.Entity;
 import net.codepixl.GLCraft.world.entity.mob.EntityPlayer;

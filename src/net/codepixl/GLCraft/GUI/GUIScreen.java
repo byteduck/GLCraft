@@ -7,14 +7,13 @@ import static org.lwjgl.opengl.GL11.glEnd;
 import java.util.ArrayList;
 import java.util.Iterator;
 
-import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.GL11;
-
-import com.nishu.utils.Color4f;
 
 import net.codepixl.GLCraft.render.Shape;
 import net.codepixl.GLCraft.render.TextureManager;
+import net.codepixl.GLCraft.util.Color4f;
 import net.codepixl.GLCraft.util.Constants;
+import net.codepixl.GLCraft.util.Mouse;
 import net.codepixl.GLCraft.util.Spritesheet;
 import net.codepixl.GLCraft.world.tile.Tile;
 
@@ -74,13 +73,13 @@ public class GUIScreen{
 	
 	public boolean testClick(int xof, int yof, int button){
 		if(testMouse(xof,yof)){
-			while(Mouse.next()){
-				if(Mouse.getEventButtonState()){
+			//while(Mouse.next()){
+			//	if(Mouse.getEventButtonState()){
 					if(Mouse.isButtonDown(button)){
 						return true;
 					}
-				}
-			}
+			//	}
+			//} TODO implement
 		}
 		return false;
 	}

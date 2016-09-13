@@ -1,11 +1,11 @@
 package net.codepixl.GLCraft.GUI.Inventory;
 
-import org.lwjgl.input.Keyboard;
-import org.lwjgl.input.Mouse;
 
 import net.codepixl.GLCraft.GUI.GUIScreen;
 import net.codepixl.GLCraft.GUI.Inventory.Elements.GUISlot;
 import net.codepixl.GLCraft.util.Constants;
+import net.codepixl.GLCraft.util.Keyboard;
+import net.codepixl.GLCraft.util.Mouse;
 import net.codepixl.GLCraft.world.entity.mob.EntityPlayer;
 import net.codepixl.GLCraft.world.item.ItemStack;
 import net.codepixl.GLCraft.world.item.crafting.CraftingManager;
@@ -79,8 +79,8 @@ public class GUICraftingAdvanced extends GUIScreen{
 		super.input(xof,yof);
 		GUISlot hoveredSlot = getHoveredSlot();
 		if(hoveredSlot != null){
-			while(Mouse.next()){
-				if(Mouse.getEventButtonState()){
+			//while(Mouse.next()){
+			//	if(Mouse.getEventButtonState()){
 					if(Mouse.isButtonDown(0)){
 						ItemStack tempStack = hoveredSlot.itemstack;
 						hoveredSlot.itemstack = player.getSelectedItemStack();
@@ -96,42 +96,40 @@ public class GUICraftingAdvanced extends GUIScreen{
 							player.setSelectedItemStack(tempStack);
 						}
 					}
+			//	}
+			//} TODO implement
+			int dWheel = (int) Mouse.getDWheel();
+			if(player.getSelectedItemStack().isNull()){
+				player.setSelectedItemStack(new ItemStack(hoveredSlot.itemstack));
+				player.getSelectedItemStack().count = 0;
+			}
+			if(hoveredSlot.itemstack.isNull()){
+				hoveredSlot.itemstack = new ItemStack(player.getSelectedItemStack());
+				hoveredSlot.itemstack.count = 0;
+			}
+			if((player.getSelectedItemStack().compatible(hoveredSlot.itemstack) || player.getSelectedItemStack().isNull()) && dWheel != 0){
+				for(int i = 0; i < dWheel / 120; i++){
+					if(hoveredSlot.itemstack.count < 64 && player.getSelectedItemStack().count > 0 && !player.getSelectedItemStack().isNull()){
+						
+						hoveredSlot.itemstack.count++;
+						player.getSelectedItemStack().count--;
+					}
+				}
+				for(int i = 0; i > dWheel / 120; i--){
+					if(player.getSelectedItemStack().count < 64 && hoveredSlot.itemstack.count > 0 && !hoveredSlot.itemstack.isNull()){
+						hoveredSlot.itemstack.count--;
+						player.getSelectedItemStack().count++;
+					}
 				}
 			}
-			int dWheel = Mouse.getDWheel();
-			if(Mouse.hasWheel()) {
-				if(player.getSelectedItemStack().isNull()){
-					player.setSelectedItemStack(new ItemStack(hoveredSlot.itemstack));
-					player.getSelectedItemStack().count = 0;
-				}
-				if(hoveredSlot.itemstack.isNull()){
-					hoveredSlot.itemstack = new ItemStack(player.getSelectedItemStack());
-					hoveredSlot.itemstack.count = 0;
-				}
-				if((player.getSelectedItemStack().compatible(hoveredSlot.itemstack) || player.getSelectedItemStack().isNull()) && dWheel != 0){
-					for(int i = 0; i < dWheel / 120; i++){
-						if(hoveredSlot.itemstack.count < 64 && player.getSelectedItemStack().count > 0 && !player.getSelectedItemStack().isNull()){
-							
-							hoveredSlot.itemstack.count++;
-							player.getSelectedItemStack().count--;
-						}
-					}
-					for(int i = 0; i > dWheel / 120; i--){
-						if(player.getSelectedItemStack().count < 64 && hoveredSlot.itemstack.count > 0 && !hoveredSlot.itemstack.isNull()){
-							hoveredSlot.itemstack.count--;
-							player.getSelectedItemStack().count++;
-						}
-					}
-				}
-				if(player.getSelectedItemStack().count == 0)
-					player.setSelectedItemStack(new ItemStack());
-				if(hoveredSlot.itemstack.count == 0)
+			if(player.getSelectedItemStack().count == 0)
+				player.setSelectedItemStack(new ItemStack());
+			if(hoveredSlot.itemstack.count == 0)
 					hoveredSlot.itemstack = new ItemStack();
-			}
 		}
 		if(result.hover && !result.itemstack.isNull()){
-			while(Mouse.next()){
-				if(Mouse.getEventButtonState()){
+			//while(Mouse.next()){
+			//	if(Mouse.getEventButtonState()){
 					if(Mouse.isButtonDown(0)){
 						result.itemstack.count = player.addToInventory(result.itemstack);
 						if(result.itemstack.count == 0){
@@ -156,8 +154,8 @@ public class GUICraftingAdvanced extends GUIScreen{
 								slot9.itemstack.count-=1;
 						}
 					}
-				}
-			}
+			//	}
+			//} TODO implement
 		}
 		if(Keyboard.isKeyDown(Keyboard.KEY_1)){
 			player.setSelectedSlot(0);

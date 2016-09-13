@@ -11,15 +11,14 @@ import static org.lwjgl.opengl.GL11.glVertex2f;
 
 import java.util.concurrent.Callable;
 
-import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.GL11;
 import org.newdawn.slick.opengl.TextureImpl;
 
-import com.nishu.utils.Color4f;
-
 import net.codepixl.GLCraft.GUI.GUIScreen;
 import net.codepixl.GLCraft.sound.SoundManager;
+import net.codepixl.GLCraft.util.Color4f;
 import net.codepixl.GLCraft.util.Constants;
+import net.codepixl.GLCraft.util.Mouse;
 
 public class GUIButton extends GUIScreen{
 
@@ -132,8 +131,8 @@ public class GUIButton extends GUIScreen{
 	@Override
 	public void input(int xof, int yof) {
 		if(testMouse(xof, yof)){
-			while(Mouse.next()){
-				if(Mouse.getEventButtonState()){
+			//while(Mouse.next()){
+			//	if(Mouse.getEventButtonState()){
 					if(Mouse.isButtonDown(0)){
 						if(!pressed && enabled){
 							SoundManager.getMainManager().quickPlay("click");
@@ -148,8 +147,8 @@ public class GUIButton extends GUIScreen{
 					}else{
 						this.pressed = false;
 					}
-				}
-			}
+			//	}
+			//} TODO implement
 			this.hovered = true;
 		}else{
 			this.hovered = false;
