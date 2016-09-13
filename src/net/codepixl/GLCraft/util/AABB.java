@@ -8,6 +8,7 @@ import static org.lwjgl.opengl.GL11.glPushMatrix;
 
 import java.util.Arrays;
 
+import org.lwjgl.opengl.GL11;
 import org.lwjgl.util.vector.Vector3f;
 
 import com.nishu.utils.Color4f;

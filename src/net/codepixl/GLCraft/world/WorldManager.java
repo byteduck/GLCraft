@@ -10,6 +10,7 @@ import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import org.lwjgl.opengl.GL11;
 import org.lwjgl.util.vector.Vector3f;
 
 import com.evilco.mc.nbt.stream.NbtInputStream;
@@ -33,6 +34,7 @@ import net.codepixl.GLCraft.util.Vector3i;
 import net.codepixl.GLCraft.util.data.saves.Save;
 import net.codepixl.GLCraft.util.data.saves.SaveManager;
 import net.codepixl.GLCraft.world.entity.Entity;
+import net.codepixl.GLCraft.world.entity.EntityFallingBlock;
 import net.codepixl.GLCraft.world.entity.EntityManager;
 import net.codepixl.GLCraft.world.entity.EntitySolid;
 import net.codepixl.GLCraft.world.entity.mob.EntityPlayer;

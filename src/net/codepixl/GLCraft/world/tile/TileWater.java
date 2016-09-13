@@ -5,6 +5,8 @@ import org.lwjgl.opengl.GL11;
 import com.nishu.utils.Color4f;
 
 import net.codepixl.GLCraft.render.RenderType;
+import net.codepixl.GLCraft.render.Shape;
+import net.codepixl.GLCraft.render.TextureManager;
 import net.codepixl.GLCraft.util.AABB;
 import net.codepixl.GLCraft.util.Spritesheet;
 import net.codepixl.GLCraft.world.Chunk;

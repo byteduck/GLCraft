@@ -1,6 +1,10 @@
 package net.codepixl.GLCraft.util.logging;
 
+import org.lwjgl.opengl.Display;
+
 import com.nishu.utils.Window;
+
+import net.codepixl.GLCraft.GLCraft;
 
 public class CrashHandler implements Thread.UncaughtExceptionHandler{
 	

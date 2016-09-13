@@ -4,6 +4,7 @@ import org.lwjgl.util.vector.Vector3f;
 
 import net.codepixl.GLCraft.util.Constants;
 import net.codepixl.GLCraft.world.WorldManager;
+import net.codepixl.GLCraft.world.entity.Entity;
 import net.codepixl.GLCraft.world.entity.particle.Particle;
 import net.codepixl.GLCraft.world.tile.material.Material;
 

@@ -1,10 +1,17 @@
 package net.codepixl.GLCraft.GUI;
 
+import static org.lwjgl.opengl.GL11.GL_QUADS;
 import static org.lwjgl.opengl.GL11.GL_TEXTURE_2D;
+import static org.lwjgl.opengl.GL11.glBegin;
 import static org.lwjgl.opengl.GL11.glDisable;
+import static org.lwjgl.opengl.GL11.glEnd;
+import static org.lwjgl.opengl.GL11.glTexCoord2f;
+import static org.lwjgl.opengl.GL11.glVertex2f;
 
 import java.io.IOException;
 import java.util.concurrent.Callable;
+
+import javax.swing.JOptionPane;
 
 import org.lwjgl.opengl.GL11;
 
@@ -12,10 +19,14 @@ import net.codepixl.GLCraft.GUI.Elements.GUIButton;
 import net.codepixl.GLCraft.GUI.Elements.GUILabel;
 import net.codepixl.GLCraft.GUI.Elements.GUILabel.Alignment;
 import net.codepixl.GLCraft.GUI.Elements.GUIScrollBox;
+import net.codepixl.GLCraft.GUI.Elements.GUISlider;
 import net.codepixl.GLCraft.GUI.Elements.GUITextBox;
+import net.codepixl.GLCraft.render.TextureManager;
 import net.codepixl.GLCraft.util.Constants;
+import net.codepixl.GLCraft.util.Spritesheet;
 import net.codepixl.GLCraft.util.data.saves.Save;
 import net.codepixl.GLCraft.util.data.saves.SaveManager;
+import net.codepixl.GLCraft.world.tile.Tile;
 
 public class GUISinglePlayer extends GUIScreen{
 	

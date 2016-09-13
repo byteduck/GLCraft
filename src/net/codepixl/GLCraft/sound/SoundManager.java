@@ -1,6 +1,12 @@
 package net.codepixl.GLCraft.sound;
 
+import java.io.File;
+import java.io.IOException;
+import java.net.MalformedURLException;
+
 import org.lwjgl.util.vector.Vector3f;
+
+import com.sun.corba.se.impl.presentation.rmi.IDLTypeException;
 
 import paulscode.sound.SoundSystem;
 import paulscode.sound.SoundSystemConfig;
