@@ -4,6 +4,7 @@ import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
 
 import org.lwjgl.BufferUtils;
+import org.lwjgl.opengl.Display;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.util.glu.GLU;
 import org.lwjgl.util.vector.Vector3f;
@@ -14,14 +15,14 @@ public class Raytracer {
 	}
 	
 	public static Ray getScreenCenterRay() {
-		float winX = Constants.WIDTH / 2, winY = Constants.HEIGHT / 2;
+		float winX = Display.getWidth() / 2, winY = Display.getHeight() / 2;
 		
 		IntBuffer viewport = BufferUtils.createIntBuffer(16);
-		GL11.glGetIntegerv(GL11.GL_VIEWPORT, viewport);
+		GL11.glGetInteger(GL11.GL_VIEWPORT, viewport);
 		FloatBuffer modelview = BufferUtils.createFloatBuffer(16);
-		GL11.glGetFloatv(GL11.GL_MODELVIEW_MATRIX, modelview);
+		GL11.glGetFloat(GL11.GL_MODELVIEW_MATRIX, modelview);
 		FloatBuffer projection = BufferUtils.createFloatBuffer(16);
-		GL11.glGetFloatv(GL11.GL_PROJECTION_MATRIX, projection);
+		GL11.glGetFloat(GL11.GL_PROJECTION_MATRIX, projection);
 		
 		FloatBuffer positionNear = BufferUtils.createFloatBuffer(3);
 		FloatBuffer positionFar = BufferUtils.createFloatBuffer(3);

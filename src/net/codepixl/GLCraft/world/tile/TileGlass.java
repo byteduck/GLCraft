@@ -2,10 +2,11 @@ package net.codepixl.GLCraft.world.tile;
 
 import org.lwjgl.opengl.GL11;
 
+import com.nishu.utils.Color4f;
+
 import net.codepixl.GLCraft.render.RenderType;
 import net.codepixl.GLCraft.render.Shape;
 import net.codepixl.GLCraft.render.TextureManager;
-import net.codepixl.GLCraft.util.Color4f;
 import net.codepixl.GLCraft.world.Chunk;
 import net.codepixl.GLCraft.world.WorldManager;
 import net.codepixl.GLCraft.world.tile.material.Material;

@@ -17,10 +17,10 @@ import org.lwjgl.util.vector.Vector3f;
 import com.evilco.mc.nbt.error.TagNotFoundException;
 import com.evilco.mc.nbt.error.UnexpectedTagTypeException;
 import com.evilco.mc.nbt.tag.TagCompound;
+import com.nishu.utils.Color4f;
 
 import net.codepixl.GLCraft.render.Shape;
 import net.codepixl.GLCraft.util.AABB;
-import net.codepixl.GLCraft.util.Color4f;
 import net.codepixl.GLCraft.util.Constants;
 import net.codepixl.GLCraft.util.MathUtils;
 import net.codepixl.GLCraft.world.Chunk;

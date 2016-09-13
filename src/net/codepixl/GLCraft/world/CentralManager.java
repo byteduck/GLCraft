@@ -2,15 +2,21 @@ package net.codepixl.GLCraft.world;
 
 import static org.lwjgl.opengl.GL11.GL_BACK;
 import static org.lwjgl.opengl.GL11.GL_BLEND;
+import static org.lwjgl.opengl.GL11.GL_COLOR_MATERIAL;
 import static org.lwjgl.opengl.GL11.GL_CULL_FACE;
 import static org.lwjgl.opengl.GL11.GL_DEPTH_TEST;
+import static org.lwjgl.opengl.GL11.GL_DIFFUSE;
 import static org.lwjgl.opengl.GL11.GL_FRONT;
+import static org.lwjgl.opengl.GL11.GL_LIGHT0;
 import static org.lwjgl.opengl.GL11.GL_LIGHTING;
+import static org.lwjgl.opengl.GL11.GL_LIGHT_MODEL_AMBIENT;
 import static org.lwjgl.opengl.GL11.GL_MODELVIEW;
 import static org.lwjgl.opengl.GL11.GL_MODULATE;
 import static org.lwjgl.opengl.GL11.GL_ONE_MINUS_SRC_ALPHA;
+import static org.lwjgl.opengl.GL11.GL_POSITION;
 import static org.lwjgl.opengl.GL11.GL_PROJECTION;
 import static org.lwjgl.opengl.GL11.GL_QUADS;
+import static org.lwjgl.opengl.GL11.GL_SMOOTH;
 import static org.lwjgl.opengl.GL11.GL_SRC_ALPHA;
 import static org.lwjgl.opengl.GL11.GL_TEXTURE_2D;
 import static org.lwjgl.opengl.GL11.GL_TEXTURE_ENV;
@@ -20,30 +26,41 @@ import static org.lwjgl.opengl.GL11.glBlendFunc;
 import static org.lwjgl.opengl.GL11.glClearColor;
 import static org.lwjgl.opengl.GL11.glClearDepth;
 import static org.lwjgl.opengl.GL11.glColor3f;
+import static org.lwjgl.opengl.GL11.glColorMaterial;
 import static org.lwjgl.opengl.GL11.glCullFace;
 import static org.lwjgl.opengl.GL11.glDisable;
 import static org.lwjgl.opengl.GL11.glEnable;
 import static org.lwjgl.opengl.GL11.glEnd;
+import static org.lwjgl.opengl.GL11.glLight;
+import static org.lwjgl.opengl.GL11.glLightModel;
 import static org.lwjgl.opengl.GL11.glLoadIdentity;
 import static org.lwjgl.opengl.GL11.glMatrixMode;
 import static org.lwjgl.opengl.GL11.glOrtho;
 import static org.lwjgl.opengl.GL11.glPopMatrix;
 import static org.lwjgl.opengl.GL11.glPushMatrix;
+import static org.lwjgl.opengl.GL11.glShadeModel;
 import static org.lwjgl.opengl.GL11.glTexEnvi;
 import static org.lwjgl.opengl.GL11.glVertex2f;
 import static org.lwjgl.opengl.GL11.glViewport;
 import static org.lwjgl.util.glu.GLU.gluPerspective;
 
 import java.io.PipedInputStream;
+import java.nio.ByteBuffer;
 import java.nio.FloatBuffer;
 import java.util.Iterator;
 
 import org.lwjgl.BufferUtils;
-import org.lwjgl.glfw.GLFW;
+import org.lwjgl.input.Keyboard;
+import org.lwjgl.input.Mouse;
+import org.lwjgl.opengl.Display;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.util.vector.Vector3f;
 import org.newdawn.slick.TrueTypeFont;
 import org.newdawn.slick.opengl.TextureImpl;
+
+import com.nishu.utils.Color4f;
+import com.nishu.utils.Screen;
+import com.nishu.utils.Time;
 
 import net.codepixl.GLCraft.GLCraft;
 import net.codepixl.GLCraft.GUI.GUIManager;
@@ -56,13 +73,9 @@ import net.codepixl.GLCraft.GUI.Inventory.Elements.GUISlot;
 import net.codepixl.GLCraft.render.Shape;
 import net.codepixl.GLCraft.render.TextureManager;
 import net.codepixl.GLCraft.sound.SoundManager;
-import net.codepixl.GLCraft.util.Color4f;
 import net.codepixl.GLCraft.util.Constants;
 import net.codepixl.GLCraft.util.DebugTimer;
-import net.codepixl.GLCraft.util.Keyboard;
-import net.codepixl.GLCraft.util.Mouse;
 import net.codepixl.GLCraft.util.Spritesheet;
-import net.codepixl.GLCraft.util.Time;
 import net.codepixl.GLCraft.util.logging.CrashHandler;
 import net.codepixl.GLCraft.world.entity.EntityManager;
 import net.codepixl.GLCraft.world.entity.mob.EntityPlayer;
@@ -71,7 +84,7 @@ import net.codepixl.GLCraft.world.entity.mob.hostile.EntityTestHostile;
 import net.codepixl.GLCraft.world.item.crafting.CraftingManager;
 import net.codepixl.GLCraft.world.tile.Tile;
 
-public class CentralManager{
+public class CentralManager extends Screen{
 
 	private float cloudMove = 0f;
 	
@@ -90,14 +103,14 @@ public class CentralManager{
 		init();
 	}
 	
+	@Override
 	public void dispose() {
-		GLFW.glfwDestroyWindow(GLCraft.getGLCraft().window);
+		Display.destroy();
 		System.exit(0);
 	}
 
+	@Override
 	public void init() {
-		Keyboard.initKeyboard();
-		
 		Constants.setWorld(this);
 		initGUIManager();
 		
@@ -129,6 +142,7 @@ public class CentralManager{
 		guiManager.addGUI(new GUISinglePlayer(), "singleplayer");
 	}
 
+	@Override
 	public void initGL() {
 		glEnable(GL_BLEND);
 		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
@@ -146,56 +160,62 @@ public class CentralManager{
 		if(Keyboard.isKeyDown(Keyboard.KEY_LMENU) && Keyboard.isKeyDown(Keyboard.KEY_C)){
 			CrashHandler.invokeCrash();
 		}
-		if(Keyboard.keyJustPressed(Keyboard.KEY_F3)){
-			renderDebug = !renderDebug;
-		}
-		if(Keyboard.keyJustPressed(Keyboard.KEY_ESCAPE)){
-			GUIScreen g = guiManager.getCurrentGUI();
-			if(guiManager.isGUIOpen() && g.canBeExited()){
-				guiManager.closeGUI(true);
-				Mouse.setGrabbed(true);
-			}else if(guiManager.getCurrentGUIName().equals("nogui")){
-				guiManager.showGUI("pauseMenu");
+		while(Keyboard.next()){
+			if(Keyboard.getEventKeyState()){
+				if(Keyboard.isKeyDown(Keyboard.KEY_F3)){
+					renderDebug = !renderDebug;
+				}
+				if(Keyboard.isKeyDown(Keyboard.KEY_ESCAPE)){
+					GUIScreen g = guiManager.getCurrentGUI();
+					if(guiManager.isGUIOpen() && g.canBeExited()){
+						guiManager.closeGUI(true);
+						Mouse.setGrabbed(true);
+					}else if(guiManager.getCurrentGUIName().equals("nogui")){
+						guiManager.showGUI("pauseMenu");
+					}
+				}
+				if(Keyboard.isKeyDown(Keyboard.KEY_E)){
+					if(guiManager.getCurrentGUIName() == "crafting" || guiManager.getCurrentGUIName() == "adv_crafting"){
+						guiManager.closeGUI(true);
+						Mouse.setGrabbed(true);
+					}else{
+						guiManager.showGUI("crafting");
+					}
+				}
+				Vector3f pos = worldManager.entityManager.getPlayer().getPos();
+				if(Keyboard.isKeyDown(Keyboard.KEY_F)){
+					worldManager.setTileAtPos(pos, Tile.Fire.getId(), true);
+				}
+				if(Keyboard.isKeyDown(Keyboard.KEY_P)){
+					/*String id = JOptionPane.showInputDialog("Enter in the id of the tile you wish to place: ");
+					int tileid = Integer.parseInt(id);
+					worldManager.setTileAtPos(pos, (byte) tileid, true);*/
+					/*worldManager.setTileAtPos(pos,Tile.ParticleProjector.getId(),true);*/
+					/*worldManager.setTileAtPos(pos, Tile.Log.getId(), false);
+					worldManager.setMetaAtPos((int)pos.x, (int)pos.y, (int)pos.z, (byte)4, true);*/
+					worldManager.setTileAtPos(pos, Tile.Chest.getId(), true);
+				}
+				if(Keyboard.isKeyDown(Keyboard.KEY_B)){
+					worldManager.setTileAtPos(pos, Tile.Bluestone.getId(), true);
+				}
+				if(Keyboard.isKeyDown(Keyboard.KEY_M)){
+					System.out.println(worldManager.getMetaAtPos((int)pos.x, (int)pos.y, (int)pos.z));
+				}
+				if(Keyboard.isKeyDown(Keyboard.KEY_T)){
+					worldManager.setTileAtPos(pos, Tile.Tnt.getId(), true);
+				}
+				if(Keyboard.isKeyDown(Keyboard.KEY_SEMICOLON)){
+					worldManager.entityManager.add(new EntityTestAnimal(pos, worldManager));
+				}
+				if(Keyboard.isKeyDown(Keyboard.KEY_APOSTROPHE)){
+					worldManager.entityManager.add(new EntityTestHostile(pos, worldManager));
+				}
+			
 			}
-		}
-		if(Keyboard.keyJustPressed(Keyboard.KEY_E)){
-			if(guiManager.getCurrentGUIName() == "crafting" || guiManager.getCurrentGUIName() == "adv_crafting"){
-				guiManager.closeGUI(true);
-				Mouse.setGrabbed(true);
-			}else{
-				guiManager.showGUI("crafting");
-			}
-		}
-		Vector3f pos = worldManager.entityManager.getPlayer().getPos();
-		if(Keyboard.keyJustPressed(Keyboard.KEY_F)){
-			worldManager.setTileAtPos(pos, Tile.Fire.getId(), true);
-		}
-		if(Keyboard.keyJustPressed(Keyboard.KEY_P)){
-			/*String id = JOptionPane.showInputDialog("Enter in the id of the tile you wish to place: ");
-			int tileid = Integer.parseInt(id);
-			worldManager.setTileAtPos(pos, (byte) tileid, true);*/
-			/*worldManager.setTileAtPos(pos,Tile.ParticleProjector.getId(),true);*/
-			/*worldManager.setTileAtPos(pos, Tile.Log.getId(), false);
-			worldManager.setMetaAtPos((int)pos.x, (int)pos.y, (int)pos.z, (byte)4, true);*/
-			worldManager.setTileAtPos(pos, Tile.Chest.getId(), true);
-		}
-		if(Keyboard.keyJustPressed(Keyboard.KEY_B)){
-			worldManager.setTileAtPos(pos, Tile.Bluestone.getId(), true);
-		}
-		if(Keyboard.keyJustPressed(Keyboard.KEY_M)){
-			System.out.println(worldManager.getMetaAtPos((int)pos.x, (int)pos.y, (int)pos.z));
-		}
-		if(Keyboard.keyJustPressed(Keyboard.KEY_T)){
-			worldManager.setTileAtPos(pos, Tile.Tnt.getId(), true);
-		}
-		if(Keyboard.keyJustPressed(Keyboard.KEY_SEMICOLON)){
-			worldManager.entityManager.add(new EntityTestAnimal(pos, worldManager));
-		}
-		if(Keyboard.keyJustPressed(Keyboard.KEY_APOSTROPHE)){
-			worldManager.entityManager.add(new EntityTestHostile(pos, worldManager));
 		}
 	}
 	
+	@Override
 	public void render() {
 		DebugTimer.getTimer("total_render").start();
 		if(Constants.GAME_STATE == Constants.GAME){
@@ -356,18 +376,18 @@ public class CentralManager{
 	}
 	
 	public void createFog(){
-		/*final FloatBuffer fogColours = BufferUtils.createFloatBuffer(4);
+		final FloatBuffer fogColours = BufferUtils.createFloatBuffer(4);
         {
             fogColours.put(new float[]{0.4f, 0.7f, 1.0f, 0.2f});
             fogColours.flip();
         }
         GL11.glClearColor(0, 0, 0, 1);
-        GL11.glFogi(GL11.GL_FOG_COLOR, fogColours);
+        GL11.glFog(GL11.GL_FOG_COLOR, fogColours);
         GL11.glFogi(GL11.GL_FOG_MODE, GL11.GL_LINEAR);
         GL11.glHint(GL11.GL_FOG_HINT, GL11.GL_FASTEST);// GL_NICEST
         GL11.glFogf(GL11.GL_FOG_START, 10);
         GL11.glFogf(GL11.GL_FOG_END, 20);
-        GL11.glFogf(GL11.GL_FOG_DENSITY, 0.2f);*/
+        GL11.glFogf(GL11.GL_FOG_DENSITY, 0.2f);
 	}
 	
 	public void render3D(){
@@ -381,8 +401,20 @@ public class CentralManager{
 		glEnable(GL_DEPTH_TEST);
 	}
 	
+	private void setupLighting(){
+		glShadeModel(GL_SMOOTH);
+		ByteBuffer f = ByteBuffer.allocateDirect(16);
+	    glEnable(GL_DEPTH_TEST);
+	    glEnable(GL_LIGHTING);
+	    glEnable(GL_LIGHT0);
+	    glLightModel(GL_LIGHT_MODEL_AMBIENT, (FloatBuffer)f.asFloatBuffer().put(new float[]{0.05f, 0.05f, 0.05f, 1f}).asReadOnlyBuffer().flip());
+	    glLight(GL_LIGHT0, GL_POSITION, (FloatBuffer)f.asFloatBuffer().put(new float[]{0,0,0,1}).flip());
+	    glEnable(GL_COLOR_MATERIAL);
+	    glColorMaterial(GL_FRONT, GL_DIFFUSE);
+	}
+	
+	@Override
 	public void update(){
-		Keyboard.update();
 		DebugTimer.getTimer("total_update").start();
 		guiManager.update();
 		if(Constants.GAME_STATE == Constants.GAME){
@@ -423,7 +455,7 @@ public class CentralManager{
 		Constants.FONT.drawString(CENTER-Constants.FONT.getWidth(line1)/2,HCENTER-Constants.FONT.getHeight(line1), line1);
 		Constants.FONT.drawString(CENTER-Constants.FONT.getWidth(line2)/2,HCENTER+Constants.FONT.getHeight(line2), line2);
 		TextureImpl.unbind();
-		GLCraft.updateDisplay();
+		Display.update();
 		glClearColor(0.0f,0.749019608f,1.0f,0.0f);
 	}
 	
@@ -455,7 +487,7 @@ public class CentralManager{
 		glVertex2f(CENTER+(percent*2-100),HCENTER+100);
 		glEnd();
 		glEnable(GL_TEXTURE_2D);
-		GLCraft.updateDisplay();
+		Display.update();
 		glClearColor(0.0f,0.749019608f,1.0f,0.0f);
 	}
 }

@@ -2,6 +2,8 @@ package net.codepixl.GLCraft.util;
 
 import org.lwjgl.util.vector.Vector3f;
 
+import com.nishu.utils.Color4f;
+
 public class MathUtils {
 	public static float distance(Vector3f a, Vector3f b){
 		

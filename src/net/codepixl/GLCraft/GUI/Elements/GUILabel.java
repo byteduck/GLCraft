@@ -5,8 +5,9 @@ import static org.lwjgl.opengl.GL11.glColor4f;
 import org.lwjgl.opengl.GL11;
 import org.newdawn.slick.opengl.TextureImpl;
 
+import com.nishu.utils.Color4f;
+
 import net.codepixl.GLCraft.GUI.GUIScreen;
-import net.codepixl.GLCraft.util.Color4f;
 import net.codepixl.GLCraft.util.Constants;
 
 public class GUILabel extends GUIScreen{

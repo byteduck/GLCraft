@@ -13,7 +13,12 @@ import static org.lwjgl.opengl.GL11.glTranslatef;
 
 import java.util.Iterator;
 
+import org.lwjgl.input.Keyboard;
+import org.lwjgl.input.Mouse;
 import org.lwjgl.util.vector.Vector3f;
+
+import com.nishu.utils.Color4f;
+import com.nishu.utils.Time;
 
 import net.codepixl.GLCraft.GUI.GUIManager;
 import net.codepixl.GLCraft.render.RenderType;
@@ -21,14 +26,10 @@ import net.codepixl.GLCraft.render.Shape;
 import net.codepixl.GLCraft.render.TextureManager;
 import net.codepixl.GLCraft.sound.SoundManager;
 import net.codepixl.GLCraft.util.AABB;
-import net.codepixl.GLCraft.util.Color4f;
 import net.codepixl.GLCraft.util.Constants;
-import net.codepixl.GLCraft.util.Keyboard;
 import net.codepixl.GLCraft.util.MathUtils;
-import net.codepixl.GLCraft.util.Mouse;
 import net.codepixl.GLCraft.util.Ray;
 import net.codepixl.GLCraft.util.Raytracer;
-import net.codepixl.GLCraft.util.Time;
 import net.codepixl.GLCraft.world.WorldManager;
 import net.codepixl.GLCraft.world.entity.Entity;
 import net.codepixl.GLCraft.world.entity.EntityItem;
@@ -128,17 +129,19 @@ public class EntityPlayer extends Mob {
 		if(Mouse.isGrabbed()) {
 			float dx = Mouse.getDX() * speed * 0.16f;
 			float dy = Mouse.getDY() * speed * 0.16f;
-			double dWheel = Mouse.getDWheel();
-			for(int i = 0; i < dWheel / 120; i++){
-				this.selectedSlot += 1;
-				if(this.selectedSlot == 9) {
-					this.selectedSlot = 0;
+			int dWheel = Mouse.getDWheel();
+			if(Mouse.hasWheel()) {
+				for(int i = 0; i < dWheel / 120; i++){
+					this.selectedSlot += 1;
+					if(this.selectedSlot == 9) {
+						this.selectedSlot = 0;
+					}
 				}
-			}
-			for(int i = 0; i > dWheel / 120; i--){
-				this.selectedSlot -= 1;
-				if(this.selectedSlot == -1) {
-					this.selectedSlot = 8;
+				for(int i = 0; i > dWheel / 120; i--){
+					this.selectedSlot -= 1;
+					if(this.selectedSlot == -1) {
+						this.selectedSlot = 8;
+					}
 				}
 			}
 			

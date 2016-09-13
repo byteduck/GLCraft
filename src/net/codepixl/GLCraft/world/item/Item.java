@@ -2,8 +2,9 @@ package net.codepixl.GLCraft.world.item;
 
 import java.util.HashMap;
 
+import com.nishu.utils.Color4f;
+
 import net.codepixl.GLCraft.render.TextureManager;
-import net.codepixl.GLCraft.util.Color4f;
 import net.codepixl.GLCraft.world.entity.mob.EntityPlayer;
 import net.codepixl.GLCraft.world.item.tool.ItemStonePickaxe;
 import net.codepixl.GLCraft.world.item.tool.ItemWoodPickaxe;

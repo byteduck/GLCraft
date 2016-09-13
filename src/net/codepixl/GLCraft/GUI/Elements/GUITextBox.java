@@ -1,18 +1,19 @@
 package net.codepixl.GLCraft.GUI.Elements;
 
+import org.lwjgl.input.Keyboard;
+import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.GL11;
 import org.newdawn.slick.Color;
 import org.newdawn.slick.opengl.TextureImpl;
+
+import com.nishu.utils.Color4f;
+import com.nishu.utils.Time;
 
 import net.codepixl.GLCraft.GUI.GUIManager;
 import net.codepixl.GLCraft.GUI.GUIScreen;
 import net.codepixl.GLCraft.render.Shape;
 import net.codepixl.GLCraft.render.util.Tesselator;
-import net.codepixl.GLCraft.util.Color4f;
 import net.codepixl.GLCraft.util.Constants;
-import net.codepixl.GLCraft.util.Keyboard;
-import net.codepixl.GLCraft.util.Mouse;
-import net.codepixl.GLCraft.util.Time;
 
 public class GUITextBox extends GUIScreen{
 	

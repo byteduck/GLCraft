@@ -7,9 +7,10 @@ import static org.lwjgl.opengl.GL11.glDisable;
 import static org.lwjgl.opengl.GL11.glEnable;
 import static org.lwjgl.opengl.GL11.glEnd;
 
+import com.nishu.utils.Color4f;
+
 import net.codepixl.GLCraft.GUI.GUIScreen;
 import net.codepixl.GLCraft.render.Shape;
-import net.codepixl.GLCraft.util.Color4f;
 
 public class GUIProgressBar extends GUIScreen{
 	

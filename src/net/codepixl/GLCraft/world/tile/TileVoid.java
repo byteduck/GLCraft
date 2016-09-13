@@ -1,6 +1,6 @@
 package net.codepixl.GLCraft.world.tile;
 
-import net.codepixl.GLCraft.util.Color4f;
+import com.nishu.utils.Color4f;
 
 public class TileVoid extends Tile{
 

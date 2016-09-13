@@ -1,7 +1,8 @@
 package net.codepixl.GLCraft.world.tile;
 
+import com.nishu.utils.Color4f;
+
 import net.codepixl.GLCraft.render.RenderType;
-import net.codepixl.GLCraft.util.Color4f;
 import net.codepixl.GLCraft.world.WorldManager;
 import net.codepixl.GLCraft.world.entity.Entity;
 import net.codepixl.GLCraft.world.entity.mob.Mob;

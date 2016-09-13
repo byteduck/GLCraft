@@ -9,10 +9,10 @@ import com.evilco.mc.nbt.tag.TagFloat;
 import com.evilco.mc.nbt.tag.TagList;
 import com.evilco.mc.nbt.tag.TagLong;
 import com.evilco.mc.nbt.tag.TagString;
+import com.nishu.utils.Time;
 
 import net.codepixl.GLCraft.util.GameObj;
 import net.codepixl.GLCraft.util.MathUtils;
-import net.codepixl.GLCraft.util.Time;
 import net.codepixl.GLCraft.world.WorldManager;
 import net.codepixl.GLCraft.world.tile.Tile;
 import net.codepixl.GLCraft.world.tile.TileFire;

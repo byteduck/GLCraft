@@ -1,6 +1,7 @@
 package net.codepixl.GLCraft.world.tile;
 
-import net.codepixl.GLCraft.util.Color4f;
+import com.nishu.utils.Color4f;
+
 import net.codepixl.GLCraft.world.tile.material.Material;
 
 public class TileGrass extends Tile{

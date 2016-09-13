@@ -14,12 +14,14 @@ import org.lwjgl.util.vector.Vector3f;
 
 import com.evilco.mc.nbt.stream.NbtInputStream;
 import com.evilco.mc.nbt.tag.TagCompound;
+import com.nishu.utils.Shader;
+import com.nishu.utils.ShaderProgram;
+import com.nishu.utils.Time;
 
 import net.codepixl.GLCraft.GLCraft;
 import net.codepixl.GLCraft.GUI.GUIManager;
 import net.codepixl.GLCraft.GUI.Inventory.GUICrafting;
 import net.codepixl.GLCraft.GUI.Inventory.GUICraftingAdvanced;
-import net.codepixl.GLCraft.render.util.ShaderProgram;
 import net.codepixl.GLCraft.util.AABB;
 import net.codepixl.GLCraft.util.Constants;
 import net.codepixl.GLCraft.util.DebugTimer;
@@ -27,7 +29,6 @@ import net.codepixl.GLCraft.util.Frustum;
 import net.codepixl.GLCraft.util.MathUtils;
 import net.codepixl.GLCraft.util.OpenSimplexNoise;
 import net.codepixl.GLCraft.util.Spritesheet;
-import net.codepixl.GLCraft.util.Time;
 import net.codepixl.GLCraft.util.Vector3i;
 import net.codepixl.GLCraft.util.data.saves.Save;
 import net.codepixl.GLCraft.util.data.saves.SaveManager;
@@ -64,12 +65,8 @@ public class WorldManager {
 	}
 	
 	private void initGL(){
-		try {
-			shader = new ShaderProgram("/shaders/chunk.vert","/shaders/chunk.frag");
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		Shader temp = new Shader("/shaders/chunk.vert","/shaders/chunk.frag");
+		shader = new ShaderProgram(temp.getvShader(), temp.getfShader());
 	}
 	
 	private void init(){

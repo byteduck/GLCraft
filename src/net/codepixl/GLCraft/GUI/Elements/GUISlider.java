@@ -2,15 +2,16 @@ package net.codepixl.GLCraft.GUI.Elements;
 
 import java.util.concurrent.Callable;
 
+import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.GL11;
 import org.newdawn.slick.Color;
 import org.newdawn.slick.opengl.TextureImpl;
 
+import com.nishu.utils.Color4f;
+
 import net.codepixl.GLCraft.GUI.GUIScreen;
 import net.codepixl.GLCraft.render.Shape;
-import net.codepixl.GLCraft.util.Color4f;
 import net.codepixl.GLCraft.util.Constants;
-import net.codepixl.GLCraft.util.Mouse;
 
 public class GUISlider extends GUIScreen{
 	

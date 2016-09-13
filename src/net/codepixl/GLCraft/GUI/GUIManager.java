@@ -2,6 +2,8 @@ package net.codepixl.GLCraft.GUI;
 
 import java.util.HashMap;
 
+import org.lwjgl.input.Keyboard;
+
 import net.codepixl.GLCraft.GUI.Elements.GUITextBox;
 import net.codepixl.GLCraft.render.TextureManager;
 
@@ -96,16 +98,20 @@ public class GUIManager {
 		if (GUIOpen)
 			currentGUI.input(0,0);
 		if(focusedTextBox != null){
-			/*Keyboard.enableRepeatEvents(true);
-				char c = Keyboard.getEventCharacter();
-				int k = Keyboard.getEventKey();
-				if(k == Keyboard.KEY_ESCAPE || k == Keyboard.KEY_RETURN){
-					this.focusedTextBox.setFocused(false);
-					this.focusedTextBox = null;
-				}else{
-					this.focusedTextBox.textInput(k,c);
+			Keyboard.enableRepeatEvents(true);
+			while(Keyboard.next()){
+				if(Keyboard.getEventKeyState()){
+					char c = Keyboard.getEventCharacter();
+					int k = Keyboard.getEventKey();
+					if(k == Keyboard.KEY_ESCAPE || k == Keyboard.KEY_RETURN){
+						this.focusedTextBox.setFocused(false);
+						this.focusedTextBox = null;
+					}else{
+						this.focusedTextBox.textInput(k,c);
+					}
 				}
-			Keyboard.enableRepeatEvents(false); TODO Make this work */
+			}
+			Keyboard.enableRepeatEvents(false);
 		}
 	}
 
