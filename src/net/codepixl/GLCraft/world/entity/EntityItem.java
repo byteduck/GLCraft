@@ -84,11 +84,31 @@ public class EntityItem extends EntitySolid{
 					}else{
 						Shape.createCross(0+((float)i*0.05f), yPos+((float)i*0.05f), 0+((float)i*0.05f), tile.getColor(), tile.getTexCoords(), size);
 					}
-				}else if(tile.getRenderType() == RenderType.FLAT || tile.getRenderType() == RenderType.CUSTOM){
+				}else if(tile.getRenderType() == RenderType.FLAT){
 					if(tile.hasMetaTextures()){
 						Shape.createPlane(0+((float)i*0.05f), yPos+((float)i*0.05f), 0+((float)i*0.05f), tile.getColor(), tile.getTexCoords(itemstack.getMeta()), size);
 					}else{
 						Shape.createPlane(0+((float)i*0.05f), yPos+((float)i*0.05f), 0+((float)i*0.05f), tile.getColor(), tile.getTexCoords(), size);
+					}
+				}else{
+					if(tile.getCustomRenderType() == RenderType.CUBE){
+						if(tile.hasMetaTextures()){
+							Shape.createCube(0+((float)i*0.05f), yPos+((float)i*0.05f), 0+((float)i*0.05f), tile.getColor(), tile.getTexCoords(itemstack.getMeta()), size);
+						}else{
+							Shape.createCube(0+((float)i*0.05f), yPos+((float)i*0.05f), 0+((float)i*0.05f), tile.getColor(), tile.getTexCoords(), size);
+						}
+					}else if(tile.getCustomRenderType() == RenderType.CROSS){
+						if(tile.hasMetaTextures()){
+							Shape.createCross(0+((float)i*0.05f), yPos+((float)i*0.05f), 0+((float)i*0.05f), tile.getColor(), tile.getTexCoords(itemstack.getMeta()), size);
+						}else{
+							Shape.createCross(0+((float)i*0.05f), yPos+((float)i*0.05f), 0+((float)i*0.05f), tile.getColor(), tile.getTexCoords(), size);
+						}
+					}else{
+						if(tile.hasMetaTextures()){
+							Shape.createPlane(0+((float)i*0.05f), yPos+((float)i*0.05f), 0+((float)i*0.05f), tile.getColor(), tile.getTexCoords(itemstack.getMeta()), size);
+						}else{
+							Shape.createPlane(0+((float)i*0.05f), yPos+((float)i*0.05f), 0+((float)i*0.05f), tile.getColor(), tile.getTexCoords(), size);
+						}
 					}
 				}
 			}else{

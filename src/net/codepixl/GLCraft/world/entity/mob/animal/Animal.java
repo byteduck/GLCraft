@@ -8,11 +8,11 @@ import net.codepixl.GLCraft.world.entity.Entity;
 import net.codepixl.GLCraft.world.entity.mob.Mob;
 
 public class Animal extends Mob{
-	private float Vx;
-	private float Vy;
-	private float Vz;
-	private float speed;
-	private Entity target;
+	protected float Vx;
+	protected float Vy;
+	protected float Vz;
+	protected float speed;
+	protected Entity target;
 	
 	public Animal(Vector3f pos, WorldManager w) {
 		super(pos, w);
@@ -31,7 +31,7 @@ public class Animal extends Mob{
 	public void setTarget(Entity target){
 		this.target = target;
 	}
-	public Vector3f getVel(){
+	public Vector3f getMovementVel(){
 		return new Vector3f(this.Vx,this.Vy,this.Vz);
 	}
 	@Override

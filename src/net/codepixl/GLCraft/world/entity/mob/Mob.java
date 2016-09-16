@@ -1,6 +1,8 @@
 package net.codepixl.GLCraft.world.entity.mob;
 
 import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
 
 import org.lwjgl.util.vector.Vector3f;
 
@@ -12,6 +14,7 @@ import net.codepixl.GLCraft.util.AABB;
 import net.codepixl.GLCraft.util.DebugTimer;
 import net.codepixl.GLCraft.util.GameObj;
 import net.codepixl.GLCraft.world.WorldManager;
+import net.codepixl.GLCraft.world.entity.Entity;
 import net.codepixl.GLCraft.world.entity.EntityItem;
 import net.codepixl.GLCraft.world.entity.EntitySolid;
 import net.codepixl.GLCraft.world.item.ItemStack;
@@ -119,12 +122,35 @@ public class Mob extends EntitySolid implements GameObj{
 			this.airLevel = 0;
 			hurt(2f,1);
 		}
-		
+		push();
 		//getCamera().updateKeyboard(32, 2);
 		//getCamera().updateMouse();
 		DebugTimer.startTimer("ai_time");
 		handleAI();
 		DebugTimer.pauseTimer("ai_time");
+	}
+	
+	public void push(){
+		float largSiz = this.getAABB().getSize().x;
+		if(this.getAABB().getSize().y > largSiz)
+			largSiz= this.getAABB().getSize().y;
+		if(this.getAABB().getSize().z > largSiz)
+			largSiz = this.getAABB().getSize().z;
+		List<Entity> list = worldManager.entityManager.getEntitiesInRadiusOfEntityOfType(this, Mob.class, largSiz);
+		Iterator<Entity> i = list.iterator();
+		while(i.hasNext()){
+			Mob m = (Mob)i.next();
+			if(AABB.testAABB(getAABB(), m.getAABB())){
+				if(this.getX() > m.getX())
+					this.move((float) (Time.getDelta()*2f), 0, 0);
+				else
+					this.move((float) (Time.getDelta()*-2f), 0, 0);
+				if(this.getZ() > m.getZ())
+					this.move(0, 0, (float) (Time.getDelta()*2f));
+				else
+					this.move(0, 0, (float) (Time.getDelta()*-2f));
+			}
+		}
 	}
 	
 	public void jump(){

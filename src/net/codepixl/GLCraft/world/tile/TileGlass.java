@@ -69,6 +69,11 @@ public class TileGlass extends Tile{
 	}
 	
 	@Override
+	public RenderType getCustomRenderType(){
+		return RenderType.CUBE;
+	}
+	
+	@Override
 	public void customRender(float x, float y, float z, WorldManager w, Chunk c){
 		float size;
 		byte meta = w.getMetaAtPos((int)x, (int)y, (int)z);

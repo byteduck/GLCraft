@@ -8,6 +8,8 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -191,6 +193,12 @@ public class EntityManager implements GameObj{
 	        	list.add(ent);
 	        }
 	    }
+	    final Entity e2 = e;
+	    Collections.sort(list, new Comparator<Entity>(){
+    	   public int compare(Entity o1, Entity o2){
+    	      return (int) (MathUtils.distance(o1.getPos(), e2.getPos()) - MathUtils.distance(o2.getPos(), e2.getPos()));
+    	   }
+    	});
 	    iterating = false;
 	    return list;
 	}
@@ -205,6 +213,12 @@ public class EntityManager implements GameObj{
 	        	list.add(ent);
 	        }
 	    }
+	    final Entity e2 = e;
+	    Collections.sort(list, new Comparator<Entity>(){
+    	   public int compare(Entity o1, Entity o2){
+    	      return (int) (MathUtils.distance(o1.getPos(), e2.getPos()) - MathUtils.distance(o2.getPos(), e2.getPos()));
+    	   }
+    	});
 	    iterating = false;
 	    return list;
 	}

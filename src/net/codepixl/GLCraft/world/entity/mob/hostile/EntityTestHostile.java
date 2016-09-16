@@ -6,7 +6,6 @@ import org.lwjgl.opengl.GL11;
 import org.lwjgl.util.vector.Vector3f;
 
 import com.nishu.utils.Color4f;
-import com.nishu.utils.Time;
 
 import net.codepixl.GLCraft.render.Shape;
 import net.codepixl.GLCraft.util.Constants;
@@ -14,6 +13,7 @@ import net.codepixl.GLCraft.util.MathUtils;
 import net.codepixl.GLCraft.world.WorldManager;
 import net.codepixl.GLCraft.world.entity.Entity;
 import net.codepixl.GLCraft.world.entity.mob.EntityPlayer;
+import net.codepixl.GLCraft.world.entity.mob.Mob;
 import net.codepixl.GLCraft.world.entity.particle.Particle;
 import net.codepixl.GLCraft.world.tile.Tile;
 
@@ -53,21 +53,18 @@ public class EntityTestHostile extends Hostile{
 			worldManager.entityManager.add(particle);
 		}
 		
-		List<Entity> e = worldManager.entityManager.getEntitiesInRadiusOfEntityOfType(this, EntityPlayer.class, 20f);
-		if(e.size() != 0){
+		List<Entity> e = worldManager.entityManager.getEntitiesInRadiusOfEntityOfType(this, Mob.class, 20f);
+		if(e.size() > 0){
+			Vector3f ppos = e.get(0).getPos();
 			this.setTarget(e.get(0));
-			EntityPlayer player = (EntityPlayer) e.get(0);
-			Vector3f ppos = player.getPos();
-			//this.walkForward();
-			if(pos.x == lastpos.x || pos.z == lastpos.z){
-				//this.jump();
-			}
-			lastpos = pos;
+			this.walkForward();
+			//if(pos.x > ppos.x) this.move( -0.25f * (float)Time.getDelta() * 15, 0, 0); else this.move( 0.25f * (float)Time.getDelta() * 15, 0, 0);
+			//if(pos.z > ppos.z) this.move(0, 0, -0.25f * (float)Time.getDelta() * 15); else this.move(0, 0, 0.25f * (float)Time.getDelta() * 15);
+			this.jump();
 			float distance = MathUtils.distance(ppos,pos);
 			if(distance <= 2){
-				player.hurt(3f, 1f);
+				((Mob)e.get(0)).hurt(3f, 1f);
 			}
-			
 		}
 	}
 

@@ -128,6 +128,9 @@ public class EntityPlayer extends Mob {
 	}
 	
 	@Override
+	public void push(){}
+	
+	@Override
 	public void hurt(float damage){
 			super.hurt(damage);
 			this.rot.x = 5f;
@@ -413,14 +416,33 @@ public class EntityPlayer extends Mob {
 					this.prevSelect = new Vector3f((int) r.pos.x, (int) r.pos.y, (int) r.pos.z);
 					if(this.wasBreaking) {
 						float percent = this.breakProgress / Tile.getTile((byte) tile).getHardness();
-						if(Tile.getTile((byte) tile).getRenderType() == RenderType.CUBE) {
+						Tile t = Tile.getTile((byte) tile);
+						if(t.getRenderType() == RenderType.CUBE) {
 							glBegin(GL_QUADS);
 							Shape.createCube((int) r.pos.x - 0.001f, (int) r.pos.y - 0.001f, (int) r.pos.z - 0.001f, new Color4f(1, 1, 1, 1f), breakingTexCoords(percent), 1.002f);
 							glEnd();
-						}else{
+						}else if(t.getRenderType() == RenderType.CROSS){
 							glBegin(GL_QUADS);
 							Shape.createCross((int) r.pos.x - 0.001f, (int) r.pos.y - 0.001f, (int) r.pos.z - 0.001f, new Color4f(1, 1, 1, 1f), breakingTexCoords(percent), 1.001f);
 							glEnd();
+						}else if(t.getRenderType() == RenderType.FLAT){
+							glBegin(GL_QUADS);
+							Shape.createFlat((int) r.pos.x, (int) r.pos.y + 0.001f, (int) r.pos.z, new Color4f(1, 1, 1, 1f), breakingTexCoords(percent), 1f);
+							glEnd();
+						}else{
+							if(t.getCustomRenderType() == RenderType.CUBE) {
+								glBegin(GL_QUADS);
+								Shape.createCube((int) r.pos.x - 0.001f, (int) r.pos.y - 0.001f, (int) r.pos.z - 0.001f, new Color4f(1, 1, 1, 1f), breakingTexCoords(percent), 1.002f);
+								glEnd();
+							}else if(t.getCustomRenderType() == RenderType.CROSS){
+								glBegin(GL_QUADS);
+								Shape.createCross((int) r.pos.x - 0.001f, (int) r.pos.y - 0.001f, (int) r.pos.z - 0.001f, new Color4f(1, 1, 1, 1f), breakingTexCoords(percent), 1.001f);
+								glEnd();
+							}else if(t.getCustomRenderType() == RenderType.FLAT){
+								glBegin(GL_QUADS);
+								Shape.createFlat((int) r.pos.x, (int) r.pos.y + 0.001f, (int) r.pos.z, new Color4f(1, 1, 1, 1f), breakingTexCoords(percent), 1f);
+								glEnd();
+							}
 						}
 					}
 					if(Mouse.isButtonDown(0) && getBreakCooldown() == 0f && GUIManager.getMainManager().sendPlayerInput()) {

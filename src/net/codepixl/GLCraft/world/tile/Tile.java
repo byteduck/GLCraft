@@ -289,4 +289,8 @@ public class Tile {
 	public boolean canBePlacedOver() {
 		return false;
 	}
+
+	public RenderType getCustomRenderType() {
+		return RenderType.CUBE;
+	}
 }

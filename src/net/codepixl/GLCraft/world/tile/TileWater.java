@@ -41,6 +41,11 @@ public class TileWater extends Tile{
 	}
 	
 	@Override
+	public RenderType getCustomRenderType(){
+		return RenderType.CUBE;
+	}
+	
+	@Override
 	public void customRender(float x, float y, float z, WorldManager w, Chunk c){
 		float size = getHeight(w.getMetaAtPos(x,y,z));
 		GL11.glPushMatrix();
@@ -370,6 +375,7 @@ public class TileWater extends Tile{
 				w.setMetaAtPos(x, y, z, (byte)1, false);
 			}
 		}
+		w.rebuildAtPos(x, y, z);
 	}
 	
 	@Override
@@ -380,8 +386,8 @@ public class TileWater extends Tile{
 	@Override
 	public void tick(int x, int y, int z, WorldManager w){
 		byte m = w.getMetaAtPos(x,y,z);
-		if(m != 0 && m < 7){
-			if(!Tile.getTile((byte) w.getTileAtPos(x, y-1, z)).canPassThrough() && !Tile.getTile((byte) w.getTileAtPos(x, y-1, z)).canBeDestroyedByLiquid()){
+		if(m != 0 && m <= 7){
+			if(m < 7 && ((!Tile.getTile((byte) w.getTileAtPos(x, y-1, z)).canPassThrough() && !Tile.getTile((byte) w.getTileAtPos(x, y-1, z)).canBeDestroyedByLiquid()) || m <= 1)){
 				if(w.getTileAtPos(x+1, y, z) == Tile.Air.getId() || Tile.getTile((byte) w.getTileAtPos(x+1, y, z)).canBeDestroyedByLiquid()){
 					w.setTileAtPos(x+1, y, z, getId(), true, (byte) (m+1));
 				}

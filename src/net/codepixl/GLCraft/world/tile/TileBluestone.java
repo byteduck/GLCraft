@@ -69,6 +69,11 @@ public class TileBluestone extends Tile{
 	}
 	
 	@Override
+	public RenderType getCustomRenderType(){
+		return RenderType.CUBE;
+	}
+	
+	@Override
 	public void customRender(float x, float y, float z, WorldManager w, Chunk c){
 		float col = w.getMetaAtPos((int)x, (int)y, (int)z)/15f;
 		glBegin(GL_QUADS);
