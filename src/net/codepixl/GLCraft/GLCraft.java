@@ -106,6 +106,10 @@ public class GLCraft extends Screen{
 		return glcraft;
 	}
 	
+	public static GLCraft getGame(){
+		return glcraft;
+	}
+	
 	public GLCraft() throws IOException, LWJGLException{
 		commonInitializer();
 	}
