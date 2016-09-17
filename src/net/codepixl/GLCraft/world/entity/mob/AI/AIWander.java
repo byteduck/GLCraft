@@ -24,6 +24,17 @@ public class AIWander extends AIPathfind{
 		this.moving = false;
 	}
 	
+	public AIWander(Mob m){
+		super(m);
+		this.minDelay = 1;
+		this.maxDelay = 5;
+		this.maxRange = 15;
+		this.maxTryTime = 4;
+		this.currentTime = 0;
+		this.currentTryTime = 0;
+		this.moving = false;
+	}
+	
 	@Override
 	public void executeAI(){
 		if(!mob.isAiBusy()){
@@ -34,9 +45,11 @@ public class AIWander extends AIPathfind{
 				if(this.currentTime >= this.currentDelay){
 					this.currentTime = 0;
 					this.currentTryTime = 0;
-					Vector3f randPos = new Vector3f(mob.getX()+Constants.randFloat(-maxRange, maxRange), mob.getY(), mob.getZ()+Constants.randFloat(-maxRange, maxRange));
-					while(!Tile.getTile((byte) mob.worldManager.getTileAtPos(randPos)).canPassThrough()){
+					Vector3f randPos = new Vector3f(mob.getX()+Constants.randFloat(-maxRange, maxRange), mob.getY()+Constants.randFloat(-maxRange, maxRange), mob.getZ()+Constants.randFloat(-maxRange, maxRange));
+					int tries = 0;
+					while(!Tile.getTile((byte) mob.worldManager.getTileAtPos(randPos)).canPassThrough() || Tile.getTile((byte) mob.worldManager.getTileAtPos(new Vector3f(randPos.x, randPos.y-1, randPos.z))).canPassThrough() && tries < 5){
 						randPos = new Vector3f(mob.getX()+Constants.randFloat(-maxRange, maxRange), mob.getY(), mob.getZ()+Constants.randFloat(-maxRange, maxRange));
+						tries++;
 					}
 					this.loc = randPos;
 					this.moving = true;

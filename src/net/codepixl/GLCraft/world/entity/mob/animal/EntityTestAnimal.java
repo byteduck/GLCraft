@@ -17,7 +17,7 @@ public class EntityTestAnimal extends Animal{
 	public EntityTestAnimal(Vector3f pos, WorldManager w) {
 		super(pos, w);
 		this.addAI(new AIRunAway(this, Hostile.class));
-		this.addAI(new AIWander(this, 1, 5, 3, 4));
+		this.addAI(new AIWander(this));
 	}
 	
 	@Override
