@@ -44,10 +44,17 @@ import static org.lwjgl.opengl.GL11.glVertex2f;
 import static org.lwjgl.opengl.GL11.glViewport;
 import static org.lwjgl.util.glu.GLU.gluPerspective;
 
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
 import java.io.PipedInputStream;
 import java.nio.ByteBuffer;
 import java.nio.FloatBuffer;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.Iterator;
+
+import javax.imageio.ImageIO;
 
 import org.lwjgl.BufferUtils;
 import org.lwjgl.input.Keyboard;
@@ -58,6 +65,7 @@ import org.lwjgl.util.vector.Vector3f;
 import org.newdawn.slick.TrueTypeFont;
 import org.newdawn.slick.opengl.TextureImpl;
 
+import com.google.common.io.Files;
 import com.nishu.utils.Color4f;
 import com.nishu.utils.Screen;
 import com.nishu.utils.Time;
@@ -95,6 +103,8 @@ public class CentralManager extends Screen{
 	private PipedInputStream actionsToDo = new PipedInputStream();
 	public GUIManager guiManager;
 	private SoundManager soundManager;
+	private double messageTime = 0;
+	private String message = "";
 	
 	public static final int AIRCHUNK = 0, MIXEDCHUNK = 1;
 
@@ -210,9 +220,16 @@ public class CentralManager extends Screen{
 				if(Keyboard.isKeyDown(Keyboard.KEY_APOSTROPHE)){
 					worldManager.entityManager.add(new EntityTestHostile(pos, worldManager));
 				}
-			
+				if(Keyboard.isKeyDown(Keyboard.KEY_F2)){
+					takeScreenshot();
+				}
 			}
 		}
+	}
+	
+	public void showMessage(double duration, String message){
+		this.messageTime = duration;
+		this.message = message;
 	}
 	
 	@Override
@@ -317,11 +334,48 @@ public class CentralManager extends Screen{
 		}
 		glEnd();
 	}
+	
+	public void takeScreenshot(){
+		showMessage(2, "Took screenshot");
+		GL11.glReadBuffer(GL11.GL_FRONT);
+		int width = Display.getDisplayMode().getWidth();
+		int height= Display.getDisplayMode().getHeight();
+		int bpp = 4; // Assuming a 32-bit display with a byte each for red, green, blue, and alpha.
+		ByteBuffer buffer = BufferUtils.createByteBuffer(width * height * bpp);
+		GL11.glReadPixels(0, 0, width, height, GL11.GL_RGBA, GL11.GL_UNSIGNED_BYTE, buffer );
+		String filename = new SimpleDateFormat("yyyy'-'MM'-'dd'_'hh'-'mm'-'ss'.png'").format(new Date());
+		File file = new File(Constants.GLCRAFTDIR+"screenshots/"+filename); // The file to save to.
+		String format = "PNG"; // Example: "PNG" or "JPG"
+		BufferedImage image = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
+		   
+		for(int x = 0; x < width; x++) 
+		{
+		    for(int y = 0; y < height; y++)
+		    {
+		        int i = (x + (width * y)) * bpp;
+		        int r = buffer.get(i) & 0xFF;
+		        int g = buffer.get(i + 1) & 0xFF;
+		        int b = buffer.get(i + 2) & 0xFF;
+		        image.setRGB(x, height - (y + 1), (0xFF << 24) | (r << 16) | (g << 8) | b);
+		    }
+		}
+		   
+		try {
+			Files.createParentDirs(file);
+		    ImageIO.write(image, format, file);
+		} catch (IOException e) { e.printStackTrace(); }
+	}
 
 	private void renderText(){
 		render2D();
 		glColor3f(1f,1f,1f);
 		Constants.FONT.drawString(10, 10, "GLCraft Alpha "+GLCraft.version);
+		if(messageTime > 0){
+			messageTime -= Time.getDelta();
+			if(messageTime < 0)
+				messageTime = 0;
+			Constants.FONT.drawString(10, Constants.FONT.getHeight()+20, this.message);
+		}
 		if(currentBlock != -1){
 			String toolTip = "Block: "+Tile.getTile((byte)currentBlock).getName();
 			Constants.FONT.drawString(Constants.WIDTH/2-Constants.FONT.getWidth(toolTip)/2, 10, toolTip);

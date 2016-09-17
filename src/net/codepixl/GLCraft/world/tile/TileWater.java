@@ -148,7 +148,7 @@ public class TileWater extends Tile{
 		float ret = 1;
 		switch(corner){
 			case 0:
-				if(w.getTileAtPos(x-1,y+1,z) == getId() || w.getTileAtPos(x,y+1,z-1) == getId() || w.getTileAtPos(x-1,y+1,z-1) == getId()){
+				if(w.getTileAtPos(x-1,y+1,z) == getId() || w.getTileAtPos(x,y+1,z-1) == getId() || w.getTileAtPos(x-1,y+1,z-1) == getId() || w.getTileAtPos(x,y+1,z) == getId()){
 					ret = 1;
 				}else{
 					if(w.getTileAtPos(x-1,y,z) == getId()){
@@ -168,7 +168,7 @@ public class TileWater extends Tile{
 				}
 				break;
 			case 1:
-				if(w.getTileAtPos(x+1,y+1,z) == getId() || w.getTileAtPos(x,y+1,z-1) == getId() || w.getTileAtPos(x+1,y+1,z-1) == getId()){
+				if(w.getTileAtPos(x+1,y+1,z) == getId() || w.getTileAtPos(x,y+1,z-1) == getId() || w.getTileAtPos(x+1,y+1,z-1) == getId() || w.getTileAtPos(x,y+1,z) == getId()){
 					ret = 1;
 				}else{
 					if(w.getTileAtPos(x+1,y,z) == getId()){
@@ -188,7 +188,7 @@ public class TileWater extends Tile{
 				}
 				break;
 			case 2:
-				if(w.getTileAtPos(x+1,y+1,z) == getId() || w.getTileAtPos(x,y+1,z+1) == getId() || w.getTileAtPos(x+1,y+1,z+1) == getId()){
+				if(w.getTileAtPos(x+1,y+1,z) == getId() || w.getTileAtPos(x,y+1,z+1) == getId() || w.getTileAtPos(x+1,y+1,z+1) == getId() || w.getTileAtPos(x,y+1,z) == getId()){
 					ret = 1;
 				}else{
 					if(w.getTileAtPos(x+1,y,z) == getId()){
@@ -208,7 +208,7 @@ public class TileWater extends Tile{
 				}
 				break;
 			case 3:
-				if(w.getTileAtPos(x-1,y+1,z) == getId() || w.getTileAtPos(x,y+1,z+1) == getId() || w.getTileAtPos(x-1,y+1,z+1) == getId()){
+				if(w.getTileAtPos(x-1,y+1,z) == getId() || w.getTileAtPos(x,y+1,z+1) == getId() || w.getTileAtPos(x-1,y+1,z+1) == getId() || w.getTileAtPos(x,y+1,z) == getId()){
 					ret = 1;
 				}else{
 					if(w.getTileAtPos(x-1,y,z) == getId()){

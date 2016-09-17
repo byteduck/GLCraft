@@ -137,6 +137,10 @@ public class WorldManager {
 		}
 	}
 	
+	public void showMessage(double seconds, String message){
+		centralManager.showMessage(seconds, message);
+	}
+	
 	public void worldFromBuf(){
 		centralManager.initSplashText();
 		for(int x = 0; x < Constants.worldLengthChunks; x++){

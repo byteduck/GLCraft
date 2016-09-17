@@ -8,6 +8,7 @@ import com.nishu.utils.Color4f;
 import net.codepixl.GLCraft.render.Shape;
 import net.codepixl.GLCraft.world.WorldManager;
 import net.codepixl.GLCraft.world.entity.mob.AI.AIRunAway;
+import net.codepixl.GLCraft.world.entity.mob.AI.AIWander;
 import net.codepixl.GLCraft.world.entity.mob.hostile.Hostile;
 import net.codepixl.GLCraft.world.tile.Tile;
 
@@ -16,6 +17,7 @@ public class EntityTestAnimal extends Animal{
 	public EntityTestAnimal(Vector3f pos, WorldManager w) {
 		super(pos, w);
 		this.addAI(new AIRunAway(this, Hostile.class));
+		this.addAI(new AIWander(this, 1, 5, 3, 4));
 	}
 	
 	@Override

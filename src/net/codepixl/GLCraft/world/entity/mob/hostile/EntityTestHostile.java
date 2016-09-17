@@ -9,6 +9,7 @@ import net.codepixl.GLCraft.render.Shape;
 import net.codepixl.GLCraft.util.Constants;
 import net.codepixl.GLCraft.world.WorldManager;
 import net.codepixl.GLCraft.world.entity.mob.AI.AIFollowNearest;
+import net.codepixl.GLCraft.world.entity.mob.AI.AIWander;
 import net.codepixl.GLCraft.world.entity.mob.animal.EntityTestAnimal;
 import net.codepixl.GLCraft.world.entity.particle.Particle;
 import net.codepixl.GLCraft.world.tile.Tile;
@@ -21,6 +22,7 @@ public class EntityTestHostile extends Hostile{
 		super(pos, w);
 		this.lastpos = new Vector3f(0,0,0);
 		this.addAI(new AIFollowNearest(this, EntityTestAnimal.class));
+		this.addAI(new AIWander(this, 1, 5, 3, 4));
 	}
 	
 	@Override
@@ -44,7 +46,6 @@ public class EntityTestHostile extends Hostile{
 		
 		if(Constants.randInt(0, 0) == 0){
 			Particle particle = new Particle(new Vector3f(this.getX()+Constants.randFloat(-1f, 1f),this.getY()+.5f+Constants.randFloat(-1f, 1f),this.getZ()+Constants.randFloat(-1f, 1f)), new Vector3f(0,0.5f,0), worldManager);
-			
 			particle.setTexCoords(Tile.Lava.getIconCoords());
 			particle.setSize(.2f);
 			worldManager.entityManager.add(particle);

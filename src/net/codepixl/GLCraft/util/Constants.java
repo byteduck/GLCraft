@@ -96,4 +96,9 @@ public class Constants {
 		
 	}
 
+	public static double randDouble(double max, double min) {
+		double randomNum = rand.nextDouble() * (max - min) + min;
+		return randomNum;
+	}
+
 }

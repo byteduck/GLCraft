@@ -22,8 +22,10 @@ public class AIRunAway extends AIPathfindAway{
 		if(e.size() > 0){
 			Vector3f ppos = e.get(0).getPos();
 			this.loc = ppos;
+			mob.setAiBusy(true);
 		}else{
 			this.loc = null;
+			mob.setAiBusy(false);
 		}
 	}
 

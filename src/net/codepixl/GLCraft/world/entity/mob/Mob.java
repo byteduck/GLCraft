@@ -37,7 +37,16 @@ public class Mob extends EntitySolid implements GameObj{
 	public float Vz = 0;
 	protected float speed;
 	private HashMap<Class, AI> behaviors = new HashMap<Class, AI>();
+	private boolean aiBusy = false;
 	
+	public boolean isAiBusy() {
+		return aiBusy;
+	}
+
+	public void setAiBusy(boolean aiBusy) {
+		this.aiBusy = aiBusy;
+	}
+
 	public Mob(Vector3f pos, WorldManager w){
 		super(pos,new Vector3f(0,0,0),new Vector3f(0,0,0),w);
 		this.setInventory(new ItemStack[9]);
