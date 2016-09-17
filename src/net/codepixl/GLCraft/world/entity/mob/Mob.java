@@ -1,6 +1,7 @@
 package net.codepixl.GLCraft.world.entity.mob;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 
@@ -17,6 +18,7 @@ import net.codepixl.GLCraft.world.WorldManager;
 import net.codepixl.GLCraft.world.entity.Entity;
 import net.codepixl.GLCraft.world.entity.EntityItem;
 import net.codepixl.GLCraft.world.entity.EntitySolid;
+import net.codepixl.GLCraft.world.entity.mob.AI.AI;
 import net.codepixl.GLCraft.world.item.ItemStack;
 import net.codepixl.GLCraft.world.tile.Tile;
 
@@ -30,6 +32,11 @@ public class Mob extends EntitySolid implements GameObj{
 	public long lastCollideX = 0;
 	public long lastCollideY = 0;
 	public long lastCollideZ = 0;
+	public float Vx = 0;
+	public float Vy = 0;
+	public float Vz = 0;
+	protected float speed;
+	private HashMap<Class, AI> behaviors = new HashMap<Class, AI>();
 	
 	public Mob(Vector3f pos, WorldManager w){
 		super(pos,new Vector3f(0,0,0),new Vector3f(0,0,0),w);
@@ -41,6 +48,17 @@ public class Mob extends EntitySolid implements GameObj{
 		this.hurtTimer = 0;
 		this.eyeLevel = (float) (getAABB().r[1]*2f*0.94f);
 		this.airLevel = 10f;
+		this.speed = 0.1f;
+	}
+	
+	public void walkForward(){
+		this.move(this.Vx,this.Vy,-this.Vz);
+	}
+	public void setSpeed(float speed){
+		this.speed = speed;
+	}
+	public Vector3f getMovementVel(){
+		return new Vector3f(this.Vx,this.Vy,this.Vz);
 	}
 	
 	@Override
@@ -63,7 +81,21 @@ public class Mob extends EntitySolid implements GameObj{
 	}
 	
 	public void handleAI(){
-		
+		for(AI ai : behaviors.values()){
+			ai.executeAI();
+		}
+	}
+	
+	public void addAI(AI behavior){
+		behaviors.put(behavior.getClass(), behavior);
+	}
+	
+	public boolean removeAI(AI behavior){
+		return behaviors.remove(behavior.getClass(), behavior);
+	}
+	
+	public AI getAI(Class ai){
+		return behaviors.get(ai);
 	}
 	
 	public void dropAllItems(){
@@ -245,6 +277,10 @@ public class Mob extends EntitySolid implements GameObj{
 	@Override
 	public void dispose() {
 		
+	}
+
+	public float getSpeed() {
+		return speed;
 	}
 
 }
