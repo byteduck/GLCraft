@@ -51,16 +51,16 @@ public class GUISlot extends GUIScreen{
 		float size = Constants.WIDTH/18f;
 		if(!itemstack.isNull()){
 			glPushMatrix();
-					if(itemstack.isTile() && itemstack.getTile().getRenderType() == RenderType.CUBE){
+					if(itemstack.isTile() && (itemstack.getTile().getRenderType() == RenderType.CUBE || (itemstack.getTile().getRenderType() == RenderType.CUSTOM && itemstack.getTile().getCustomRenderType() == RenderType.CUBE))){
 						glTranslatef(x-size/2,y-size/2,0);
 						glScalef(0.5f,0.5f,0.5f);
 						GL11.glRotatef(140f,1.0f,0.0f,0.0f);
 						GL11.glRotatef(45f,0.0f,1.0f,0.0f);
 						glBegin(GL_QUADS);
 						if(itemstack.getTile().hasMetaTextures()){
-							Shape.createCube(size/2f,-size*1.5f,0, new Color4f(1f,1f,1f,1f), itemstack.getTile().getTexCoords(itemstack.getMeta()), size);
+							Shape.createCube(size/2.25f,-size*1.5f,0, new Color4f(1f,1f,1f,1f), itemstack.getTile().getTexCoords(itemstack.getMeta()), size);
 						}else{
-							Shape.createCube(size/2f,-size*1.5f,0, new Color4f(1f,1f,1f,1f), itemstack.getTile().getTexCoords(), size);
+							Shape.createCube(size/2.25f,-size*1.5f,0, new Color4f(1f,1f,1f,1f), itemstack.getTile().getTexCoords(), size);
 						}
 					}else{
 						glTranslatef(x,y,0);

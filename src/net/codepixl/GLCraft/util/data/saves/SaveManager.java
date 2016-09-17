@@ -1,23 +1,21 @@
 package net.codepixl.GLCraft.util.data.saves;
 
-import java.awt.TrayIcon.MessageType;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 
-import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 
 import org.lwjgl.util.vector.Vector3f;
 
-import com.evilco.mc.nbt.error.TagNotFoundException;
-import com.evilco.mc.nbt.error.UnexpectedTagTypeException;
 import com.evilco.mc.nbt.stream.NbtInputStream;
 import com.evilco.mc.nbt.stream.NbtOutputStream;
 import com.evilco.mc.nbt.tag.TagByte;
@@ -264,6 +262,9 @@ public class SaveManager {
 		t.setTag(versionTag);
 		TagString formatTag = new TagString("format", currentFormat);
 		t.setTag(formatTag);
+		save.timestamp = new Date().getTime();
+		TagLong timeTag = new TagLong("timestamp", save.timestamp);
+		t.setTag(timeTag);
 		nbtOutputStream.write(t);
 		nbtOutputStream.close();
 	}
@@ -274,7 +275,10 @@ public class SaveManager {
 			NbtInputStream nbtInputStream = new NbtInputStream(inputStream);
 			TagCompound tag = (TagCompound)nbtInputStream.readTag();
 			nbtInputStream.close();
-			return new Save(name,tag.getString("name"),tag.getString("version"),tag.getString("format"));
+			long timestamp = 0;
+			if(tag.getTag("timestamp") != null)
+				timestamp = tag.getLong("timestamp");
+			return new Save(name,tag.getString("name"),tag.getString("version"),tag.getString("format"),timestamp);
 		}else if(new File(Constants.GLCRAFTDIR+"saves/"+name+"/player.nbt").exists()){ //No metadata file, check if player.nbt exists
 			return new Save(name,name,"?",formatV0);
 		}else{
@@ -292,6 +296,7 @@ public class SaveManager {
 					saves.add(getSave(f.getName()));
 			}
 		}
+		Collections.sort(saves);
 		return (Save[]) saves.toArray(new Save[saves.size()]);
 	}
 }
