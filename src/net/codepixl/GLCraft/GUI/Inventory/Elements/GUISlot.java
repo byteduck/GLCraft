@@ -15,6 +15,7 @@ import org.newdawn.slick.opengl.TextureImpl;
 import com.nishu.utils.Color4f;
 
 import net.codepixl.GLCraft.GUI.GUIScreen;
+import net.codepixl.GLCraft.render.RenderType;
 import net.codepixl.GLCraft.render.Shape;
 import net.codepixl.GLCraft.render.TextureManager;
 import net.codepixl.GLCraft.render.util.Tesselator;
@@ -50,7 +51,7 @@ public class GUISlot extends GUIScreen{
 		float size = Constants.WIDTH/18f;
 		if(!itemstack.isNull()){
 			glPushMatrix();
-					if(itemstack.isTile()){
+					if(itemstack.isTile() && itemstack.getTile().getRenderType() == RenderType.CUBE){
 						glTranslatef(x-size/2,y-size/2,0);
 						glScalef(0.5f,0.5f,0.5f);
 						GL11.glRotatef(140f,1.0f,0.0f,0.0f);
@@ -65,7 +66,10 @@ public class GUISlot extends GUIScreen{
 						glTranslatef(x,y,0);
 						glScalef(0.7f, 0.7f, 0.7f);
 						glBegin(GL_QUADS);
-						Shape.createCenteredSquare(0,0, new Color4f(1f,1f,1f,1f), itemstack.getItem().getTexCoords(), size);
+						if(itemstack.isItem())
+							Shape.createCenteredSquare(0,0, new Color4f(1f,1f,1f,1f), itemstack.getItem().getTexCoords(), size);
+						else
+							Shape.createCenteredSquare(0,0, new Color4f(1f,1f,1f,1f), itemstack.getTile().getTexCoords(), size);
 					}
 				glEnd();
 			glPopMatrix();

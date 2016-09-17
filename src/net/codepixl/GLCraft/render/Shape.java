@@ -366,4 +366,51 @@ public class Shape {
 		glTexCoord2f(texCoords[0] + currentSpritesheet.uniformSize(), texCoords[1]);
 		glVertex3f(x + size, y, z);
 	}
+
+	public static void createTexturelessFlat(float x, float y, float z, Color4f color, float size) {
+		// Top
+		glColor4f(color.r, color.g, color.b, color.a);
+		glVertex3f(x, y, z);
+		glVertex3f(x, y, z+size);
+		glVertex3f(x + size, y, z+size);
+		glVertex3f(x + size, y, z);
+
+		// Bottom
+		glVertex3f(x + size, y, z);
+		glVertex3f(x + size, y, z+size);
+		glVertex3f(x, y, z+size);
+		glVertex3f(x, y, z);
+	}
+
+	public static void createTexturelessCross(float x, float y, float z, Color4f color, float size) {
+		//color = getColor(new Vector3f(x, y, z));
+
+		// face 1
+		glColor4f(color.r, color.g, color.b, color.a);
+		glVertex3f(x + size, y + size, z + size);
+		glVertex3f(x + size, y, z + size);
+		glVertex3f(x, y, z);
+		glVertex3f(x, y + size, z);
+
+		// face 1 reversed
+		glColor4f(color.r, color.g, color.b, color.a);
+		glVertex3f(x, y + size, z);
+		glVertex3f(x, y, z);
+		glVertex3f(x + size, y, z + size);
+		glVertex3f(x + size, y + size, z + size);
+
+		// face 2
+		glColor4f(color.r, color.g, color.b, color.a);
+		glVertex3f(x + size, y + size, z);
+		glVertex3f(x + size, y, z);
+		glVertex3f(x, y, z + size);
+		glVertex3f(x, y + size, z + size);
+
+		// face 2 reversed
+		glColor4f(color.r, color.g, color.b, color.a);;
+		glVertex3f(x, y + size, z + size);
+		glVertex3f(x, y, z + size);
+		glVertex3f(x + size, y, z);
+		glVertex3f(x + size, y + size, z);
+	}
 }

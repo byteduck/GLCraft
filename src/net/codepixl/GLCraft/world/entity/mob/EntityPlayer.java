@@ -11,18 +11,13 @@ import static org.lwjgl.opengl.GL11.glPushAttrib;
 import static org.lwjgl.opengl.GL11.glRotatef;
 import static org.lwjgl.opengl.GL11.glTranslatef;
 
-import java.io.FileInputStream;
-import java.io.IOException;
 import java.util.Iterator;
-import java.util.List;
 
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
+import org.lwjgl.opengl.GL11;
 import org.lwjgl.util.vector.Vector3f;
 
-import com.evilco.mc.nbt.stream.NbtInputStream;
-import com.evilco.mc.nbt.tag.TagCompound;
-import com.evilco.mc.nbt.tag.TagFloat;
 import com.nishu.utils.Color4f;
 import com.nishu.utils.Time;
 
@@ -36,11 +31,9 @@ import net.codepixl.GLCraft.util.Constants;
 import net.codepixl.GLCraft.util.MathUtils;
 import net.codepixl.GLCraft.util.Ray;
 import net.codepixl.GLCraft.util.Raytracer;
-import net.codepixl.GLCraft.util.data.saves.SaveManager;
 import net.codepixl.GLCraft.world.WorldManager;
 import net.codepixl.GLCraft.world.entity.Entity;
 import net.codepixl.GLCraft.world.entity.EntityItem;
-import net.codepixl.GLCraft.world.entity.NBTUtil;
 import net.codepixl.GLCraft.world.item.Item;
 import net.codepixl.GLCraft.world.item.ItemStack;
 import net.codepixl.GLCraft.world.item.tool.Tool;
@@ -394,22 +387,26 @@ public class EntityPlayer extends Mob {
 					}
 					// System.out.println(worldManager.getTileAtPos((int)r.pos.x,
 					// (int)r.pos.y, (int)r.pos.z));
-					float[] highlightCoords = TextureManager.texture("misc.highlight");
+					GL11.glDisable(GL11.GL_TEXTURE_2D);
+					GL11.glPolygonMode(GL11.GL_FRONT_AND_BACK, GL11.GL_LINE);
+					GL11.glLineWidth(0.5f);
 					if(Tile.getTile((byte) tile).getRenderType() == RenderType.CUBE) {
-						glBegin(GL_QUADS);
-						Shape.createCube((int) r.pos.x - 0.0005f, (int) r.pos.y - 0.0005f, (int) r.pos.z - 0.0005f, new Color4f(1, 1, 1, 1f), highlightCoords, 1.001f);
+						glBegin(GL11.GL_QUADS);
+						Shape.createTexturelessCube((int) r.pos.x - 0.0005f, (int) r.pos.y - 0.0005f, (int) r.pos.z - 0.0005f, new Color4f(0, 0, 0, 1f), 1.001f);
 						glEnd();
 					}else if(Tile.getTile((byte) tile).getRenderType() == RenderType.CROSS){
-						glBegin(GL_QUADS);
-						Shape.createCross((int) r.pos.x - 0.0005f, (int) r.pos.y - 0.0005f, (int) r.pos.z - 0.0005f, new Color4f(1, 1, 1, 1f), highlightCoords, 1.001f);
+						glBegin(GL11.GL_QUADS);
+						Shape.createTexturelessCross((int) r.pos.x - 0.0005f, (int) r.pos.y - 0.0005f, (int) r.pos.z - 0.0005f, new Color4f(0, 0, 0, 1f), 1.001f);
 						glEnd();
 					}else if(Tile.getTile((byte) tile).getRenderType() == RenderType.FLAT){
-						glBegin(GL_QUADS);
-						Shape.createFlat((int) r.pos.x - 0.0005f, (int) r.pos.y + 0.1f, (int) r.pos.z - 0.0005f, new Color4f(1, 1, 1, 1f), highlightCoords, 1.001f);
+						glBegin(GL11.GL_QUADS);
+						Shape.createTexturelessFlat((int) r.pos.x - 0.0005f, (int) r.pos.y + 0.1f, (int) r.pos.z - 0.0005f, new Color4f(0, 0, 0, 1f), 1.001f);
 						glEnd();
 					}else if(Tile.getTile((byte)tile).getRenderType() == RenderType.CUSTOM){
 						Tile.getTile((byte)tile).renderHitbox(r.pos);
 					}
+					GL11.glEnable(GL11.GL_TEXTURE_2D);
+					GL11.glPolygonMode(GL11.GL_FRONT_AND_BACK, GL11.GL_FILL);
 					if(!this.prevSelect.equals(new Vector3f((int) r.pos.x, (int) r.pos.y, (int) r.pos.z))) {
 						this.breakProgress = 0f;
 					}

@@ -8,6 +8,7 @@ import static org.lwjgl.opengl.GL11.glPushMatrix;
 import static org.lwjgl.opengl.GL11.glRotatef;
 import static org.lwjgl.opengl.GL11.glTranslatef;
 
+import org.lwjgl.opengl.GL11;
 import org.lwjgl.util.vector.Vector3f;
 
 import com.nishu.utils.Color4f;
@@ -29,6 +30,12 @@ public class TileBluestone extends Tile{
 	@Override
 	public String getTextureName(){
 		return "bluestone_center";
+	}
+	
+	public TileBluestone(){
+		super();
+		TextureManager.addTexture("tiles.bluestone_side",TextureManager.TILES+"bluestone_side.png");
+		TextureManager.addTexture("tiles.bluestone_line",TextureManager.TILES+"bluestone_line.png");
 	}
 
 	@Override
@@ -70,7 +77,7 @@ public class TileBluestone extends Tile{
 	
 	@Override
 	public RenderType getCustomRenderType(){
-		return RenderType.CUBE;
+		return RenderType.FLAT;
 	}
 	
 	@Override
@@ -87,13 +94,13 @@ public class TileBluestone extends Tile{
 				glRotatef(90f,1f,0,0);
 				glTranslatef(-x,-y,-z);
 				glBegin(GL_QUADS);
-				//Shape.createFlat(x, y+0.01f, z, new Color4f(col,col,col,1f), new float[]{Spritesheet.tiles.uniformSize()*4,Spritesheet.tiles.uniformSize()*2}, 1);
+				Shape.createFlat(x, y+0.01f, z, new Color4f(col,col,col,1f), TextureManager.texture("tiles.bluestone_line"), 1);
 				glEnd();
 				glPopMatrix();
 			}
 			glPushMatrix();
 			glBegin(GL_QUADS);
-			//Shape.createFlat(x, y+0.01f, z, new Color4f(col,col,col,1f), new float[]{Spritesheet.tiles.uniformSize()*3,Spritesheet.tiles.uniformSize()*2}, 1);
+			Shape.createFlat(x, y+0.01f, z, new Color4f(col,col,col,1f), TextureManager.texture("tiles.bluestone_side"), 1);
 			glEnd();
 			glPopMatrix();
 		}
@@ -104,7 +111,7 @@ public class TileBluestone extends Tile{
 				glRotatef(-90f,1f,0,0);
 				glTranslatef(-x,-y,-z);
 				glBegin(GL_QUADS);
-				//Shape.createFlat(x, y+0.01f, z, new Color4f(col,col,col,1f), new float[]{Spritesheet.tiles.uniformSize()*4,Spritesheet.tiles.uniformSize()*2}, 1);
+				Shape.createFlat(x, y+0.01f, z, new Color4f(col,col,col,1f), TextureManager.texture("tiles.bluestone_line"), 1);
 				glEnd();
 				glPopMatrix();
 			}
@@ -113,27 +120,49 @@ public class TileBluestone extends Tile{
 			glRotatef(180f,0,1f,0);
 			glTranslatef(-x,-y,-z);
 			glBegin(GL_QUADS);
-			//Shape.createFlat(x, y+0.01f, z, new Color4f(col,col,col,1f), new float[]{Spritesheet.tiles.uniformSize()*3,Spritesheet.tiles.uniformSize()*2}, 1);
+			Shape.createFlat(x, y+0.01f, z, new Color4f(col,col,col,1f), TextureManager.texture("tiles.bluestone_side"), 1);
 			glEnd();
 			glPopMatrix();
 		}
 		if(w.getTileAtPos(x+1, y, z) == Tile.Bluestone.getId() || w.getTileAtPos(x+1, y-1, z) == Tile.Bluestone.getId() || w.getTileAtPos(x+1, y+1, z) == Tile.Bluestone.getId()){
+			if(w.getTileAtPos(x+1, y-1, z) == Tile.Bluestone.getId()){
+				glPushMatrix();
+				glTranslatef(x+1f,y-1f,z);
+				glRotatef(-90f, 0f, 1f, 0f);
+				glRotatef(-90f,1f,0f,0);
+				glTranslatef(-x,-y,-z);
+				glBegin(GL_QUADS);
+				Shape.createFlat(x, y+0.01f, z, new Color4f(col,col,col,1f), TextureManager.texture("tiles.bluestone_line"), 1);
+				glEnd();
+				glPopMatrix();
+			}
 			glPushMatrix();
 			glTranslatef(x+1f,y,z);
 			glRotatef(-90f,0,1f,0);
 			glTranslatef(-x,-y,-z);
 			glBegin(GL_QUADS);
-			//Shape.createFlat(x, y+0.01f, z, new Color4f(col,col,col,1f), new float[]{Spritesheet.tiles.uniformSize()*3,Spritesheet.tiles.uniformSize()*2}, 1);
+			Shape.createFlat(x, y+0.01f, z, new Color4f(col,col,col,1f), TextureManager.texture("tiles.bluestone_side"), 1);
 			glEnd();
 			glPopMatrix();
 		}
 		if(w.getTileAtPos(x-1, y, z) == Tile.Bluestone.getId() || w.getTileAtPos(x-1, y-1, z) == Tile.Bluestone.getId() || w.getTileAtPos(x-1, y+1, z) == Tile.Bluestone.getId()){
+			if(w.getTileAtPos(x-1, y-1, z) == Tile.Bluestone.getId()){
+				glPushMatrix();
+				glTranslatef(x,y-1f,z+1f);
+				glRotatef(90f, 0f, 1f, 0f);
+				glRotatef(-90f,1f,0f,0);
+				glTranslatef(-x,-y,-z);
+				glBegin(GL_QUADS);
+				Shape.createFlat(x, y+0.01f, z, new Color4f(col,col,col,1f), TextureManager.texture("tiles.bluestone_line"), 1);
+				glEnd();
+				glPopMatrix();
+			}
 			glPushMatrix();
 			glTranslatef(x,y,z+1f);
 			glRotatef(90f,0,1f,0);
 			glTranslatef(-x,-y,-z);
 			glBegin(GL_QUADS);
-			//Shape.createFlat(x, y+0.01f, z, new Color4f(col,col,col,1f), new float[]{Spritesheet.tiles.uniformSize()*3,Spritesheet.tiles.uniformSize()*2}, 1);
+			Shape.createFlat(x, y+0.01f, z, new Color4f(col,col,col,1f), TextureManager.texture("tiles.bluestone_side"), 1);
 			glEnd();
 			glPopMatrix();
 		}
@@ -141,8 +170,8 @@ public class TileBluestone extends Tile{
 	
 	@Override
 	public void renderHitbox(Vector3f pos){
-		glBegin(GL_QUADS);
-		Shape.createFlat((int) pos.x - 0.0005f, (int) pos.y + 0.02f, (int) pos.z - 0.0005f, new Color4f(1, 1, 1, 1f), TextureManager.texture("misc.highlight"), 1.001f);
+		glBegin(GL11.GL_QUADS);
+		Shape.createTexturelessFlat((int) pos.x, (int) pos.y + 0.02f, (int) pos.z - 0.0005f, new Color4f(0, 0, 0, 1f), 1.001f);
 		glEnd();
 	}
 
