@@ -27,6 +27,9 @@ public class Mob extends EntitySolid implements GameObj{
 	private float voidHurt = 0f;
 	protected float fallDistance = 0f;
 	protected float prevY = 0f;
+	public long lastCollideX = 0;
+	public long lastCollideY = 0;
+	public long lastCollideZ = 0;
 	
 	public Mob(Vector3f pos, WorldManager w){
 		super(pos,new Vector3f(0,0,0),new Vector3f(0,0,0),w);
@@ -49,13 +52,13 @@ public class Mob extends EntitySolid implements GameObj{
 	@Override
 	public void move(float x, float y, float z){
 		if(!isInWater()){
-			moveMain(x,0,0);
-			moveMain(0,y,0);
-			moveMain(0,0,z);
+			if(moveMain(x,0,0)) lastCollideX = System.currentTimeMillis();
+			if(moveMain(0,y,0)) lastCollideY = System.currentTimeMillis();
+			if(moveMain(0,0,z)) lastCollideZ = System.currentTimeMillis();
 		}else{
-			moveMain(x*0.3f,0,0);
-			moveMain(0,y,0);
-			moveMain(0,0,z*0.3f);
+			if(moveMain(x*0.3f,0,0)) lastCollideX = System.currentTimeMillis();
+			if(moveMain(0,y,0)) lastCollideY = System.currentTimeMillis();
+			if(moveMain(0,0,z*0.3f)) lastCollideZ = System.currentTimeMillis();
 		}
 	}
 	
@@ -156,8 +159,11 @@ public class Mob extends EntitySolid implements GameObj{
 	public void jump(){
 		if(onGround)
 			this.getVelocity().y = 0.9f;
-		else if(isInWater()){
+		else if(isSubmerged()){
 			this.getVelocity().y = 0.3f;
+			if(System.currentTimeMillis() - this.lastCollideX <= 25 || System.currentTimeMillis() - this.lastCollideZ <= 25){
+				this.getVelocity().y = 0.9f;
+			}
 		}
 	}
 	

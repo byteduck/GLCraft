@@ -37,7 +37,7 @@ public class EntitySolid extends Entity{
 		moveMain(0,0,z);
 	}
 	
-	protected final void moveMain(float x, float y, float z){
+	protected final boolean moveMain(float x, float y, float z){
 		Vector3f toPos = new Vector3f(this.getX()+x,this.getY()+y,this.getZ()+z);
 		AABB toAABB = new AABB(this.aabb.getSize().x,this.aabb.getSize().y,this.aabb.getSize().z);
 		toAABB.update(toPos);
@@ -67,6 +67,7 @@ public class EntitySolid extends Entity{
 		}
 		onGround = testOnGround(new Vector3f(this.getX(),this.getY()-0.01f,this.getZ()));
 		setPos(toPos);
+		return collided;
 	}
 	
 	private boolean testOnGround(Vector3f pos){
@@ -88,6 +89,19 @@ public class EntitySolid extends Entity{
 		while(i.hasNext()){
 			AABB next = i.next();
 			if(AABB.testAABB(getAABB(), next)){
+				return true;
+			}
+		}
+		return false;
+	}
+	
+	public boolean isSubmerged(){
+		Iterator<AABB> i = worldManager.BlockAABBForEntity(this, Tile.Water).iterator();
+		AABB aabb = new AABB(getAABB().getSize().x, getAABB().getSize().y/2f, getAABB().getSize().z);
+		aabb.update(new Vector3f(getX(), getY()+aabb.getSize().y/2, getZ()));
+		while(i.hasNext()){
+			AABB next = i.next();
+			if(AABB.testAABB(aabb, next)){
 				return true;
 			}
 		}
