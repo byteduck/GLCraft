@@ -157,7 +157,7 @@ public class EntitySolid extends Entity{
 	}
 	
 	public AABB getDefaultAABB(){
-		return new AABB(1,1,1);
+		return new AABB(0.98f,0.98f,0.98f);
 	}
 
 }

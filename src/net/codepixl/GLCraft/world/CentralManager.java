@@ -100,7 +100,7 @@ public class CentralManager extends Screen{
 
 	private float cloudMove = 0f;
 	
-	private boolean renderDebug = false;
+	public boolean renderDebug = false;
 	TrueTypeFont font;
 	private WorldManager worldManager;
 	private int currentBlock;
@@ -206,8 +206,8 @@ public class CentralManager extends Screen{
 					Pathfinder p = new Pathfinder(new Vector3i(pos), pathfindPos, worldManager);
 					boolean success = p.pathfind(1000);
 					if(success){
-						for(Vector3i block : p.path){
-							worldManager.setTileAtPos(block.x, block.y, block.z, Tile.Glass.getId(), true);
+						for(Vector3f block : p.path){
+							worldManager.setTileAtPos(block, Tile.Glass.getId(), true);
 						}
 					}
 				}

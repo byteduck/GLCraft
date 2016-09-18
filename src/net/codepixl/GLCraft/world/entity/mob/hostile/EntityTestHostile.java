@@ -6,13 +6,12 @@ import org.lwjgl.util.vector.Vector3f;
 import com.nishu.utils.Color4f;
 
 import net.codepixl.GLCraft.render.Shape;
-import net.codepixl.GLCraft.util.Constants;
 import net.codepixl.GLCraft.world.WorldManager;
+import net.codepixl.GLCraft.world.entity.mob.EntityPlayer;
 import net.codepixl.GLCraft.world.entity.mob.AI.AIFollowNearest;
 import net.codepixl.GLCraft.world.entity.mob.AI.AIHurtNearest;
 import net.codepixl.GLCraft.world.entity.mob.AI.AIWander;
-import net.codepixl.GLCraft.world.entity.mob.animal.Animal;
-import net.codepixl.GLCraft.world.entity.particle.Particle;
+import net.codepixl.GLCraft.world.entity.mob.AI.pathfinding.Pathfinder;
 import net.codepixl.GLCraft.world.tile.Tile;
 
 public class EntityTestHostile extends Hostile{
@@ -22,9 +21,9 @@ public class EntityTestHostile extends Hostile{
 	public EntityTestHostile(Vector3f pos, WorldManager w) {
 		super(pos, w);
 		this.lastpos = new Vector3f(0,0,0);
-		this.addAI(new AIFollowNearest(this, Animal.class));
+		this.addAI(new AIFollowNearest(this, EntityPlayer.class));
 		this.addAI(new AIWander(this));
-		this.addAI(new AIHurtNearest(this, Animal.class));
+		this.addAI(new AIHurtNearest(this, EntityPlayer.class));
 	}
 	
 	@Override
@@ -39,7 +38,13 @@ public class EntityTestHostile extends Hostile{
 		//Shape.createCube(0.5f,1,-0.5f, Color4f.WHITE, Tile.Fire.getTexCoords(), 1f);
 		GL11.glEnd();
 		GL11.glPopMatrix();
-		
+		if(worldManager.centralManager.renderDebug){
+			Pathfinder p = ((AIFollowNearest)this.getAI(AIFollowNearest.class)).getPathfinder();
+			if(p != null){
+				p.renderPath();
+			}
+		}
+			
 	}
 
 }
