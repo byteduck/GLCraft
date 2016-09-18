@@ -44,6 +44,7 @@ public class EntityPlayer extends Mob {
 	
 	private float breakCooldown, buildCooldown, breakProgress, walkAccel;
 	public byte currentTile;
+	public ItemStack mouseItem;
 	private final float maxU, maxD, speed;
 	private int selectedSlot;
 	private boolean qPressed, wasBreaking, wasRightClick;
@@ -62,6 +63,7 @@ public class EntityPlayer extends Mob {
 		buildCooldown = 0;
 		breakProgress = 0;
 		selectedSlot = 0;
+		mouseItem = new ItemStack();
 		qPressed = false;
 		prevSelect = new Vector3f(-1, -1, -1);
 		eyeLevel = 1.6f;

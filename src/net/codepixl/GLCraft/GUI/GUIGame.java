@@ -7,6 +7,8 @@ import static org.lwjgl.opengl.GL11.glLoadIdentity;
 import static org.lwjgl.opengl.GL11.glPopMatrix;
 import static org.lwjgl.opengl.GL11.glPushMatrix;
 
+import org.lwjgl.input.Mouse;
+
 import com.nishu.utils.Color4f;
 
 import net.codepixl.GLCraft.GUI.Inventory.Elements.GUISlot;
@@ -15,6 +17,7 @@ import net.codepixl.GLCraft.util.Constants;
 import net.codepixl.GLCraft.util.Spritesheet;
 import net.codepixl.GLCraft.world.WorldManager;
 import net.codepixl.GLCraft.world.entity.mob.EntityPlayer;
+import net.codepixl.GLCraft.world.item.ItemStack;
 import net.codepixl.GLCraft.world.tile.Tile;
 
 public class GUIGame extends GUIScreen{
@@ -88,6 +91,10 @@ public class GUIGame extends GUIScreen{
 		for(int i = 0; i < 10; i++){
 			Shape.createCenteredSquare((float)Constants.WIDTH/9f+i*HEARTSIZE+i*HEARTSPACING+HEARTSIZE/2f,Constants.HEIGHT-(SIZE/2f)-HEARTSIZE*2f, new Color4f(1,1,1,1), p.getTexCoordsForHealthIndex(i), HEARTSIZE);
 		}
+		glEnd();
+		
+		glBegin(GL_QUADS);
+		Shape.createCenteredSquare(Mouse.getX(), -Mouse.getY()+Constants.HEIGHT, Color4f.WHITE, player.mouseItem.getIconCoords(), 32);
 		glEnd();
 	}
 }

@@ -1,5 +1,6 @@
 package net.codepixl.GLCraft.world.item;
 
+import net.codepixl.GLCraft.render.TextureManager;
 import net.codepixl.GLCraft.world.tile.Tile;
 
 public class ItemStack{
@@ -125,5 +126,31 @@ public class ItemStack{
 	}
 	public void setMeta(byte meta){
 		this.meta = meta;
+	}
+	
+	public float[] getTexCoords() {
+		if(!this.isNull)
+			if(this.isTile)
+				if(this.tile.hasMetaTextures())
+					return this.tile.getTexCoords(this.meta);
+				else
+					return this.tile.getTexCoords();
+			else
+				return this.item.getTexCoords();
+		else
+			return TextureManager.texture("misc.nothing");
+	}
+	
+	public float[] getIconCoords() {
+		if(!this.isNull)
+			if(this.isTile)
+				if(this.tile.hasMetaTextures())
+					return this.tile.getIconCoords(this.meta);
+				else
+					return this.tile.getIconCoords();
+			else
+				return this.item.getTexCoords();
+		else
+			return TextureManager.texture("misc.nothing");
 	}
 }
