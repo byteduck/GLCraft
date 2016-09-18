@@ -27,6 +27,7 @@ public class AIFollowNearest extends AIPathfind{
 			List<Entity> e = mob.worldManager.entityManager.getEntitiesInRadiusOfEntityOfType(mob, follow, 20f);
 			if(e.size() > 0){
 				Vector3f ppos = e.get(0).getPos();
+				ppos = new Vector3f(ppos.x + .5f, ppos.y, ppos.z + .5f);
 				this.setLocation(ppos);
 				mob.setAiBusy(true);
 			}else{

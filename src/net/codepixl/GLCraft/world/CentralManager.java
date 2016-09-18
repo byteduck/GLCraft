@@ -164,7 +164,8 @@ public class CentralManager extends Screen{
 		glEnable(GL_CULL_FACE);
 	}
 	
-	public static Vector3i pathfindPos = new Vector3i(0,0,0);
+	private Pathfinder pathfinder;
+	private Vector3i pathfindPos = new Vector3i(0,0,0);
 
 	private void input(){
 		guiManager.input();
@@ -203,13 +204,8 @@ public class CentralManager extends Screen{
 					worldManager.setTileAtPos(pos, Tile.Fire.getId(), true);
 				}
 				if(Keyboard.isKeyDown(Keyboard.KEY_P)){
-					Pathfinder p = new Pathfinder(new Vector3i(pos), pathfindPos, worldManager);
-					boolean success = p.pathfind(1000);
-					if(success){
-						for(Vector3f block : p.path){
-							worldManager.setTileAtPos(block, Tile.Glass.getId(), true);
-						}
-					}
+					pathfinder = new Pathfinder(new Vector3i(pos), pathfindPos, worldManager);
+					pathfinder.pathfind(1000);
 				}
 				if(Keyboard.isKeyDown(Keyboard.KEY_O)){
 					pathfindPos = new Vector3i(pos);
@@ -251,6 +247,8 @@ public class CentralManager extends Screen{
 			glLoadIdentity();
 			render3D();
 			worldManager.render();
+			if(this.renderDebug && this.pathfinder != null && this.pathfinder.path.size() > 0)
+				this.pathfinder.renderPath();
 			currentBlock = raycast();
 			renderClouds();
 			renderText();
