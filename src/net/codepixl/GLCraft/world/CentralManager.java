@@ -71,6 +71,7 @@ import com.nishu.utils.Screen;
 import com.nishu.utils.Time;
 
 import net.codepixl.GLCraft.GLCraft;
+import net.codepixl.GLCraft.GUI.GUIGame;
 import net.codepixl.GLCraft.GUI.GUIManager;
 import net.codepixl.GLCraft.GUI.GUIPauseMenu;
 import net.codepixl.GLCraft.GUI.GUIScreen;
@@ -89,7 +90,6 @@ import net.codepixl.GLCraft.util.logging.CrashHandler;
 import net.codepixl.GLCraft.world.entity.EntityManager;
 import net.codepixl.GLCraft.world.entity.mob.EntityPlayer;
 import net.codepixl.GLCraft.world.entity.mob.AI.pathfinding.Pathfinder;
-import net.codepixl.GLCraft.world.entity.mob.AI.pathfinding.PathfindingNode;
 import net.codepixl.GLCraft.world.entity.mob.animal.EntityTestAnimal;
 import net.codepixl.GLCraft.world.entity.mob.hostile.EntityTestHostile;
 import net.codepixl.GLCraft.world.item.ItemStack;
@@ -131,6 +131,7 @@ public class CentralManager extends Screen{
 		TextureManager.initTextures();
 		CraftingManager.initRecipes();
 		worldManager = new WorldManager(this);
+		guiManager.setGameGUI(new GUIGame(worldManager));
 		GLCraft.renderSplashText("Starting Central Manager...", "Starting Sound System");
 		soundManager = new SoundManager();
 		SoundManager.setMainManager(soundManager);
@@ -252,7 +253,7 @@ public class CentralManager extends Screen{
 			currentBlock = raycast();
 			renderClouds();
 			renderText();
-			renderInventory();
+			//renderInventory();
 			renderEtc();
 		}
 		render2D();
@@ -291,6 +292,7 @@ public class CentralManager extends Screen{
 		Shape.currentSpritesheet = Spritesheet.atlas;
 	}
 	
+	@Deprecated
 	private void renderInventory() {
 		glLoadIdentity();
 		render2D();
@@ -481,6 +483,7 @@ public class CentralManager extends Screen{
 	public void update(){
 		DebugTimer.getTimer("total_update").start();
 		guiManager.update();
+		guiManager.setShowGame(Constants.GAME_STATE == Constants.GAME);
 		if(Constants.GAME_STATE == Constants.GAME){
 			worldManager.update();
 		}

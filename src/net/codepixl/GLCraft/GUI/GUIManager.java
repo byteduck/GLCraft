@@ -15,11 +15,12 @@ import net.codepixl.GLCraft.render.TextureManager;
 public class GUIManager {
 
 	private GUIScreen currentGUI;
-	private boolean GUIOpen = false;
+	private boolean GUIOpen = false, showGame = false;
 	private HashMap<String,GUIScreen> staticGUIs = new HashMap<String,GUIScreen>();
 	private static GUIManager mainManager;
 	private String currentGUIName = "nogui";
 	private GUITextBox focusedTextBox;
+	private GUIGame gameGUI;
 
 	public GUIManager(){
 		initTextures();
@@ -31,6 +32,14 @@ public class GUIManager {
 		TextureManager.addTexture("gui.heart_half", TextureManager.GUIS+"heart_half.png");
 		TextureManager.addTexture("gui.heart_empty", TextureManager.GUIS+"heart_empty.png");
 		TextureManager.addTexture("gui.bubble", TextureManager.GUIS+"bubble.png");
+	}
+	
+	public void setShowGame(boolean show){
+		showGame = show;
+	}
+	
+	public void setGameGUI(GUIGame gui){
+		this.gameGUI = gui;
 	}
 	
 	public static void setMainManager(GUIManager manager){
@@ -90,16 +99,22 @@ public class GUIManager {
 	}
 
 	public void render() {
+		if(showGame)
+			gameGUI.renderMain();
 		if (GUIOpen)
 			currentGUI.renderMain();
 	}
 
 	public void update(){
+		if(showGame)
+			gameGUI.update();
 		if (GUIOpen)
 			currentGUI.update();
 	}
 
 	public void input(){
+		if(showGame)
+			gameGUI.input(0,0);
 		if (GUIOpen)
 			currentGUI.input(0,0);
 		if(focusedTextBox != null){
