@@ -6,7 +6,6 @@ import com.nishu.utils.Color4f;
 
 public class MathUtils {
 	public static float distance(Vector3f a, Vector3f b){
-		
 		float xd = b.getX()-a.getX();
 		float yd = b.getY()-a.getY();
 		float zd = b.getZ()-a.getZ();

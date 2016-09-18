@@ -37,5 +37,9 @@ public class Vector3i {
 	public boolean equals(Object o){
 		return (o instanceof Vector3i) && (((Vector3i)o).x == x) && (((Vector3i)o).y == y) && (((Vector3i)o).z == z);
 	}
+
+	public Vector3f toVector3f() {
+		return new Vector3f(x,y,z);
+	}
    
 }

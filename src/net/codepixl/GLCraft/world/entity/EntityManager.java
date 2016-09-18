@@ -86,7 +86,7 @@ public class EntityManager implements GameObj{
 	}
 	
 	public void initPlayer(){
-		player = new EntityPlayer(new Vector3f(16,100,16),w);
+		player = new EntityPlayer(new Vector3f(16,200,16),w);
 		add(player);
 	}
 	

@@ -84,11 +84,15 @@ import net.codepixl.GLCraft.sound.SoundManager;
 import net.codepixl.GLCraft.util.Constants;
 import net.codepixl.GLCraft.util.DebugTimer;
 import net.codepixl.GLCraft.util.Spritesheet;
+import net.codepixl.GLCraft.util.Vector3i;
 import net.codepixl.GLCraft.util.logging.CrashHandler;
 import net.codepixl.GLCraft.world.entity.EntityManager;
 import net.codepixl.GLCraft.world.entity.mob.EntityPlayer;
+import net.codepixl.GLCraft.world.entity.mob.AI.pathfinding.Pathfinder;
+import net.codepixl.GLCraft.world.entity.mob.AI.pathfinding.PathfindingNode;
 import net.codepixl.GLCraft.world.entity.mob.animal.EntityTestAnimal;
 import net.codepixl.GLCraft.world.entity.mob.hostile.EntityTestHostile;
+import net.codepixl.GLCraft.world.item.ItemStack;
 import net.codepixl.GLCraft.world.item.crafting.CraftingManager;
 import net.codepixl.GLCraft.world.tile.Tile;
 
@@ -159,6 +163,8 @@ public class CentralManager extends Screen{
 		glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
 		glEnable(GL_CULL_FACE);
 	}
+	
+	public static Vector3i pathfindPos = new Vector3i(0,0,0);
 
 	private void input(){
 		guiManager.input();
@@ -197,13 +203,16 @@ public class CentralManager extends Screen{
 					worldManager.setTileAtPos(pos, Tile.Fire.getId(), true);
 				}
 				if(Keyboard.isKeyDown(Keyboard.KEY_P)){
-					/*String id = JOptionPane.showInputDialog("Enter in the id of the tile you wish to place: ");
-					int tileid = Integer.parseInt(id);
-					worldManager.setTileAtPos(pos, (byte) tileid, true);*/
-					/*worldManager.setTileAtPos(pos,Tile.ParticleProjector.getId(),true);*/
-					/*worldManager.setTileAtPos(pos, Tile.Log.getId(), false);
-					worldManager.setMetaAtPos((int)pos.x, (int)pos.y, (int)pos.z, (byte)4, true);*/
-					worldManager.setTileAtPos(pos, Tile.Chest.getId(), true);
+					Pathfinder p = new Pathfinder(new Vector3i(pos), pathfindPos, worldManager);
+					boolean success = p.pathfind(1000);
+					if(success){
+						for(Vector3i block : p.path){
+							worldManager.setTileAtPos(block.x, block.y, block.z, Tile.Glass.getId(), true);
+						}
+					}
+				}
+				if(Keyboard.isKeyDown(Keyboard.KEY_O)){
+					pathfindPos = new Vector3i(pos);
 				}
 				if(Keyboard.isKeyDown(Keyboard.KEY_B)){
 					worldManager.setTileAtPos(pos, Tile.Bluestone.getId(), true);
@@ -222,6 +231,9 @@ public class CentralManager extends Screen{
 				}
 				if(Keyboard.isKeyDown(Keyboard.KEY_F2)){
 					takeScreenshot();
+				}
+				if(Keyboard.isKeyDown(Keyboard.KEY_G)){
+					worldManager.entityManager.getPlayer().addToInventory(new ItemStack(Tile.Grass, 64));
 				}
 			}
 		}
