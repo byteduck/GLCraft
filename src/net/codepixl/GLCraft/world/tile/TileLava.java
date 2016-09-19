@@ -5,6 +5,7 @@ import com.nishu.utils.Color4f;
 import net.codepixl.GLCraft.util.Constants;
 import net.codepixl.GLCraft.world.WorldManager;
 import net.codepixl.GLCraft.world.entity.Entity;
+import net.codepixl.GLCraft.world.entity.mob.DamageSource;
 import net.codepixl.GLCraft.world.entity.mob.Mob;
 import net.codepixl.GLCraft.world.tile.material.Material;
 
@@ -73,7 +74,7 @@ public class TileLava extends Tile{
 	@Override
 	public void onCollide(int x, int y, int z, WorldManager worldManager, Entity e) {
 		if(e instanceof Mob){
-			((Mob) e).hurt(2f,0.4f);
+			((Mob) e).hurt(2f,0.4f,DamageSource.FIRE);
 			((Mob) e).setFire(10);
 		}
 	}

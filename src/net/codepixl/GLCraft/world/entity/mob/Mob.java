@@ -38,6 +38,7 @@ public class Mob extends EntitySolid implements GameObj{
 	protected float speed;
 	private HashMap<Class, AI> behaviors = new HashMap<Class, AI>();
 	private boolean aiBusy = false;
+	private DamageSource lastDamageSource = DamageSource.ENVIRONMENT;
 	
 	public boolean isAiBusy() {
 		return aiBusy;
@@ -119,7 +120,7 @@ public class Mob extends EntitySolid implements GameObj{
 	@Override
 	protected void voidHurt(){
 		if(this.pos.y < 0 && voidHurt >= 0.3f){
-			this.hurt(2f);
+			this.hurt(2f,DamageSource.VOID);
 			this.voidHurt = 0;
 		}else if(this.pos.y < 0){
 			this.voidHurt+=Time.getDelta();
@@ -132,7 +133,7 @@ public class Mob extends EntitySolid implements GameObj{
 	public void update(){
 		super.update();
 		if(this.onFire > 0f){
-			this.hurt(0.5f,1);
+			this.hurt(0.5f,1,DamageSource.FIRE);
 		}
 		if(this.isInWater()){
 			this.fallDistance = 0;
@@ -149,7 +150,7 @@ public class Mob extends EntitySolid implements GameObj{
 			if(this.fallDistance > 0f){
 				float damage = (fallDistance - 3f)*2;
 				if(damage > 0f){
-					this.hurt(damage);
+					this.hurt(damage,DamageSource.FALL);
 				}
 			}
 			this.fallDistance = 0f;
@@ -164,7 +165,7 @@ public class Mob extends EntitySolid implements GameObj{
 		
 		if(this.airLevel < 0){
 			this.airLevel = 0;
-			hurt(2f,1);
+			hurt(2f,1,DamageSource.DROWNING);
 		}
 		push();
 		//getCamera().updateKeyboard(32, 2);
@@ -236,13 +237,14 @@ public class Mob extends EntitySolid implements GameObj{
 		return true;
 	}
 	
-	public void hurt(float amt){
+	public void hurt(float amt, DamageSource source){
 		this.health-=amt;
+		this.setLastDamageSource(source);
 	}
 	
-	public void hurt(float damage,float time){
+	public void hurt(float damage, float time, DamageSource source){
 		if(this.hurtTimer<=0){
-			this.hurt(damage);
+			this.hurt(damage, source);
 			this.hurtTimer=time;
 		}
 	}
@@ -290,6 +292,14 @@ public class Mob extends EntitySolid implements GameObj{
 
 	public float getSpeed() {
 		return speed;
+	}
+
+	public DamageSource getLastDamageSource() {
+		return lastDamageSource;
+	}
+
+	public void setLastDamageSource(DamageSource lastDamageSource) {
+		this.lastDamageSource = lastDamageSource;
 	}
 
 }

@@ -79,6 +79,7 @@ public class EntityPlayer extends Mob {
 		SoundManager.getMainManager().setPosAndRot(pos, rot);
 		this.rot.x = MathUtils.towardsZero(this.rot.x, (float) (Time.getDelta()*30f));
 		if(this.isDead()){
+			worldManager.showMessage(5.0, DeathMessage.getMessage("Player", getLastDamageSource()));
 			this.setDead(false);
 			this.dropAllItems();
 			this.respawn();
@@ -118,16 +119,22 @@ public class EntityPlayer extends Mob {
 	}
 	
 	public void respawn(){
-		this.setPos(new Vector3f(Constants.CHUNKSIZE*(Constants.worldLengthChunks/2f),Constants.CHUNKSIZE*Constants.worldLengthChunks,Constants.CHUNKSIZE*(Constants.worldLengthChunks/2f)));
+		int x = (int) (Constants.CHUNKSIZE*(Constants.worldLengthChunks/2f));
+		int z = (int) (Constants.CHUNKSIZE*(Constants.worldLengthChunks/2f));
+		int y = Constants.CHUNKSIZE*Constants.worldLengthChunks+1;
+		while(Tile.getTile((byte) worldManager.getTileAtPos(x, y-1, z)).canPassThrough()){y--;}
+		this.setPos(new Vector3f(x,y,z));
 		this.health = 20f;
+		this.fallDistance = 0;
+		this.onFire = 0;
 	}
 	
 	@Override
 	public void push(){}
 	
 	@Override
-	public void hurt(float damage){
-			super.hurt(damage);
+	public void hurt(float damage, DamageSource source){
+			super.hurt(damage, source);
 			this.rot.x = 5f;
 	}
 	

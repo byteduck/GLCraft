@@ -3,6 +3,7 @@ package net.codepixl.GLCraft.world.entity.mob.AI;
 import java.util.List;
 
 import net.codepixl.GLCraft.world.entity.Entity;
+import net.codepixl.GLCraft.world.entity.mob.DamageSource;
 import net.codepixl.GLCraft.world.entity.mob.Mob;
 
 public class AIHurtNearest extends AI{
@@ -25,7 +26,7 @@ public class AIHurtNearest extends AI{
 		List<Entity> a = mob.worldManager.entityManager.getEntitiesInRadiusOfEntityOfType(mob, hurt, largSiz+1f);
 		if(a.size() > 0){
 			Mob m = (Mob)a.get(0);
-			m.hurt(2, 1.0f);
+			m.hurt(2, 1.0f, DamageSource.MOB);
 		}
 	}
 }

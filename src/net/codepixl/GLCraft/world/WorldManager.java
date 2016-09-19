@@ -127,6 +127,7 @@ public class WorldManager {
 		}
 		centralManager.renderSplashText("Hold on...", "Beaming you down");
 		System.out.println("Done!");
+		entityManager.getPlayer().respawn();
 		doneGenerating = true;
 		String saveName = name.replaceAll("[^ a-zA-Z0-9.-]", "_");
 		this.currentSave = new Save(saveName, name, GLCraft.version, SaveManager.currentFormat);
