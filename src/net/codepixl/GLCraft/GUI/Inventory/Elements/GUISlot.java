@@ -1,26 +1,16 @@
 package net.codepixl.GLCraft.GUI.Inventory.Elements;
 
-import static org.lwjgl.opengl.GL11.GL_QUADS;
-import static org.lwjgl.opengl.GL11.glBegin;
-import static org.lwjgl.opengl.GL11.glEnd;
-import static org.lwjgl.opengl.GL11.glPopMatrix;
-import static org.lwjgl.opengl.GL11.glPushMatrix;
-import static org.lwjgl.opengl.GL11.glScalef;
-import static org.lwjgl.opengl.GL11.glTranslatef;
-
 import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.GL11;
-import org.newdawn.slick.opengl.TextureImpl;
 
 import com.nishu.utils.Color4f;
 
 import net.codepixl.GLCraft.GUI.GUIScreen;
-import net.codepixl.GLCraft.render.RenderType;
 import net.codepixl.GLCraft.render.Shape;
 import net.codepixl.GLCraft.render.TextureManager;
-import net.codepixl.GLCraft.render.util.Tesselator;
 import net.codepixl.GLCraft.util.Constants;
 import net.codepixl.GLCraft.util.Spritesheet;
+import net.codepixl.GLCraft.world.entity.mob.EntityPlayer;
 import net.codepixl.GLCraft.world.item.ItemStack;
 
 public class GUISlot extends GUIScreen{
@@ -29,11 +19,15 @@ public class GUISlot extends GUIScreen{
 	private int x,y;
 	public static final float size = (float)Constants.WIDTH/18f;
 	public boolean hover = false;
+	public boolean canPickup = true, canPlace = true;
+	public EntityPlayer player;
+	public boolean justTook = false, justPlaced = false;
 	
-	public GUISlot(int x, int y){
+	public GUISlot(int x, int y, EntityPlayer player){
 		this.itemstack = new ItemStack();
 		this.x = x;
 		this.y = y;
+		this.player = player;
 	}
 	
 	@Override
@@ -49,34 +43,7 @@ public class GUISlot extends GUIScreen{
 		Shape.createCenteredSquare(x,y, color, TextureManager.texture("gui.guislot"), size);
 		GL11.glEnd();
 		float size = Constants.WIDTH/18f;
-		if(!itemstack.isNull()){
-			glPushMatrix();
-					if(itemstack.isTile() && (itemstack.getTile().getRenderType() == RenderType.CUBE || (itemstack.getTile().getRenderType() == RenderType.CUSTOM && itemstack.getTile().getCustomRenderType() == RenderType.CUBE))){
-						glTranslatef(x-size/2,y-size/2,0);
-						glScalef(0.5f,0.5f,0.5f);
-						GL11.glRotatef(140f,1.0f,0.0f,0.0f);
-						GL11.glRotatef(45f,0.0f,1.0f,0.0f);
-						glBegin(GL_QUADS);
-						if(itemstack.getTile().hasMetaTextures()){
-							Shape.createCube(size/2.25f,-size*1.5f,0, new Color4f(1f,1f,1f,1f), itemstack.getTile().getTexCoords(itemstack.getMeta()), size);
-						}else{
-							Shape.createCube(size/2.25f,-size*1.5f,0, new Color4f(1f,1f,1f,1f), itemstack.getTile().getTexCoords(), size);
-						}
-					}else{
-						glTranslatef(x,y,0);
-						glScalef(0.7f, 0.7f, 0.7f);
-						glBegin(GL_QUADS);
-						if(itemstack.isItem())
-							Shape.createCenteredSquare(0,0, new Color4f(1f,1f,1f,1f), itemstack.getItem().getTexCoords(), size);
-						else
-							Shape.createCenteredSquare(0,0, new Color4f(1f,1f,1f,1f), itemstack.getTile().getTexCoords(), size);
-					}
-				glEnd();
-			glPopMatrix();
-			if(itemstack.count != 1)
-				Tesselator.drawTextWithShadow(x, y, Integer.toString(itemstack.count));
-			TextureImpl.unbind();
-		}
+		itemstack.renderIcon(x, y, size);
 	}
 
 	@Override
@@ -86,8 +53,58 @@ public class GUISlot extends GUIScreen{
 
 	@Override
 	public void input(int xof, int yof) {
+		this.justTook = false;
+		this.justPlaced = false;
 		if(testMouse(xof,yof)){
 			this.hover = true;
+			while(Mouse.next()){
+				if(Mouse.getEventButtonState()){
+					if(Mouse.isButtonDown(0)){
+						ItemStack pItemStack = player.mouseItem;
+						ItemStack itemStack = this.itemstack;
+						if(this.player.mouseItem.isNull() && this.canPickup){
+							this.itemstack = pItemStack;
+							this.player.mouseItem = itemStack;
+							this.justTook = true;
+						}else{
+							if(this.canPickup && this.canPlace){
+								if(itemstack.compatible(pItemStack)){
+									int added = itemStack.addToStack(pItemStack.count);
+									pItemStack.count = added;
+									if(pItemStack.count == 0)
+										this.player.mouseItem = new ItemStack();
+									this.justPlaced = true;
+								}else{
+									this.itemstack = pItemStack;
+									this.player.mouseItem = itemStack;
+									this.justTook = true;
+									this.justPlaced = true;
+								}
+							}else if(this.canPlace && !this.canPickup && itemStack.isNull()){
+								this.itemstack = pItemStack;
+								this.player.mouseItem = itemStack;
+								this.justPlaced = true;
+							}
+						}
+					}else if(Mouse.isButtonDown(1)){
+						ItemStack pItemStack = player.mouseItem;
+						ItemStack itemStack = this.itemstack;
+						if(!pItemStack.isNull() && (itemStack.compatible(pItemStack) || itemStack.isNull())){
+							if(itemStack.isNull()){
+								this.itemstack = new ItemStack(pItemStack);
+								this.itemstack.count = 0;
+								itemStack = this.itemstack;
+							}
+							int added = itemStack.addToStack(1);
+							if(added == 0)
+								pItemStack.count--;
+							if(pItemStack.count == 0)
+								this.player.mouseItem = new ItemStack();
+							this.justPlaced = true;
+						}
+					}
+				}
+			}
 		}else{
 			this.hover = false;
 		}

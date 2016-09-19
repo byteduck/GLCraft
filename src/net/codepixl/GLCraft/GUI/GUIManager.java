@@ -1,16 +1,21 @@
 package net.codepixl.GLCraft.GUI;
 
-import static org.lwjgl.opengl.GL11.GL_TEXTURE_2D;
-import static org.lwjgl.opengl.GL11.glDisable;
-import static org.lwjgl.opengl.GL11.glVertex2f;
+import static org.lwjgl.opengl.GL11.GL_QUADS;
+import static org.lwjgl.opengl.GL11.glBegin;
+import static org.lwjgl.opengl.GL11.glEnd;
 
 import java.util.HashMap;
 
 import org.lwjgl.input.Keyboard;
-import org.lwjgl.opengl.GL11;
+import org.lwjgl.input.Mouse;
+
+import com.nishu.utils.Color4f;
 
 import net.codepixl.GLCraft.GUI.Elements.GUITextBox;
+import net.codepixl.GLCraft.render.Shape;
 import net.codepixl.GLCraft.render.TextureManager;
+import net.codepixl.GLCraft.util.Constants;
+import net.codepixl.GLCraft.world.entity.mob.EntityPlayer;
 
 public class GUIManager {
 
@@ -37,7 +42,7 @@ public class GUIManager {
 	public void setShowGame(boolean show){
 		showGame = show;
 	}
-	
+
 	public void setGameGUI(GUIGame gui){
 		this.gameGUI = gui;
 	}
@@ -103,6 +108,7 @@ public class GUIManager {
 			gameGUI.renderMain();
 		if (GUIOpen)
 			currentGUI.renderMain();
+		renderMouseItem();
 	}
 
 	public void update(){
@@ -132,6 +138,13 @@ public class GUIManager {
 				}
 			}
 			Keyboard.enableRepeatEvents(false);
+		}
+	}
+	
+	public void renderMouseItem(){
+		if(this.currentGUI != null && this.currentGUI.shouldRenderMouseItem()){
+			EntityPlayer player = Constants.world.getWorldManager().getEntityManager().getPlayer();
+			player.mouseItem.renderIcon(Mouse.getX(), -Mouse.getY()+Constants.HEIGHT, 64);
 		}
 	}
 

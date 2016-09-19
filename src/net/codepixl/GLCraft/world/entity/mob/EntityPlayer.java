@@ -63,7 +63,7 @@ public class EntityPlayer extends Mob {
 		buildCooldown = 0;
 		breakProgress = 0;
 		selectedSlot = 0;
-		mouseItem = new ItemStack();
+		mouseItem = new ItemStack(Tile.Grass);
 		qPressed = false;
 		prevSelect = new Vector3f(-1, -1, -1);
 		eyeLevel = 1.6f;
@@ -173,6 +173,11 @@ public class EntityPlayer extends Mob {
 		EntityItem e = new EntityItem(new ItemStack(item, amount), pos.x, pos.y, pos.z, w);
 		e.setVelocity(MathUtils.RotToVel(direction, 1f));
 		w.spawnEntity(e);
+	}
+	public void dropItem(ItemStack item){
+		EntityItem e = new EntityItem(item, pos.x, pos.y+this.eyeLevel, pos.z, worldManager);
+		e.setVelocity(MathUtils.RotToVel(this.getRot(), 1f));
+		worldManager.spawnEntity(e);
 	}
 	public void updateKeyboard(float delay, float speed) {
 		boolean keyUp = Keyboard.isKeyDown(Keyboard.KEY_W);

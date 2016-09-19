@@ -3,14 +3,14 @@ package net.codepixl.GLCraft.GUI.tileentity;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
 
-import net.codepixl.GLCraft.GUI.GUIScreen;
+import net.codepixl.GLCraft.GUI.Inventory.GUIInventoryScreen;
 import net.codepixl.GLCraft.GUI.Inventory.Elements.GUISlot;
 import net.codepixl.GLCraft.util.Constants;
 import net.codepixl.GLCraft.world.entity.mob.EntityPlayer;
 import net.codepixl.GLCraft.world.entity.tileentity.TileEntityChest;
 import net.codepixl.GLCraft.world.item.ItemStack;
 
-public class GUIChest extends GUIScreen{
+public class GUIChest extends GUIInventoryScreen{
 	
 	private TileEntityChest chest;
 	private EntityPlayer player;
@@ -25,9 +25,9 @@ public class GUIChest extends GUIScreen{
 		slots = new GUISlot[20];
 		for(int i = 0; i < slots.length; i++){
 			if(i < 10){
-				slots[i] = new GUISlot((HMIDDLE+HSIZE*10)-HSIZE*2*i,VMIDDLE-HSIZE);
+				slots[i] = new GUISlot((HMIDDLE+HSIZE*10)-HSIZE*2*i,VMIDDLE-HSIZE,p);
 			}else{
-				slots[i] = new GUISlot((HMIDDLE+HSIZE*10)-HSIZE*2*(i-10),VMIDDLE+HSIZE);
+				slots[i] = new GUISlot((HMIDDLE+HSIZE*10)-HSIZE*2*(i-10),VMIDDLE+HSIZE,p);
 			}
 			slots[i].itemstack = chest.getSlot(i);
 			this.addElement(slots[i]);

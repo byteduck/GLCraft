@@ -170,5 +170,9 @@ public class GUIScreen{
 	public boolean canBeExited() {
 		return true;
 	}
+
+	public boolean shouldRenderMouseItem(){
+		return false;
+	}
 	
 }

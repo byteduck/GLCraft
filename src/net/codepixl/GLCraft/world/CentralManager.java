@@ -323,7 +323,7 @@ public class CentralManager extends Screen{
 			glPopMatrix();
 		}
 		for(float i = 0; i < 9f; i++){
-			GUISlot s = new GUISlot((int)(Constants.WIDTH/9f+i*SIZE+i*SPACING+SIZE/2f),(int)(Constants.HEIGHT-(SIZE/2f)));
+			GUISlot s = new GUISlot((int)(Constants.WIDTH/9f+i*SIZE+i*SPACING+SIZE/2f),(int)(Constants.HEIGHT-(SIZE/2f)),p);
 			s.itemstack = p.getInventory((int)i);
 			if(p.getSelectedSlot() == i)
 				s.hover = true;

@@ -37,17 +37,20 @@ public class GUIGame extends GUIScreen{
 		player = worldManager.getEntityManager().getPlayer();
 		for(int j = 0; j < 9; j++){
 			float i = j;
-			slots[j] = new GUISlot((int)(Constants.WIDTH/9f+i*SIZE+i*SPACING+SIZE/2f),(int)(Constants.HEIGHT-(SIZE/2f)));
+			slots[j] = new GUISlot((int)(Constants.WIDTH/9f+i*SIZE+i*SPACING+SIZE/2f),(int)(Constants.HEIGHT-(SIZE/2f)),player);
 		}
 		addElements(slots);
 	}
 	
 	@Override
 	public void input(int xof, int yof){
-		super.input(xof, yof);
 		for(int i = 0; i < slots.length; i++){
 			slots[i].hover = false;
 			slots[i].itemstack = player.getInventory(i);
+		}
+		super.input(xof, yof);
+		for(int i = 0; i < slots.length; i++){
+			player.getInventory()[i] = slots[i].itemstack;
 		}
 		slots[worldManager.getEntityManager().getPlayer().getSelectedSlot()].hover = true;
 	}
@@ -91,10 +94,6 @@ public class GUIGame extends GUIScreen{
 		for(int i = 0; i < 10; i++){
 			Shape.createCenteredSquare((float)Constants.WIDTH/9f+i*HEARTSIZE+i*HEARTSPACING+HEARTSIZE/2f,Constants.HEIGHT-(SIZE/2f)-HEARTSIZE*2f, new Color4f(1,1,1,1), p.getTexCoordsForHealthIndex(i), HEARTSIZE);
 		}
-		glEnd();
-		
-		glBegin(GL_QUADS);
-		Shape.createCenteredSquare(Mouse.getX(), -Mouse.getY()+Constants.HEIGHT, Color4f.WHITE, player.mouseItem.getIconCoords(), 32);
 		glEnd();
 	}
 }

@@ -1,6 +1,20 @@
 package net.codepixl.GLCraft.world.item;
 
+import static org.lwjgl.opengl.GL11.GL_QUADS;
+import static org.lwjgl.opengl.GL11.glBegin;
+import static org.lwjgl.opengl.GL11.glEnd;
+import static org.lwjgl.opengl.GL11.glScalef;
+import static org.lwjgl.opengl.GL11.glTranslatef;
+
+import org.lwjgl.opengl.GL11;
+import org.newdawn.slick.opengl.TextureImpl;
+
+import com.nishu.utils.Color4f;
+
+import net.codepixl.GLCraft.render.RenderType;
+import net.codepixl.GLCraft.render.Shape;
 import net.codepixl.GLCraft.render.TextureManager;
+import net.codepixl.GLCraft.render.util.Tesselator;
 import net.codepixl.GLCraft.world.tile.Tile;
 
 public class ItemStack{
@@ -152,5 +166,36 @@ public class ItemStack{
 				return this.item.getTexCoords();
 		else
 			return TextureManager.texture("misc.nothing");
+	}
+	
+	public void renderIcon(int x, int y, float size){
+		if(!this.isNull()){
+			GL11.glPushMatrix();
+			if(this.isTile() && (this.getTile().getRenderType() == RenderType.CUBE || (this.getTile().getRenderType() == RenderType.CUSTOM && this.getTile().getCustomRenderType() == RenderType.CUBE))){
+				glTranslatef(x-size/2,y-size/2,0);
+				glScalef(0.5f,0.5f,0.5f);
+				GL11.glRotatef(140f,1.0f,0.0f,0.0f);
+				GL11.glRotatef(45f,0.0f,1.0f,0.0f);
+				glBegin(GL_QUADS);
+				if(this.getTile().hasMetaTextures()){
+					Shape.createCube(size/2.25f,-size*1.5f,0, new Color4f(1f,1f,1f,1f), this.getTile().getTexCoords(this.getMeta()), size);
+				}else{
+					Shape.createCube(size/2.25f,-size*1.5f,0, new Color4f(1f,1f,1f,1f), this.getTile().getTexCoords(), size);
+				}
+			}else{
+				glTranslatef(x,y,0);
+				glScalef(0.7f, 0.7f, 0.7f);
+				glBegin(GL_QUADS);
+				if(this.isItem())
+					Shape.createCenteredSquare(0,0, new Color4f(1f,1f,1f,1f), this.getItem().getTexCoords(), size);
+				else
+					Shape.createCenteredSquare(0,0, new Color4f(1f,1f,1f,1f), this.getTile().getTexCoords(), size);
+			}
+			glEnd();
+			GL11.glPopMatrix();
+			if(this.count != 1)
+				Tesselator.drawTextWithShadow(x, y, Integer.toString(this.count));
+			TextureImpl.unbind();
+		}
 	}
 }

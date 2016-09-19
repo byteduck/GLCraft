@@ -3,15 +3,15 @@ package net.codepixl.GLCraft.GUI.tileentity;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
 
-import net.codepixl.GLCraft.GUI.GUIScreen;
 import net.codepixl.GLCraft.GUI.Elements.GUIProgressBar;
+import net.codepixl.GLCraft.GUI.Inventory.GUIInventoryScreen;
 import net.codepixl.GLCraft.GUI.Inventory.Elements.GUISlot;
 import net.codepixl.GLCraft.util.Constants;
 import net.codepixl.GLCraft.world.entity.mob.EntityPlayer;
 import net.codepixl.GLCraft.world.entity.tileentity.TileEntityFurnace;
 import net.codepixl.GLCraft.world.item.ItemStack;
 
-public class GUIFurnace extends GUIScreen{
+public class GUIFurnace extends GUIInventoryScreen{
 	
 	private TileEntityFurnace furnace;
 	private EntityPlayer player;
@@ -27,8 +27,9 @@ public class GUIFurnace extends GUIScreen{
 	public GUIFurnace(TileEntityFurnace furnace, EntityPlayer player) {
 		this.furnace = furnace;
 		this.player = player;
-		in = new GUISlot(HMIDDLE-HSIZE-PBSIZE/2-10,VMIDDLE);
-		out = new GUISlot(HMIDDLE+HSIZE+PBSIZE/2+10,VMIDDLE);
+		in = new GUISlot(HMIDDLE-HSIZE-PBSIZE/2-10,VMIDDLE,player);
+		out = new GUISlot(HMIDDLE+HSIZE+PBSIZE/2+10,VMIDDLE,player);
+		out.canPlace = false;
 		progressBar = new GUIProgressBar(HMIDDLE-PBSIZE/2, VMIDDLE-GUIProgressBar.PB_HEIGHT/2, PBSIZE);
 		
 		addElements(in,out, progressBar);
