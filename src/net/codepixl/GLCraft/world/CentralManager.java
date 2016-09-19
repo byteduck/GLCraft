@@ -252,12 +252,13 @@ public class CentralManager extends Screen{
 				this.pathfinder.renderPath();
 			currentBlock = raycast();
 			renderClouds();
-			renderText();
-			//renderInventory();
 			renderEtc();
+			//renderInventory();
 		}
 		render2D();
 		guiManager.render();
+		if(Constants.GAME_STATE == Constants.GAME)
+			renderText();
 		glDisable(GL_TEXTURE_2D);
 		DebugTimer.getTimer("total_render").end();
 	}
