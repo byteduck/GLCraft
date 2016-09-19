@@ -42,10 +42,11 @@ public class EntityItem extends EntitySolid{
 		this.rot = rot;
 		this.setVel(vel);
 		yPos = 0;
-		if(t.getByte("isItem") > 0){
-			itemstack = new ItemStack(Item.getItem(t.getByte("id")),(int)t.getByte("count"));
-		}else{
-			itemstack = new ItemStack(Tile.getTile(t.getByte("id")),(int)t.getByte("count"));
+		try{
+			itemstack = ItemStack.fromNBT(t.getCompound("itemstack"));
+		}catch(TagNotFoundException e){
+			itemstack = new ItemStack();
+			setDead(true);
 		}
 	}
 
@@ -152,9 +153,7 @@ public class EntityItem extends EntitySolid{
 	
 	@Override
 	public void writeToNBT(TagCompound t){
-		t.setTag(new TagByte("isItem",(byte) (this.itemstack.isItem() ? 1 : 0 )));
-		t.setTag(new TagByte("id",this.itemstack.getId()));
-		t.setTag(new TagByte("count",(byte)this.itemstack.count));
+		t.setTag(itemstack.toNBT("itemstack"));
 	}
 	
 	public static Entity fromNBT(TagCompound t, WorldManager w) throws UnexpectedTagTypeException, TagNotFoundException{

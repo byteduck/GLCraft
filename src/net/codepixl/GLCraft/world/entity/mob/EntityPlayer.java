@@ -63,7 +63,7 @@ public class EntityPlayer extends Mob {
 		buildCooldown = 0;
 		breakProgress = 0;
 		selectedSlot = 0;
-		mouseItem = new ItemStack(Tile.Grass);
+		mouseItem = new ItemStack();
 		qPressed = false;
 		prevSelect = new Vector3f(-1, -1, -1);
 		eyeLevel = 1.6f;

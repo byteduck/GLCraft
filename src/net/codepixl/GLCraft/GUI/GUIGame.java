@@ -45,11 +45,12 @@ public class GUIGame extends GUIScreen{
 	@Override
 	public void input(int xof, int yof){
 		for(int i = 0; i < slots.length; i++){
-			slots[i].hover = false;
 			slots[i].itemstack = player.getInventory(i);
 		}
 		super.input(xof, yof);
 		for(int i = 0; i < slots.length; i++){
+			if(!worldManager.centralManager.guiManager.isGUIOpen())
+				slots[i].hover = false;
 			player.getInventory()[i] = slots[i].itemstack;
 		}
 		slots[worldManager.getEntityManager().getPlayer().getSelectedSlot()].hover = true;

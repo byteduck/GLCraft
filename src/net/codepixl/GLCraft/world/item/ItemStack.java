@@ -9,12 +9,18 @@ import static org.lwjgl.opengl.GL11.glTranslatef;
 import org.lwjgl.opengl.GL11;
 import org.newdawn.slick.opengl.TextureImpl;
 
+import com.evilco.mc.nbt.error.TagNotFoundException;
+import com.evilco.mc.nbt.error.UnexpectedTagTypeException;
+import com.evilco.mc.nbt.tag.TagByte;
+import com.evilco.mc.nbt.tag.TagCompound;
+import com.evilco.mc.nbt.tag.TagInteger;
 import com.nishu.utils.Color4f;
 
 import net.codepixl.GLCraft.render.RenderType;
 import net.codepixl.GLCraft.render.Shape;
 import net.codepixl.GLCraft.render.TextureManager;
 import net.codepixl.GLCraft.render.util.Tesselator;
+import net.codepixl.GLCraft.util.Spritesheet;
 import net.codepixl.GLCraft.world.tile.Tile;
 
 public class ItemStack{
@@ -155,6 +161,36 @@ public class ItemStack{
 			return TextureManager.texture("misc.nothing");
 	}
 	
+	public TagCompound toNBT(){
+		TagCompound ret = new TagCompound("");
+		ret.setTag(new TagByte("isItem",(byte) (this.isItem() ? 1 : 0 )));
+		ret.setTag(new TagByte("id",this.getId()));
+		ret.setTag(new TagByte("count",(byte)this.count));
+		ret.setTag(new TagByte("meta",(byte)this.meta));
+		return ret;
+	}
+	
+	public TagCompound toNBT(String name){
+		TagCompound ret = toNBT();
+		ret.setName(name);
+		return ret;
+	}
+	
+	public static ItemStack fromNBT(TagCompound tag) throws UnexpectedTagTypeException, TagNotFoundException{
+		ItemStack stack;
+		if(tag.getByte("isItem") == 0){
+			stack = new ItemStack(Tile.getTile(tag.getByte("id")));
+		}else{
+			stack = new ItemStack(Item.getItem(tag.getByte("id")));
+		}
+		stack.count = tag.getByte("count");
+		try{
+			stack.meta = tag.getByte("meta");
+		}catch(TagNotFoundException e){} //In case the world was saved with an older version
+			
+		return stack;
+	}
+	
 	public float[] getIconCoords() {
 		if(!this.isNull)
 			if(this.isTile)
@@ -170,6 +206,7 @@ public class ItemStack{
 	
 	public void renderIcon(int x, int y, float size){
 		if(!this.isNull()){
+			Spritesheet.atlas.bind();
 			GL11.glPushMatrix();
 			if(this.isTile() && (this.getTile().getRenderType() == RenderType.CUBE || (this.getTile().getRenderType() == RenderType.CUSTOM && this.getTile().getCustomRenderType() == RenderType.CUBE))){
 				glTranslatef(x-size/2,y-size/2,0);
@@ -190,6 +227,7 @@ public class ItemStack{
 					Shape.createCenteredSquare(0,0, new Color4f(1f,1f,1f,1f), this.getItem().getTexCoords(), size);
 				else
 					Shape.createCenteredSquare(0,0, new Color4f(1f,1f,1f,1f), this.getTile().getTexCoords(), size);
+				
 			}
 			glEnd();
 			GL11.glPopMatrix();
@@ -197,5 +235,6 @@ public class ItemStack{
 				Tesselator.drawTextWithShadow(x, y, Integer.toString(this.count));
 			TextureImpl.unbind();
 		}
+		TextureImpl.unbind();
 	}
 }

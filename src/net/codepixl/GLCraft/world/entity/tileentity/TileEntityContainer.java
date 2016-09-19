@@ -89,11 +89,8 @@ public class TileEntityContainer extends TileEntity{
 		for(int i = 0; i < getInventory().length; i++){
 			ItemStack stack = getInventory()[i];
 			if(!stack.isNull()){
-				TagCompound slot = new TagCompound("");
+				TagCompound slot = stack.toNBT();
 				slot.setTag(new TagInteger("slot",i));
-				slot.setTag(new TagByte("isItem",(byte) (stack.isItem() ? 1 : 0 )));
-				slot.setTag(new TagByte("id",stack.getId()));
-				slot.setTag(new TagByte("count",(byte)stack.count));
 				inventory.addTag(slot);
 			}
 		}
@@ -113,13 +110,7 @@ public class TileEntityContainer extends TileEntity{
 			while(i.hasNext()){
 				TagCompound t2 = i.next();
 				int slot = t2.getInteger("slot");
-				ItemStack stack;
-				if(t2.getByte("isItem") == 0){
-					stack = new ItemStack(Tile.getTile(t2.getByte("id")));
-				}else{
-					stack = new ItemStack(Item.getItem(t2.getByte("id")));
-				}
-				stack.count = t2.getByte("count");
+				ItemStack stack = ItemStack.fromNBT(t2);
 				is[slot] = stack;
 			}
 			return new TileEntityContainer((int)pos.x, (int)pos.y, (int)pos.z, is, w);

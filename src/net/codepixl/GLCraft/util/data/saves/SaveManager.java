@@ -83,11 +83,8 @@ public class SaveManager {
 				for(int i = 0; i < p.getInventory().length; i++){
 					ItemStack stack = p.getInventory(i);
 					if(!stack.isNull()){
-						TagCompound slot = new TagCompound("");
+						TagCompound slot = stack.toNBT();
 						slot.setTag(new TagInteger("slot",i));
-						slot.setTag(new TagByte("isItem",(byte) (stack.isItem() ? 1 : 0 )));
-						slot.setTag(new TagByte("id",stack.getId()));
-						slot.setTag(new TagByte("count",(byte)stack.count));
 						inventory.addTag(slot);
 					}
 				}
@@ -165,13 +162,7 @@ public class SaveManager {
 					while(i.hasNext()){
 						TagCompound t = i.next();
 						int slot = t.getInteger("slot");
-						ItemStack stack;
-						if(t.getByte("isItem") == 0){
-							stack = new ItemStack(Tile.getTile(t.getByte("id")));
-						}else{
-							stack = new ItemStack(Item.getItem(t.getByte("id")));
-						}
-						stack.count = t.getByte("count");
+						ItemStack stack = ItemStack.fromNBT(t);
 						p.setInventory(slot, stack);
 					}
 				}
