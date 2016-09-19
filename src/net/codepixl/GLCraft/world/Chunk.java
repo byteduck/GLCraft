@@ -206,6 +206,8 @@ public class Chunk {
 							tiles[x][y][z] = Tile.IronOre.getId();
 						}else if(rand > 150 && rand <= 160){
 							tiles[x][y][z] = Tile.GoldOre.getId();
+						}else if(rand > 160 && rand <= 165){
+							tiles[x][y][z] = Tile.BluestoneOre.getId();
 						}
 					}else if(tiles[x][y][z] == Tile.Grass.getId()){
 						int rand = Constants.rand.nextInt(100);

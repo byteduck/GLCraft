@@ -55,6 +55,7 @@ public class Tile {
 	public static Tile Dirt = new TileDirt();
 	public static Tile Furnace = new TileFurnace();
 	public static Tile Cobblestone = new TileCobblestone();
+	public static Tile BluestoneOre = new TileBluestoneOre();
 	//TILES
 	
 	public String getName(){
@@ -86,7 +87,7 @@ public class Tile {
 	}
 	
 	public String getTextureName(){
-		return this.getName();
+		return this.getName().toLowerCase().replace(" ", "_");
 	}
 	
 	public String getTextureName(byte meta){
@@ -292,5 +293,9 @@ public class Tile {
 
 	public RenderType getCustomRenderType() {
 		return RenderType.CUBE;
+	}
+	
+	public byte getPowerLevel(int x, int y, int z, WorldManager w){
+		return 0;
 	}
 }

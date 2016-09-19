@@ -269,8 +269,33 @@ public class TileBluestone extends Tile{
 			}
 		}
 		//END BLUESTONE DETECTION
-		if(w.getTileAtPos(x+1, y, z) == Tile.Grass.getId()){
-			most = 15;
+		byte plevel = Tile.getTile((byte) w.getTileAtPos(x+1, y, z)).getPowerLevel(x+1, y, z, w);
+		if(plevel > most){
+			most = plevel;
+		}
+		plevel = Tile.getTile((byte) w.getTileAtPos(x-1, y, z)).getPowerLevel(x-1, y, z, w);
+		if(plevel > most){
+			most = plevel;
+		}
+		
+		plevel = Tile.getTile((byte) w.getTileAtPos(x, y+1, z)).getPowerLevel(x, y+1, z, w);
+		if(plevel > most){
+			most = plevel;
+		}
+		
+		plevel = Tile.getTile((byte) w.getTileAtPos(x, y-1, z)).getPowerLevel(x, y-1, z, w);
+		if(plevel > most){
+			most = plevel;
+		}
+		
+		plevel = Tile.getTile((byte) w.getTileAtPos(x, y, z+1)).getPowerLevel(x, y, z+1, w);
+		if(plevel > most){
+			most = plevel;
+		}
+
+		plevel = Tile.getTile((byte) w.getTileAtPos(x, y, z-1)).getPowerLevel(x, y, z-1, w);
+		if(plevel > most){
+			most = plevel;
 		}
 		w.setMetaAtPos(x, y, z, most, false);
 		if(most != prev){

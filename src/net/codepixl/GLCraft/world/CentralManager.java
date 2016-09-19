@@ -212,7 +212,7 @@ public class CentralManager extends Screen{
 					pathfindPos = new Vector3i(pos);
 				}
 				if(Keyboard.isKeyDown(Keyboard.KEY_B)){
-					worldManager.setTileAtPos(pos, Tile.Bluestone.getId(), true);
+					worldManager.setTileAtPos(pos, Tile.BluestoneOre.getId(), true);
 				}
 				if(Keyboard.isKeyDown(Keyboard.KEY_M)){
 					System.out.println(worldManager.getMetaAtPos((int)pos.x, (int)pos.y, (int)pos.z));

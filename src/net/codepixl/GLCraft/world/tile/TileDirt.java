@@ -2,6 +2,7 @@ package net.codepixl.GLCraft.world.tile;
 
 import com.nishu.utils.Color4f;
 
+import net.codepixl.GLCraft.world.WorldManager;
 import net.codepixl.GLCraft.world.tile.material.Material;
 
 public class TileDirt extends Tile{
@@ -30,6 +31,11 @@ public class TileDirt extends Tile{
 	@Override
 	public float getHardness(){
 		return 0.5f;
+	}
+	
+	@Override
+	public byte getPowerLevel(int x, int y, int z, WorldManager w){
+		return 15;
 	}
 
 }
