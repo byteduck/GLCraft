@@ -17,6 +17,7 @@ import net.codepixl.GLCraft.render.TextureManager;
 import net.codepixl.GLCraft.util.Constants;
 import net.codepixl.GLCraft.util.Spritesheet;
 import net.codepixl.GLCraft.world.tile.Tile;
+import net.codepixl.GLCraft.world.tile.ore.TileOre;
 
 public class GUIScreen{
 	public int x = 0;
@@ -149,20 +150,8 @@ public class GUIScreen{
 		bgTexCoords = new float[howManyWide][howManyTall][2];
 		for(int x = 0; x < howManyWide; x++){
 			for(int y = 0; y < howManyTall; y++){
-				int rand = Constants.randInt(0, 25);
-				switch(rand){
-				case 0:
-					bgTexCoords[x][y] = TextureManager.tile(Tile.CoalOre);
-					break;
-				case 1:
-					bgTexCoords[x][y] = TextureManager.tile(Tile.GoldOre);
-					break;
-				case 2:
-					bgTexCoords[x][y] = TextureManager.tile(Tile.IronOre);
-					break;
-				default:
-					bgTexCoords[x][y] = TextureManager.tile(Tile.Stone);
-				}
+				int rand = Constants.randInt(0, 10+TileOre.ores.size()-1);
+				if(rand > 11) bgTexCoords[x][y] = TextureManager.tile(TileOre.ores.get(rand-10)); else bgTexCoords[x][y] = TextureManager.tile(Tile.Stone);
 			}
 		}
 	}
