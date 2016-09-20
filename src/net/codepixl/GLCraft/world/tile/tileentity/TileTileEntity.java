@@ -1,9 +1,8 @@
 package net.codepixl.GLCraft.world.tile.tileentity;
 
+import net.codepixl.GLCraft.util.BreakSource;
 import net.codepixl.GLCraft.world.WorldManager;
-import net.codepixl.GLCraft.world.entity.EntityItem;
 import net.codepixl.GLCraft.world.entity.tileentity.TileEntity;
-import net.codepixl.GLCraft.world.item.ItemStack;
 import net.codepixl.GLCraft.world.tile.Tile;
 
 public class TileTileEntity extends Tile{
@@ -18,8 +17,8 @@ public class TileTileEntity extends Tile{
 	}
 	
 	@Override
-	public void onBreak(int x, int y, int z, boolean drop, WorldManager worldManager){
-		super.onBreak(x, y, z, drop, worldManager);
+	public void onBreak(int x, int y, int z, boolean drop, BreakSource source, WorldManager worldManager){
+		super.onBreak(x, y, z, drop, source, worldManager);
 		if(worldManager.getTileEntityAtPos(x, y, z) != null) worldManager.getTileEntityAtPos(x, y, z).setDead(true);
 	}
 }

@@ -17,6 +17,7 @@ import net.codepixl.GLCraft.render.RenderType;
 import net.codepixl.GLCraft.render.Shape;
 import net.codepixl.GLCraft.render.TextureManager;
 import net.codepixl.GLCraft.util.AABB;
+import net.codepixl.GLCraft.util.BreakSource;
 import net.codepixl.GLCraft.world.Chunk;
 import net.codepixl.GLCraft.world.WorldManager;
 import net.codepixl.GLCraft.world.item.ItemStack;
@@ -322,13 +323,13 @@ public class TileBluestone extends Tile{
 	}
 	
 	@Override
-	public void onBreak(int x, int y, int z, boolean drop, WorldManager w){
-		super.onBreak(x,y,z,drop,w);
+	public void onBreak(int x, int y, int z, boolean drop, BreakSource source, WorldManager w){
+		super.onBreak(x,y,z,drop,source, w);
 		onPlace(x,y,z,w);
 	}
 	
 	@Override
-	public ItemStack getDrop(int x, int y, int z, WorldManager w){
+	public ItemStack getDrop(int x, int y, int z, BreakSource source, WorldManager w){
 		return new ItemStack(this, 1);
 	}
 	

@@ -10,7 +10,6 @@ import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 
-import org.lwjgl.opengl.GL11;
 import org.lwjgl.util.vector.Vector3f;
 
 import com.evilco.mc.nbt.stream.NbtInputStream;
@@ -24,6 +23,7 @@ import net.codepixl.GLCraft.GUI.GUIManager;
 import net.codepixl.GLCraft.GUI.Inventory.GUICrafting;
 import net.codepixl.GLCraft.GUI.Inventory.GUICraftingAdvanced;
 import net.codepixl.GLCraft.util.AABB;
+import net.codepixl.GLCraft.util.BreakSource;
 import net.codepixl.GLCraft.util.Constants;
 import net.codepixl.GLCraft.util.DebugTimer;
 import net.codepixl.GLCraft.util.Frustum;
@@ -34,7 +34,6 @@ import net.codepixl.GLCraft.util.Vector3i;
 import net.codepixl.GLCraft.util.data.saves.Save;
 import net.codepixl.GLCraft.util.data.saves.SaveManager;
 import net.codepixl.GLCraft.world.entity.Entity;
-import net.codepixl.GLCraft.world.entity.EntityFallingBlock;
 import net.codepixl.GLCraft.world.entity.EntityManager;
 import net.codepixl.GLCraft.world.entity.EntitySolid;
 import net.codepixl.GLCraft.world.entity.mob.EntityPlayer;
@@ -373,12 +372,20 @@ public class WorldManager {
 	}
 	
 	public void setTileAtPos(int x, int y, int z, byte tile, boolean rebuild){
-		setTileAtPos(x,y,z,tile,rebuild,(byte)0);
+		setTileAtPos(x,y,z,tile,new BreakSource(),rebuild,(byte)0);
+	}
+	
+	public void setTileAtPos(int x, int y, int z, byte tile, BreakSource source, boolean rebuild){
+		setTileAtPos(x,y,z,tile,source,rebuild,(byte)0);
 	}
 	
 	public void setTileAtPos(int x, int y, int z, byte tile, boolean rebuild, byte meta){
+		setTileAtPos(x,y,z,tile,new BreakSource(),rebuild,meta);
+	}
+	
+	public void setTileAtPos(int x, int y, int z, byte tile, BreakSource source, boolean rebuild, byte meta){
 		Chunk c = getChunk(x,y,z);
-		c.setTileAtPos(x-(int)c.getPos().x, y-(int)c.getPos().y, z-(int)c.getPos().z, tile, false);
+		c.setTileAtPos(x-(int)c.getPos().x, y-(int)c.getPos().y, z-(int)c.getPos().z, tile, source, false);
 		setMetaAtPos(x,y,z,meta,rebuild);
 		blockUpdate(x+1,y,z);
 		blockUpdate(x-1,y,z);

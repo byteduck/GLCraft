@@ -205,7 +205,7 @@ public class ItemStack{
 	}
 	
 	public void renderIcon(int x, int y, float size){
-		if(!this.isNull()){
+		if(!this.isNull() && this.count != 0){
 			Spritesheet.atlas.bind();
 			GL11.glPushMatrix();
 			if(this.isTile() && (this.getTile().getRenderType() == RenderType.CUBE || (this.getTile().getRenderType() == RenderType.CUSTOM && this.getTile().getCustomRenderType() == RenderType.CUBE))){

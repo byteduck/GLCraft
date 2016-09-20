@@ -42,11 +42,6 @@ public class TileAir extends Tile{
 	}
 	
 	@Override
-	public void onBreak(int x, int y, int z, boolean drop, WorldManager w){
-		
-	}
-	
-	@Override
 	public boolean canBeDestroyedByLiquid(){
 		return true;
 	}

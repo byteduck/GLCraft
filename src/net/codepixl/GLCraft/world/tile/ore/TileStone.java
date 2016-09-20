@@ -1,12 +1,14 @@
-package net.codepixl.GLCraft.world.tile;
+package net.codepixl.GLCraft.world.tile.ore;
 
 import com.nishu.utils.Color4f;
 
+import net.codepixl.GLCraft.util.BreakSource;
 import net.codepixl.GLCraft.world.WorldManager;
 import net.codepixl.GLCraft.world.item.ItemStack;
+import net.codepixl.GLCraft.world.tile.Tile;
 import net.codepixl.GLCraft.world.tile.material.Material;
 
-public class TileStone extends Tile{
+public class TileStone extends TileOre{
 
 	@Override
 	public String getName() {
@@ -15,20 +17,9 @@ public class TileStone extends Tile{
 	}
 	
 	@Override
-	public Material getMaterial(){
-		return Material.STONE;
-	}
-	
-	@Override
 	public byte getId() {
 		// TODO Auto-generated method stub
 		return 2;
-	}
-
-	@Override
-	public Color4f getColor() {
-		// TODO Auto-generated method stub
-		return Color4f.WHITE;
 	}
 	
 	@Override
@@ -37,8 +28,8 @@ public class TileStone extends Tile{
 	}
 	
 	@Override
-	public ItemStack getDrop(int x, int y, int z, WorldManager w){
-		return new ItemStack(Tile.Cobblestone, 1);
+	public ItemStack dropItem(){
+		return new ItemStack(Tile.Stone);
 	}
 
 }

@@ -3,6 +3,7 @@ package net.codepixl.GLCraft.world.tile;
 import com.nishu.utils.Color4f;
 
 import net.codepixl.GLCraft.render.RenderType;
+import net.codepixl.GLCraft.util.BreakSource;
 import net.codepixl.GLCraft.util.Constants;
 import net.codepixl.GLCraft.world.Chunk;
 import net.codepixl.GLCraft.world.WorldManager;
@@ -59,7 +60,7 @@ public class TileSapling extends Tile{
 	public void blockUpdate(int x, int y, int z, WorldManager w){
 		if(Tile.getTile((byte)w.getTileAtPos(x, y-1, z)).canPassThrough()){
 			w.setTileAtPos(x, y, z, Tile.Air.getId(), true);
-			onBreak(x,y,z,true,w);
+			onBreak(x,y,z,true,new BreakSource(), w);
 		}
 	}
 }

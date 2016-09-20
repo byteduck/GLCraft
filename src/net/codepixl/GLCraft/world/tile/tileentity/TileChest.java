@@ -2,6 +2,7 @@ package net.codepixl.GLCraft.world.tile.tileentity;
 
 import com.nishu.utils.Color4f;
 
+import net.codepixl.GLCraft.util.BreakSource;
 import net.codepixl.GLCraft.world.WorldManager;
 import net.codepixl.GLCraft.world.entity.mob.EntityPlayer;
 import net.codepixl.GLCraft.world.entity.tileentity.TileEntity;
@@ -66,8 +67,8 @@ public class TileChest extends TileTileEntity{
 	}
 	
 	@Override
-	public void onBreak(int x, int y, int z, boolean drop, WorldManager worldManager){
-		super.onBreak(x, y, z, drop, worldManager);
+	public void onBreak(int x, int y, int z, boolean drop, BreakSource source, WorldManager worldManager){
+		super.onBreak(x, y, z, drop, source, worldManager);
 		((TileEntityChest)worldManager.getTileEntityAtPos(x, y, z)).dropAllItems();
 	}
 	

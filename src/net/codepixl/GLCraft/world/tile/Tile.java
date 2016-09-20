@@ -9,6 +9,7 @@ import com.nishu.utils.Color4f;
 import net.codepixl.GLCraft.render.RenderType;
 import net.codepixl.GLCraft.render.TextureManager;
 import net.codepixl.GLCraft.util.AABB;
+import net.codepixl.GLCraft.util.BreakSource;
 import net.codepixl.GLCraft.util.Constants;
 import net.codepixl.GLCraft.world.Chunk;
 import net.codepixl.GLCraft.world.WorldManager;
@@ -18,6 +19,11 @@ import net.codepixl.GLCraft.world.entity.mob.EntityPlayer;
 import net.codepixl.GLCraft.world.entity.particle.Particle;
 import net.codepixl.GLCraft.world.item.ItemStack;
 import net.codepixl.GLCraft.world.tile.material.Material;
+import net.codepixl.GLCraft.world.tile.ore.TileBluestoneOre;
+import net.codepixl.GLCraft.world.tile.ore.TileCoalOre;
+import net.codepixl.GLCraft.world.tile.ore.TileGoldOre;
+import net.codepixl.GLCraft.world.tile.ore.TileIronOre;
+import net.codepixl.GLCraft.world.tile.ore.TileStone;
 import net.codepixl.GLCraft.world.tile.tick.TickHelper;
 import net.codepixl.GLCraft.world.tile.tileentity.TileChest;
 import net.codepixl.GLCraft.world.tile.tileentity.TileFurnace;
@@ -34,9 +40,9 @@ public class Tile {
 	public static Tile Stone = new TileStone();
 	public static Tile Water = new TileWater();
 	public static Tile Glass = new TileGlass();
-	public static Tile CoalOre = new TileCoal();
-	public static Tile IronOre = new TileIron();
-	public static Tile GoldOre = new TileGold();
+	public static Tile CoalOre = new TileCoalOre();
+	public static Tile IronOre = new TileIronOre();
+	public static Tile GoldOre = new TileGoldOre();
 	public static Tile Log = new TileLog();
 	public static Tile Leaf = new TileLeaf();
 	public static Tile TallGrass = new TileTallGrass();
@@ -106,23 +112,25 @@ public class Tile {
 		return false;
 	}
 	
-	public ItemStack getDrop(int x, int y, int z, WorldManager w){
+	public ItemStack getDrop(int x, int y, int z, BreakSource source, WorldManager w){
 		return new ItemStack(this, 1, w.getMetaAtPos(x, y, z));
 	}
 	
-	public void onBreak(int x, int y, int z, boolean drop, WorldManager worldManager){
+	public void onBreak(int x, int y, int z, boolean drop, BreakSource source, WorldManager worldManager){
 		if(drop){
-			ItemStack is = getDrop(x, y, z, worldManager);
-			worldManager.spawnEntity(new EntityItem(is,(float)x+0.5f,(float)y+0.5f,(float)z+0.5f,worldManager));
-			for(int i=1; i<5; i++){
-				Particle particle = new Particle(new Vector3f(x+Constants.randFloat(0,1),y+Constants.randFloat(0,1),z+Constants.randFloat(0,1)), new Vector3f(Constants.randFloat(-0.1f, 0.1f),0,Constants.randFloat(-0.1f, 0.1f)), worldManager);
-				if(this.hasMetaTextures() == false){
-					particle.setTexCoords(this.getIconCoords());
-				}else{
-					particle.setTexCoords(this.getIconCoords(worldManager.getMetaAtPos(x, y, z)));
+			ItemStack is = getDrop(x, y, z, source, worldManager);
+			if(!is.isNull()){
+				worldManager.spawnEntity(new EntityItem(is,(float)x+0.5f,(float)y+0.5f,(float)z+0.5f,worldManager));
+				for(int i=1; i<5; i++){
+					Particle particle = new Particle(new Vector3f(x+Constants.randFloat(0,1),y+Constants.randFloat(0,1),z+Constants.randFloat(0,1)), new Vector3f(Constants.randFloat(-0.1f, 0.1f),0,Constants.randFloat(-0.1f, 0.1f)), worldManager);
+					if(this.hasMetaTextures() == false){
+						particle.setTexCoords(this.getIconCoords());
+					}else{
+						particle.setTexCoords(this.getIconCoords(worldManager.getMetaAtPos(x, y, z)));
+					}
+					particle.setLifeTime(Constants.randFloat(0.3f,0.7f));
+					worldManager.entityManager.add(particle);
 				}
-				particle.setLifeTime(Constants.randFloat(0.3f,0.7f));
-				worldManager.entityManager.add(particle);
 			}
 		}
 	}

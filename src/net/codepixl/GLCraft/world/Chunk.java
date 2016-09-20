@@ -10,7 +10,6 @@ import static org.lwjgl.opengl.GL11.glEndList;
 import static org.lwjgl.opengl.GL11.glGenLists;
 import static org.lwjgl.opengl.GL11.glNewList;
 
-import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -20,7 +19,6 @@ import java.util.Iterator;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.util.vector.Vector3f;
 
-import com.evilco.mc.nbt.stream.NbtInputStream;
 import com.evilco.mc.nbt.stream.NbtOutputStream;
 import com.evilco.mc.nbt.tag.TagByteArray;
 import com.evilco.mc.nbt.tag.TagCompound;
@@ -29,6 +27,7 @@ import com.nishu.utils.ShaderProgram;
 
 import net.codepixl.GLCraft.render.RenderType;
 import net.codepixl.GLCraft.render.Shape;
+import net.codepixl.GLCraft.util.BreakSource;
 import net.codepixl.GLCraft.util.Constants;
 import net.codepixl.GLCraft.util.Vector3i;
 import net.codepixl.GLCraft.world.tile.Tile;
@@ -577,7 +576,7 @@ public static void createCustomTree(int x, int y, int z,Tile trunk,Tile leaf, by
 		}
 	}
 	
-	public void setTileAtPos(int x, int y, int z, byte tile, boolean rebuild){
+	public void setTileAtPos(int x, int y, int z, byte tile, BreakSource source, boolean rebuild){
 		boolean inBoundsOne = (x >= 0) && (x < tiles.length);
 		boolean inBoundsTwo = (y >= 0) && (y < tiles[0].length);
 		boolean inBoundsThree = (z >= 0) && (z < tiles[0][0].length);
@@ -586,7 +585,7 @@ public static void createCustomTree(int x, int y, int z,Tile trunk,Tile leaf, by
 			float ax = x+pos.x;
 			float ay = y+pos.y;
 			float az = z+pos.z;
-			Tile.getTile(tiles[x][y][z]).onBreak((int)ax, (int)ay, (int)az, false, worldManager);
+			Tile.getTile(tiles[x][y][z]).onBreak((int)ax, (int)ay, (int)az, false, source, worldManager);
 			if(tiles[x][y][z] == Tile.Lamp.getId()){
 				this.light[x][y][z] = 0;
 			}

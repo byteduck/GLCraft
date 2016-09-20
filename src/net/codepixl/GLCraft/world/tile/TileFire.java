@@ -3,6 +3,7 @@ package net.codepixl.GLCraft.world.tile;
 import com.nishu.utils.Color4f;
 
 import net.codepixl.GLCraft.render.RenderType;
+import net.codepixl.GLCraft.util.BreakSource;
 import net.codepixl.GLCraft.world.WorldManager;
 import net.codepixl.GLCraft.world.entity.Entity;
 import net.codepixl.GLCraft.world.entity.mob.DamageSource;
@@ -50,7 +51,7 @@ public class TileFire extends Tile{
 	}
 	
 	@Override
-	public void onBreak(int x, int y, int z, boolean drop, WorldManager worldManager){
+	public void onBreak(int x, int y, int z, boolean drop, BreakSource source, WorldManager worldManager){
 		
 	}
 	
