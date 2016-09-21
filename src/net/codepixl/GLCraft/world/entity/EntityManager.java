@@ -174,7 +174,9 @@ public class EntityManager implements GameObj{
 		iterating = true;
 	    while (it.hasNext()) {
 	    	Entity e = it.next();
+	    	w.shader.use();
 	        e.render();
+	        w.shader.release();
 	        /**if(e instanceof EntitySolid && !(e instanceof EntityPlayer)){
 	        	((EntitySolid) e).aabb.render();
 	        }**/

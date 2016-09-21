@@ -47,7 +47,7 @@ public class WorldManager {
 	public boolean doneGenerating = false;
 	public EntityManager entityManager;
 	private volatile HashMap<Vector3i,Chunk> activeChunks; //Vector3i because HashMap doesn't play well with floats (therefore vector3f)
-	private ShaderProgram shader;
+	public ShaderProgram shader;
 	public static Tile selectedBlock = Tile.Air;
 	public CentralManager centralManager;
 	public float tick = 0f;

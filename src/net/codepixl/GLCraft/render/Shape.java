@@ -322,13 +322,13 @@ public class Shape {
 		glVertex3f(x + size, y, z);
 
 		// Back
-		glTexCoord2f(texCoords[0], texCoords[1]);
-		glVertex3f(x + size, y, z);
-		glTexCoord2f(texCoords[0], texCoords[1] + currentSpritesheet.uniformSize());
-		glVertex3f(x + size, y + size, z);
-		glTexCoord2f(texCoords[0] + currentSpritesheet.uniformSize(), texCoords[1] + currentSpritesheet.uniformSize());
-		glVertex3f(x, y + size, z);
 		glTexCoord2f(texCoords[0] + currentSpritesheet.uniformSize(), texCoords[1]);
+		glVertex3f(x + size, y, z);
+		glTexCoord2f(texCoords[0] + currentSpritesheet.uniformSize(), texCoords[1] + currentSpritesheet.uniformSize());
+		glVertex3f(x + size, y + size, z);
+		glTexCoord2f(texCoords[0], texCoords[1] + currentSpritesheet.uniformSize());
+		glVertex3f(x, y + size, z);
+		glTexCoord2f(texCoords[0], texCoords[1]);
 		glVertex3f(x, y, z);
 	}
 	
