@@ -264,16 +264,16 @@ public class WorldManager {
 			while(i.hasNext()){
 				i.next().render(false);
 			}
+			
+			DebugTimer.startTimer("entity_render");
+			entityManager.render();
+			DebugTimer.endTimer("entity_render");
+			
 			i = toRender.iterator();
 			while(i.hasNext()){
 				i.next().render(true);
 			}
 			DebugTimer.endTimer("chunk_render");
-			
-
-			DebugTimer.startTimer("entity_render");
-			entityManager.render();
-			DebugTimer.endTimer("entity_render");
 		}
 	}
 	
