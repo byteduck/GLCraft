@@ -29,7 +29,7 @@ public class TileStone extends TileOre{
 	
 	@Override
 	public ItemStack dropItem(){
-		return new ItemStack(Tile.Stone);
+		return new ItemStack(Tile.Cobblestone);
 	}
 
 }

@@ -84,6 +84,12 @@ public class GUISlot extends GUIScreen{
 								this.itemstack = pItemStack;
 								this.player.mouseItem = itemStack;
 								this.justPlaced = true;
+							}else if(this.canPickup && itemStack.compatible(pItemStack)){
+								int added = pItemStack.addToStack(itemStack.count);
+								itemStack.count = added;
+								if(itemStack.count == 0)
+									this.itemstack = new ItemStack();
+								this.justTook = true;
 							}
 						}
 					}else if(Mouse.isButtonDown(1)){

@@ -124,7 +124,7 @@ public class EntityItem extends EntitySolid{
 	@Override
 	public void update(){
 		super.update();
-		if(this.getCount() <= 0){
+		if(this.getCount() <= 0 || this.timeAlive > 300000){
 			this.setDead(true);
 		}
 		while(!Tile.getTile((byte)worldManager.getTileAtPos(this.getPos())).canPassThrough()){

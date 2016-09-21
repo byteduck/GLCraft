@@ -96,7 +96,7 @@ public class TileOre extends Tile{
 			if(b.player.getSelectedItemStack().isItem() && b.player.getSelectedItemStack().getItem() instanceof Tool){
 				Tool t = (Tool) b.player.getSelectedItemStack().getItem();
 				if(t.getStrength() >= toolUsed().getStrength())
-					return new ItemStack(dropItem(),Constants.randInt(dropRange()[0]-1,dropRange()[1]));
+					return new ItemStack(dropItem(),Constants.randInt(dropRange()[0],dropRange()[1]));
 			}
 		}
 		return new ItemStack();
