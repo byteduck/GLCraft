@@ -31,6 +31,8 @@ import net.codepixl.GLCraft.util.BreakSource;
 import net.codepixl.GLCraft.util.Constants;
 import net.codepixl.GLCraft.util.Vector3i;
 import net.codepixl.GLCraft.world.tile.Tile;
+import net.codepixl.GLCraft.world.tile.ore.TileOre;
+import net.codepixl.GLCraft.world.tile.ore.TileStone;
 import net.codepixl.GLCraft.world.tile.tick.TickHelper;
 
 
@@ -198,15 +200,10 @@ public class Chunk {
 			for(int y = 0; y < sizeY; y++){
 				for(int z = 0; z < sizeZ; z++){
 					if(tiles[x][y][z] == Tile.Stone.getId()){
-						int rand = Constants.rand.nextInt(10000);
-						if(rand <= 100){
-							tiles[x][y][z] = Tile.CoalOre.getId();
-						}else if(rand > 100 && rand <= 150){
-							tiles[x][y][z] = Tile.IronOre.getId();
-						}else if(rand > 150 && rand <= 160){
-							tiles[x][y][z] = Tile.GoldOre.getId();
-						}else if(rand > 160 && rand <= 165){
-							tiles[x][y][z] = Tile.BluestoneOre.getId();
+						TileOre o = TileOre.ores.get(Constants.rand.nextInt(TileOre.ores.size()-1)+1);
+						float rand = Constants.randFloat(0, 1);
+						if(rand <= o.getRareness() && y+(int)pos.y <= o.getMaxHeight() && y+(int)pos.y >= o.getMinHeight()){
+							o.spawnVein(x+(int)pos.x, y+(int)pos.y, z+(int)pos.z, worldManager);
 						}
 					}else if(tiles[x][y][z] == Tile.Grass.getId()){
 						int rand = Constants.rand.nextInt(100);

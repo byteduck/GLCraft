@@ -21,6 +21,7 @@ import net.codepixl.GLCraft.world.item.ItemStack;
 import net.codepixl.GLCraft.world.tile.material.Material;
 import net.codepixl.GLCraft.world.tile.ore.TileBluestoneOre;
 import net.codepixl.GLCraft.world.tile.ore.TileCoalOre;
+import net.codepixl.GLCraft.world.tile.ore.TileDiamondOre;
 import net.codepixl.GLCraft.world.tile.ore.TileGoldOre;
 import net.codepixl.GLCraft.world.tile.ore.TileIronOre;
 import net.codepixl.GLCraft.world.tile.ore.TileStone;
@@ -62,7 +63,7 @@ public class Tile {
 	public static Tile Furnace = new TileFurnace();
 	public static Tile Cobblestone = new TileCobblestone();
 	public static Tile BluestoneOre = new TileBluestoneOre();
-	//TILES
+	public static Tile DiamondOre = new TileDiamondOre();
 	
 	public String getName(){
 		return "Un-named block";

@@ -25,5 +25,25 @@ public class TileIronOre extends TileOre{
 	public ItemStack dropItem(){
 		return new ItemStack(this);
 	}
+	
+	@Override
+	public float getRareness(){
+		return 0.006f;
+	}
+	
+	@Override
+	public int getMinHeight(){
+		return 5;
+	}
+	
+	@Override
+	public int getMaxHeight(){
+		return 60;
+	}
+	
+	@Override
+	public int[] veinRange(){
+		return new int[]{1,6};
+	}
 
 }

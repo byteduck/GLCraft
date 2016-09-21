@@ -22,6 +22,12 @@ public class Vector3i {
 		this.z = (int)f.z;
 	}
 	
+	public Vector3i(Vector3i v) {
+		this.x = v.x;
+		this.y = v.y;
+		this.z = v.z;
+	}
+
 	@Override
 	public String toString(){
 		return "["+x+","+y+","+z+"]";
