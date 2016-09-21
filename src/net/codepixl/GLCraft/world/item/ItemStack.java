@@ -134,8 +134,12 @@ public class ItemStack{
 		return 0;
 	}
 	public boolean compatible(ItemStack itemstack) {
-		if(this.isTile && itemstack.isTile() && this.tile == itemstack.tile && this.meta == itemstack.meta) return true;
-		if(this.isItem() && itemstack.isItem() && this.item == itemstack.item && this.meta == itemstack.meta) return true;
+		return compatible(itemstack, false);
+	}
+	
+	public boolean compatible(ItemStack itemstack, boolean ignoreMeta) {
+		if(this.isTile && itemstack.isTile() && this.tile == itemstack.tile && (this.meta == itemstack.meta || ignoreMeta)) return true;
+		if(this.isItem() && itemstack.isItem() && this.item == itemstack.item && (this.meta == itemstack.meta || ignoreMeta)) return true;
 		return false;
 	}
 	public boolean isNull() {

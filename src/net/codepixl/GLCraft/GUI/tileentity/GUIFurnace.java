@@ -15,8 +15,9 @@ public class GUIFurnace extends GUIInventoryScreen{
 	
 	private TileEntityFurnace furnace;
 	private EntityPlayer player;
-	private GUISlot in,out;
+	private GUISlot in,out,fuel;
 	private GUIProgressBar progressBar;
+	private GUIProgressBar fuelBar;
 	
 	private static final int HMIDDLE = Constants.WIDTH/2;
 	private static final int VMIDDLE = Constants.HEIGHT/2;
@@ -31,22 +32,27 @@ public class GUIFurnace extends GUIInventoryScreen{
 		out = new GUISlot(HMIDDLE+HSIZE+PBSIZE/2+10,VMIDDLE,player);
 		out.canPlace = false;
 		progressBar = new GUIProgressBar(HMIDDLE-PBSIZE/2, VMIDDLE-GUIProgressBar.PB_HEIGHT/2, PBSIZE);
+		fuelBar = new GUIProgressBar(HMIDDLE-5, VMIDDLE+PBSIZE/2+10, PBSIZE/2, true);
+		fuel = new GUISlot(HMIDDLE, VMIDDLE+PBSIZE/2+HSIZE+20, player);
 		
-		addElements(in,out, progressBar);
+		addElements(in, out, progressBar, fuelBar, fuel);
 	}
 	
 	@Override
 	public void update(){
 		progressBar.setProgress(furnace.getProgressPercent());
+		fuelBar.setProgress(furnace.getFuelPercent());
 	}
 	
 	@Override
 	public void input(int xof, int yof){
 		in.itemstack = furnace.getSlot(0);
 		out.itemstack = furnace.getSlot(1);
+		fuel.itemstack = furnace.getSlot(2);
 		super.input(xof, yof);
 		furnace.getInventory()[0] = in.itemstack;
 		furnace.getInventory()[1] = out.itemstack;
+		furnace.getInventory()[2] = fuel.itemstack;
 	}
 
 }

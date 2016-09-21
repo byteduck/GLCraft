@@ -10,6 +10,7 @@ import net.codepixl.GLCraft.world.tile.Tile;
 public class CraftingManager {
 	private static ArrayList<Recipe> recipes = new ArrayList<Recipe>();
 	private static ArrayList<FurnaceRecipe> furnaceRecipes = new ArrayList<FurnaceRecipe>();
+	private static ArrayList<FurnaceFuel> furnaceFuels = new ArrayList<FurnaceFuel>();
 	
 	public static void addRecipe(Recipe r){
 		recipes.add(r);
@@ -17,6 +18,10 @@ public class CraftingManager {
 	
 	public static void addRecipe(FurnaceRecipe r){
 		furnaceRecipes.add(r);
+	}
+	
+	public static void addFuel(FurnaceFuel f){
+		furnaceFuels.add(f);
 	}
 	
 	public static ItemStack checkRecipe(Recipe r){
@@ -76,6 +81,18 @@ public class CraftingManager {
 		
 		return null;
 	}
+	
+	/**
+	 *  Furnace Fuel
+	**/
+	public static FurnaceFuel checkFuel(ItemStack i){
+		for(FurnaceFuel f : furnaceFuels){
+			if(f.check(i))
+				return f;
+		}
+		
+		return null;
+	}
 
 	public static void initRecipes() {
 		/**Wood**/
@@ -94,8 +111,14 @@ public class CraftingManager {
 		/* FURNACE RECIPES */
 		
 		/**Stone**/addRecipe(new FurnaceRecipe(new ItemStack(Tile.Cobblestone), new ItemStack(Tile.Stone)));
-		/**Glass**/addRecipe(new FurnaceRecipe(new ItemStack(Tile.Sand), new ItemStack(Tile.Glass), 1.5f));
-		/**Iron Ingot**/addRecipe(new FurnaceRecipe(new ItemStack(Tile.IronOre), new ItemStack(Item.IronIngot), 1.5f));
+		/**Glass**/addRecipe(new FurnaceRecipe(new ItemStack(Tile.Sand), new ItemStack(Tile.Glass), 7f));
+		/**Iron Ingot**/addRecipe(new FurnaceRecipe(new ItemStack(Tile.IronOre), new ItemStack(Item.IronIngot), 11f));
+		
+		/* FURNACE FUEL */
+		/**Coal**/addFuel(new FurnaceFuel(new ItemStack(Item.Coal), 80f));
+		/**Log**/addFuel(new FurnaceFuel(new ItemStack(Tile.Log), 15f));
+		/**Wood**/addFuel(new FurnaceFuel(new ItemStack(Tile.Wood), 15f));
+		/**Stick**/addFuel(new FurnaceFuel(new ItemStack(Item.Stick), 5f));
 	}
 	
 }

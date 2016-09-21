@@ -22,6 +22,7 @@ public class Item {
 	public static Item IronPick = new ItemIronPickaxe();
 	public static Item Diamond = new ItemDiamond();
 	public static Item IronIngot = new ItemIronIngot();
+	public static Item Coal = new ItemCoal();
 	
 	public String getName(){
 		return "Un-named item";

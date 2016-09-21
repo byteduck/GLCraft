@@ -1,5 +1,6 @@
 package net.codepixl.GLCraft.world.tile.ore;
 
+import net.codepixl.GLCraft.world.item.Item;
 import net.codepixl.GLCraft.world.item.ItemStack;
 
 public class TileCoalOre extends TileOre{
@@ -34,6 +35,11 @@ public class TileCoalOre extends TileOre{
 	@Override
 	public int getMaxHeight(){
 		return 80;
+	}
+	
+	@Override
+	public ItemStack dropItem(){
+		return new ItemStack(Item.Coal);
 	}
 	
 	@Override

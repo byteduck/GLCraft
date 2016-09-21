@@ -15,7 +15,7 @@ public class FurnaceRecipe {
 	public FurnaceRecipe(ItemStack in, ItemStack out){
 		this.in = in;
 		this.out = out;
-		this.cookTime = 1f;
+		this.cookTime = 10f;
 	}
 	
 	public boolean checkRecipe(ItemStack in){
@@ -28,5 +28,9 @@ public class FurnaceRecipe {
 	
 	public ItemStack getOut(){
 		return out;
+	}
+	
+	public ItemStack getIn(){
+		return in;
 	}
 }
