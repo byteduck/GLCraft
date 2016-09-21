@@ -1,4 +1,4 @@
-package net.codepixl.GLCraft.world.item.crafting;
+package net.codepixl.GLCraft.world.crafting;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -86,6 +86,7 @@ public class CraftingManager {
 		/**Sticks**/addRecipe(new Recipe(new ItemStack(Tile.Wood),new ItemStack(),new ItemStack(Tile.Wood),new ItemStack(),new ItemStack(Item.Stick,4)));
 		/**Wood Pick**/addRecipe(new Recipe(new ItemStack(Tile.Wood),new ItemStack(Tile.Wood),new ItemStack(Tile.Wood),new ItemStack(),new ItemStack(Item.Stick),new ItemStack(),new ItemStack(),new ItemStack(Item.Stick),new ItemStack(),new ItemStack(Item.WoodPick,1)));
 		/**Stone Pick**/addRecipe(new Recipe(new ItemStack(Tile.Cobblestone),new ItemStack(Tile.Cobblestone),new ItemStack(Tile.Cobblestone),new ItemStack(),new ItemStack(Item.Stick),new ItemStack(),new ItemStack(),new ItemStack(Item.Stick),new ItemStack(),new ItemStack(Item.StonePick,1)));
+		/**Iron Pick**/addRecipe(new Recipe(new ItemStack(Item.IronIngot),new ItemStack(Item.IronIngot),new ItemStack(Item.IronIngot),new ItemStack(),new ItemStack(Item.Stick),new ItemStack(),new ItemStack(),new ItemStack(Item.Stick),new ItemStack(),new ItemStack(Item.IronPick,1)));
 		/**Chest**/addRecipe(new Recipe(new ItemStack(Tile.Wood),new ItemStack(Tile.Wood),new ItemStack(Tile.Wood),new ItemStack(Tile.Wood),new ItemStack(),new ItemStack(Tile.Wood),new ItemStack(Tile.Wood),new ItemStack(Tile.Wood),new ItemStack(Tile.Wood),new ItemStack(Tile.Chest,1)));
 		/**Bucket**/addRecipe(new Recipe(new ItemStack(),new ItemStack(),new ItemStack(),new ItemStack(Tile.Wood),new ItemStack(),new ItemStack(Tile.Wood),new ItemStack(),new ItemStack(Tile.Wood),new ItemStack(),new ItemStack(Item.Bucket,1)));
 		/**Furnace**/addRecipe(new Recipe(new ItemStack(Tile.Cobblestone),new ItemStack(Tile.Cobblestone),new ItemStack(Tile.Cobblestone),new ItemStack(Tile.Cobblestone),new ItemStack(),new ItemStack(Tile.Cobblestone),new ItemStack(Tile.Cobblestone),new ItemStack(Tile.Cobblestone),new ItemStack(Tile.Cobblestone),new ItemStack(Tile.Furnace,1)));
@@ -94,6 +95,7 @@ public class CraftingManager {
 		
 		/**Stone**/addRecipe(new FurnaceRecipe(new ItemStack(Tile.Cobblestone), new ItemStack(Tile.Stone)));
 		/**Glass**/addRecipe(new FurnaceRecipe(new ItemStack(Tile.Sand), new ItemStack(Tile.Glass), 1.5f));
+		/**Iron Ingot**/addRecipe(new FurnaceRecipe(new ItemStack(Tile.IronOre), new ItemStack(Item.IronIngot), 1.5f));
 	}
 	
 }

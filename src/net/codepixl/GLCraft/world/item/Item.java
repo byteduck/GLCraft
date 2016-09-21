@@ -21,6 +21,7 @@ public class Item {
 	public static Item BucketWater = new ItemBucketWater();
 	public static Item IronPick = new ItemIronPickaxe();
 	public static Item Diamond = new ItemDiamond();
+	public static Item IronIngot = new ItemIronIngot();
 	
 	public String getName(){
 		return "Un-named item";
@@ -50,7 +51,7 @@ public class Item {
 	
 	public String getTextureName() {
 		// TODO Auto-generated method stub
-		return this.getName();
+		return this.getName().toLowerCase().replace(' ', '_');
 	}
 	
 	public void onClick(EntityPlayer p){

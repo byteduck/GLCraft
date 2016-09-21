@@ -87,13 +87,13 @@ import net.codepixl.GLCraft.util.DebugTimer;
 import net.codepixl.GLCraft.util.Spritesheet;
 import net.codepixl.GLCraft.util.Vector3i;
 import net.codepixl.GLCraft.util.logging.CrashHandler;
+import net.codepixl.GLCraft.world.crafting.CraftingManager;
 import net.codepixl.GLCraft.world.entity.EntityManager;
 import net.codepixl.GLCraft.world.entity.mob.EntityPlayer;
 import net.codepixl.GLCraft.world.entity.mob.AI.pathfinding.Pathfinder;
 import net.codepixl.GLCraft.world.entity.mob.animal.EntityTestAnimal;
 import net.codepixl.GLCraft.world.entity.mob.hostile.EntityTestHostile;
 import net.codepixl.GLCraft.world.item.ItemStack;
-import net.codepixl.GLCraft.world.item.crafting.CraftingManager;
 import net.codepixl.GLCraft.world.tile.Tile;
 
 public class CentralManager extends Screen{

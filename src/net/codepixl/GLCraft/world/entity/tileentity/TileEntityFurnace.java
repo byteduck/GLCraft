@@ -13,13 +13,13 @@ import com.nishu.utils.Time;
 import net.codepixl.GLCraft.GUI.tileentity.GUIChest;
 import net.codepixl.GLCraft.GUI.tileentity.GUIFurnace;
 import net.codepixl.GLCraft.world.WorldManager;
+import net.codepixl.GLCraft.world.crafting.CraftingManager;
+import net.codepixl.GLCraft.world.crafting.FurnaceRecipe;
 import net.codepixl.GLCraft.world.entity.Entity;
 import net.codepixl.GLCraft.world.entity.NBTUtil;
 import net.codepixl.GLCraft.world.entity.mob.EntityPlayer;
 import net.codepixl.GLCraft.world.item.Item;
 import net.codepixl.GLCraft.world.item.ItemStack;
-import net.codepixl.GLCraft.world.item.crafting.CraftingManager;
-import net.codepixl.GLCraft.world.item.crafting.FurnaceRecipe;
 import net.codepixl.GLCraft.world.tile.Tile;
 
 public class TileEntityFurnace extends TileEntityContainer{

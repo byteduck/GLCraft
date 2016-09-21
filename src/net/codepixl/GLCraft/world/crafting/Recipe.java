@@ -1,4 +1,4 @@
-package net.codepixl.GLCraft.world.item.crafting;
+package net.codepixl.GLCraft.world.crafting;
 
 import net.codepixl.GLCraft.world.item.ItemStack;
 
