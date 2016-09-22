@@ -13,21 +13,20 @@ import net.codepixl.GLCraft.world.item.ItemStack;
 public class GUIChest extends GUIInventoryScreen{
 	
 	private TileEntityChest chest;
-	private EntityPlayer player;
 	private GUISlot[] slots;
 	private static final int HMIDDLE = Constants.WIDTH/2;
-	private static final int VMIDDLE = Constants.HEIGHT/2;
+	private static final int VMIDDLE = (int) (Constants.HEIGHT/2-GUISlot.size*2);
 	private static final int HSIZE = (int) (GUISlot.size/2f);
 	
 	public GUIChest(TileEntityChest chest, EntityPlayer p) {
-		this.player = p;
+		super(p);
 		this.chest = chest;
 		slots = new GUISlot[20];
 		for(int i = 0; i < slots.length; i++){
 			if(i < 10){
-				slots[i] = new GUISlot((HMIDDLE+HSIZE*10)-HSIZE*2*i,VMIDDLE-HSIZE,p);
+				slots[i] = new GUISlot((HMIDDLE+HSIZE*10)-HSIZE*2*i-(int)GUISlot.size/2,VMIDDLE-HSIZE,p);
 			}else{
-				slots[i] = new GUISlot((HMIDDLE+HSIZE*10)-HSIZE*2*(i-10),VMIDDLE+HSIZE,p);
+				slots[i] = new GUISlot((HMIDDLE+HSIZE*10)-HSIZE*2*(i-10)-(int)GUISlot.size/2,VMIDDLE+HSIZE,p);
 			}
 			slots[i].itemstack = chest.getSlot(i);
 			this.addElement(slots[i]);

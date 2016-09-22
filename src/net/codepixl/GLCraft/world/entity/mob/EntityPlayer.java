@@ -75,6 +75,11 @@ public class EntityPlayer extends Mob {
 		return new AABB(0.6f, 1.8f, 0.6f);
 	}
 	
+	@Override
+	public int getInventorySize(){
+		return 36;
+	}
+	
 	public void update() {
 		super.update();
 		SoundManager.getMainManager().setPosAndRot(pos, rot);

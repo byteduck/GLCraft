@@ -50,8 +50,8 @@ public class Mob extends EntitySolid implements GameObj{
 
 	public Mob(Vector3f pos, WorldManager w){
 		super(pos,new Vector3f(0,0,0),new Vector3f(0,0,0),w);
-		this.setInventory(new ItemStack[9]);
-		for(int i = 0; i < 9; i++){
+		this.setInventory(new ItemStack[getInventorySize()]);
+		for(int i = 0; i < getInventorySize(); i++){
 			getInventory()[i] = new ItemStack();
 		}
 		this.health = 20f;
@@ -59,6 +59,10 @@ public class Mob extends EntitySolid implements GameObj{
 		this.eyeLevel = (float) (getAABB().r[1]*2f*0.94f);
 		this.airLevel = 10f;
 		this.speed = 0.1f;
+	}
+	
+	public int getInventorySize(){
+		return 9;
 	}
 	
 	public void walkForward(){

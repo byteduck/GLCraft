@@ -14,20 +14,19 @@ import net.codepixl.GLCraft.world.item.ItemStack;
 public class GUIFurnace extends GUIInventoryScreen{
 	
 	private TileEntityFurnace furnace;
-	private EntityPlayer player;
 	private GUISlot in,out,fuel;
 	private GUIProgressBar progressBar;
 	private GUIProgressBar fuelBar;
 	
 	private static final int HMIDDLE = Constants.WIDTH/2;
-	private static final int VMIDDLE = Constants.HEIGHT/2;
+	private static final int VMIDDLE = (int) (Constants.HEIGHT/2-GUISlot.size*2);
 	private static final int HSIZE = (int) (GUISlot.size/2f);
 	private static final int PBSIZE = 100;
 	
 	
 	public GUIFurnace(TileEntityFurnace furnace, EntityPlayer player) {
+		super(player);
 		this.furnace = furnace;
-		this.player = player;
 		in = new GUISlot(HMIDDLE-HSIZE-PBSIZE/2-10,VMIDDLE,player);
 		out = new GUISlot(HMIDDLE+HSIZE+PBSIZE/2+10,VMIDDLE,player);
 		out.canPlace = false;

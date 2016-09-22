@@ -148,8 +148,8 @@ public class SaveManager {
 			
 			//ENTITY & PLAYER LOADING
 			worldManager.entityManager.removeAll();
-			p.setInventory(new ItemStack[9]);
-			for(int i = 0; i < 9; i++){
+			p.setInventory(new ItemStack[p.getInventorySize()]);
+			for(int i = 0; i < p.getInventorySize(); i++){
 				p.setInventory(i, new ItemStack());
 			}
 			inputStream = new FileInputStream(Constants.GLCRAFTDIR+"/saves/"+name+"/player.nbt");

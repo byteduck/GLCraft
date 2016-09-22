@@ -14,11 +14,10 @@ import net.codepixl.GLCraft.world.item.ItemStack;
 public class GUICrafting extends GUIInventoryScreen{
 	private GUISlot slot1,slot2,slot3,slot4,result;
 	private static final int HMIDDLE = Constants.WIDTH/2;
-	private static final int VMIDDLE = Constants.HEIGHT/2;
+	private static final int VMIDDLE = (int) (Constants.HEIGHT/2-GUISlot.size*2);
 	private static final int HSIZE = (int) (GUISlot.size/2f);
-	private EntityPlayer player;
 	public GUICrafting(EntityPlayer p){
-		player = p;
+		super(p);
 		slot1 = new GUISlot(HMIDDLE-HSIZE,VMIDDLE-HSIZE,p);
 		slot2 = new GUISlot(HMIDDLE+HSIZE,VMIDDLE-HSIZE,p);
 		slot3 = new GUISlot(HMIDDLE-HSIZE,VMIDDLE+HSIZE,p);
