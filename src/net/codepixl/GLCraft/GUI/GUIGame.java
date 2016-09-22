@@ -37,7 +37,7 @@ public class GUIGame extends GUIScreen{
 		player = worldManager.getEntityManager().getPlayer();
 		for(int j = 0; j < 9; j++){
 			float i = j;
-			slots[j] = new GUISlot((int)(Constants.WIDTH/9f+i*SIZE+i*SPACING+SIZE/2f),(int)(Constants.HEIGHT-(SIZE/2f)),player);
+			slots[j] = new GUISlot((int)(Constants.WIDTH/9f+i*SIZE+i*SPACING+SIZE/2f)+(int)GUISlot.size/2,(int)(Constants.HEIGHT-(SIZE/2f)),player);
 		}
 		addElements(slots);
 	}
