@@ -86,14 +86,14 @@ public class GUIGame extends GUIScreen{
 		if(p.airLevel < 10f){
 			glBegin(GL_QUADS);
 			for(int i = 0; i < 10; i++){
-				Shape.createCenteredSquare((float)Constants.WIDTH/9f+i*BUBBLESIZE+i*BUBBLESPACING+BUBBLESIZE/2f,Constants.HEIGHT-(SIZE/2f)-BUBBLESIZE*3.5f, new Color4f(1,1,1,1), p.getTexCoordsForAirIndex(i), BUBBLESIZE);
+				Shape.createCenteredSquare((float)Constants.WIDTH/9f+i*BUBBLESIZE+i*BUBBLESPACING+BUBBLESIZE/2f+(int)GUISlot.size/2,Constants.HEIGHT-(SIZE/2f)-BUBBLESIZE*3.5f, new Color4f(1,1,1,1), p.getTexCoordsForAirIndex(i), BUBBLESIZE);
 			}
 			glEnd();
 		}
 		
 		glBegin(GL_QUADS);
 		for(int i = 0; i < 10; i++){
-			Shape.createCenteredSquare((float)Constants.WIDTH/9f+i*HEARTSIZE+i*HEARTSPACING+HEARTSIZE/2f,Constants.HEIGHT-(SIZE/2f)-HEARTSIZE*2f, new Color4f(1,1,1,1), p.getTexCoordsForHealthIndex(i), HEARTSIZE);
+			Shape.createCenteredSquare((float)Constants.WIDTH/9f+i*HEARTSIZE+i*HEARTSPACING+HEARTSIZE/2f+(int)GUISlot.size/2,Constants.HEIGHT-(SIZE/2f)-HEARTSIZE*2f, new Color4f(1,1,1,1), p.getTexCoordsForHealthIndex(i), HEARTSIZE);
 		}
 		glEnd();
 	}

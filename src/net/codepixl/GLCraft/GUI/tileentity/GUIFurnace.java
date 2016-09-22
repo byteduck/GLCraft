@@ -1,7 +1,6 @@
 package net.codepixl.GLCraft.GUI.tileentity;
 
-import org.lwjgl.input.Keyboard;
-import org.lwjgl.input.Mouse;
+import com.nishu.utils.Color4f;
 
 import net.codepixl.GLCraft.GUI.Elements.GUIProgressBar;
 import net.codepixl.GLCraft.GUI.Inventory.GUIInventoryScreen;
@@ -9,7 +8,6 @@ import net.codepixl.GLCraft.GUI.Inventory.Elements.GUISlot;
 import net.codepixl.GLCraft.util.Constants;
 import net.codepixl.GLCraft.world.entity.mob.EntityPlayer;
 import net.codepixl.GLCraft.world.entity.tileentity.TileEntityFurnace;
-import net.codepixl.GLCraft.world.item.ItemStack;
 
 public class GUIFurnace extends GUIInventoryScreen{
 	
@@ -31,7 +29,7 @@ public class GUIFurnace extends GUIInventoryScreen{
 		out = new GUISlot(HMIDDLE+HSIZE+PBSIZE/2+10,VMIDDLE,player);
 		out.canPlace = false;
 		progressBar = new GUIProgressBar(HMIDDLE-PBSIZE/2, VMIDDLE-GUIProgressBar.PB_HEIGHT/2, PBSIZE);
-		fuelBar = new GUIProgressBar(HMIDDLE-5, VMIDDLE+PBSIZE/2+10, PBSIZE/2, true);
+		fuelBar = new GUIProgressBar(HMIDDLE-5, VMIDDLE+PBSIZE/2+10, PBSIZE/2, true, new Color4f(0.8f, 0.1f, 0.1f, 1f), new Color4f(0.2f, 0f, 0f, 1f));
 		fuel = new GUISlot(HMIDDLE, VMIDDLE+PBSIZE/2+HSIZE+20, player);
 		
 		addElements(in, out, progressBar, fuelBar, fuel);
