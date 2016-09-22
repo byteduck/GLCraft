@@ -104,15 +104,19 @@ public class CraftingManager {
 		/**Wood Pick**/addRecipe(new Recipe(new ItemStack(Tile.Wood),new ItemStack(Tile.Wood),new ItemStack(Tile.Wood),new ItemStack(),new ItemStack(Item.Stick),new ItemStack(),new ItemStack(),new ItemStack(Item.Stick),new ItemStack(),new ItemStack(Item.WoodPick,1)));
 		/**Stone Pick**/addRecipe(new Recipe(new ItemStack(Tile.Cobblestone),new ItemStack(Tile.Cobblestone),new ItemStack(Tile.Cobblestone),new ItemStack(),new ItemStack(Item.Stick),new ItemStack(),new ItemStack(),new ItemStack(Item.Stick),new ItemStack(),new ItemStack(Item.StonePick,1)));
 		/**Iron Pick**/addRecipe(new Recipe(new ItemStack(Item.IronIngot),new ItemStack(Item.IronIngot),new ItemStack(Item.IronIngot),new ItemStack(),new ItemStack(Item.Stick),new ItemStack(),new ItemStack(),new ItemStack(Item.Stick),new ItemStack(),new ItemStack(Item.IronPick,1)));
+		/**Gold Pick**/addRecipe(new Recipe(new ItemStack(Item.GoldIngot),new ItemStack(Item.GoldIngot),new ItemStack(Item.GoldIngot),new ItemStack(),new ItemStack(Item.Stick),new ItemStack(),new ItemStack(),new ItemStack(Item.Stick),new ItemStack(),new ItemStack(Item.GoldPick,1)));
+		/**Diamond Pick**/addRecipe(new Recipe(new ItemStack(Item.Diamond),new ItemStack(Item.Diamond),new ItemStack(Item.Diamond),new ItemStack(),new ItemStack(Item.Stick),new ItemStack(),new ItemStack(),new ItemStack(Item.Stick),new ItemStack(),new ItemStack(Item.DiamondPick,1)));
 		/**Chest**/addRecipe(new Recipe(new ItemStack(Tile.Wood),new ItemStack(Tile.Wood),new ItemStack(Tile.Wood),new ItemStack(Tile.Wood),new ItemStack(),new ItemStack(Tile.Wood),new ItemStack(Tile.Wood),new ItemStack(Tile.Wood),new ItemStack(Tile.Wood),new ItemStack(Tile.Chest,1)));
 		/**Bucket**/addRecipe(new Recipe(new ItemStack(),new ItemStack(),new ItemStack(),new ItemStack(Tile.Wood),new ItemStack(),new ItemStack(Tile.Wood),new ItemStack(),new ItemStack(Tile.Wood),new ItemStack(),new ItemStack(Item.Bucket,1)));
 		/**Furnace**/addRecipe(new Recipe(new ItemStack(Tile.Cobblestone),new ItemStack(Tile.Cobblestone),new ItemStack(Tile.Cobblestone),new ItemStack(Tile.Cobblestone),new ItemStack(),new ItemStack(Tile.Cobblestone),new ItemStack(Tile.Cobblestone),new ItemStack(Tile.Cobblestone),new ItemStack(Tile.Cobblestone),new ItemStack(Tile.Furnace,1)));
+		/**Condensed Bluestone**/addRecipe(new Recipe(new ItemStack(Tile.Bluestone),new ItemStack(Tile.Bluestone),new ItemStack(Tile.Bluestone),new ItemStack(Tile.Bluestone),new ItemStack(Tile.Bluestone),new ItemStack(Tile.Bluestone),new ItemStack(Tile.Bluestone),new ItemStack(Tile.Bluestone),new ItemStack(Tile.Bluestone),new ItemStack(Tile.CondensedBluestone,1)));
 		
 		/* FURNACE RECIPES */
 		
 		/**Stone**/addRecipe(new FurnaceRecipe(new ItemStack(Tile.Cobblestone), new ItemStack(Tile.Stone)));
 		/**Glass**/addRecipe(new FurnaceRecipe(new ItemStack(Tile.Sand), new ItemStack(Tile.Glass), 7f));
 		/**Iron Ingot**/addRecipe(new FurnaceRecipe(new ItemStack(Tile.IronOre), new ItemStack(Item.IronIngot), 11f));
+		/**Gold Ingot**/addRecipe(new FurnaceRecipe(new ItemStack(Tile.GoldOre), new ItemStack(Item.GoldIngot), 11f));
 		
 		/* FURNACE FUEL */
 		/**Coal**/addFuel(new FurnaceFuel(new ItemStack(Item.Coal), 80f));

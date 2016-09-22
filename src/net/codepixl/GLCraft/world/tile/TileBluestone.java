@@ -31,13 +31,14 @@ public class TileBluestone extends Tile{
 	
 	@Override
 	public String getTextureName(){
-		return "bluestone_center";
+		return "bluestone";
 	}
 	
 	public TileBluestone(){
 		super();
 		TextureManager.addTexture("tiles.bluestone_side",TextureManager.TILES+"bluestone_side.png");
 		TextureManager.addTexture("tiles.bluestone_line",TextureManager.TILES+"bluestone_line.png");
+		TextureManager.addTexture("tiles.bluestone_center",TextureManager.TILES+"bluestone_center.png");
 	}
 
 	@Override
@@ -86,7 +87,7 @@ public class TileBluestone extends Tile{
 	public void customRender(float x, float y, float z, WorldManager w, Chunk c){
 		float col = w.getMetaAtPos((int)x, (int)y, (int)z)/15f;
 		glBegin(GL_QUADS);
-		float[] texCoords = TextureManager.tile(this);
+		float[] texCoords = TextureManager.texture("tiles.bluestone_center");
 		Shape.createFlat(x, y+0.01f, z, new Color4f(col,col,col,1f), texCoords, 1);
 		glEnd();
 		if(w.getTileAtPos(x, y, z-1) == Tile.Bluestone.getId() || w.getTileAtPos(x, y-1, z-1) == Tile.Bluestone.getId() || w.getTileAtPos(x, y+1, z-1) == Tile.Bluestone.getId()){

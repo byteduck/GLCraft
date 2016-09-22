@@ -64,6 +64,7 @@ public class Tile {
 	public static Tile Cobblestone = new TileCobblestone();
 	public static Tile BluestoneOre = new TileBluestoneOre();
 	public static Tile DiamondOre = new TileDiamondOre();
+	public static Tile CondensedBluestone = new TileCondensedBluestone();
 	
 	public String getName(){
 		return "Un-named block";
@@ -125,7 +126,7 @@ public class Tile {
 				for(int i=1; i<5; i++){
 					Particle particle = new Particle(new Vector3f(x+Constants.randFloat(0,1),y+Constants.randFloat(0,1),z+Constants.randFloat(0,1)), new Vector3f(Constants.randFloat(-0.1f, 0.1f),0,Constants.randFloat(-0.1f, 0.1f)), worldManager);
 					if(this.hasMetaTextures() == false){
-						particle.setTexCoords(this.getIconCoords());
+						particle.setTexCoords(this.getTexCoords());
 					}else{
 						particle.setTexCoords(this.getIconCoords(worldManager.getMetaAtPos(x, y, z)));
 					}

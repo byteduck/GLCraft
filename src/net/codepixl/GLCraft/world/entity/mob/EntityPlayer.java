@@ -480,7 +480,7 @@ public class EntityPlayer extends Mob {
 										r.prev();
 										blockaabb.update(new Vector3f(((int) r.pos.x) + 0.5f, (int) r.pos.y, ((int) r.pos.z) + 0.5f));
 									}
-									if(!r.origPos.equals(r.pos)){
+									if(!r.origPos.equals(r.pos) && worldManager.getEntityManager().getPlayer().getSelectedItemStack().getTile().canPlace((int) r.pos.x, (int) r.pos.y, (int) r.pos.z, worldManager)){
 										worldManager.setTileAtPos((int) r.pos.x, (int) r.pos.y, (int) r.pos.z, this.getSelectedItemStack().getTile().getId(), true, this.getSelectedItemStack().getMeta());
 										int sub = worldManager.getEntityManager().getPlayer().getSelectedItemStack().subFromStack(1);
 										if(sub > 0) {

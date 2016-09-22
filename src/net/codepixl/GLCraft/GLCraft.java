@@ -160,6 +160,7 @@ public class GLCraft extends Screen{
 		
 		/**To initialize Tiles and items because they are static*/
 		Tile.tileMap.toString();
+		System.out.println("---------------");
 		Item.itemMap.toString();
 		
 		initCamera();

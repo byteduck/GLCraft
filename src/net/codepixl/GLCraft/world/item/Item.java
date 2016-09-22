@@ -6,6 +6,8 @@ import com.nishu.utils.Color4f;
 
 import net.codepixl.GLCraft.render.TextureManager;
 import net.codepixl.GLCraft.world.entity.mob.EntityPlayer;
+import net.codepixl.GLCraft.world.item.tool.ItemDiamondPickaxe;
+import net.codepixl.GLCraft.world.item.tool.ItemGoldPickaxe;
 import net.codepixl.GLCraft.world.item.tool.ItemIronPickaxe;
 import net.codepixl.GLCraft.world.item.tool.ItemStonePickaxe;
 import net.codepixl.GLCraft.world.item.tool.ItemWoodPickaxe;
@@ -23,6 +25,9 @@ public class Item {
 	public static Item Diamond = new ItemDiamond();
 	public static Item IronIngot = new ItemIronIngot();
 	public static Item Coal = new ItemCoal();
+	public static Item DiamondPick = new ItemDiamondPickaxe();
+	public static Item GoldPick = new ItemGoldPickaxe();
+	public static Item GoldIngot = new ItemGoldIngot();
 	
 	public String getName(){
 		return "Un-named item";

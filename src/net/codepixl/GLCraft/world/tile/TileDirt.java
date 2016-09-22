@@ -32,10 +32,5 @@ public class TileDirt extends Tile{
 	public float getHardness(){
 		return 0.5f;
 	}
-	
-	@Override
-	public byte getPowerLevel(int x, int y, int z, WorldManager w){
-		return 15;
-	}
 
 }
