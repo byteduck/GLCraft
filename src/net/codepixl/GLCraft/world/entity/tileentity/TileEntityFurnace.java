@@ -121,8 +121,16 @@ public class TileEntityFurnace extends TileEntityContainer{
 		super.writeToNBT(t);
 		TagFloat progress = new TagFloat("progress", this.progress);
 		TagFloat fuelTime = new TagFloat("fuelTime", this.fuelTime);
-		TagCompound currentRecipe = this.currentRecipe.getIn().toNBT("currentRecipe");
-		TagCompound currentFuel = this.currentFuel.fuel.toNBT("currentFuel");
+		TagCompound currentRecipe = null;
+		if(this.currentRecipe != null)
+			currentRecipe = this.currentRecipe.getIn().toNBT("currentRecipe");
+		else
+			currentRecipe = new ItemStack().toNBT("currentRecipe");
+		TagCompound currentFuel = null;
+		if(this.currentFuel != null)
+			currentFuel = this.currentFuel.fuel.toNBT("currentFuel");
+		else
+			currentFuel = new ItemStack().toNBT("currentFuel");
 		TagByte cooking = new TagByte("cooking", this.cooking ? (byte)1 : (byte)0);
 		t.setTag(cooking);
 		t.setTag(progress);

@@ -169,10 +169,12 @@ public class ItemStack{
 	
 	public TagCompound toNBT(){
 		TagCompound ret = new TagCompound("");
-		ret.setTag(new TagByte("isItem",(byte) (this.isItem() ? 1 : 0 )));
-		ret.setTag(new TagByte("id",this.getId()));
-		ret.setTag(new TagByte("count",(byte)this.count));
-		ret.setTag(new TagByte("meta",(byte)this.meta));
+		if(!this.isNull){
+			ret.setTag(new TagByte("isItem",(byte) (this.isItem() ? 1 : 0 )));
+			ret.setTag(new TagByte("id",this.getId()));
+			ret.setTag(new TagByte("count",(byte)this.count));
+			ret.setTag(new TagByte("meta",(byte)this.meta));
+		}
 		return ret;
 	}
 	
@@ -184,15 +186,19 @@ public class ItemStack{
 	
 	public static ItemStack fromNBT(TagCompound tag) throws UnexpectedTagTypeException, TagNotFoundException{
 		ItemStack stack;
-		if(tag.getByte("isItem") == 0){
-			stack = new ItemStack(Tile.getTile(tag.getByte("id")));
-		}else{
-			stack = new ItemStack(Item.getItem(tag.getByte("id")));
-		}
-		stack.count = tag.getByte("count");
 		try{
-			stack.meta = tag.getByte("meta");
-		}catch(TagNotFoundException e){} //In case the world was saved with an older version
+			if(tag.getByte("isItem") == 0){
+				stack = new ItemStack(Tile.getTile(tag.getByte("id")));
+			}else{
+				stack = new ItemStack(Item.getItem(tag.getByte("id")));
+			}
+			stack.count = tag.getByte("count");
+			try{
+				stack.meta = tag.getByte("meta");
+			}catch(TagNotFoundException e){} //In case the world was saved with an older version
+		}catch(TagNotFoundException e){
+			stack = new ItemStack();
+		}
 			
 		return stack;
 	}

@@ -14,6 +14,8 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 
+import javax.swing.JOptionPane;
+
 import org.lwjgl.util.vector.Vector3f;
 
 import com.evilco.mc.nbt.stream.NbtOutputStream;
@@ -109,10 +111,20 @@ public class EntityManager implements GameObj{
 		TagList list = new TagList("Entities");
 		Iterator<Entity> i = this.entities.iterator();
 		while(i.hasNext()){
-			Entity e = i.next();
+			final Entity e = i.next();
 			if(!(e instanceof EntityPlayer)){
-				TagCompound t = e.mainWriteToNBT();
-				list.addTag(t);
+				try{
+					TagCompound t = e.mainWriteToNBT();
+					list.addTag(t);
+				}catch(final Exception ex){
+					Thread t = new Thread(new Runnable(){
+				        public void run(){
+				            JOptionPane.showInternalMessageDialog(null, "There was an error saving an "+e.getClass()+".\nYour world may not load as expected.\nPlease report this bug and upload the log saved at\n"+Constants.GLCRAFTDIR+"GLCraft.log", "Error saving Entity", JOptionPane.ERROR_MESSAGE);
+				            ex.printStackTrace();
+				        }
+				    });
+					t.start();
+				}
 			}
 			
 		}

@@ -202,7 +202,7 @@ public class CentralManager extends Screen{
 				}
 				Vector3f pos = worldManager.entityManager.getPlayer().getPos();
 				if(Keyboard.isKeyDown(Keyboard.KEY_F)){
-					worldManager.setTileAtPos(pos, Tile.Fire.getId(), true);
+					worldManager.setTileAtPos(pos, Tile.Furnace.getId(), true);
 				}
 				if(Keyboard.isKeyDown(Keyboard.KEY_P)){
 					pathfinder = new Pathfinder(new Vector3i(pos), pathfindPos, worldManager);

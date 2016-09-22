@@ -181,7 +181,12 @@ public class SaveManager {
 			while(i.hasNext()){
 				TagCompound t = i.next();
 				Entity e = null;
-				e = NBTUtil.readEntity(t, worldManager);
+				try{
+					e = NBTUtil.readEntity(t, worldManager);
+				}catch(final Exception ex){
+					JOptionPane.showInternalMessageDialog(null, "There was an error loading an "+e.getClass()+".\nYour world may not load as expected.\nPlease report this bug and upload the log saved at\n"+Constants.GLCRAFTDIR+"GLCraft.log", "Error loading Entity", JOptionPane.ERROR_MESSAGE);
+					ex.printStackTrace();
+				}
 				if(e != null){
 					worldManager.spawnEntity(e);
 				}else{
@@ -193,15 +198,9 @@ public class SaveManager {
 			e.printStackTrace();
 		} catch (NullPointerException e){
 			e.printStackTrace();
-		} catch (NoSuchMethodException e1) {
-			e1.printStackTrace();
 		} catch (SecurityException e1) {
 			e1.printStackTrace();
-		} catch (IllegalAccessException e1) {
-			e1.printStackTrace();
 		} catch (IllegalArgumentException e1) {
-			e1.printStackTrace();
-		} catch (InvocationTargetException e1) {
 			e1.printStackTrace();
 		}
 		JOptionPane.showMessageDialog(null, "Unknown error loading the world.", "Error", JOptionPane.ERROR_MESSAGE);
