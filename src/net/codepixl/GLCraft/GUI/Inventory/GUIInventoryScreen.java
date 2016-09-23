@@ -41,8 +41,9 @@ public class GUIInventoryScreen extends GUIScreen{
 	public void onClose(){
 		super.onClose();
 		EntityPlayer p = Constants.world.getWorldManager().getEntityManager().getPlayer();
-		if(!p.mouseItem.isNull())
+		if(!p.mouseItem.isNull()){
 			p.dropItem(p.mouseItem);
+		}
 		p.mouseItem = new ItemStack();
 	}
 }

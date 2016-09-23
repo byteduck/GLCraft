@@ -58,6 +58,7 @@ public class GUICrafting extends GUIInventoryScreen{
 	
 	@Override
 	public void onClose(){
+		super.onClose();
 		player.dropItem(slot1.itemstack);
 		player.dropItem(slot2.itemstack);
 		player.dropItem(slot3.itemstack);

@@ -13,6 +13,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import net.codepixl.GLCraft.GLCraft;
+import net.codepixl.GLCraft.world.crafting.Recipe.InvalidRecipeException;
 
 public class LoadedPlugin {
 	public String name;
@@ -60,7 +61,12 @@ public class LoadedPlugin {
 		this.version = "dev";
 		this.description = "A plugin loaded from the GLCraft dev environment.";
 		this.mainClass = "dev";
-		p.init();
+		try {
+			p.init();
+		} catch (InvalidRecipeException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		System.out.println("---Loaded dev plugin---");
 	}
 	

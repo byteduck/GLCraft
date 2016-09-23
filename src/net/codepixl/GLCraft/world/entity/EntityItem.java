@@ -112,7 +112,7 @@ public class EntityItem extends EntitySolid{
 						}
 					}
 				}
-			}else{
+			}else if(!itemstack.isNull()){
 				Item item = itemstack.getItem();
 				Shape.createPlane(0+((float)i*0.05f), yPos+((float)i*0.05f), 0+((float)i*0.05f), item.getColor(), item.getTexCoords(), size);
 			}
@@ -124,7 +124,7 @@ public class EntityItem extends EntitySolid{
 	@Override
 	public void update(){
 		super.update();
-		if(this.getCount() <= 0 || this.timeAlive > 300000){
+		if(this.getCount() <= 0 || this.timeAlive > 300000 || this.itemstack.isNull()){
 			this.setDead(true);
 		}
 		while(!Tile.getTile((byte)worldManager.getTileAtPos(this.getPos())).canPassThrough()){

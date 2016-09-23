@@ -7,6 +7,8 @@ import java.util.HashMap;
 import java.util.Iterator;
 
 import net.codepixl.GLCraft.GLCraft;
+import net.codepixl.GLCraft.world.item.Item;
+import net.codepixl.GLCraft.world.item.PluginItem;
 import net.codepixl.GLCraft.world.tile.PluginTile;
 import net.codepixl.GLCraft.world.tile.Tile;
 
@@ -16,6 +18,7 @@ public class PluginManager {
 	HashMap<Plugin,LoadedPlugin> plugins = new HashMap<Plugin,LoadedPlugin>();
 	public static String path;
 	byte currentTile = 0x64;
+	byte currentItem = 0x64;
 	public LoadedPlugin currentlyLoadingPlugin = null;
 	
 	public PluginManager(String pluginPath){
@@ -34,6 +37,13 @@ public class PluginManager {
 		Tile.tileMap.put(currentTile, t);
 		System.out.println("Registered plugin tile "+t.getName()+" with ID "+currentTile);
 		currentTile++;
+	}
+	
+	public void addItem(PluginItem i){
+		i.assignedID = currentItem;
+		Item.itemMap.put(currentItem, i);
+		System.out.println("Registered item "+i.getName()+" with ID "+currentItem);
+		currentItem++;
 	}
 	
 	public void update(){

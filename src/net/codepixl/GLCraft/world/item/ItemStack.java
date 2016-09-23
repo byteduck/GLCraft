@@ -33,26 +33,49 @@ public class ItemStack{
 	private boolean isNull;
 	private byte meta;
 	public ItemStack(Tile t){
-		count = 1;
-		isTile = true;
-		tile = t;
-		meta = 0;
+		if(t != null){
+			count = 1;
+			isTile = true;
+			tile = t;
+			meta = 0;
+		}else{
+			this.isNull = true;
+			this.isTile = false;
+		}
+		if(tile == Tile.Air){
+			this.isNull = true;
+			this.isTile = false;
+		}
 	}
 	public ItemStack(Tile t, byte meta){
-		count = 1;
-		isTile = true;
-		tile = t;
-		this.meta = meta;
+		if(t != null){
+			count = 1;
+			isTile = true;
+			tile = t;
+			this.meta = meta;
+		}else{
+			this.isNull = true;
+			this.isTile = false;
+		}
+		if(tile == Tile.Air){
+			this.isNull = true;
+			this.isTile = false;
+		}
 	}
 	public ItemStack(){
 		isNull = true;
 		isTile = false;
 	}
 	public ItemStack(Item i){
-		count = 1;
-		isTile = false;
-		item = i;
-		meta = 0;
+		if(i != null){
+			count = 1;
+			isTile = false;
+			item = i;
+			meta = 0;
+		}else{
+			this.isNull = true;
+			this.isTile = false;
+		}
 	}
 	public ItemStack(ItemStack s){
 		this.tile = s.tile;
@@ -70,22 +93,44 @@ public class ItemStack{
 		this.meta = s.meta;
 	}
 	public ItemStack(Tile t, int count){
-		this.count = count;
-		isTile = true;
-		tile = t;
-		meta = 0;
+		if(t != null){
+			this.count = count;
+			isTile = true;
+			tile = t;
+			meta = 0;
+		}else{
+			this.isNull = true;
+		}
+		if(tile == Tile.Air){
+			this.isNull = true;
+			this.isTile = false;
+		}
 	}
 	public ItemStack(Tile t, int count, byte meta){
-		this.count = count;
-		isTile = true;
-		tile = t;
-		this.meta = meta;
+		if(t != null){
+			this.count = count;
+			isTile = true;
+			tile = t;
+			this.meta = meta;
+		}else{
+			this.isNull = true;
+			this.isTile = false;
+		}
+		if(tile == Tile.Air){
+			this.isNull = true;
+			this.isTile = false;
+		}
 	}
 	public ItemStack(Item i, int count){
-		this.count = count;
-		isTile = false;
-		item = i;
-		meta = 0;
+		if(i != null){
+			this.count = count;
+			isTile = false;
+			item = i;
+			meta = 0;
+		}else{
+			this.isNull = true;
+			this.isTile = false;
+		}
 	}
 	public boolean isTile(){
 		return isTile;
@@ -259,5 +304,14 @@ public class ItemStack{
 			TextureImpl.unbind();
 		}
 		TextureImpl.unbind();
+	}
+	
+	public String getName(){
+		if(isTile)
+			return tile.getName();
+		else if(!isNull)
+			return item.getName();
+		else
+			return "";
 	}
 }

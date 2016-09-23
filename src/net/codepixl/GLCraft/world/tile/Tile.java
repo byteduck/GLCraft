@@ -165,7 +165,10 @@ public class Tile {
 	public void tick(int x, int y, int z, WorldManager worldManager){}
 	
 	public static Tile getTile(byte id){
-		return tileMap.get(id);
+		if(!tileMap.containsKey(id))
+			return Air;
+		else
+			return tileMap.get(id);
 	}
 	
 	public Material getMaterial(){
