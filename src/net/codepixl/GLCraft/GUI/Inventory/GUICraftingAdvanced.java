@@ -45,10 +45,20 @@ public class GUICraftingAdvanced extends GUIInventoryScreen{
 	public void update(){
 		super.update();
 		ItemStack result = new ItemStack();
-		if(slot3.isEmpty() && slot6.isEmpty() && slot7.isEmpty() && slot8.isEmpty() && slot9.isEmpty())
-			result = CraftingManager.checkRecipe(new Recipe(slot1.itemstack,slot2.itemstack,slot4.itemstack,slot5.itemstack,null));
-		else
-			result = CraftingManager.checkRecipe(new Recipe(slot1.itemstack,slot2.itemstack,slot3.itemstack,slot4.itemstack,slot5.itemstack,slot6.itemstack,slot7.itemstack,slot8.itemstack,slot9.itemstack,null));
+		try{
+			if(slot3.isEmpty() && slot6.isEmpty() && slot7.isEmpty() && slot8.isEmpty() && slot9.isEmpty())
+				result = CraftingManager.checkRecipe(new Recipe(null,"12","34",'1',slot1.itemstack,'2',slot2.itemstack,'3',slot4.itemstack,'4',slot5.itemstack));
+			else if(slot1.isEmpty() && slot4.isEmpty() && slot7.isEmpty() && slot8.isEmpty() && slot9.isEmpty())
+				result = CraftingManager.checkRecipe(new Recipe(null,"12","34",'1',slot2.itemstack,'2',slot3.itemstack,'3',slot5.itemstack,'4',slot6.itemstack));
+			else if(slot1.isEmpty() && slot2.isEmpty() && slot3.isEmpty() && slot6.isEmpty() && slot9.isEmpty())
+				result = CraftingManager.checkRecipe(new Recipe(null,"12","34",'1',slot4.itemstack,'2',slot5.itemstack,'3',slot7.itemstack,'4',slot8.itemstack));
+			else if(slot1.isEmpty() && slot2.isEmpty() && slot3.isEmpty() && slot4.isEmpty() && slot7.isEmpty())
+				result = CraftingManager.checkRecipe(new Recipe(null,"12","34",'1',slot5.itemstack,'2',slot6.itemstack,'3',slot8.itemstack,'4',slot9.itemstack));
+			else
+				result = CraftingManager.checkRecipe(new Recipe(null,"123","456","789",'1',slot1.itemstack,'2',slot2.itemstack,'3',slot3.itemstack,'4',slot4.itemstack,'5',slot5.itemstack,'6',slot6.itemstack,'7',slot7.itemstack,'8',slot8.itemstack,'9',slot9.itemstack));
+		}catch(Recipe.InvalidRecipeException e){
+			e.printStackTrace();
+		}
 		if(result != null){
 			this.result.itemstack = new ItemStack(result);
 		}else{
@@ -97,6 +107,19 @@ public class GUICraftingAdvanced extends GUIInventoryScreen{
 			if(!slot9.itemstack.isNull())
 				slot9.itemstack.count-=1;
 		}
+	}
+	
+	@Override
+	public void onClose(){
+		player.dropItem(slot1.itemstack);
+		player.dropItem(slot2.itemstack);
+		player.dropItem(slot3.itemstack);
+		player.dropItem(slot4.itemstack);
+		player.dropItem(slot5.itemstack);
+		player.dropItem(slot6.itemstack);
+		player.dropItem(slot7.itemstack);
+		player.dropItem(slot8.itemstack);
+		player.dropItem(slot9.itemstack);
 	}
 	
 	private GUISlot getHoveredSlot(){

@@ -188,9 +188,11 @@ public class EntityPlayer extends Mob {
 		w.spawnEntity(e);
 	}
 	public void dropItem(ItemStack item){
-		EntityItem e = new EntityItem(item, pos.x, pos.y+this.eyeLevel, pos.z, worldManager);
-		e.setVelocity(MathUtils.RotToVel(this.getRot(), 1f));
-		worldManager.spawnEntity(e);
+		if(!item.isNull()){
+			EntityItem e = new EntityItem(item, pos.x, pos.y+this.eyeLevel, pos.z, worldManager);
+			e.setVelocity(MathUtils.RotToVel(this.getRot(), 1f));
+			worldManager.spawnEntity(e);
+		}
 	}
 	public void updateKeyboard(float delay, float speed) {
 		boolean keyUp = Keyboard.isKeyDown(Keyboard.KEY_W);

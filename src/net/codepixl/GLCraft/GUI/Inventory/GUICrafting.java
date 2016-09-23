@@ -8,6 +8,7 @@ import net.codepixl.GLCraft.GUI.Inventory.Elements.GUISlot;
 import net.codepixl.GLCraft.util.Constants;
 import net.codepixl.GLCraft.world.crafting.CraftingManager;
 import net.codepixl.GLCraft.world.crafting.Recipe;
+import net.codepixl.GLCraft.world.crafting.Recipe.InvalidRecipeException;
 import net.codepixl.GLCraft.world.entity.mob.EntityPlayer;
 import net.codepixl.GLCraft.world.item.ItemStack;
 
@@ -34,7 +35,12 @@ public class GUICrafting extends GUIInventoryScreen{
 	@Override
 	public void update(){
 		super.update();
-		ItemStack result = CraftingManager.checkRecipe(new Recipe(slot1.itemstack,slot2.itemstack,slot3.itemstack,slot4.itemstack,null));
+		ItemStack result = null;
+		try {
+			result = CraftingManager.checkRecipe(new Recipe(null,"12","34",'1',slot1.itemstack,'2',slot2.itemstack,'3',slot3.itemstack,'4',slot4.itemstack));
+		} catch (InvalidRecipeException e) {
+			e.printStackTrace();
+		}
 		if(result != null){
 			this.result.itemstack = new ItemStack(result);
 		}else{
@@ -48,6 +54,14 @@ public class GUICrafting extends GUIInventoryScreen{
 			slot3.itemstack = new ItemStack();
 		if(slot4.itemstack.count == 0)
 			slot4.itemstack = new ItemStack();
+	}
+	
+	@Override
+	public void onClose(){
+		player.dropItem(slot1.itemstack);
+		player.dropItem(slot2.itemstack);
+		player.dropItem(slot3.itemstack);
+		player.dropItem(slot4.itemstack);
 	}
 	
 	@Override

@@ -3,6 +3,7 @@ package net.codepixl.GLCraft.world.crafting;
 import java.util.ArrayList;
 import java.util.Iterator;
 
+import net.codepixl.GLCraft.world.crafting.Recipe.InvalidRecipeException;
 import net.codepixl.GLCraft.world.item.Item;
 import net.codepixl.GLCraft.world.item.ItemStack;
 import net.codepixl.GLCraft.world.tile.Tile;
@@ -32,38 +33,10 @@ public class CraftingManager {
 			if(rec.checkRecipe(r)){
 				result = rec.result;
 				if(rec.preserveMeta){
-					switch(rec.preserveMetaFrom){
-						case 0:
-							result.setMeta(r.a.getMeta());
-							break;
-						case 1:
-							result.setMeta(r.b.getMeta());
-							break;
-						case 2:
-							result.setMeta(r.c.getMeta());
-							break;
-						case 3:
-							result.setMeta(r.d.getMeta());
-							break;
-						case 4:
-							result.setMeta(r.e.getMeta());
-							break;
-						case 5:
-							result.setMeta(r.f.getMeta());
-							break;
-						case 6:
-							result.setMeta(r.g.getMeta());
-							break;
-						case 7:
-							result.setMeta(r.h.getMeta());
-							break;
-						case 8:
-							result.setMeta(r.i.getMeta());
-							break;
-						default:
-							result.setMeta(r.a.getMeta());
-							break;
-					}
+					if(r.retMeta == -1)
+						result.setMeta(r.items.get(rec.preserveMetaFrom).getMeta());
+					else
+						result.setMeta(r.retMeta);
 				}
 			}
 		}
@@ -94,22 +67,45 @@ public class CraftingManager {
 		return null;
 	}
 
-	public static void initRecipes() {
+	public static void initRecipes() throws InvalidRecipeException {
 		/**Wood**/
-		Recipe woodRecipe = new Recipe(new ItemStack(Tile.Log),new ItemStack(),new ItemStack(),new ItemStack(),new ItemStack(Tile.Wood,4));
+		Recipe woodRecipe = new Recipe(new ItemStack(Tile.Wood, 4), new ItemStack(Tile.Log));
 		woodRecipe.setPreserveMetaFromSlot(0);
 		addRecipe(woodRecipe);
-		/**Workbench**/addRecipe(new Recipe(new ItemStack(Tile.Wood),new ItemStack(Tile.Wood),new ItemStack(Tile.Wood),new ItemStack(Tile.Wood),new ItemStack(Tile.Workbench,1)));
-		/**Sticks**/addRecipe(new Recipe(new ItemStack(Tile.Wood),new ItemStack(),new ItemStack(Tile.Wood),new ItemStack(),new ItemStack(Item.Stick,4)));
-		/**Wood Pick**/addRecipe(new Recipe(new ItemStack(Tile.Wood),new ItemStack(Tile.Wood),new ItemStack(Tile.Wood),new ItemStack(),new ItemStack(Item.Stick),new ItemStack(),new ItemStack(),new ItemStack(Item.Stick),new ItemStack(),new ItemStack(Item.WoodPick,1)));
-		/**Stone Pick**/addRecipe(new Recipe(new ItemStack(Tile.Cobblestone),new ItemStack(Tile.Cobblestone),new ItemStack(Tile.Cobblestone),new ItemStack(),new ItemStack(Item.Stick),new ItemStack(),new ItemStack(),new ItemStack(Item.Stick),new ItemStack(),new ItemStack(Item.StonePick,1)));
-		/**Iron Pick**/addRecipe(new Recipe(new ItemStack(Item.IronIngot),new ItemStack(Item.IronIngot),new ItemStack(Item.IronIngot),new ItemStack(),new ItemStack(Item.Stick),new ItemStack(),new ItemStack(),new ItemStack(Item.Stick),new ItemStack(),new ItemStack(Item.IronPick,1)));
-		/**Gold Pick**/addRecipe(new Recipe(new ItemStack(Item.GoldIngot),new ItemStack(Item.GoldIngot),new ItemStack(Item.GoldIngot),new ItemStack(),new ItemStack(Item.Stick),new ItemStack(),new ItemStack(),new ItemStack(Item.Stick),new ItemStack(),new ItemStack(Item.GoldPick,1)));
-		/**Diamond Pick**/addRecipe(new Recipe(new ItemStack(Item.Diamond),new ItemStack(Item.Diamond),new ItemStack(Item.Diamond),new ItemStack(),new ItemStack(Item.Stick),new ItemStack(),new ItemStack(),new ItemStack(Item.Stick),new ItemStack(),new ItemStack(Item.DiamondPick,1)));
-		/**Chest**/addRecipe(new Recipe(new ItemStack(Tile.Wood),new ItemStack(Tile.Wood),new ItemStack(Tile.Wood),new ItemStack(Tile.Wood),new ItemStack(),new ItemStack(Tile.Wood),new ItemStack(Tile.Wood),new ItemStack(Tile.Wood),new ItemStack(Tile.Wood),new ItemStack(Tile.Chest,1)));
-		/**Bucket**/addRecipe(new Recipe(new ItemStack(),new ItemStack(),new ItemStack(),new ItemStack(Tile.Wood),new ItemStack(),new ItemStack(Tile.Wood),new ItemStack(),new ItemStack(Tile.Wood),new ItemStack(),new ItemStack(Item.Bucket,1)));
-		/**Furnace**/addRecipe(new Recipe(new ItemStack(Tile.Cobblestone),new ItemStack(Tile.Cobblestone),new ItemStack(Tile.Cobblestone),new ItemStack(Tile.Cobblestone),new ItemStack(),new ItemStack(Tile.Cobblestone),new ItemStack(Tile.Cobblestone),new ItemStack(Tile.Cobblestone),new ItemStack(Tile.Cobblestone),new ItemStack(Tile.Furnace,1)));
-		/**Condensed Bluestone**/addRecipe(new Recipe(new ItemStack(Tile.Bluestone),new ItemStack(Tile.Bluestone),new ItemStack(Tile.Bluestone),new ItemStack(Tile.Bluestone),new ItemStack(Tile.Bluestone),new ItemStack(Tile.Bluestone),new ItemStack(Tile.Bluestone),new ItemStack(Tile.Bluestone),new ItemStack(Tile.Bluestone),new ItemStack(Tile.CondensedBluestone,1)));
+		/**Workbench**/
+		addRecipe(new Recipe(new ItemStack(Tile.Workbench),"ww","ww",'w',new ItemStack(Tile.Wood)));
+		/**Sticks**/
+		addRecipe(new Recipe(new ItemStack(Item.Stick,4),"w ","w ", 'w', new ItemStack(Tile.Wood)));
+		addRecipe(new Recipe(new ItemStack(Item.Stick,4)," w"," w", 'w', new ItemStack(Tile.Wood)));
+		/**Wood Pick**/
+		addRecipe(new Recipe(new ItemStack(Item.WoodPick), "www", " s ", " s ", 'w', new ItemStack(Tile.Wood), 's', new ItemStack(Item.Stick)));
+		/**Stone Pick**/
+		addRecipe(new Recipe(new ItemStack(Item.StonePick), "ccc", " s ", " s ", 'c', new ItemStack(Tile.Cobblestone), 's', new ItemStack(Item.Stick)));
+		/**Iron Pick**/
+		addRecipe(new Recipe(new ItemStack(Item.IronPick), "iii", " s ", " s ", 'i', new ItemStack(Item.IronIngot), 's', new ItemStack(Item.Stick)));
+		/**Gold Pick**/
+		addRecipe(new Recipe(new ItemStack(Item.GoldPick), "ggg", " s ", " s ", 'g', new ItemStack(Item.GoldIngot), 's', new ItemStack(Item.Stick)));
+		/**Diamond Pick**/
+		addRecipe(new Recipe(new ItemStack(Item.DiamondPick), "ddd", " s ", " s ", 'd', new ItemStack(Item.Diamond), 's', new ItemStack(Item.Stick)));
+		/**Chest**/
+		addRecipe(new Recipe(new ItemStack(Tile.Chest),"www","w w","www",'w',new ItemStack(Tile.Wood)));
+		/**Bucket**/
+		addRecipe(new Recipe(new ItemStack(Item.Bucket),"w w"," w ","   ",'w',new ItemStack(Tile.Wood)));
+		addRecipe(new Recipe(new ItemStack(Item.Bucket),"   ","w w"," w ",'w',new ItemStack(Tile.Wood)));
+		/**Furnace**/
+		addRecipe(new Recipe(new ItemStack(Tile.Furnace), "sss","s s","sss",'s',new ItemStack(Tile.Stone)));
+		/**Condensed Bluestone**/
+		addRecipe(new Recipe(new ItemStack(Tile.CondensedBluestone),"bbb","bbb","bbb",'b',new ItemStack(Tile.Bluestone)));
+		/**Wood Axe**/
+		addRecipe(new Recipe(new ItemStack(Item.WoodAxe), "ww ", "ws "," s ",'w',new ItemStack(Tile.Wood),'s',new ItemStack(Item.Stick)));
+		/**Stone Axe**/
+		addRecipe(new Recipe(new ItemStack(Item.StoneAxe), "cc ", "cs "," s ",'c',new ItemStack(Tile.Cobblestone),'s',new ItemStack(Item.Stick)));
+		/**Iron Axe**/
+		addRecipe(new Recipe(new ItemStack(Item.IronAxe), "ii ", "is "," s ",'i',new ItemStack(Item.IronIngot),'s',new ItemStack(Item.Stick)));
+		/**Gold Axe**/
+		addRecipe(new Recipe(new ItemStack(Item.GoldAxe), "gg ", "gs "," s ",'g',new ItemStack(Item.GoldIngot),'s',new ItemStack(Item.Stick)));
+		/**Diamond Axe**/
+		addRecipe(new Recipe(new ItemStack(Item.DiamondAxe), "dd ", "ds "," s ",'d',new ItemStack(Item.Diamond),'s',new ItemStack(Item.Stick)));
 		
 		/* FURNACE RECIPES */
 		

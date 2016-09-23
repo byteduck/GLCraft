@@ -88,6 +88,7 @@ import net.codepixl.GLCraft.util.Spritesheet;
 import net.codepixl.GLCraft.util.Vector3i;
 import net.codepixl.GLCraft.util.logging.CrashHandler;
 import net.codepixl.GLCraft.world.crafting.CraftingManager;
+import net.codepixl.GLCraft.world.crafting.Recipe.InvalidRecipeException;
 import net.codepixl.GLCraft.world.entity.EntityManager;
 import net.codepixl.GLCraft.world.entity.mob.EntityPlayer;
 import net.codepixl.GLCraft.world.entity.mob.AI.pathfinding.Pathfinder;
@@ -129,7 +130,11 @@ public class CentralManager extends Screen{
 		initGUIManager();
 		
 		TextureManager.initTextures();
-		CraftingManager.initRecipes();
+		try {
+			CraftingManager.initRecipes();
+		} catch (InvalidRecipeException e) {
+			e.printStackTrace();
+		}
 		worldManager = new WorldManager(this);
 		guiManager.setGameGUI(new GUIGame(worldManager));
 		GLCraft.renderSplashText("Starting Central Manager...", "Starting Sound System");
