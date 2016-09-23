@@ -99,7 +99,7 @@ public class GLCraft extends Screen{
 	private static GLCraft glcraft;
 	public static boolean isDevEnvironment = false;
 	public static boolean loadExtPlugins = true;
-	public static String version = "0.0.9dev";
+	public static String version = "0.0.9 Dev A";
 	private Plugin devPlugin;
 	
 	public static GLCraft getGLCraft(){
