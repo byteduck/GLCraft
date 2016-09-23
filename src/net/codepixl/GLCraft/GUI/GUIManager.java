@@ -8,12 +8,17 @@ import java.util.HashMap;
 
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
+import org.lwjgl.opengl.GL11;
+import org.newdawn.slick.opengl.TextureImpl;
 
 import com.nishu.utils.Color4f;
 
+import net.codepixl.GLCraft.GLCraft;
 import net.codepixl.GLCraft.GUI.Elements.GUITextBox;
+import net.codepixl.GLCraft.GUI.Inventory.GUIInventoryScreen;
 import net.codepixl.GLCraft.render.Shape;
 import net.codepixl.GLCraft.render.TextureManager;
+import net.codepixl.GLCraft.render.util.Tesselator;
 import net.codepixl.GLCraft.util.Constants;
 import net.codepixl.GLCraft.world.entity.mob.EntityPlayer;
 
@@ -109,6 +114,14 @@ public class GUIManager {
 		if (GUIOpen)
 			currentGUI.renderMain();
 		renderMouseItem();
+		EntityPlayer p = Constants.world.getWorldManager().getEntityManager().getPlayer();
+		if(p.mouseItem.isNull() && p.hoverSlot != null && p.hoverSlot.showLabel && p.hoverSlot.hover && !p.hoverSlot.itemstack.isNull()){
+			TextureImpl.unbind();
+			GL11.glBegin(GL11.GL_QUADS);
+			Shape.createTexturelessRect(Mouse.getX(), -Mouse.getY()+Constants.HEIGHT-Constants.FONT.getHeight(), Constants.FONT.getWidth(p.hoverSlot.itemstack.getName())+4, Constants.FONT.getHeight()+4, new Color4f(0f, 0f, 0f, 0.5f));
+			GL11.glEnd();
+			Tesselator.drawTextWithShadow(Mouse.getX()+2, -Mouse.getY()+Constants.HEIGHT-Constants.FONT.getHeight()+2, p.hoverSlot.itemstack.getName());
+		}
 	}
 
 	public void update(){
@@ -119,10 +132,14 @@ public class GUIManager {
 	}
 
 	public void input(){
-		if(showGame)
-			gameGUI.input(0,0);
-		if (GUIOpen)
+		EntityPlayer p = Constants.world.getWorldManager().getEntityManager().getPlayer();
+		p.hoverSlot = null;
+		if (GUIOpen){
 			currentGUI.input(0,0);
+			if(currentGUI instanceof GUIInventoryScreen)
+				gameGUI.input(0,0);
+		}else if(showGame)
+			gameGUI.input(0, 0);
 		if(focusedTextBox != null){
 			Keyboard.enableRepeatEvents(true);
 			while(Keyboard.next()){

@@ -421,6 +421,8 @@ public static void createCustomTree(int x, int y, int z,Tile trunk,Tile leaf, by
 			for(int x = 0; x < sizeX; x++){
 				for(int y = 0; y < sizeY; y++){
 					for(int z = 0; z < sizeZ; z++){
+						if(!Tile.tileMap.containsKey(tiles[x][y][z]))
+							tiles[x][y][z] = Tile.Air.getId();
 						Tile t = Tile.getTile(tiles[x][y][z]);
 						boolean shouldRender = translucent ? t.isTranslucent() : !t.isTranslucent();
 						if(shouldRender && t != Tile.Air && !checkTileNotInView(x+(int)pos.getX(),y+(int)pos.getY(),z+(int)pos.getZ())){

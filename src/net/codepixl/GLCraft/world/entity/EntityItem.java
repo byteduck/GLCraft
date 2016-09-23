@@ -135,10 +135,10 @@ public class EntityItem extends EntitySolid{
 		}else{
 			yPos = MathUtils.easeInOutQuad((float)timeAlive/1000f, 0.3f, -0.3f, 1f);
 		}
-		Iterator<Entity> i = worldManager.getEntityManager().getEntitiesInRadiusOfEntityOfType(this, EntityItem.class, 1.5f).iterator();
+		Iterator<Entity> i = worldManager.getEntityManager().getEntitiesInRadiusOfEntityOfType(this, EntityItem.class, 0.75f).iterator();
 		while(i.hasNext()){
 			EntityItem e = (EntityItem)i.next();
-			if(e.itemstack.count+this.itemstack.count <= 64 && e.itemstack.compatible(this.itemstack) && e.timeAlive <= this.timeAlive){
+			if(e.itemstack.count+this.itemstack.count <= this.itemstack.getMaxStackSize() && e.itemstack.compatible(this.itemstack) && e.timeAlive <= this.timeAlive){
 				e.setDead(true);
 				this.itemstack.count+=e.itemstack.count;
 			}

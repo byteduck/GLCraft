@@ -22,6 +22,7 @@ import com.nishu.utils.Color4f;
 import com.nishu.utils.Time;
 
 import net.codepixl.GLCraft.GUI.GUIManager;
+import net.codepixl.GLCraft.GUI.Inventory.Elements.GUISlot;
 import net.codepixl.GLCraft.render.RenderType;
 import net.codepixl.GLCraft.render.Shape;
 import net.codepixl.GLCraft.render.TextureManager;
@@ -53,6 +54,7 @@ public class EntityPlayer extends Mob {
 	private boolean shouldPlaceTile;
 	private Tile tileToPlace;
 	private byte metaToPlace;
+	public GUISlot hoverSlot;
 	
 	public EntityPlayer(Vector3f pos, WorldManager w) {
 		super(pos, w);

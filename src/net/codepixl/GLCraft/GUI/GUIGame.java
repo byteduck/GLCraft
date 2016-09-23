@@ -49,11 +49,16 @@ public class GUIGame extends GUIScreen{
 		}
 		super.input(xof, yof);
 		for(int i = 0; i < slots.length; i++){
-			if(!worldManager.centralManager.guiManager.isGUIOpen())
+			if(!worldManager.centralManager.guiManager.isGUIOpen()){
 				slots[i].hover = false;
+				slots[i].showLabel = false;
+			}else{
+				slots[i].showLabel = true;
+			}
 			player.getInventory()[i] = slots[i].itemstack;
 		}
-		slots[worldManager.getEntityManager().getPlayer().getSelectedSlot()].hover = true;
+		if(!worldManager.centralManager.guiManager.isGUIOpen())
+			slots[worldManager.getEntityManager().getPlayer().getSelectedSlot()].hover = true;
 	}
 	
 	@Override
