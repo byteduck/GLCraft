@@ -115,13 +115,22 @@ public class ItemStack{
 	public int addToStack(int count){
 		int ret = count;
 		for(int i = count; i > 0; i--){
-			if(this.count >= 64){
+			if(this.count >= getMaxStackSize()){
 				return ret;
 			}
 			this.count+=1;
 			ret-=1;
 		}
 		return ret;
+	}
+	
+	public int getMaxStackSize(){
+		if(this.isNull)
+			return 0;
+		if(!this.isTile)
+			return this.item.maxStackSize();
+		else
+			return 64;
 	}
 	
 	public int subFromStack(int count){

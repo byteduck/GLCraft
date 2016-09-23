@@ -79,5 +79,9 @@ public class Item {
 			registerItem();
 		}
 	}
+	
+	public int maxStackSize(){
+		return 64;
+	}
 
 }

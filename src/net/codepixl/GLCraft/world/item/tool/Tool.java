@@ -24,4 +24,9 @@ public class Tool extends Item{
 		return 0.8f;
 	}
 	
+	@Override
+	public int maxStackSize(){
+		return 1;
+	}
+	
 }

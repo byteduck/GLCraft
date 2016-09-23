@@ -2,6 +2,8 @@ package net.codepixl.GLCraft.world.tile;
 
 import com.nishu.utils.Color4f;
 
+import net.codepixl.GLCraft.world.tile.material.Material;
+
 public class TileLog extends Tile{
 	
 	private static String[] types = {"oak","darkoak","maple","pine","whiteoak"};
@@ -10,6 +12,11 @@ public class TileLog extends Tile{
 	public String getName() {
 		// TODO Auto-generated method stub
 		return "Log";
+	}
+	
+	@Override
+	public Material getMaterial(){
+		return Material.WOOD;
 	}
 
 	@Override
