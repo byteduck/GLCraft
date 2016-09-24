@@ -117,9 +117,11 @@ public class GUIManager {
 		EntityPlayer p = Constants.world.getWorldManager().getEntityManager().getPlayer();
 		if(p.mouseItem.isNull() && p.hoverSlot != null && p.hoverSlot.showLabel && p.hoverSlot.hover && !p.hoverSlot.itemstack.isNull()){
 			TextureImpl.unbind();
+			GL11.glDisable(GL11.GL_TEXTURE_2D);
 			GL11.glBegin(GL11.GL_QUADS);
 			Shape.createTexturelessRect(Mouse.getX(), -Mouse.getY()+Constants.HEIGHT-Constants.FONT.getHeight(), Constants.FONT.getWidth(p.hoverSlot.itemstack.getName())+4, Constants.FONT.getHeight()+4, new Color4f(0f, 0f, 0f, 0.5f));
 			GL11.glEnd();
+			GL11.glEnable(GL11.GL_TEXTURE_2D);
 			Tesselator.drawTextWithShadow(Mouse.getX()+2, -Mouse.getY()+Constants.HEIGHT-Constants.FONT.getHeight()+2, p.hoverSlot.itemstack.getName());
 		}
 	}
