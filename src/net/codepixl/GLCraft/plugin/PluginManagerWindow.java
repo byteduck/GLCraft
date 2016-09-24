@@ -38,11 +38,13 @@ public class PluginManagerWindow extends JFrame{
 		this.setSize(356, 249);
 		top = new DefaultMutableTreeNode("Plugins");
 		addPlugins();
+		final PluginManagerWindow window = this;
 		btnNewButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				JFileChooser jf = new JFileChooser();
 				FileNameExtensionFilter filter = new FileNameExtensionFilter("Compressed GLCraft Plugins", "glcp", "zip", "jar");
 				jf.setFileFilter(filter);
+				window.setAlwaysOnTop(false);
 				int returnVal = jf.showOpenDialog(null);
 				if(returnVal == JFileChooser.APPROVE_OPTION){
 					File plugin = jf.getSelectedFile();
@@ -68,6 +70,7 @@ public class PluginManagerWindow extends JFrame{
 						JOptionPane.showMessageDialog(null, "There was an error installing the plugin.\nMake sure to remove existing plugins with the same name first.", "GLCraft", JOptionPane.ERROR_MESSAGE);
 					}
 				}
+				window.setAlwaysOnTop(true);
 			}
 		});
 		getContentPane().add(btnNewButton, BorderLayout.NORTH);

@@ -27,7 +27,7 @@ public class LoadedPlugin {
 	public LoadedPlugin(String path) throws IOException, ClassNotFoundException, InstantiationException, IllegalAccessException{
 		try{
 			GLCraft.getGLCraft().getPluginManager().currentlyLoadingPlugin = this;
-			this.path = path;
+			this.path = path+"/";
 			byte[] data = Files.readAllBytes(new File(path+"/plugin.json").toPath());
 			String jsonString = new String(data,StandardCharsets.UTF_8);
 			JSONObject json = new JSONObject(jsonString);
@@ -36,7 +36,7 @@ public class LoadedPlugin {
 			this.description = json.getString("pluginDescription");
 			this.mainClass = json.getString("mainClass");
 			this.glVersion = json.getString("GLCraftVersion");
-			if(this.glVersion != GLCraft.version){
+			if(!this.glVersion.equals(GLCraft.version)){
 				JOptionPane.showMessageDialog(null, "The Plugin "+this.name+" is for a newer/older version of GLCraft. It will be deleted.",  "Error", JOptionPane.ERROR_MESSAGE);
 				deleteDirectory(new File(path));
 			}else{
