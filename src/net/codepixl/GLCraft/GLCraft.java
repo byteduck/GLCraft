@@ -165,7 +165,7 @@ public class GLCraft extends Screen{
 		
 		initCamera();
 		world = new CentralManager();
-		String pluginsFolder = Constants.GLCRAFTDIR+"/Plugins";
+		String pluginsFolder = Constants.GLCRAFTDIR+"/plugins";
 		new File(pluginsFolder).mkdirs();
 		pluginManager = new PluginManager(pluginsFolder);
 		if(loadExtPlugins){

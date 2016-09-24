@@ -23,7 +23,7 @@ public class PluginItem extends Item{
 	public PluginItem(Plugin p){
 		this.plugin = p;
 		if(this.getClass() != PluginItem.class){
-			TextureManager.addExternalTexture("items."+getTextureName(), GLCraft.getGLCraft().getPluginManager().getResourceLocation()+"textures\\items\\"+getTextureName()+".png");
+			TextureManager.addPluginTexture("items."+getTextureName(), "textures/items/"+getTextureName()+".png", p);
 		}
 	}
 }

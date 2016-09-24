@@ -1,6 +1,7 @@
 package net.codepixl.GLCraft.plugin;
 
 import java.io.File;
+import java.io.FilenameFilter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -55,36 +56,29 @@ public class PluginManager {
 	
 	public void loadPlugins(){
 		File dir = new File(path);
-		File[] plugins = dir.listFiles();
+		File[] plugins = dir.listFiles(new FilenameFilter(){
+
+			@Override
+			public boolean accept(File dir, String name) {
+				return name.endsWith(".jar");
+			}
+			
+		});
 		for(int i = 0; i < plugins.length; i++){
-			if(plugins[i].isDirectory()){
-				try {
-					GLCraft.renderSplashText("Loading Plugins...", plugins[i].getName());
-					this.loadedPlugins.add(new LoadedPlugin(plugins[i].getAbsolutePath()));
-				} catch (IOException | ClassNotFoundException | InstantiationException | IllegalAccessException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
+			try {
+				GLCraft.renderSplashText("Loading Plugins...", plugins[i].getName().replaceAll(".jar", ""));
+				LoadedPlugin p = new LoadedPlugin(plugins[i].getAbsolutePath());
+				this.loadedPlugins.add(p);
+				this.plugins.put(p.plugin, p);
+			} catch (IOException | ClassNotFoundException | InstantiationException | IllegalAccessException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
 			}
 		}
 		currentlyLoadingPlugin = null;
 	}
-
-	public String getResourceLocation(Plugin p) {
-		if(plugins.get(p).mainClass.equals("dev")){
-			return plugins.get(p).path+"/res/";
-		}else{
-			System.out.println(plugins.get(p).path);
-			return plugins.get(p).path;
-		}
-	}
 	
-	public String getResourceLocation(){
-		if(currentlyLoadingPlugin.mainClass.equals("dev")){
-			return "res/";
-		}else{
-			System.out.println(currentlyLoadingPlugin.path);
-			return currentlyLoadingPlugin.path;
-		}
+	public LoadedPlugin getLoadedPlugin(Plugin p){
+		return this.plugins.get(p);
 	}
 }

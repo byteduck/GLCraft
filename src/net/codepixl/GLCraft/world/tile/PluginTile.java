@@ -25,16 +25,16 @@ public class PluginTile extends Tile{
 				if(this.hasMultipleTextures()){
 					for(String name : this.getMultiTextureNames()){
 						if(!TextureManager.hasTexture("tiles."+name)){
-							TextureManager.addExternalTexture("tiles."+name, GLCraft.getGLCraft().getPluginManager().getResourceLocation()+"textures\\tiles\\"+name+".png");
+							TextureManager.addPluginTexture("tiles."+name,"textures/tiles/"+name+".png",plugin);
 						}
 					}
 				}else{
 					if(!TextureManager.hasTexture("tiles."+this.getTextureName())){
-						TextureManager.addExternalTexture("tiles."+this.getTextureName(), GLCraft.getGLCraft().getPluginManager().getResourceLocation()+"textures\\tiles\\"+this.getTextureName()+".png");
+						TextureManager.addPluginTexture("tiles."+this.getTextureName(), "textures/tiles/"+this.getTextureName()+".png",plugin);
 					}
 				}
 				if(!TextureManager.hasTexture("tiles."+this.getIconName())){
-					TextureManager.addExternalTexture("tiles."+this.getIconName(), GLCraft.getGLCraft().getPluginManager().getResourceLocation()+"textures\\tiles\\"+this.getIconName()+".png");
+					TextureManager.addPluginTexture("tiles."+this.getIconName(), "textures/tiles/"+this.getIconName()+".png",plugin);
 				}
 			}
 		}

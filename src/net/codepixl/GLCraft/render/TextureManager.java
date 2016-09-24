@@ -4,8 +4,7 @@ import java.awt.Graphics;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
-import java.net.URL;
-import java.util.Arrays;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
@@ -13,6 +12,8 @@ import java.util.Map;
 import javax.imageio.ImageIO;
 
 import net.codepixl.GLCraft.GLCraft;
+import net.codepixl.GLCraft.plugin.LoadedPlugin;
+import net.codepixl.GLCraft.plugin.Plugin;
 import net.codepixl.GLCraft.util.Constants;
 import net.codepixl.GLCraft.util.Spritesheet;
 import net.codepixl.GLCraft.util.Texture;
@@ -23,6 +24,7 @@ import net.codepixl.GLCraft.world.tile.Tile;
 public class TextureManager {
 	private static HashMap<String,String> textures = new HashMap<String,String>();
 	private static HashMap<String,float[]> atlasCoords = new HashMap<String,float[]>();
+	private static ArrayList<PluginTexture> pluginTextures = new ArrayList<PluginTexture>();
 	public static final String TILES = "textures/tiles/";
 	public static final String ITEMS = "textures/items/";
 	public static final String GUIS = "textures/gui/";
@@ -107,6 +109,28 @@ public class TextureManager {
 					y++;
 				}
 			}
+			Iterator<PluginTexture> it2 = pluginTextures.iterator();
+			while(it2.hasNext()){
+				PluginTexture next = it2.next();
+				BufferedImage image;
+				LoadedPlugin p = GLCraft.getGLCraft().getPluginManager().getLoadedPlugin(next.plugin);
+				try {
+					image = ImageIO.read(p.loader.getResourceAsStream(next.loc));
+					g.drawImage(image, x*16, y*16, null);
+					atlasCoords.put(next.name, new float[]{(float)x*(1f/(float)maxWidth),(float)y*(1f/(float)maxWidth)});
+				} catch (IOException | IllegalArgumentException e) {
+					e.printStackTrace();
+					System.err.println("Error adding "+next.name+" to texture atlas: Could not find file "+next.loc+" in plugin "+p.name+". Replacing with \"NO IMG\"");
+					e.printStackTrace();
+					g.drawImage(noimg, x*16, y*16, null);
+					atlasCoords.put(next.name, new float[]{(float)x*(1f/(float)maxWidth),(float)y*(1f/(float)maxWidth)});
+				}
+				x++;
+				if(x >= maxWidth){
+					x = 0;
+					y++;
+				}
+			}
 			try {
 				File outputfile = new File(Constants.GLCRAFTDIR,"/temp/atlas.png");
 				outputfile.getParentFile().mkdirs();
@@ -174,5 +198,8 @@ public class TextureManager {
 	}
 	public static boolean hasTexture(String name){
 		return textures.containsKey(name.toLowerCase());
+	}
+	public static void addPluginTexture(String name, String loc, Plugin plugin) {
+		pluginTextures.add(new PluginTexture(name,loc,plugin));
 	}
 }

@@ -1,11 +1,13 @@
 package net.codepixl.GLCraft.plugin;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.URL;
 import java.net.URLClassLoader;
+import java.nio.ByteBuffer;
 import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
 
 import javax.swing.JOptionPane;
 
@@ -22,13 +24,14 @@ public class LoadedPlugin {
 	public String description;
 	public String mainClass;
 	public String glVersion;
-	ClassLoader loader;
+	public ClassLoader loader;
 	Plugin plugin;
 	public LoadedPlugin(String path) throws IOException, ClassNotFoundException, InstantiationException, IllegalAccessException{
 		try{
 			GLCraft.getGLCraft().getPluginManager().currentlyLoadingPlugin = this;
-			this.path = path+"/";
-			byte[] data = Files.readAllBytes(new File(path+"/plugin.json").toPath());
+			loader = new URLClassLoader(new URL[]{new URL("jar:file:"+path+"!/")}, ClassLoader.getSystemClassLoader());
+			InputStream jsonInputStream = loader.getResourceAsStream("plugin.json");
+			byte[] data = readFully(jsonInputStream);
 			String jsonString = new String(data,StandardCharsets.UTF_8);
 			JSONObject json = new JSONObject(jsonString);
 			this.name = json.getString("pluginName");
@@ -40,7 +43,6 @@ public class LoadedPlugin {
 				JOptionPane.showMessageDialog(null, "The Plugin "+this.name+" is for a newer/older version of GLCraft. It will be deleted.",  "Error", JOptionPane.ERROR_MESSAGE);
 				deleteDirectory(new File(path));
 			}else{
-				loader = new URLClassLoader(new URL[]{new File(path).toURL()});
 				plugin = (Plugin) loader.loadClass(mainClass).newInstance();
 				plugin.init();
 			}
@@ -52,6 +54,17 @@ public class LoadedPlugin {
 			e.printStackTrace();
 			JOptionPane.showMessageDialog(null, "The Plugin "+this.name+" could not be loaded because of aliens/an unknown error.", "Error", JOptionPane.ERROR_MESSAGE);
 		}
+	}
+	
+	public static byte[] readFully(InputStream input) throws IOException{
+	    byte[] buffer = new byte[8192];
+	    int bytesRead;
+	    ByteArrayOutputStream output = new ByteArrayOutputStream();
+	    while ((bytesRead = input.read(buffer)) != -1)
+	    {
+	        output.write(buffer, 0, bytesRead);
+	    }
+	    return output.toByteArray();
 	}
 	
 	public LoadedPlugin(Plugin p){
