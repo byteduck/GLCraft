@@ -12,7 +12,7 @@ public class Constants {
 	public static Random rand = new Random();
 	public static int renderDistance = 10;
 	public static int worldLengthChunks = 10;
-	public static int seaLevel = 10;
+	public static int seaLevel = 62;
 	public static final int CHUNKSIZE = 16;
 	public static final float textSize = 0.5f;
 	public static boolean doneGenerating = false;

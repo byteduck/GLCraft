@@ -302,7 +302,7 @@ public class CentralManager extends Screen{
 	private void renderClouds(){
 		Spritesheet.clouds.bind();
 		Shape.currentSpritesheet = Spritesheet.clouds;
-		GL11.glTranslatef(cloudMove, 100f, 1000f);
+		GL11.glTranslatef(cloudMove, 127f, 1000f);
 		GL11.glRotatef(-90f, 1f, 0f, 0f);
 		GL11.glBegin(GL_QUADS);
 		Shape.createPlane(-4000f, 0, 0, new Color4f(1f,1f,1f,0.5f), new float[]{0f,0f}, 2000f);

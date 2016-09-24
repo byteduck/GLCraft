@@ -111,7 +111,7 @@ public class Chunk {
 						int posY = (int)pos.y+y;
 						int posZ = (int)pos.z+z;
 						//System.out.println(posX+","+posZ);
-						float noise = ((float) worldManager.noise.eval((double)posX/50d, (double)posZ/50d) + 1f)*(float)Constants.CHUNKSIZE;
+						float noise = ((float) worldManager.noise.eval((double)posX/50d, (double)posZ/50d) + 1f)*(float)Constants.CHUNKSIZE+50;
 						if(posY < noise){
 							if(posY == 0){
 								tiles[x][y][z] = Tile.Bedrock.getId();

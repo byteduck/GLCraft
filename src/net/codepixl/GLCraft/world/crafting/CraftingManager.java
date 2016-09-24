@@ -93,7 +93,7 @@ public class CraftingManager {
 		addRecipe(new Recipe(new ItemStack(Item.Bucket),"w w"," w ","   ",'w',new ItemStack(Tile.Wood)));
 		addRecipe(new Recipe(new ItemStack(Item.Bucket),"   ","w w"," w ",'w',new ItemStack(Tile.Wood)));
 		/**Furnace**/
-		addRecipe(new Recipe(new ItemStack(Tile.Furnace), "sss","s s","sss",'s',new ItemStack(Tile.Stone)));
+		addRecipe(new Recipe(new ItemStack(Tile.Furnace), "sss","s s","sss",'s',new ItemStack(Tile.Cobblestone)));
 		/**Condensed Bluestone**/
 		addRecipe(new Recipe(new ItemStack(Tile.CondensedBluestone),"bbb","bbb","bbb",'b',new ItemStack(Tile.Bluestone)));
 		/**Wood Axe**/
