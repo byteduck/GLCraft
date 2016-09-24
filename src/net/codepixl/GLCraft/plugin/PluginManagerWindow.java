@@ -38,13 +38,11 @@ public class PluginManagerWindow extends JFrame{
 		this.setSize(356, 249);
 		top = new DefaultMutableTreeNode("Plugins");
 		addPlugins();
-		final PluginManagerWindow window = this;
 		btnNewButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				JFileChooser jf = new JFileChooser();
 				FileNameExtensionFilter filter = new FileNameExtensionFilter("Compressed GLCraft Plugins", "glcp", "zip", "jar");
 				jf.setFileFilter(filter);
-				window.setAlwaysOnTop(false);
 				int returnVal = jf.showOpenDialog(null);
 				if(returnVal == JFileChooser.APPROVE_OPTION){
 					File plugin = jf.getSelectedFile();
@@ -59,7 +57,7 @@ public class PluginManagerWindow extends JFrame{
 						JSONObject j = new JSONObject(jsonString);
 						String name = j.getString("pluginName");
 						Files.move(tempFolder.toPath(), new File(PluginManager.path, name).toPath(), StandardCopyOption.REPLACE_EXISTING);
-						JOptionPane.showMessageDialog(null, "Plugin added successfully.", "GLCraft", JOptionPane.PLAIN_MESSAGE);
+						JOptionPane.showMessageDialog(null, "Plugin added successfully.\nRestart GLCraft.", "GLCraft", JOptionPane.INFORMATION_MESSAGE);
 					} catch (ZipException e1) {
 						// TODO Auto-generated catch block
 						e1.printStackTrace();
@@ -68,9 +66,11 @@ public class PluginManagerWindow extends JFrame{
 						// TODO Auto-generated catch block
 						e1.printStackTrace();
 						JOptionPane.showMessageDialog(null, "There was an error installing the plugin.\nMake sure to remove existing plugins with the same name first.", "GLCraft", JOptionPane.ERROR_MESSAGE);
+					} catch(Exception e1){
+						e1.printStackTrace();
+						JOptionPane.showMessageDialog(null, "Something went horribly wrong. Make sure the plugin.json is formatted correctly.", "GLCraft", JOptionPane.ERROR_MESSAGE);
 					}
 				}
-				window.setAlwaysOnTop(true);
 			}
 		});
 		getContentPane().add(btnNewButton, BorderLayout.NORTH);
@@ -90,7 +90,6 @@ public class PluginManagerWindow extends JFrame{
 		getContentPane().add(scrollPane, BorderLayout.CENTER);
 		this.setLocationRelativeTo(null);
 		this.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
-		this.setAlwaysOnTop(true);
 	}
 	
 	private void addPlugins(){
