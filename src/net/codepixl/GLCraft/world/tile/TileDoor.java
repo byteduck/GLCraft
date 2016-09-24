@@ -92,7 +92,7 @@ public class TileDoor extends Tile{
 		if(meta < 2)
 			return new AABB(0.0625f,1,1).update(new Vector3f(x,y,z+0.5f));
 		else
-			return new AABB(1,1,0.0625f).update(new Vector3f(x,y,z));
+			return new AABB(1,1,0.0625f).update(new Vector3f(x+0.5f,y,z));
 	}
 	
 	@Override

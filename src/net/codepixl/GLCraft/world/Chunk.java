@@ -592,7 +592,7 @@ public static void createCustomTree(int x, int y, int z,Tile trunk,Tile leaf, by
 				queueTickTileUpdate(x,y,z);
 			}
 			tiles[x][y][z] = tile;
-			this.meta[x][y][z] = meta;
+			setMetaAtPos(x,y,z,meta,rebuild);
 			Tile.getTile(tile).onPlace((int)ax, (int)ay, (int)az, worldManager);
 			//ALWAYS assume that the rebuild argument will be false (except in special cases) because the setting of the meta rebuilds the chunk.
 			if(rebuild){

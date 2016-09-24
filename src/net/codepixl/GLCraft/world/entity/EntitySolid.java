@@ -32,9 +32,12 @@ public class EntitySolid extends Entity{
 	}
 	
 	public void move(float x, float y, float z){
-		moveMain(x,0,0);
-		moveMain(0,y,0);
-		moveMain(0,0,z);
+		if(moveMain(x,0,0))
+			this.getVel().x = 0;
+		if(moveMain(0,y,0))
+			this.getVel().y = 0;
+		if(moveMain(0,0,z))
+			this.getVel().z = 0;
 	}
 	
 	protected final boolean moveMain(float x, float y, float z){
@@ -125,10 +128,9 @@ public class EntitySolid extends Entity{
 	public void update(){
 		super.update();
 		aabb.update(new Vector3f(pos.x+(float)aabb.r[0],pos.y,pos.z+(float)aabb.r[2]));
-		while(testHitHead(new Vector3f(this.getX(),this.getY()+this.aabb.getSize().y+0.01f,this.getZ()))){
+		/*while(testHitHead(new Vector3f(this.getX(),this.getY()+this.aabb.getSize().y+0.01f,this.getZ()))){
 			this.getVel().y = 0f;
-			this.pos.y-=0.01f;
-		}
+		}*/
 		this.move((this.getVelocity().x * (float)Time.getDelta() * 10),(this.getVelocity().y * (float)Time.getDelta() * 10),(this.getVelocity().z * (float)Time.getDelta() * 10));
 		if(this.isInWater()){
 			this.getVelocity().y = MathUtils.towardsValue(this.getVelocity().y, (float)Time.getDelta()*3, -0.2f);

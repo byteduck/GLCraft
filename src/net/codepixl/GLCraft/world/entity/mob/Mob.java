@@ -84,13 +84,13 @@ public class Mob extends EntitySolid implements GameObj{
 	@Override
 	public void move(float x, float y, float z){
 		if(!isInWater()){
-			if(moveMain(x,0,0)) lastCollideX = System.currentTimeMillis();
-			if(moveMain(0,y,0)) lastCollideY = System.currentTimeMillis();
-			if(moveMain(0,0,z)) lastCollideZ = System.currentTimeMillis();
+			if(moveMain(x,0,0)){ lastCollideX = System.currentTimeMillis(); this.getVel().x = 0;}
+			if(moveMain(0,y,0)){ lastCollideY = System.currentTimeMillis(); this.getVel().y = 0;}
+			if(moveMain(0,0,z)){ lastCollideZ = System.currentTimeMillis(); this.getVel().z = 0;}
 		}else{
-			if(moveMain(x*0.3f,0,0)) lastCollideX = System.currentTimeMillis();
-			if(moveMain(0,y,0)) lastCollideY = System.currentTimeMillis();
-			if(moveMain(0,0,z*0.3f)) lastCollideZ = System.currentTimeMillis();
+			if(moveMain(x*0.3f,0,0)){ lastCollideX = System.currentTimeMillis(); this.getVel().x = 0;}
+			if(moveMain(0,y,0)){ lastCollideY = System.currentTimeMillis(); this.getVel().y = 0;}
+			if(moveMain(0,0,z*0.3f)){ lastCollideZ = System.currentTimeMillis(); this.getVel().z = 0;}
 		}
 	}
 	
