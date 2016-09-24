@@ -48,6 +48,24 @@ public class GLCraftPathfinderProvider implements PathfinderProvider<Vector3i>{
 		if(!visited.contains(new PathfindingNode(pos, null, null, null)) && isValidPos(pos)){
 			ret.add(new PathfindingNode(pos, node, node.start, node.dest));
 		}
+		if(y == 0){
+			pos = new Vector3i(node.pos.x+1, node.pos.y+y, node.pos.z+1);
+			if(!visited.contains(new PathfindingNode(pos, null, null, null)) && isValidPos(pos)){
+				ret.add(new PathfindingNode(pos, node, node.start, node.dest));
+			}
+			pos = new Vector3i(node.pos.x-1, node.pos.y+y, node.pos.z+1);
+			if(!visited.contains(new PathfindingNode(pos, null, null, null)) && isValidPos(pos)){
+				ret.add(new PathfindingNode(pos, node, node.start, node.dest));
+			}
+			pos = new Vector3i(node.pos.x-1, node.pos.y+y, node.pos.z-1);
+			if(!visited.contains(new PathfindingNode(pos, null, null, null)) && isValidPos(pos)){
+				ret.add(new PathfindingNode(pos, node, node.start, node.dest));
+			}
+			pos = new Vector3i(node.pos.x+1, node.pos.y+y, node.pos.z-1);
+			if(!visited.contains(new PathfindingNode(pos, null, null, null)) && isValidPos(pos)){
+				ret.add(new PathfindingNode(pos, node, node.start, node.dest));
+			}
+		}
 	}
 
 }

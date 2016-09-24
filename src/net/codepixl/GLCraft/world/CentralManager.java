@@ -209,6 +209,20 @@ public class CentralManager extends Screen{
 				if(Keyboard.isKeyDown(Keyboard.KEY_F2)){
 					takeScreenshot();
 				}
+				Vector3f pos = worldManager.entityManager.getPlayer().getPos();
+				if(Keyboard.isKeyDown(Keyboard.KEY_O)){
+					pathfindPos = new Vector3i(pos);
+				}
+				if(Keyboard.isKeyDown(Keyboard.KEY_P)){
+					pathfinder = new Pathfinder(new Vector3i(pos), pathfindPos, worldManager);
+					pathfinder.pathfind(1000);
+				}
+				if(Keyboard.isKeyDown(Keyboard.KEY_SEMICOLON)){
+					worldManager.entityManager.add(new EntityTestAnimal(pos, worldManager));
+				}
+				if(Keyboard.isKeyDown(Keyboard.KEY_APOSTROPHE)){
+					worldManager.entityManager.add(new EntityTestHostile(pos, worldManager));
+				}
 				/*Vector3f pos = worldManager.entityManager.getPlayer().getPos();
 				if(Keyboard.isKeyDown(Keyboard.KEY_F)){
 					worldManager.setTileAtPos(pos, Tile.Furnace.getId(), true);
