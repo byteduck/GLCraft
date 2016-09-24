@@ -224,11 +224,7 @@ public class CentralManager extends Screen{
 					worldManager.entityManager.add(new EntityTestHostile(pos, worldManager));
 				}
 				if(Keyboard.isKeyDown(Keyboard.KEY_G)){
-					worldManager.entityManager.getPlayer().addToInventory(new ItemStack(Item.DiamondPick, 1));
-					worldManager.entityManager.getPlayer().addToInventory(new ItemStack(Item.StonePick, 1));
-					worldManager.entityManager.getPlayer().addToInventory(new ItemStack(Item.WoodPick, 1));
-					worldManager.entityManager.getPlayer().addToInventory(new ItemStack(Item.IronPick, 1));
-					worldManager.entityManager.getPlayer().addToInventory(new ItemStack(Item.GoldPick, 1));
+					worldManager.entityManager.getPlayer().addToInventory(new ItemStack(Tile.DiamondOre, 1));
 				}
 				/*Vector3f pos = worldManager.entityManager.getPlayer().getPos();
 				if(Keyboard.isKeyDown(Keyboard.KEY_F)){

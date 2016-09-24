@@ -2,6 +2,9 @@ package net.codepixl.GLCraft.world.tile;
 
 import com.nishu.utils.Color4f;
 
+import net.codepixl.GLCraft.util.BreakSource;
+import net.codepixl.GLCraft.world.WorldManager;
+import net.codepixl.GLCraft.world.item.ItemStack;
 import net.codepixl.GLCraft.world.tile.material.Material;
 
 public class TileGrass extends Tile{
@@ -31,6 +34,11 @@ public class TileGrass extends Tile{
 	@Override
 	public boolean hasMultipleTextures(){
 		return true;
+	}
+	
+	@Override
+	public ItemStack getDrop(int x, int y, int z, BreakSource source, WorldManager w){
+		return new ItemStack(Tile.Dirt);
 	}
 	
 	@Override

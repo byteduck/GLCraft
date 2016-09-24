@@ -63,6 +63,10 @@ public class GUICrafting extends GUIInventoryScreen{
 		player.dropItem(slot2.itemstack);
 		player.dropItem(slot3.itemstack);
 		player.dropItem(slot4.itemstack);
+		slot1.itemstack = new ItemStack();
+		slot2.itemstack = new ItemStack();
+		slot3.itemstack = new ItemStack();
+		slot4.itemstack = new ItemStack();
 	}
 	
 	@Override

@@ -121,6 +121,15 @@ public class GUICraftingAdvanced extends GUIInventoryScreen{
 		player.dropItem(slot7.itemstack);
 		player.dropItem(slot8.itemstack);
 		player.dropItem(slot9.itemstack);
+		slot1.itemstack = new ItemStack();
+		slot2.itemstack = new ItemStack();
+		slot3.itemstack = new ItemStack();
+		slot4.itemstack = new ItemStack();
+		slot5.itemstack = new ItemStack();
+		slot6.itemstack = new ItemStack();
+		slot7.itemstack = new ItemStack();
+		slot8.itemstack = new ItemStack();
+		slot9.itemstack = new ItemStack();
 	}
 	
 	private GUISlot getHoveredSlot(){

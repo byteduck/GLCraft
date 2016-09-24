@@ -90,8 +90,8 @@ public class CraftingManager {
 		/**Chest**/
 		addRecipe(new Recipe(new ItemStack(Tile.Chest),"www","w w","www",'w',new ItemStack(Tile.Wood)));
 		/**Bucket**/
-		addRecipe(new Recipe(new ItemStack(Item.Bucket),"w w"," w ","   ",'w',new ItemStack(Tile.Wood)));
-		addRecipe(new Recipe(new ItemStack(Item.Bucket),"   ","w w"," w ",'w',new ItemStack(Tile.Wood)));
+		addRecipe(new Recipe(new ItemStack(Item.Bucket),"w w"," w ","   ",'w',new ItemStack(Item.IronIngot)));
+		addRecipe(new Recipe(new ItemStack(Item.Bucket),"   ","w w"," w ",'w',new ItemStack(Item.IronIngot)));
 		/**Furnace**/
 		addRecipe(new Recipe(new ItemStack(Tile.Furnace), "sss","s s","sss",'s',new ItemStack(Tile.Cobblestone)));
 		/**Condensed Bluestone**/
