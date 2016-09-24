@@ -64,6 +64,21 @@ public class TileDoor extends Tile{
 	
 	@Override
 	public boolean onClick(int x, int y, int z, EntityPlayer p, WorldManager w){
+		byte m = w.getMetaAtPos(x,y,z);
+		byte m2 = (byte) (m%2);
+		byte ma = m2 == 0 ? w.getMetaAtPos(x, y+1, z) : w.getMetaAtPos(x, y-1, z);
+		if(m < 2){
+			m +=2;
+			ma+=2;
+		}else{
+			m-=2;
+			ma-=2;
+		}
+		w.setMetaAtPos(x, y, z, m, true);
+		if(m2 == 0)
+			w.setMetaAtPos(x, y+1, z, ma, true);
+		else
+			w.setMetaAtPos(x, y-1, z, ma, true);
 		return true;
 	}
 	
@@ -74,7 +89,10 @@ public class TileDoor extends Tile{
 	
 	@Override
 	public AABB getAABB(int x, int y, int z, byte meta, WorldManager w){
-		return new AABB(0.0625f,1,1).update(new Vector3f(x,y,z+0.5f));
+		if(meta < 2)
+			return new AABB(0.0625f,1,1).update(new Vector3f(x,y,z+0.5f));
+		else
+			return new AABB(1,1,0.0625f).update(new Vector3f(x,y,z));
 	}
 	
 	@Override
@@ -91,9 +109,9 @@ public class TileDoor extends Tile{
 	public void onBreak(int x, int y, int z, boolean drop, BreakSource source, WorldManager worldManager){
 		super.onBreak(x, y, z, drop, source, worldManager);
 		if(source.type == BreakSource.Type.PLAYER){
-			if(worldManager.getMetaAtPos(x, y, z) == 0)
+			if(worldManager.getMetaAtPos(x, y, z)%2 == 0)
 				worldManager.setTileAtPos(x, y+1, z, Tile.Air.getId(), true);
-			else if(worldManager.getMetaAtPos(x, y, z) == 1)
+			else
 				worldManager.setTileAtPos(x, y-1, z, Tile.Air.getId(), true);
 		}
 	}
@@ -111,17 +129,32 @@ public class TileDoor extends Tile{
 		 * bottom - first top - second front - third back - fourth left -
 		 * fifth right - sixth
 		 */
-		float[] texCoordsA = meta == 0 ? TextureManager.texture("tiles.door_bottom") : TextureManager.texture("tiles.door_top");
-		float[] texCoords = new float[]{
-			Tile.Wood.getTexCoords((byte) 0)[0], Tile.Wood.getTexCoords((byte) 0)[1],
-			Tile.Wood.getTexCoords((byte) 0)[0], Tile.Wood.getTexCoords((byte) 0)[1],
-			Tile.Wood.getTexCoords((byte) 0)[0], Tile.Wood.getTexCoords((byte) 0)[1],
-			Tile.Wood.getTexCoords((byte) 0)[0], Tile.Wood.getTexCoords((byte) 0)[1],
-			texCoordsA[0], texCoordsA[1],
-			texCoordsA[0], texCoordsA[1]
-		};
+		float[] texCoordsA = meta%2 == 0 ? TextureManager.texture("tiles.door_bottom") : TextureManager.texture("tiles.door_top");
+		float[] texCoords;
+		if(meta < 2){
+			texCoords = new float[]{
+				Tile.Wood.getTexCoords((byte) 0)[0], Tile.Wood.getTexCoords((byte) 0)[1],
+				Tile.Wood.getTexCoords((byte) 0)[0], Tile.Wood.getTexCoords((byte) 0)[1],
+				Tile.Wood.getTexCoords((byte) 0)[0], Tile.Wood.getTexCoords((byte) 0)[1],
+				Tile.Wood.getTexCoords((byte) 0)[0], Tile.Wood.getTexCoords((byte) 0)[1],
+				texCoordsA[0], texCoordsA[1],
+				texCoordsA[0], texCoordsA[1]
+			};
+		}else{
+			texCoords = new float[]{
+					Tile.Wood.getTexCoords((byte) 0)[0], Tile.Wood.getTexCoords((byte) 0)[1],
+					Tile.Wood.getTexCoords((byte) 0)[0], Tile.Wood.getTexCoords((byte) 0)[1],
+					texCoordsA[0], texCoordsA[1],
+					texCoordsA[0], texCoordsA[1],
+					Tile.Wood.getTexCoords((byte) 0)[0], Tile.Wood.getTexCoords((byte) 0)[1],
+					Tile.Wood.getTexCoords((byte) 0)[0], Tile.Wood.getTexCoords((byte) 0)[1]
+				};
+		}
 		GL11.glBegin(GL11.GL_QUADS);
-		Shape.createRect(x, y, z, Color4f.WHITE, texCoords, 0.0625f, 1f, 1f);
+		if(meta < 2)
+			Shape.createRect(x, y, z, Color4f.WHITE, texCoords, 0.0625f, 1f, 1f);
+		else
+			Shape.createRect(x, y, z, Color4f.WHITE, texCoords, 1f, 1f, 0.0625f);
 		GL11.glEnd();
 	}
 }
