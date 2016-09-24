@@ -319,8 +319,7 @@ public class WorldManager {
 			for(int y = (int) (entitySolid.getY()-1); y < entitySolid.getY()+mAABB.getSize().y+1; y++){
 				for(int z = (int) (entitySolid.getZ()-1); z < entitySolid.getZ()+mAABB.getSize().z; z++){
 					if(!Tile.getTile((byte)getTileAtPos(x,y,z)).canPassThrough()){
-						AABB aabb = new AABB(1,1,1);
-						aabb.update(new Vector3f(x+0.5f,y,z+0.5f));
+						AABB aabb = Tile.getTile((byte)getTileAtPos(x,y,z)).getAABB(x,y,z,getMetaAtPos(x,y,z),this);
 						//if(!AABB.testAABB(aabb, mAABB))
 							arraylist.add(aabb);
 					}
@@ -337,8 +336,7 @@ public class WorldManager {
 			for(int y = (int) (entitySolid.getY()-1); y < entitySolid.getY()+mAABB.getSize().y; y++){
 				for(int z = (int) (entitySolid.getZ()-1); z < entitySolid.getZ()+mAABB.getSize().z; z++){
 					if(Tile.getTile((byte)getTileAtPos(x,y,z)) == t){
-						AABB aabb = Tile.getTile((byte)getTileAtPos(x,y,z)).getAABB(getMetaAtPos(x,y,z));
-						aabb.update(new Vector3f(x+0.5f,y,z+0.5f));
+						AABB aabb = Tile.getTile((byte)getTileAtPos(x,y,z)).getAABB(x,y,z,getMetaAtPos(x,y,z),this);
 						//if(!AABB.testAABB(aabb, mAABB))
 							arraylist.add(aabb);
 					}
@@ -385,8 +383,7 @@ public class WorldManager {
 	
 	public void setTileAtPos(int x, int y, int z, byte tile, BreakSource source, boolean rebuild, byte meta){
 		Chunk c = getChunk(x,y,z);
-		c.setTileAtPos(x-(int)c.getPos().x, y-(int)c.getPos().y, z-(int)c.getPos().z, tile, source, false);
-		setMetaAtPos(x,y,z,meta,rebuild);
+		c.setTileAtPos(x-(int)c.getPos().x, y-(int)c.getPos().y, z-(int)c.getPos().z, tile, meta, source, true);
 		blockUpdate(x+1,y,z);
 		blockUpdate(x-1,y,z);
 		blockUpdate(x,y+1,z);

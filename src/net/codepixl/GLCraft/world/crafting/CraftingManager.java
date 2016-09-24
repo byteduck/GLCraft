@@ -106,6 +106,9 @@ public class CraftingManager {
 		addRecipe(new Recipe(new ItemStack(Item.GoldAxe), "gg ", "gs "," s ",'g',new ItemStack(Item.GoldIngot),'s',new ItemStack(Item.Stick)));
 		/**Diamond Axe**/
 		addRecipe(new Recipe(new ItemStack(Item.DiamondAxe), "dd ", "ds "," s ",'d',new ItemStack(Item.Diamond),'s',new ItemStack(Item.Stick)));
+		/**Door**/
+		addRecipe(new Recipe(new ItemStack(Tile.Door), "ww ","ww ","ww ",'w',new ItemStack(Tile.Wood)));
+		addRecipe(new Recipe(new ItemStack(Tile.Door), " ww"," ww"," ww",'w',new ItemStack(Tile.Wood)));
 		
 		/* FURNACE RECIPES */
 		

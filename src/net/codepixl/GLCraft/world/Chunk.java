@@ -575,7 +575,7 @@ public static void createCustomTree(int x, int y, int z,Tile trunk,Tile leaf, by
 		}
 	}
 	
-	public void setTileAtPos(int x, int y, int z, byte tile, BreakSource source, boolean rebuild){
+	public void setTileAtPos(int x, int y, int z, byte tile, byte meta, BreakSource source, boolean rebuild){
 		boolean inBoundsOne = (x >= 0) && (x < tiles.length);
 		boolean inBoundsTwo = (y >= 0) && (y < tiles[0].length);
 		boolean inBoundsThree = (z >= 0) && (z < tiles[0][0].length);
@@ -592,10 +592,12 @@ public static void createCustomTree(int x, int y, int z,Tile trunk,Tile leaf, by
 				queueTickTileUpdate(x,y,z);
 			}
 			tiles[x][y][z] = tile;
+			this.meta[x][y][z] = meta;
 			Tile.getTile(tile).onPlace((int)ax, (int)ay, (int)az, worldManager);
 			//ALWAYS assume that the rebuild argument will be false (except in special cases) because the setting of the meta rebuilds the chunk.
 			if(rebuild){
 				queueLight();
+				rebuild();
 				/**worldManager.getChunkAtCoords(MathUtils.coordsToChunkPos((int)ax-7, (int)ay, (int)az)).queueLight();
 				worldManager.getChunkAtCoords(MathUtils.coordsToChunkPos((int)ax+7, (int)ay, (int)az)).queueLight();
 				worldManager.getChunkAtCoords(MathUtils.coordsToChunkPos((int)ax, (int)ay-7, (int)az)).queueLight();

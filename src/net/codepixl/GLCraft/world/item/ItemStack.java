@@ -292,7 +292,7 @@ public class ItemStack{
 				if(this.isItem())
 					Shape.createCenteredSquare(0,0, new Color4f(1f,1f,1f,1f), this.getItem().getTexCoords(), size);
 				else
-					Shape.createCenteredSquare(0,0, new Color4f(1f,1f,1f,1f), this.getTile().getTexCoords(), size);
+					Shape.createCenteredSquare(0,0, new Color4f(1f,1f,1f,1f), this.getTile().getIconCoords(), size);
 				
 			}
 			glEnd();

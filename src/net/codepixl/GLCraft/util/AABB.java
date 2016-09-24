@@ -38,13 +38,14 @@ public class AABB {
 		vel = Arrays.copyOf(aabb.vel, aabb.vel.length);
 	}
 
-	public void update(final Vector3f position) {
+	public AABB update(final Vector3f position) {
 		center[0] = position.getX();
 		center[1] = position.getY() + r[1];
 		center[2] = position.getZ();
 		pos[0] = position.x;
 		pos[1] = position.y;
 		pos[2] = position.z;
+		return this;
 	}
 	
 	public void update(final Vector3f position, final Vector3f velocity) {

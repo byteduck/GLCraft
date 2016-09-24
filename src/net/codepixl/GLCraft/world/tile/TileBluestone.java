@@ -64,8 +64,8 @@ public class TileBluestone extends Tile{
 	}
 	
 	@Override
-	public AABB getAABB(byte meta){
-		return new AABB(1,0.1f,1);
+	public AABB getAABB(int x, int y, int z, byte meta, WorldManager w){
+		return new AABB(1,0.1f,1).update(new Vector3f(x+0.5f,y,z+0.5f));
 	}
 	
 	@Override

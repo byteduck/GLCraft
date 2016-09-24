@@ -16,6 +16,10 @@ public class Shape {
 	public static Spritesheet currentSpritesheet = Spritesheet.atlas;
 	
 	public static void createCube(float x, float y, float z, Color4f color, float[] texCoords, float size) {
+		createRect(x,y,z,color,texCoords,size,size,size);
+	}
+	
+	public static void createRect(float x, float y, float z, Color4f color, float[] texCoords, float sizeX, float sizeY, float sizeZ) {
 		try{
 		//color = getColor(new Vector3f(x, y, z));
 
@@ -23,68 +27,68 @@ public class Shape {
 			// bottom face
 			glColor4f(color.r, color.g, color.b, color.a);
 			glTexCoord2f(texCoords[0], texCoords[1]);
-			glVertex3f(x, y, z + size);
+			glVertex3f(x, y, z + sizeZ);
 			glTexCoord2f(texCoords[0] + currentSpritesheet.uniformSize(), texCoords[1]);
-			glVertex3f(x + size, y, z + size);
+			glVertex3f(x + sizeX, y, z + sizeZ);
 			glTexCoord2f(texCoords[0] + currentSpritesheet.uniformSize(), texCoords[1] + currentSpritesheet.uniformSize());
-			glVertex3f(x + size, y, z);
+			glVertex3f(x + sizeX, y, z);
 			glTexCoord2f(texCoords[0], texCoords[1] + currentSpritesheet.uniformSize());
 			glVertex3f(x, y, z);
 
 			// top face
 			glColor4f(color.r, color.g, color.b, color.a);
 			glTexCoord2f(texCoords[0], texCoords[1]);
-			glVertex3f(x, y + size, z);
+			glVertex3f(x, y + sizeY, z);
 			glTexCoord2f(texCoords[0] + currentSpritesheet.uniformSize(), texCoords[1]);
-			glVertex3f(x + size, y + size, z);
+			glVertex3f(x + sizeX, y + sizeY, z);
 			glTexCoord2f(texCoords[0] + currentSpritesheet.uniformSize(), texCoords[1] + currentSpritesheet.uniformSize());
-			glVertex3f(x + size, y + size, z + size);
+			glVertex3f(x + sizeX, y + sizeY, z + sizeZ);
 			glTexCoord2f(texCoords[0], texCoords[1] + currentSpritesheet.uniformSize());
-			glVertex3f(x, y + size, z + size);
+			glVertex3f(x, y + sizeY, z + sizeZ);
 
 			// front face
 			glColor4f(color.r, color.g, color.b, color.a);
 			glTexCoord2f(texCoords[0], texCoords[1]);
 			glVertex3f(x, y, z);
 			glTexCoord2f(texCoords[0] + currentSpritesheet.uniformSize(), texCoords[1]);
-			glVertex3f(x + size, y, z);
+			glVertex3f(x + sizeX, y, z);
 			glTexCoord2f(texCoords[0] + currentSpritesheet.uniformSize(), texCoords[1] + currentSpritesheet.uniformSize());
-			glVertex3f(x + size, y + size, z);
+			glVertex3f(x + sizeX, y + sizeY, z);
 			glTexCoord2f(texCoords[0], texCoords[1] + currentSpritesheet.uniformSize());
-			glVertex3f(x, y + size, z);
+			glVertex3f(x, y + sizeY, z);
 
 			// back face
 			glColor4f(color.r, color.g, color.b, color.a);
 			glTexCoord2f(texCoords[0], texCoords[1]);
-			glVertex3f(x, y + size, z + size);
+			glVertex3f(x, y + sizeY, z + sizeZ);
 			glTexCoord2f(texCoords[0] + currentSpritesheet.uniformSize(), texCoords[1]);
-			glVertex3f(x + size, y + size, z + size);
+			glVertex3f(x + sizeX, y + sizeY, z + sizeZ);
 			glTexCoord2f(texCoords[0] + currentSpritesheet.uniformSize(), texCoords[1] + currentSpritesheet.uniformSize());
-			glVertex3f(x + size, y, z + size);
+			glVertex3f(x + sizeX, y, z + sizeZ);
 			glTexCoord2f(texCoords[0], texCoords[1] + currentSpritesheet.uniformSize());
-			glVertex3f(x, y, z + size);
+			glVertex3f(x, y, z + sizeZ);
 
 			// left face
 			glColor4f(color.r, color.g, color.b, color.a);
 			glTexCoord2f(texCoords[0], texCoords[1]);
-			glVertex3f(x + size, y, z);
+			glVertex3f(x + sizeX, y, z);
 			glTexCoord2f(texCoords[0] + currentSpritesheet.uniformSize(), texCoords[1]);
-			glVertex3f(x + size, y, z + size);
+			glVertex3f(x + sizeX, y, z + sizeZ);
 			glTexCoord2f(texCoords[0] + currentSpritesheet.uniformSize(), texCoords[1] + currentSpritesheet.uniformSize());
-			glVertex3f(x + size, y + size, z + size);
+			glVertex3f(x + sizeX, y + sizeY, z + sizeZ);
 			glTexCoord2f(texCoords[0], texCoords[1] + currentSpritesheet.uniformSize());
-			glVertex3f(x + size, y + size, z);
+			glVertex3f(x + sizeX, y + sizeY, z);
 
 			// right face
 			glColor4f(color.r, color.g, color.b, color.a);
 			glTexCoord2f(texCoords[0], texCoords[1]);
-			glVertex3f(x, y, z + size);
+			glVertex3f(x, y, z + sizeZ);
 			glTexCoord2f(texCoords[0] + currentSpritesheet.uniformSize(), texCoords[1]);
 			glVertex3f(x, y, z);
 			glTexCoord2f(texCoords[0] + currentSpritesheet.uniformSize(), texCoords[1] + currentSpritesheet.uniformSize());
-			glVertex3f(x, y + size, z);
+			glVertex3f(x, y + sizeY, z);
 			glTexCoord2f(texCoords[0], texCoords[1] + currentSpritesheet.uniformSize());
-			glVertex3f(x, y + size, z + size);
+			glVertex3f(x, y + sizeY, z + sizeZ);
 		} else if (texCoords.length > 2) {
 			/*
 			 * bottom - first top - second front - third back - fourth left -
@@ -93,71 +97,71 @@ public class Shape {
 			// bottom face (0, 1)
 			glColor4f(color.r, color.g, color.b, color.a);
 			glTexCoord2f(texCoords[0], texCoords[1]);
-			glVertex3f(x, y, z + size);
+			glVertex3f(x, y, z + sizeZ);
 			glTexCoord2f(texCoords[0] + currentSpritesheet.uniformSize(), texCoords[1]);
-			glVertex3f(x + size, y, z + size);
+			glVertex3f(x + sizeX, y, z + sizeZ);
 			glTexCoord2f(texCoords[0] + currentSpritesheet.uniformSize(), texCoords[1] + currentSpritesheet.uniformSize());
-			glVertex3f(x + size, y, z);
+			glVertex3f(x + sizeX, y, z);
 			glTexCoord2f(texCoords[0], texCoords[1] + currentSpritesheet.uniformSize());
 			glVertex3f(x, y, z);
 
 			// top face (2, 3)
 			glColor4f(color.r, color.g, color.b, color.a);
 			glTexCoord2f(texCoords[2], texCoords[3]);
-			glVertex3f(x, y + size, z);
+			glVertex3f(x, y + sizeY, z);
 			glTexCoord2f(texCoords[2] + currentSpritesheet.uniformSize(), texCoords[3]);
-			glVertex3f(x + size, y + size, z);
+			glVertex3f(x + sizeX, y + sizeY, z);
 			glTexCoord2f(texCoords[2] + currentSpritesheet.uniformSize(), texCoords[3] + currentSpritesheet.uniformSize());
-			glVertex3f(x + size, y + size, z + size);
+			glVertex3f(x + sizeX, y + sizeY, z + sizeZ);
 			glTexCoord2f(texCoords[2], texCoords[3] + currentSpritesheet.uniformSize());
-			glVertex3f(x, y + size, z + size);
+			glVertex3f(x, y + sizeY, z + sizeZ);
 
 			// front face (4, 5)
 			glColor4f(color.r, color.g, color.b, color.a);
 			glTexCoord2f(texCoords[4], texCoords[5] + currentSpritesheet.uniformSize());
 			glVertex3f(x, y, z);
 			glTexCoord2f(texCoords[4] + currentSpritesheet.uniformSize(), texCoords[5] + currentSpritesheet.uniformSize());
-			glVertex3f(x + size, y, z);
+			glVertex3f(x + sizeX, y, z);
 			glTexCoord2f(texCoords[4] + currentSpritesheet.uniformSize(), texCoords[5]);
-			glVertex3f(x + size, y + size, z);
+			glVertex3f(x + sizeX, y + sizeY, z);
 			glTexCoord2f(texCoords[4], texCoords[5]);
-			glVertex3f(x, y + size, z);
+			glVertex3f(x, y + sizeY, z);
 
 			// back face (6, 7)
 			glColor4f(color.r, color.g, color.b, color.a);
 			glTexCoord2f(texCoords[6], texCoords[7]);
-			glVertex3f(x, y + size, z + size);
+			glVertex3f(x, y + sizeY, z + sizeZ);
 			glTexCoord2f(texCoords[6] + currentSpritesheet.uniformSize(), texCoords[7]);
-			glVertex3f(x + size, y + size, z + size);
+			glVertex3f(x + sizeX, y + sizeY, z + sizeZ);
 			glTexCoord2f(texCoords[6] + currentSpritesheet.uniformSize(), texCoords[7] + currentSpritesheet.uniformSize());
-			glVertex3f(x + size, y, z + size);
+			glVertex3f(x + sizeX, y, z + sizeZ);
 			glTexCoord2f(texCoords[6], texCoords[7] + currentSpritesheet.uniformSize());
-			glVertex3f(x, y, z + size);
+			glVertex3f(x, y, z + sizeZ);
 
 			// left face (8, 9)
 			glColor4f(color.r, color.g, color.b, color.a);
 			glTexCoord2f(texCoords[8], texCoords[9] + currentSpritesheet.uniformSize());
-			glVertex3f(x + size, y, z);
+			glVertex3f(x + sizeX, y, z);
 			glTexCoord2f(texCoords[8] + currentSpritesheet.uniformSize(), texCoords[9] + currentSpritesheet.uniformSize());
-			glVertex3f(x + size, y, z + size);
+			glVertex3f(x + sizeX, y, z + sizeZ);
 			glTexCoord2f(texCoords[8] + currentSpritesheet.uniformSize(), texCoords[9]);
-			glVertex3f(x + size, y + size, z + size);
+			glVertex3f(x + sizeX, y + sizeY, z + sizeZ);
 			glTexCoord2f(texCoords[8], texCoords[9]);
-			glVertex3f(x + size, y + size, z);
+			glVertex3f(x + sizeX, y + sizeY, z);
 
 			// right face (10, 11)
 			glColor4f(color.r, color.g, color.b, color.a);
 			glTexCoord2f(texCoords[10], texCoords[11] + currentSpritesheet.uniformSize());
-			glVertex3f(x, y, z + size);
+			glVertex3f(x, y, z + sizeZ);
 			glTexCoord2f(texCoords[10] + currentSpritesheet.uniformSize(), texCoords[11] + currentSpritesheet.uniformSize());
 			glVertex3f(x, y, z);
 			glTexCoord2f(texCoords[10] + currentSpritesheet.uniformSize(), texCoords[11]);
-			glVertex3f(x, y + size, z);
+			glVertex3f(x, y + sizeY, z);
 			glTexCoord2f(texCoords[10], texCoords[11]);
-			glVertex3f(x, y + size, z + size);
+			glVertex3f(x, y + sizeY, z + sizeZ);
 		}
 		}catch(NullPointerException e){
-			System.out.println("Error rendering cube: Texcoords null");
+			System.out.println("Error rendering rect: Texcoords null");
 			e.printStackTrace();
 			System.exit(0);
 		}

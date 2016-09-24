@@ -1,6 +1,7 @@
 package net.codepixl.GLCraft.world.tile;
 
 import org.lwjgl.opengl.GL11;
+import org.lwjgl.util.vector.Vector3f;
 
 import com.nishu.utils.Color4f;
 
@@ -296,7 +297,7 @@ public class TileWater extends Tile{
 	}
 	
 	@Override
-	public AABB getAABB(byte meta){
+	public AABB getAABB(int x, int y, int z, byte meta, WorldManager w){
 		float size = 0;
 		if(meta == 0){
 			size = 1f;
@@ -305,7 +306,7 @@ public class TileWater extends Tile{
 		}else{
 			size = (7f-((float)meta-1f))/7f;
 		}
-		return new AABB(1,size,1);
+		return new AABB(1,size,1).update(new Vector3f(x+0.5f,y,z+0.5f));
 	}
 	
 	@Override

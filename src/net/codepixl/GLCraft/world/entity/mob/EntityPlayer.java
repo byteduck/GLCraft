@@ -402,8 +402,7 @@ public class EntityPlayer extends Mob {
 					if(Tile.getTile((byte)tile).customHitbox()){
 						AABB ray = new AABB(0,0,0);
 						ray.update(r.pos);
-						AABB block = Tile.getTile((byte)tile).getAABB(worldManager.getMetaAtPos(tpos));
-						block.update(new Vector3f((int)r.pos.x+0.5f,(int)r.pos.y,(int)r.pos.z+0.5f));
+						AABB block = Tile.getTile((byte)tile).getAABB((int)tpos.x, (int)tpos.y, (int)tpos.z, worldManager.getMetaAtPos(tpos), worldManager);
 						if(!AABB.testAABB(block, ray)){
 							r.next();
 							continue;
@@ -480,14 +479,15 @@ public class EntityPlayer extends Mob {
 					r.prev();
 					//BUILD
 					if(Mouse.isButtonDown(1) && GUIManager.getMainManager().sendPlayerInput() && worldManager.getEntityManager().getPlayer().getBuildCooldown() == 0f/** && worldManager.getTileAtPos(r.pos) == 0**/) {
-						if(Tile.getTile((byte) tile).onClick((int)tpos.x, (int)tpos.y, (int)tpos.z, this, worldManager)){}else{
+						if(Tile.getTile((byte) tile).onClick((int)tpos.x, (int)tpos.y, (int)tpos.z, this, worldManager)){
+							setBuildCooldown(0.2f);
+						}else{
 							if(!worldManager.getEntityManager().getPlayer().getSelectedItemStack().isNull() && worldManager.getEntityManager().getPlayer().getSelectedItemStack().isTile()){
-								AABB blockaabb = new AABB(1, 1, 1);
-								blockaabb.update(new Vector3f(((int) r.pos.x) + 0.5f, (int) r.pos.y, ((int) r.pos.z) + 0.5f));
+								AABB blockaabb = getSelectedItemStack().getTile().getAABB((int)r.pos.x, (int)r.pos.y, (int)r.pos.z, getSelectedItemStack().getMeta(), worldManager);
 								if(!AABB.testAABB(blockaabb, getAABB()) && worldManager.getEntityManager().getPlayer().getSelectedItemStack().getTile().canPlace((int) r.pos.x, (int) r.pos.y, (int) r.pos.z, worldManager)) {
 									while((!Tile.getTile((byte) worldManager.getTileAtPos(r.pos)).canBePlacedOver() || AABB.testAABB(blockaabb, getAABB()) && worldManager.getEntityManager().getPlayer().getSelectedItemStack().getTile().canPlace((int) r.pos.x, (int) r.pos.y, (int) r.pos.z, worldManager)) && !r.pos.equals(r.origPos)){
 										r.prev();
-										blockaabb.update(new Vector3f(((int) r.pos.x) + 0.5f, (int) r.pos.y, ((int) r.pos.z) + 0.5f));
+										blockaabb = getSelectedItemStack().getTile().getAABB((int)r.pos.x, (int)r.pos.y, (int)r.pos.z, getSelectedItemStack().getMeta(), worldManager);
 									}
 									if(!r.origPos.equals(r.pos) && worldManager.getEntityManager().getPlayer().getSelectedItemStack().getTile().canPlace((int) r.pos.x, (int) r.pos.y, (int) r.pos.z, worldManager)){
 										worldManager.setTileAtPos((int) r.pos.x, (int) r.pos.y, (int) r.pos.z, this.getSelectedItemStack().getTile().getId(), true, this.getSelectedItemStack().getMeta());
@@ -505,8 +505,7 @@ public class EntityPlayer extends Mob {
 							}
 						}
 					}else if(shouldPlaceTile){
-						AABB blockaabb = new AABB(1, 1, 1);
-						blockaabb.update(new Vector3f(((int) r.pos.x) + 0.5f, (int) r.pos.y, ((int) r.pos.z) + 0.5f));
+						AABB blockaabb = tileToPlace.getAABB((int)r.pos.x, (int)r.pos.y, (int)r.pos.z, metaToPlace, worldManager);
 						if(!AABB.testAABB(blockaabb, getAABB()) && worldManager.getEntityManager().getPlayer().getSelectedItemStack().getTile().canPlace((int) r.pos.x, (int) r.pos.y, (int) r.pos.z, worldManager)) {
 							while((worldManager.getTileAtPos(r.pos) != Tile.Air.getId() || AABB.testAABB(blockaabb, getAABB()) && worldManager.getEntityManager().getPlayer().getSelectedItemStack().getTile().canPlace((int) r.pos.x, (int) r.pos.y, (int) r.pos.z, worldManager)) && !r.pos.equals(r.origPos)){
 								r.prev();

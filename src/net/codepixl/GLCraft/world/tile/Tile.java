@@ -65,6 +65,7 @@ public class Tile {
 	public static Tile BluestoneOre = new TileBluestoneOre();
 	public static Tile DiamondOre = new TileDiamondOre();
 	public static Tile CondensedBluestone = new TileCondensedBluestone();
+	public static Tile Door = new TileDoor();
 	
 	public String getName(){
 		return "Un-named block";
@@ -78,8 +79,10 @@ public class Tile {
 		return false;
 	}
 	
-	public AABB getAABB(byte meta){
-		return new AABB(1,1,1);
+	public AABB getAABB(int x, int y, int z, byte meta, WorldManager w){
+		AABB aabb = new AABB(1,1,1);
+		aabb.update(new Vector3f(x+0.5f, y, z+0.5f));
+		return aabb;
 	}
 	
 	public boolean needsConstantTick(){

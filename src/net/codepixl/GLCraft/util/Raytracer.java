@@ -31,7 +31,7 @@ public class Raytracer {
 		
 		Vector3f nearVec = new Vector3f(positionNear.get(0), positionNear.get(1), positionNear.get(2));
 		Vector3f farVec = new Vector3f(positionFar.get(0), positionFar.get(1), positionFar.get(2));
-		return new Ray(nearVec, Vector3f.sub(farVec, nearVec, null).normalise(null), 0.1f);
+		return new Ray(nearVec, Vector3f.sub(farVec, nearVec, null).normalise(null), 0.01f);
 	}
 	
 }

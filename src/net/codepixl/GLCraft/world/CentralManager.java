@@ -94,6 +94,7 @@ import net.codepixl.GLCraft.world.entity.mob.EntityPlayer;
 import net.codepixl.GLCraft.world.entity.mob.AI.pathfinding.Pathfinder;
 import net.codepixl.GLCraft.world.entity.mob.animal.EntityTestAnimal;
 import net.codepixl.GLCraft.world.entity.mob.hostile.EntityTestHostile;
+import net.codepixl.GLCraft.world.item.Item;
 import net.codepixl.GLCraft.world.item.ItemStack;
 import net.codepixl.GLCraft.world.tile.Tile;
 
@@ -205,7 +206,10 @@ public class CentralManager extends Screen{
 						guiManager.showGUI("crafting");
 					}
 				}
-				Vector3f pos = worldManager.entityManager.getPlayer().getPos();
+				if(Keyboard.isKeyDown(Keyboard.KEY_F2)){
+					takeScreenshot();
+				}
+				/*Vector3f pos = worldManager.entityManager.getPlayer().getPos();
 				if(Keyboard.isKeyDown(Keyboard.KEY_F)){
 					worldManager.setTileAtPos(pos, Tile.Furnace.getId(), true);
 				}
@@ -231,12 +235,9 @@ public class CentralManager extends Screen{
 				if(Keyboard.isKeyDown(Keyboard.KEY_APOSTROPHE)){
 					worldManager.entityManager.add(new EntityTestHostile(pos, worldManager));
 				}
-				if(Keyboard.isKeyDown(Keyboard.KEY_F2)){
-					takeScreenshot();
-				}
 				if(Keyboard.isKeyDown(Keyboard.KEY_G)){
 					worldManager.entityManager.getPlayer().addToInventory(new ItemStack(Tile.Grass, 64));
-				}
+				}*/
 			}
 		}
 	}

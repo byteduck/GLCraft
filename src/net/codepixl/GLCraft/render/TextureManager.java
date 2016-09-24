@@ -94,7 +94,7 @@ public class TextureManager {
 					}
 					g.drawImage(image, x*16, y*16, null);
 					atlasCoords.put(next.getKey(), new float[]{(float)x*(1f/(float)maxWidth),(float)y*(1f/(float)maxWidth)});
-					System.out.println("Added "+next.getKey()+" at "+x+","+y+" to texture atlas");
+					//System.out.println("Added "+next.getKey()+" at "+x+","+y+" to texture atlas");
 				} catch (Exception e) {
 					System.err.println("Error adding "+next.getKey()+" to texture atlas: Could not find file "+next.getValue()+". Replacing with \"NO IMG\"");
 					e.printStackTrace();
