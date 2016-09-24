@@ -5,6 +5,7 @@ import net.codepixl.GLCraft.world.WorldManager;
 import net.codepixl.GLCraft.world.entity.mob.EntityPlayer;
 import net.codepixl.GLCraft.world.entity.tileentity.TileEntity;
 import net.codepixl.GLCraft.world.entity.tileentity.TileEntityFurnace;
+import net.codepixl.GLCraft.world.tile.material.Material;
 
 public class TileFurnace extends TileTileEntity{
 	
@@ -32,6 +33,16 @@ public class TileFurnace extends TileTileEntity{
 			((TileEntityFurnace)w.getTileEntityAtPos(x, y, z)).openGUI(w, p);
 		}
 		return true;
+	}
+	
+	@Override
+	public float getHardness(){
+		return 2f;
+	}
+	
+	@Override
+	public Material getMaterial(){
+		return Material.STONE;
 	}
 	
 	@Override

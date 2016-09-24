@@ -9,7 +9,7 @@ public class ItemWoodAxe extends Tool{
 	
 	@Override
 	public float getStrength(){
-		return 2.5f;
+		return 1.5f;
 	}
 	
 	@Override
