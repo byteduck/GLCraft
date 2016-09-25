@@ -149,7 +149,7 @@ public class Chunk {
 	}
 	
 	public void save(TagCompound reg) throws IOException{
-		TagCompound t = new TagCompound("chunk"+this.pos.toString());
+		TagCompound t = new TagCompound("chunk"+this.pos.toString().replace("Vector3f", ""));
 		byte[] tbuf = new byte[this.sizeX*this.sizeY*this.sizeZ];
 		byte[] mbuf = new byte[this.sizeX*this.sizeY*this.sizeZ];
 		int i = 0;

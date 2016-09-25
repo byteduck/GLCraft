@@ -7,8 +7,10 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map.Entry;
 
 import javax.swing.JOptionPane;
 
@@ -27,6 +29,8 @@ import com.evilco.mc.nbt.tag.TagString;
 
 import net.codepixl.GLCraft.GLCraft;
 import net.codepixl.GLCraft.util.Constants;
+import net.codepixl.GLCraft.util.FileUtil;
+import net.codepixl.GLCraft.util.Vector2i;
 import net.codepixl.GLCraft.world.WorldManager;
 import net.codepixl.GLCraft.world.entity.Entity;
 import net.codepixl.GLCraft.world.entity.NBTUtil;
@@ -38,7 +42,8 @@ public class SaveManager {
 	public static String formatV0 = "GLCWorldv0";
 	public static String formatV1 = "GLCWorldv1";
 	public static String formatV2 = "GLCWorldv2";
-	public static String currentFormat = formatV2;
+	public static String formatV3 = "GLCWorldv3";
+	public static String currentFormat = formatV3;
 	
 	public static boolean saveWorld(WorldManager tworldManager, Save tsave, boolean tquit){
     	System.out.println("Saving world "+tsave+"...");
@@ -230,6 +235,37 @@ public class SaveManager {
 					out.close();
 				}
 				s.format = formatV2;
+			}else if(s.format.equals(formatV2)){
+				Constants.world.initSplashText();
+				HashMap<Vector2i, TagCompound> regions = new HashMap<Vector2i, TagCompound>();
+				for(int chunk = 0; chunk < 1000; chunk++){
+					Constants.world.renderSplashText("Upgrading world...", "V2 to V3 (reading chunks)", (int) (((float)chunk/1000f)*100));
+					FileInputStream inputStream = new FileInputStream(new File(s.getFolder(),"chunks/chunk"+chunk+".nbt"));
+					NbtInputStream nbtInputStream = new NbtInputStream(inputStream);
+					TagCompound tag = (TagCompound) nbtInputStream.readTag();
+					nbtInputStream.close();
+					TagCompound posT = tag.getCompound("pos");
+					Vector3f pos = new Vector3f();
+					pos.x = posT.getFloat("x");
+					pos.y = posT.getFloat("y");
+					pos.z = posT.getFloat("z");
+					Vector2i reg = new Vector2i((int)Math.floor(pos.x/16f/32f),(int)Math.floor(pos.z/16f/32f));
+					if(!regions.containsKey(reg))
+						regions.put(reg, new TagCompound(reg.toString()));
+					tag.setName("chunk"+pos.toString().replace("Vector3f", ""));
+					regions.get(reg).setTag(tag);
+				}
+				Iterator<Entry<Vector2i, TagCompound>> i = regions.entrySet().iterator();
+				new File(s.getFolder(),"region/").mkdirs();
+				while(i.hasNext()){
+					Constants.world.renderSplashText("Upgrading world...", "V2 to V3 (saving regions)");
+					Entry<Vector2i, TagCompound> next = i.next();
+					NbtOutputStream out = new NbtOutputStream(new FileOutputStream(new File(s.getFolder(),"region/r"+next.getKey().toString().replace("[","").replace("]","").replace(',', '.')+".nbt")));
+					out.write(next.getValue());
+					out.close();
+				}
+			    FileUtil.deleteDirectory(new File(Constants.GLCRAFTDIR+"saves/"+s.name+"/chunks"));
+				s.format = formatV3;
 			}else{
 				return false;
 			}
