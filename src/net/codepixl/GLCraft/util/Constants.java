@@ -55,7 +55,7 @@ public class Constants {
 
 	public static String getGamePath() {
 		if ("Linux".equals(System.getProperty("os.name"))) {
-			return "~/GLCraft";
+			return System.getProperty("user.home") + "/GLCraft/";
 		} else {
 			return System.getProperty("user.home") + "\\GLCraft\\";
 		}
