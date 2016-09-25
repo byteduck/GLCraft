@@ -29,10 +29,10 @@ import net.codepixl.GLCraft.render.RenderType;
 import net.codepixl.GLCraft.render.Shape;
 import net.codepixl.GLCraft.util.BreakSource;
 import net.codepixl.GLCraft.util.Constants;
+import net.codepixl.GLCraft.util.Vector2i;
 import net.codepixl.GLCraft.util.Vector3i;
 import net.codepixl.GLCraft.world.tile.Tile;
 import net.codepixl.GLCraft.world.tile.ore.TileOre;
-import net.codepixl.GLCraft.world.tile.ore.TileStone;
 import net.codepixl.GLCraft.world.tile.tick.TickHelper;
 
 
@@ -105,13 +105,16 @@ public class Chunk {
 			}
 		}else{
 			for(int x = 0; x < sizeX; x++){
-				for(int y = 0; y < sizeY; y++){
-					for(int z = 0; z < sizeZ; z++){
-						int posX = (int)pos.x+x;
+				for(int z = 0; z < sizeZ; z++){
+					int posZ = (int)pos.z+z;
+					int posX = (int)pos.x+x;
+					float elevation = (float) worldManager.elevationNoise.eval((double)posX/300d, (double)posZ/300d);
+					float roughness = (float) worldManager.roughnessNoise.eval((double)posX/300d, (double)posZ/300d);
+					float detail = (float) worldManager.detailNoise.eval((double)posX/75d, (double)posZ/75d);
+					for(int y = 0; y < sizeY; y++){
 						int posY = (int)pos.y+y;
-						int posZ = (int)pos.z+z;
 						//System.out.println(posX+","+posZ);
-						float noise = ((float) worldManager.noise.eval((double)posX/50d, (double)posZ/50d) + 1f)*(float)Constants.CHUNKSIZE+50;
+						float noise = (elevation + (roughness*detail))*60f+64f;
 						if(posY < noise){
 							if(posY == 0){
 								tiles[x][y][z] = Tile.Bedrock.getId();
@@ -145,9 +148,8 @@ public class Chunk {
 		}
 	}
 	
-	public void save(String filename) throws IOException{
-		NbtOutputStream out = new NbtOutputStream(new FileOutputStream(filename));
-		TagCompound t = new TagCompound("chunk");
+	public void save(TagCompound reg) throws IOException{
+		TagCompound t = new TagCompound("chunk"+this.pos.toString());
 		byte[] tbuf = new byte[this.sizeX*this.sizeY*this.sizeZ];
 		byte[] mbuf = new byte[this.sizeX*this.sizeY*this.sizeZ];
 		int i = 0;
@@ -172,8 +174,7 @@ public class Chunk {
 		t.setTag(pos);
 		t.setTag(tiles);
 		t.setTag(meta);
-		out.write(t);
-		out.close();
+		reg.setTag(t);
 	}
 	
 	public void load(TagCompound t) throws IOException{
@@ -193,6 +194,10 @@ public class Chunk {
 				}
 			}
 		}
+	}
+	
+	public Vector2i getRegion(){
+		return new Vector2i((int)Math.floor(this.pos.x/16f/32f),(int)Math.floor(this.pos.z/16f/32f));
 	}
 	
 	void populateChunk(){

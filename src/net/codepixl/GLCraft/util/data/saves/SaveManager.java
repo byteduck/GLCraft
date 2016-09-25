@@ -4,10 +4,8 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
@@ -16,9 +14,9 @@ import javax.swing.JOptionPane;
 
 import org.lwjgl.util.vector.Vector3f;
 
+import com.evilco.mc.nbt.error.TagNotFoundException;
 import com.evilco.mc.nbt.stream.NbtInputStream;
 import com.evilco.mc.nbt.stream.NbtOutputStream;
-import com.evilco.mc.nbt.tag.TagByte;
 import com.evilco.mc.nbt.tag.TagByteArray;
 import com.evilco.mc.nbt.tag.TagCompound;
 import com.evilco.mc.nbt.tag.TagFloat;
@@ -33,9 +31,7 @@ import net.codepixl.GLCraft.world.WorldManager;
 import net.codepixl.GLCraft.world.entity.Entity;
 import net.codepixl.GLCraft.world.entity.NBTUtil;
 import net.codepixl.GLCraft.world.entity.mob.EntityPlayer;
-import net.codepixl.GLCraft.world.item.Item;
 import net.codepixl.GLCraft.world.item.ItemStack;
-import net.codepixl.GLCraft.world.tile.Tile;
 
 public class SaveManager {
 	
@@ -261,14 +257,19 @@ public class SaveManager {
 	
 	public static Save getSave(String name) throws IOException{
 		if(new File(Constants.GLCRAFTDIR+"saves/"+name+"/world.nbt").exists()){
-			FileInputStream inputStream = new FileInputStream(Constants.GLCRAFTDIR+"saves/"+name+"/world.nbt");
-			NbtInputStream nbtInputStream = new NbtInputStream(inputStream);
-			TagCompound tag = (TagCompound)nbtInputStream.readTag();
-			nbtInputStream.close();
-			long timestamp = 0;
-			if(tag.getTag("timestamp") != null)
+			try{
+				FileInputStream inputStream = new FileInputStream(Constants.GLCRAFTDIR+"saves/"+name+"/world.nbt");
+				NbtInputStream nbtInputStream = new NbtInputStream(inputStream);
+				TagCompound tag = (TagCompound)nbtInputStream.readTag();
+				nbtInputStream.close();
+				long timestamp = 0;
 				timestamp = tag.getLong("timestamp");
-			return new Save(name,tag.getString("name"),tag.getString("version"),tag.getString("format"),timestamp);
+				return new Save(name,tag.getString("name"),tag.getString("version"),tag.getString("format"),timestamp);
+			}catch(TagNotFoundException | NullPointerException e){
+				System.err.println("WARNING: world "+name+" is corrupted!");
+				return null;
+			}
+			
 		}else if(new File(Constants.GLCRAFTDIR+"saves/"+name+"/player.nbt").exists()){ //No metadata file, check if player.nbt exists
 			return new Save(name,name,"?",formatV0);
 		}else{

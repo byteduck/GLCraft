@@ -2,18 +2,25 @@ package net.codepixl.GLCraft.world;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.FilenameFilter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Timer;
 import java.util.TimerTask;
 
 import org.lwjgl.util.vector.Vector3f;
 
 import com.evilco.mc.nbt.stream.NbtInputStream;
+import com.evilco.mc.nbt.stream.NbtOutputStream;
+import com.evilco.mc.nbt.tag.ITag;
 import com.evilco.mc.nbt.tag.TagCompound;
+import com.google.common.io.Files;
 import com.nishu.utils.Shader;
 import com.nishu.utils.ShaderProgram;
 import com.nishu.utils.Time;
@@ -30,6 +37,7 @@ import net.codepixl.GLCraft.util.Frustum;
 import net.codepixl.GLCraft.util.MathUtils;
 import net.codepixl.GLCraft.util.OpenSimplexNoise;
 import net.codepixl.GLCraft.util.Spritesheet;
+import net.codepixl.GLCraft.util.Vector2i;
 import net.codepixl.GLCraft.util.Vector3i;
 import net.codepixl.GLCraft.util.data.saves.Save;
 import net.codepixl.GLCraft.util.data.saves.SaveManager;
@@ -43,7 +51,7 @@ import net.codepixl.GLCraft.world.tile.tick.TickHelper;
 
 public class WorldManager {
 	public int loop = 0;
-	public static OpenSimplexNoise noise;
+	public static OpenSimplexNoise elevationNoise, roughnessNoise, detailNoise;
 	public boolean doneGenerating = false;
 	public EntityManager entityManager;
 	private volatile HashMap<Vector3i,Chunk> activeChunks; //Vector3i because HashMap doesn't play well with floats (therefore vector3f)
@@ -80,7 +88,9 @@ public class WorldManager {
 	
 	public void createWorld(String name){
 		System.out.println("Creating Chunks...");
-		noise = new OpenSimplexNoise(Constants.rand.nextLong());
+		elevationNoise = new OpenSimplexNoise(Constants.rand.nextLong());
+		roughnessNoise = new OpenSimplexNoise(Constants.rand.nextLong());
+		detailNoise = new OpenSimplexNoise(Constants.rand.nextLong());
 		centralManager.initSplashText();
 		for(int x = 0; x < Constants.worldLengthChunks; x++){
 			for(int y = 0; y < Constants.worldLengthChunks; y++){
@@ -284,22 +294,45 @@ public class WorldManager {
 	public void saveChunks(String name) throws IOException{
 		Iterator<Chunk> i = this.activeChunks.values().iterator();
 		int index = 0;
-		File f = new File(Constants.GLCRAFTDIR+"saves/"+name+"/chunks");
+		File f = new File(Constants.GLCRAFTDIR+"saves/"+name+"/region");
 		f.mkdirs();
+		HashMap<Vector2i,TagCompound> regions = new HashMap<Vector2i,TagCompound>();
 		while(i.hasNext()){
 			Chunk c = i.next();
-			c.save(Constants.GLCRAFTDIR+"saves/"+name+"/chunks/chunk"+index+".nbt");
+			Vector2i reg = c.getRegion();
+			if(!regions.containsKey(reg)){
+				regions.put(reg, new TagCompound(reg.toString()));
+			}
+			c.save(regions.get(reg));
 			index++;
 		}
+		Iterator<Entry<Vector2i, TagCompound>> it = regions.entrySet().iterator();
+	    while (it.hasNext()) {
+	    	Entry<Vector2i, TagCompound> next = it.next();
+	    	NbtOutputStream s = new NbtOutputStream(new FileOutputStream(new File(f,"r"+next.getKey().toString().replace("[","").replace("]","").replace(',', '.')+".nbt")));
+	    	s.write(next.getValue());
+	    	s.close();
+	    }
 	}
 	
 	public void loadChunks(Save s) throws IOException{
-		for(int i = 0; i < activeChunks.size(); i++){
-			NbtInputStream in = new NbtInputStream(new FileInputStream(Constants.GLCRAFTDIR+"saves/"+s.name+"/chunks/chunk"+i+".nbt"));
+		File regionsFile = new File(Constants.GLCRAFTDIR+"saves/"+s.name+"/region");
+		String[] files = regionsFile.list();
+		for(String file : files){
+			NbtInputStream in = new NbtInputStream(new FileInputStream(new File(regionsFile,file)));
 			TagCompound t = (TagCompound) in.readTag();
-			TagCompound post = t.getCompound("pos");
-			Vector3i pos = new Vector3i(post.getFloat("x"), post.getFloat("y"), post.getFloat("z"));
-			activeChunks.get(pos).load(t);
+			Map<String, ITag> tags = t.getTags();
+			Iterator<Entry<String, ITag>> i = tags.entrySet().iterator();
+			while(i.hasNext()){
+				Entry<String, ITag> next = i.next();
+				if(next.getValue() instanceof TagCompound){
+					TagCompound chunkTag = (TagCompound) next.getValue();
+					TagCompound post = chunkTag.getCompound("pos");
+					Vector3i pos = new Vector3i(post.getFloat("x"), post.getFloat("y"), post.getFloat("z"));
+					activeChunks.get(pos).load(chunkTag);
+				}
+			}
+			
 		}
 		
 		Iterator<Chunk> i = this.activeChunks.values().iterator();
