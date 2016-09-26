@@ -32,6 +32,8 @@ import net.codepixl.GLCraft.util.BreakSource;
 import net.codepixl.GLCraft.util.Constants;
 import net.codepixl.GLCraft.util.Vector2i;
 import net.codepixl.GLCraft.util.Vector3i;
+import net.codepixl.GLCraft.world.WorldManager.Light;
+import net.codepixl.GLCraft.world.WorldManager.LightRemoval;
 import net.codepixl.GLCraft.world.tile.Tile;
 import net.codepixl.GLCraft.world.tile.ore.TileOre;
 import net.codepixl.GLCraft.world.tile.tick.TickHelper;
@@ -56,9 +58,6 @@ public class Chunk {
 	private ArrayList<Vector3f> tickTiles = new ArrayList<Vector3f>();
 	private ArrayList<Vector3f> tempTickTiles = new ArrayList<Vector3f>();
 	private ArrayList<Vector3f> scheduledBlockUpdates = new ArrayList<Vector3f>();
-	private Queue<Light> lightQueue = new LinkedList<Light>();
-	private Queue<LightRemoval> lightRemovalQueue = new LinkedList<LightRemoval>();
-	private ArrayList<Chunk> lightRebuildQueue = new ArrayList<Chunk>();
 	
 	public Chunk(ShaderProgram shader, int type, float x, float y, float z, WorldManager w, boolean fromBuf){
 		this.pos = new Vector3f(x,y,z);
@@ -345,6 +344,7 @@ public static void createCustomTree(int x, int y, int z,Tile trunk,Tile leaf, by
 	
 	public void update(){
 		if(needsRebuild){
+			worldManager.relight();
 			rebuildBase(true);
 			rebuildBase(false);
 			needsRebuild = false;
@@ -361,78 +361,7 @@ public static void createCustomTree(int x, int y, int z,Tile trunk,Tile leaf, by
 		}
 	}
 	
-	private void relight(){
-		lightRebuildQueue.clear();
-		while(!lightRemovalQueue.isEmpty()){
-			LightRemoval next = lightRemovalQueue.poll();
-			Vector3i npos = next.pos;
-			Vector3i pos = new Vector3i(npos.x+1, npos.y, npos.z);
-			evalLightRemoval(npos,pos,next);
-			pos = new Vector3i(npos.x-1, npos.y, npos.z);
-			evalLightRemoval(npos,pos,next);
-			pos = new Vector3i(npos.x, npos.y+1, npos.z);
-			evalLightRemoval(npos,pos,next);
-			pos = new Vector3i(npos.x, npos.y-1, npos.z);
-			evalLightRemoval(npos,pos,next);
-			pos = new Vector3i(npos.x, npos.y, npos.z+1);
-			evalLightRemoval(npos,pos,next);
-			pos = new Vector3i(npos.x, npos.y, npos.z-1);
-			evalLightRemoval(npos,pos,next);
-		}
-		while(!lightQueue.isEmpty()){
-			Light nextl = lightQueue.poll();
-			Vector3i next = nextl.pos;
-			Vector3i pos = new Vector3i(next.x+1, next.y, next.z);
-			evalLight(nextl,pos);
-			pos = new Vector3i(next.x-1, next.y, next.z);
-			evalLight(nextl,pos);
-			pos = new Vector3i(next.x, next.y+1, next.z);
-			evalLight(nextl,pos);
-			pos = new Vector3i(next.x, next.y-1, next.z);
-			evalLight(nextl,pos);
-			pos = new Vector3i(next.x, next.y, next.z+1);
-			evalLight(nextl,pos);
-			pos = new Vector3i(next.x, next.y, next.z-1);
-			evalLight(nextl,pos);
-		}
-		for(Chunk c : lightRebuildQueue){
-			if(c != this)
-				c.rebuild();
-		}
-	}
 	
-	private void evalLight(Light next, Vector3i dest){
-		int bl, dbl;
-		bl = next.chunk.getBlockLight(next.pos.x, next.pos.y, next.pos.z);
-		Chunk c = worldManager.getChunk(dest.x, dest.y, dest.z);
-		if(c != null){
-			dbl = c.getBlockLight(dest.x, dest.y, dest.z);
-			if(dbl < bl-1){
-				lightQueue.add(new Light(dest, c));
-				byte tra = Tile.getTile((byte) worldManager.getTileAtPos(dest.x, dest.y, dest.z)).getTransparency();
-				byte res = 0;
-				if(tra < bl)
-					res = (byte) (bl-tra);
-				c.setBlockLight(dest.x, dest.y, dest.z, res, false);
-				lightRebuildQueue.add(c);
-			}
-		}
-	}
-	
-	private void evalLightRemoval(Vector3i src, Vector3i dest, LightRemoval rem){
-		Chunk c = worldManager.getChunk(dest.x, dest.y, dest.z);
-		if(c != null){
-			int dbl = c.getBlockLight(dest.x, dest.y, dest.z);
-			int bl = rem.level;
-			if(dbl != 0 && dbl < bl){
-				c.setBlockLight(dest.x, dest.y, dest.z, 0, false);
-				lightRemovalQueue.add(new LightRemoval(dest, (byte) dbl, c));
-			}else if(dbl >= bl){
-				lightQueue.add(new Light(dest,c));
-			}
-			lightRebuildQueue.add(c);
-		}
-	}
 	
 	private boolean inBounds(int x, int y, int z){
 		return x < Constants.CHUNKSIZE && x >= 0 && y < Constants.CHUNKSIZE && y >= 0 && z < Constants.CHUNKSIZE && z >= 0;
@@ -498,7 +427,6 @@ public static void createCustomTree(int x, int y, int z,Tile trunk,Tile leaf, by
 	}
 	
 	protected void rebuildBase(boolean translucent){
-		relight();
 		if(type != CentralManager.AIRCHUNK){
 			if(translucent)
 				glNewList(transvcID, GL_COMPILE);
@@ -700,6 +628,18 @@ public static void createCustomTree(int x, int y, int z,Tile trunk,Tile leaf, by
 			setMetaAtPos(x,y,z,meta,rebuild);
 			if(Tile.getTile(tile).getLightLevel() > 0)
 				setBlockLight(x+(int)pos.x,y+(int)pos.y,z+(int)pos.z,Tile.getTile(tile).getLightLevel(),true);
+			else if(Tile.getTile(tile).getTransparency() < 15){
+				Vector3i pos = new Vector3i(this.pos.x+x, this.pos.y+y, this.pos.z+z);
+				worldManager.lightQueue.add(new Light(new Vector3i(pos.x+1, pos.y, pos.z)));
+				worldManager.lightQueue.add(new Light(new Vector3i(pos.x-1, pos.y, pos.z)));
+				worldManager.lightQueue.add(new Light(new Vector3i(pos.x, pos.y+1, pos.z)));
+				worldManager.lightQueue.add(new Light(new Vector3i(pos.x, pos.y-1, pos.z)));
+				worldManager.lightQueue.add(new Light(new Vector3i(pos.x, pos.y, pos.z+1)));
+				worldManager.lightQueue.add(new Light(new Vector3i(pos.x, pos.y, pos.z-1)));
+			}else{
+				Vector3i pos = new Vector3i(this.pos.x+x, this.pos.y+y, this.pos.z+z);
+				worldManager.lightRemovalQueue.add(new LightRemoval(pos, (byte)15, this));
+			}
 			Tile.getTile(tile).onPlace((int)ax, (int)ay, (int)az, worldManager);
 			//ALWAYS assume that the rebuild argument will be false (except in special cases) because the setting of the meta rebuilds the chunk.
 			if(rebuild){
@@ -789,32 +729,12 @@ public static void createCustomTree(int x, int y, int z,Tile trunk,Tile leaf, by
 	public void setBlockLight(int x, int y, int z, int val, boolean relight) {
 		light[x-(int)this.pos.x][y-(int)this.pos.y][z-(int)this.pos.z] = (byte) ((light[x-(int)this.pos.x][y-(int)this.pos.y][z-(int)this.pos.z] & 0xF0) | val);
 		if(relight){
-			lightQueue.add(new Light(new Vector3i(x,y,z), this));
+			worldManager.lightQueue.add(new Light(new Vector3i(x,y,z), this));
 		}
 	}
 	
 	private void removeBlockLight(int x, int y, int z, byte level){
-		lightRemovalQueue.add(new LightRemoval(new Vector3i(x,y,z), level, this));
-	}
-	
-	private class LightRemoval{
-		public Vector3i pos;
-		public byte level;
-		public Chunk chunk;
-		public LightRemoval(Vector3i pos, byte level, Chunk chunk){
-			this.pos = pos;
-			this.level = level;
-			this.chunk = chunk;
-		}
-	}
-	
-	private class Light{
-		public Vector3i pos;
-		public Chunk chunk;
-		public Light(Vector3i pos, Chunk chunk){
-			this.pos = pos;
-			this.chunk = chunk;
-		}
+		worldManager.lightRemovalQueue.add(new LightRemoval(new Vector3i(x,y,z), level, this));
 	}
 	
 }

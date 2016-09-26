@@ -3,14 +3,15 @@ package net.codepixl.GLCraft.world;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
-import java.io.FilenameFilter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Queue;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -20,7 +21,6 @@ import com.evilco.mc.nbt.stream.NbtInputStream;
 import com.evilco.mc.nbt.stream.NbtOutputStream;
 import com.evilco.mc.nbt.tag.ITag;
 import com.evilco.mc.nbt.tag.TagCompound;
-import com.google.common.io.Files;
 import com.nishu.utils.Shader;
 import com.nishu.utils.ShaderProgram;
 import com.nishu.utils.Time;
@@ -33,7 +33,6 @@ import net.codepixl.GLCraft.util.AABB;
 import net.codepixl.GLCraft.util.BreakSource;
 import net.codepixl.GLCraft.util.Constants;
 import net.codepixl.GLCraft.util.DebugTimer;
-import net.codepixl.GLCraft.util.FileUtil;
 import net.codepixl.GLCraft.util.Frustum;
 import net.codepixl.GLCraft.util.MathUtils;
 import net.codepixl.GLCraft.util.OpenSimplexNoise;
@@ -64,6 +63,10 @@ public class WorldManager {
 	private static WorldManager cw;
 	private boolean saving = false;
 	private Save currentSave;
+	public long worldTime;
+	public Queue<Light> lightQueue = new LinkedList<Light>();
+	public Queue<LightRemoval> lightRemovalQueue = new LinkedList<LightRemoval>();
+	public ArrayList<Chunk> lightRebuildQueue = new ArrayList<Chunk>();
 	
 	public WorldManager(CentralManager w){
 		this.centralManager = w;
@@ -195,6 +198,8 @@ public class WorldManager {
 			DebugTimer.endTimer("chunk_tick");
 		}
 		
+		worldTime+=Time.getDelta()*1000;
+		
 	}
 	
 	private void loadUnload() {
@@ -290,6 +295,10 @@ public class WorldManager {
 	
 	public EntityManager getEntityManager(){
 		return entityManager;
+	}
+	
+	public float getSkyLightIntensity(){
+		return 1;
 	}
 	
 	public void saveChunks(String name) throws IOException{
@@ -605,6 +614,102 @@ public class WorldManager {
 
 	public Chunk getChunk(Vector3f pos) {
 		return getChunk(new Vector3i(pos));
+	}
+	
+	public void relight(){
+		lightRebuildQueue.clear();
+		while(!lightRemovalQueue.isEmpty()){
+			LightRemoval next = lightRemovalQueue.poll();
+			Vector3i npos = next.pos;
+			Vector3i pos = new Vector3i(npos.x+1, npos.y, npos.z);
+			evalLightRemoval(npos,pos,next);
+			pos = new Vector3i(npos.x-1, npos.y, npos.z);
+			evalLightRemoval(npos,pos,next);
+			pos = new Vector3i(npos.x, npos.y+1, npos.z);
+			evalLightRemoval(npos,pos,next);
+			pos = new Vector3i(npos.x, npos.y-1, npos.z);
+			evalLightRemoval(npos,pos,next);
+			pos = new Vector3i(npos.x, npos.y, npos.z+1);
+			evalLightRemoval(npos,pos,next);
+			pos = new Vector3i(npos.x, npos.y, npos.z-1);
+			evalLightRemoval(npos,pos,next);
+		}
+		while(!lightQueue.isEmpty()){
+			Light nextl = lightQueue.poll();
+			Vector3i next = nextl.pos;
+			Vector3i pos = new Vector3i(next.x+1, next.y, next.z);
+			evalLight(nextl,pos);
+			pos = new Vector3i(next.x-1, next.y, next.z);
+			evalLight(nextl,pos);
+			pos = new Vector3i(next.x, next.y+1, next.z);
+			evalLight(nextl,pos);
+			pos = new Vector3i(next.x, next.y-1, next.z);
+			evalLight(nextl,pos);
+			pos = new Vector3i(next.x, next.y, next.z+1);
+			evalLight(nextl,pos);
+			pos = new Vector3i(next.x, next.y, next.z-1);
+			evalLight(nextl,pos);
+		}
+		for(Chunk c : lightRebuildQueue){
+			c.rebuild();
+		}
+	}
+	
+	private void evalLight(Light next, Vector3i dest){
+		int bl, dbl;
+		bl = next.chunk.getBlockLight(next.pos.x, next.pos.y, next.pos.z);
+		Chunk c = getChunk(dest.x, dest.y, dest.z);
+		if(c != null){
+			dbl = c.getBlockLight(dest.x, dest.y, dest.z);
+			if(dbl < bl-1){
+				lightQueue.add(new Light(dest, c));
+				byte tra = Tile.getTile((byte)getTileAtPos(dest.x, dest.y, dest.z)).getTransparency();
+				byte res = 0;
+				if(tra < bl)
+					res = (byte) (bl-tra);
+				c.setBlockLight(dest.x, dest.y, dest.z, res, false);
+				lightRebuildQueue.add(c);
+			}
+		}
+	}
+	
+	private void evalLightRemoval(Vector3i src, Vector3i dest, LightRemoval rem){
+		Chunk c = getChunk(dest.x, dest.y, dest.z);
+		if(c != null){
+			int dbl = c.getBlockLight(dest.x, dest.y, dest.z);
+			int bl = rem.level;
+			if(dbl != 0 && dbl < bl){
+				c.setBlockLight(dest.x, dest.y, dest.z, 0, false);
+				lightRemovalQueue.add(new LightRemoval(dest, (byte) dbl, c));
+			}else if(dbl >= bl){
+				lightQueue.add(new Light(dest,c));
+			}
+			lightRebuildQueue.add(c);
+		}
+	}
+	
+	public static class LightRemoval{
+		public Vector3i pos;
+		public byte level;
+		public Chunk chunk;
+		public LightRemoval(Vector3i pos, byte level, Chunk chunk){
+			this.pos = pos;
+			this.level = level;
+			this.chunk = chunk;
+		}
+	}
+	
+	public static class Light{
+		public Vector3i pos;
+		public Chunk chunk;
+		public Light(Vector3i pos, Chunk chunk){
+			this.pos = pos;
+			this.chunk = chunk;
+		}
+		public Light(Vector3i pos) {
+			this.pos = pos;
+			this.chunk = Constants.world.getWorldManager().getChunk(pos);
+		}
 	}
 	
 }
