@@ -225,10 +225,7 @@ public class CentralManager extends Screen{
 				}
 				if(Keyboard.isKeyDown(Keyboard.KEY_L)){
 					Chunk c = worldManager.getChunk(pos);
-					System.out.println(worldManager.getBlockLight((int)pos.x, (int)pos.y, (int)pos.z));
-				}
-				if(Keyboard.isKeyDown(Keyboard.KEY_G)){
-					worldManager.setTileAtPos(pos, Tile.TallGrass.getId(), true);
+					System.out.println(worldManager.getLight((int)pos.x, (int)pos.y, (int)pos.z));
 				}
 				/*Vector3f pos = worldManager.entityManager.getPlayer().getPos();
 				if(Keyboard.isKeyDown(Keyboard.KEY_F)){

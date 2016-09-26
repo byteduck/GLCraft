@@ -109,6 +109,8 @@ public class CraftingManager {
 		/**Door**/
 		addRecipe(new Recipe(new ItemStack(Tile.Door), "ww ","ww ","ww ",'w',new ItemStack(Tile.Wood)));
 		addRecipe(new Recipe(new ItemStack(Tile.Door), " ww"," ww"," ww",'w',new ItemStack(Tile.Wood)));
+		/**Lamp**/
+		addRecipe(new Recipe(new ItemStack(Tile.Lamp, 4), " b ", "bcb", " b ",'b',new ItemStack(Tile.Bluestone),'c',new ItemStack(Tile.CondensedBluestone)));
 		
 		/* FURNACE RECIPES */
 		

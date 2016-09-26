@@ -192,6 +192,10 @@ public class Chunk {
 			for(int y = 0; y < this.sizeY; y++){
 				for(int z = 0; z < this.sizeZ; z++){
 					tiles[x][y][z] = tbuf[i];
+					if(Tile.getTile(tiles[x][y][z]).getLightLevel() > 0){
+						worldManager.lightQueue.add(new Light(new Vector3i(x+(int)this.pos.x,y+(int)this.pos.y,z+(int)this.pos.z),this));
+						this.light[x][y][z] = Tile.getTile(tiles[x][y][z]).getLightLevel();
+					}
 					meta[x][y][z] = mbuf[i];
 					i++;
 				}
@@ -281,7 +285,7 @@ public class Chunk {
 		w.setTileAtPos(x, y+5, z, leaf.getId(), true);
 	}
 	
-public static void createCustomTree(int x, int y, int z,Tile trunk,Tile leaf, byte trunkMeta, byte leafMeta, WorldManager w){
+	public static void createCustomTree(int x, int y, int z,Tile trunk,Tile leaf, byte trunkMeta, byte leafMeta, WorldManager w){
 		
 		for(int i = 0; i < 5; i++){
 			w.setTileAtPos(x, y+i, z, trunk.getId(), false, trunkMeta);
@@ -441,12 +445,12 @@ public static void createCustomTree(int x, int y, int z,Tile trunk,Tile leaf, by
 						boolean shouldRender = translucent ? t.isTranslucent() : !t.isTranslucent();
 						if(shouldRender && t != Tile.Air && !checkTileNotInView(x+(int)pos.getX(),y+(int)pos.getY(),z+(int)pos.getZ())){
 							float[] light = new float[]{
-								worldManager.getBlockLight(x+(int)pos.x,y+(int)pos.y-1,z+(int)pos.z)/15f+0.1f,
-								worldManager.getBlockLight(x+(int)pos.x,y+(int)pos.y+1,z+(int)pos.z)/15f+0.1f,
-								worldManager.getBlockLight(x+(int)pos.x,y+(int)pos.y,z+(int)pos.z-1)/15f+0.1f,
-								worldManager.getBlockLight(x+(int)pos.x,y+(int)pos.y,z+(int)pos.z+1)/15f+0.1f,
-								worldManager.getBlockLight(x+(int)pos.x+1,y+(int)pos.y,z+(int)pos.z)/15f+0.1f,
-								worldManager.getBlockLight(x+(int)pos.x-1,y+(int)pos.y,z+(int)pos.z)/15f+0.1f,
+								getLightIntensity(x,y-1,z),
+								getLightIntensity(x,y+1,z),
+								getLightIntensity(x,y,z-1),
+								getLightIntensity(x,y,z+1),
+								getLightIntensity(x+1,y,z),
+								getLightIntensity(x-1,y,z)
 							};
 							Color4f[] col = new Color4f[]{
 									new Color4f(t.getColor().r*light[0],t.getColor().g*light[0],t.getColor().b*light[0],t.getColor().a),
@@ -503,6 +507,14 @@ public static void createCustomTree(int x, int y, int z,Tile trunk,Tile leaf, by
 			}
 			glEndList();
 		}
+	}
+	
+	private float getLightIntensity(int x, int y, int z){
+		Vector3i pos = new Vector3i(x+(int)this.pos.x,y+(int)this.pos.y,z+(int)this.pos.z);
+		float ret = ((float)worldManager.getBlockLight(pos.x, pos.y, pos.z)+(float)worldManager.getSunlight(pos.x, pos.y, pos.z)*worldManager.getSkyLightIntensity())/15f+0.1f;
+		if(ret > 1)
+			ret = 1;
+		return ret;
 	}
 	
 	private boolean checkTileNotInView(int x, int y, int z){
@@ -636,9 +648,16 @@ public static void createCustomTree(int x, int y, int z,Tile trunk,Tile leaf, by
 				worldManager.lightQueue.add(new Light(new Vector3i(pos.x, pos.y-1, pos.z)));
 				worldManager.lightQueue.add(new Light(new Vector3i(pos.x, pos.y, pos.z+1)));
 				worldManager.lightQueue.add(new Light(new Vector3i(pos.x, pos.y, pos.z-1)));
+				worldManager.sunlightQueue.add(new Light(new Vector3i(pos.x+1, pos.y, pos.z)));
+				worldManager.sunlightQueue.add(new Light(new Vector3i(pos.x-1, pos.y, pos.z)));
+				worldManager.sunlightQueue.add(new Light(new Vector3i(pos.x, pos.y+1, pos.z)));
+				worldManager.sunlightQueue.add(new Light(new Vector3i(pos.x, pos.y-1, pos.z)));
+				worldManager.sunlightQueue.add(new Light(new Vector3i(pos.x, pos.y, pos.z+1)));
+				worldManager.sunlightQueue.add(new Light(new Vector3i(pos.x, pos.y, pos.z-1)));
 			}else{
 				Vector3i pos = new Vector3i(this.pos.x+x, this.pos.y+y, this.pos.z+z);
 				worldManager.lightRemovalQueue.add(new LightRemoval(pos, (byte)15, this));
+				worldManager.sunlightRemovalQueue.add(new LightRemoval(pos, (byte)15, this));
 			}
 			Tile.getTile(tile).onPlace((int)ax, (int)ay, (int)az, worldManager);
 			//ALWAYS assume that the rebuild argument will be false (except in special cases) because the setting of the meta rebuilds the chunk.

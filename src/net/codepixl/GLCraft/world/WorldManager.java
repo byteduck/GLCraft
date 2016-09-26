@@ -65,8 +65,10 @@ public class WorldManager {
 	private Save currentSave;
 	public long worldTime;
 	public Queue<Light> lightQueue = new LinkedList<Light>();
+	public Queue<Light> sunlightQueue = new LinkedList<Light>();
 	public Queue<LightRemoval> lightRemovalQueue = new LinkedList<LightRemoval>();
 	public ArrayList<Chunk> lightRebuildQueue = new ArrayList<Chunk>();
+	public Queue<LightRemoval> sunlightRemovalQueue = new LinkedList<LightRemoval>();
 	
 	public WorldManager(CentralManager w){
 		this.centralManager = w;
@@ -139,6 +141,7 @@ public class WorldManager {
 			c.rebuildTickTiles();
 		}
 		centralManager.renderSplashText("Hold on...", "Beaming you down");
+		reSunlight();
 		System.out.println("Done!");
 		entityManager.getPlayer().respawn();
 		doneGenerating = true;
@@ -352,9 +355,20 @@ public class WorldManager {
 			c.rebuildBase(false);
 			c.rebuildTickTiles();
 		}
+		
+		reSunlight();
 			
 	}
 	
+	private void reSunlight() {
+		for(int x = 0; x < Constants.worldLength; x++)
+			for(int z = 0; z < Constants.worldLength; z++){
+				sunlightQueue.add(new Light(new Vector3i(x,Constants.worldLength-1,z)));
+				setSunlight(x,Constants.worldLength-1,z,15,false);
+			}
+		relight();
+	}
+
 	public ArrayList<AABB> BlockAABBForEntity(EntitySolid entitySolid){
 		ArrayList<AABB> arraylist = new ArrayList<AABB>();
 		AABB mAABB = entitySolid.getAABB();
@@ -589,7 +603,7 @@ public class WorldManager {
 		if(c != null)
 			return c.getSunlight(x, y, z);
 		else
-			return -1;
+			return 0;
 	}
 
 	public void setSunlight(int x, int y, int z, int val, boolean relight) {
@@ -603,13 +617,24 @@ public class WorldManager {
 		if(c != null)
 			return c.getBlockLight(x, y, z);
 		else
-			return -1;
+			return 0;
 	}
 	
 	public void setBlockLight(int x, int y, int z, int val, boolean relight) {
 		Chunk c = getChunk(x,y,z);
 		if(c != null)
 			c.setBlockLight(x, y, z, val, relight);
+	}
+	
+	public int getLight(int x, int y, int z){
+		Chunk c = getChunk(x,y,z);
+		if(c != null){
+			int ret = (c.getBlockLight(x, y, z)+c.getSunlight(x, y, z));
+			if(ret > 15)
+				ret = 15;
+			return ret;
+		}else
+			return 0;
 	}
 
 	public Chunk getChunk(Vector3f pos) {
@@ -650,11 +675,78 @@ public class WorldManager {
 			pos = new Vector3i(next.x, next.y, next.z-1);
 			evalLight(nextl,pos);
 		}
+		while(!sunlightRemovalQueue.isEmpty()){
+			LightRemoval next = sunlightRemovalQueue.poll();
+			Vector3i npos = next.pos;
+			Vector3i pos = new Vector3i(npos.x+1, npos.y, npos.z);
+			evalSunlightRemoval(npos,pos,next);
+			pos = new Vector3i(npos.x-1, npos.y, npos.z);
+			evalSunlightRemoval(npos,pos,next);
+			pos = new Vector3i(npos.x, npos.y+1, npos.z);
+			evalSunlightRemoval(npos,pos,next);
+			pos = new Vector3i(npos.x, npos.y-1, npos.z);
+			evalSunlightRemoval(npos,pos,next);
+			pos = new Vector3i(npos.x, npos.y, npos.z+1);
+			evalSunlightRemoval(npos,pos,next);
+			pos = new Vector3i(npos.x, npos.y, npos.z-1);
+			evalSunlightRemoval(npos,pos,next);
+		}
+		while(!sunlightQueue.isEmpty()){
+			Light nextl = sunlightQueue.poll();
+			Vector3i next = nextl.pos;
+			Vector3i pos = new Vector3i(next.x+1, next.y, next.z);
+			evalSunlight(nextl,pos,false);
+			pos = new Vector3i(next.x-1, next.y, next.z);
+			evalSunlight(nextl,pos,false);
+			pos = new Vector3i(next.x, next.y+1, next.z);
+			evalSunlight(nextl,pos,false);
+			pos = new Vector3i(next.x, next.y-1, next.z);
+			evalSunlight(nextl,pos,true);
+			pos = new Vector3i(next.x, next.y, next.z+1);
+			evalSunlight(nextl,pos,false);
+			pos = new Vector3i(next.x, next.y, next.z-1);
+			evalSunlight(nextl,pos,false);
+		}
 		for(Chunk c : lightRebuildQueue){
 			c.rebuild();
 		}
 	}
 	
+	private void evalSunlight(Light next, Vector3i dest, boolean downwards) {
+		int bl, dbl;
+		bl = next.chunk.getSunlight(next.pos.x, next.pos.y, next.pos.z);
+		Chunk c = getChunk(dest.x, dest.y, dest.z);
+		if(c != null){
+			dbl = c.getSunlight(dest.x, dest.y, dest.z);
+			if(dbl < bl-1){
+				sunlightQueue.add(new Light(dest, c));
+				byte tra = Tile.getTile((byte)getTileAtPos(dest.x, dest.y, dest.z)).getTransparency();
+				byte res = 0;
+				if(bl == 15 && downwards)
+					tra-=1;
+				if(tra < bl)
+					res = (byte) (bl-tra);
+				c.setSunlight(dest.x, dest.y, dest.z, res, false);
+				lightRebuildQueue.add(c);
+			}
+		}
+	}
+	
+	private void evalSunlightRemoval(Vector3i src, Vector3i dest, LightRemoval rem){
+		Chunk c = getChunk(dest.x, dest.y, dest.z);
+		if(c != null){
+			int dbl = c.getSunlight(dest.x, dest.y, dest.z);
+			int bl = rem.level;
+			if(dbl != 0 && dbl < bl){
+				c.setSunlight(dest.x, dest.y, dest.z, 0, false);
+				sunlightRemovalQueue.add(new LightRemoval(dest, (byte) dbl, c));
+			}else if(dbl >= bl){
+				sunlightQueue.add(new Light(dest,c));
+			}
+			lightRebuildQueue.add(c);
+		}
+	}
+
 	private void evalLight(Light next, Vector3i dest){
 		int bl, dbl;
 		bl = next.chunk.getBlockLight(next.pos.x, next.pos.y, next.pos.z);

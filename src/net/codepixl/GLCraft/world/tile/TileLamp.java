@@ -37,5 +37,10 @@ public class TileLamp extends Tile{
 		// TODO Auto-generated method stub
 		return false;
 	}
+	
+	@Override
+	public byte getLightLevel(){
+		return 15;
+	}
 
 }
