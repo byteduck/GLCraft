@@ -739,11 +739,12 @@ public class WorldManager {
 	private void evalSunlightRemoval(Vector3i src, Vector3i dest, LightRemoval rem, boolean down){
 		Chunk c = getChunk(dest.x, dest.y, dest.z);
 		if(c != null){
+			int dbl = c.getSunlight(dest.x, dest.y, dest.z);
 			if(down){
 				c.setSunlight(dest.x, dest.y, dest.z, 0, false);
-				sunlightRemovalQueue.add(new LightRemoval(dest, (byte)0, c));
+				sunlightRemovalQueue.add(new LightRemoval(dest, (byte) dbl, c));
+				dbl = 0;
 			}
-			int dbl = c.getSunlight(dest.x, dest.y, dest.z);
 			int bl = rem.level;
 			if(dbl != 0 && dbl < bl){
 				c.setSunlight(dest.x, dest.y, dest.z, 0, false);
