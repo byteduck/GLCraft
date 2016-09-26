@@ -41,6 +41,7 @@ import net.codepixl.GLCraft.util.Vector2i;
 import net.codepixl.GLCraft.util.Vector3i;
 import net.codepixl.GLCraft.util.data.saves.Save;
 import net.codepixl.GLCraft.util.data.saves.SaveManager;
+import net.codepixl.GLCraft.world.WorldManager.Light;
 import net.codepixl.GLCraft.world.entity.Entity;
 import net.codepixl.GLCraft.world.entity.EntityManager;
 import net.codepixl.GLCraft.world.entity.EntitySolid;
@@ -678,18 +679,19 @@ public class WorldManager {
 		while(!sunlightRemovalQueue.isEmpty()){
 			LightRemoval next = sunlightRemovalQueue.poll();
 			Vector3i npos = next.pos;
+			this.setSunlight(npos.x, npos.y, npos.z, 0, false);
 			Vector3i pos = new Vector3i(npos.x+1, npos.y, npos.z);
-			evalSunlightRemoval(npos,pos,next);
+			evalSunlightRemoval(npos,pos,next,false);
 			pos = new Vector3i(npos.x-1, npos.y, npos.z);
-			evalSunlightRemoval(npos,pos,next);
+			evalSunlightRemoval(npos,pos,next,false);
 			pos = new Vector3i(npos.x, npos.y+1, npos.z);
-			evalSunlightRemoval(npos,pos,next);
+			evalSunlightRemoval(npos,pos,next,false);
 			pos = new Vector3i(npos.x, npos.y-1, npos.z);
-			evalSunlightRemoval(npos,pos,next);
+			evalSunlightRemoval(npos,pos,next,true);
 			pos = new Vector3i(npos.x, npos.y, npos.z+1);
-			evalSunlightRemoval(npos,pos,next);
+			evalSunlightRemoval(npos,pos,next,false);
 			pos = new Vector3i(npos.x, npos.y, npos.z-1);
-			evalSunlightRemoval(npos,pos,next);
+			evalSunlightRemoval(npos,pos,next,false);
 		}
 		while(!sunlightQueue.isEmpty()){
 			Light nextl = sunlightQueue.poll();
@@ -714,27 +716,33 @@ public class WorldManager {
 	
 	private void evalSunlight(Light next, Vector3i dest, boolean downwards) {
 		int bl, dbl;
-		bl = next.chunk.getSunlight(next.pos.x, next.pos.y, next.pos.z);
-		Chunk c = getChunk(dest.x, dest.y, dest.z);
-		if(c != null){
-			dbl = c.getSunlight(dest.x, dest.y, dest.z);
-			if(dbl < bl-1){
-				sunlightQueue.add(new Light(dest, c));
-				byte tra = Tile.getTile((byte)getTileAtPos(dest.x, dest.y, dest.z)).getTransparency();
-				byte res = 0;
-				if(bl == 15 && downwards)
-					tra-=1;
-				if(tra < bl)
-					res = (byte) (bl-tra);
-				c.setSunlight(dest.x, dest.y, dest.z, res, false);
-				lightRebuildQueue.add(c);
+		if(next.chunk != null){
+			bl = next.chunk.getSunlight(next.pos.x, next.pos.y, next.pos.z);
+			Chunk c = getChunk(dest.x, dest.y, dest.z);
+			if(c != null){
+				dbl = c.getSunlight(dest.x, dest.y, dest.z);
+				if(dbl < bl-1){
+					sunlightQueue.add(new Light(dest, c));
+					byte tra = Tile.getTile((byte)getTileAtPos(dest.x, dest.y, dest.z)).getTransparency();
+					byte res = 0;
+					if(bl == 15 && downwards)
+						tra-=1;
+					if(tra < bl)
+						res = (byte) (bl-tra);
+					c.setSunlight(dest.x, dest.y, dest.z, res, false);
+					lightRebuildQueue.add(c);
+				}
 			}
 		}
 	}
 	
-	private void evalSunlightRemoval(Vector3i src, Vector3i dest, LightRemoval rem){
+	private void evalSunlightRemoval(Vector3i src, Vector3i dest, LightRemoval rem, boolean down){
 		Chunk c = getChunk(dest.x, dest.y, dest.z);
 		if(c != null){
+			if(down){
+				c.setSunlight(dest.x, dest.y, dest.z, 0, false);
+				sunlightRemovalQueue.add(new LightRemoval(dest, (byte)0, c));
+			}
 			int dbl = c.getSunlight(dest.x, dest.y, dest.z);
 			int bl = rem.level;
 			if(dbl != 0 && dbl < bl){
@@ -749,18 +757,20 @@ public class WorldManager {
 
 	private void evalLight(Light next, Vector3i dest){
 		int bl, dbl;
-		bl = next.chunk.getBlockLight(next.pos.x, next.pos.y, next.pos.z);
-		Chunk c = getChunk(dest.x, dest.y, dest.z);
-		if(c != null){
-			dbl = c.getBlockLight(dest.x, dest.y, dest.z);
-			if(dbl < bl-1){
-				lightQueue.add(new Light(dest, c));
-				byte tra = Tile.getTile((byte)getTileAtPos(dest.x, dest.y, dest.z)).getTransparency();
-				byte res = 0;
-				if(tra < bl)
-					res = (byte) (bl-tra);
-				c.setBlockLight(dest.x, dest.y, dest.z, res, false);
-				lightRebuildQueue.add(c);
+		if(next.chunk != null){
+			bl = next.chunk.getBlockLight(next.pos.x, next.pos.y, next.pos.z);
+			Chunk c = getChunk(dest.x, dest.y, dest.z);
+			if(c != null){
+				dbl = c.getBlockLight(dest.x, dest.y, dest.z);
+				if(dbl < bl-1){
+					lightQueue.add(new Light(dest, c));
+					byte tra = Tile.getTile((byte)getTileAtPos(dest.x, dest.y, dest.z)).getTransparency();
+					byte res = 0;
+					if(tra < bl)
+						res = (byte) (bl-tra);
+					c.setBlockLight(dest.x, dest.y, dest.z, res, false);
+					lightRebuildQueue.add(c);
+				}
 			}
 		}
 	}

@@ -638,24 +638,25 @@ public class Chunk {
 			}
 			tiles[x][y][z] = tile;
 			setMetaAtPos(x,y,z,meta,rebuild);
+			Vector3i pos = new Vector3i(this.pos.x+x, this.pos.y+y, this.pos.z+z);
+			worldManager.sunlightQueue.add(new Light(new Vector3i(pos.x+1, pos.y, pos.z)));
+			worldManager.sunlightQueue.add(new Light(new Vector3i(pos.x-1, pos.y, pos.z)));
+			worldManager.sunlightQueue.add(new Light(new Vector3i(pos.x, pos.y+1, pos.z)));
+			worldManager.sunlightQueue.add(new Light(new Vector3i(pos.x, pos.y-1, pos.z)));
+			worldManager.sunlightQueue.add(new Light(new Vector3i(pos.x, pos.y, pos.z+1)));
+			worldManager.sunlightQueue.add(new Light(new Vector3i(pos.x, pos.y, pos.z-1)));
 			if(Tile.getTile(tile).getLightLevel() > 0)
-				setBlockLight(x+(int)pos.x,y+(int)pos.y,z+(int)pos.z,Tile.getTile(tile).getLightLevel(),true);
+				setBlockLight(pos.x,pos.y,pos.z,Tile.getTile(tile).getLightLevel(),true);
 			else if(Tile.getTile(tile).getTransparency() < 15){
-				Vector3i pos = new Vector3i(this.pos.x+x, this.pos.y+y, this.pos.z+z);
 				worldManager.lightQueue.add(new Light(new Vector3i(pos.x+1, pos.y, pos.z)));
 				worldManager.lightQueue.add(new Light(new Vector3i(pos.x-1, pos.y, pos.z)));
 				worldManager.lightQueue.add(new Light(new Vector3i(pos.x, pos.y+1, pos.z)));
 				worldManager.lightQueue.add(new Light(new Vector3i(pos.x, pos.y-1, pos.z)));
 				worldManager.lightQueue.add(new Light(new Vector3i(pos.x, pos.y, pos.z+1)));
 				worldManager.lightQueue.add(new Light(new Vector3i(pos.x, pos.y, pos.z-1)));
-				worldManager.sunlightQueue.add(new Light(new Vector3i(pos.x+1, pos.y, pos.z)));
-				worldManager.sunlightQueue.add(new Light(new Vector3i(pos.x-1, pos.y, pos.z)));
-				worldManager.sunlightQueue.add(new Light(new Vector3i(pos.x, pos.y+1, pos.z)));
-				worldManager.sunlightQueue.add(new Light(new Vector3i(pos.x, pos.y-1, pos.z)));
-				worldManager.sunlightQueue.add(new Light(new Vector3i(pos.x, pos.y, pos.z+1)));
-				worldManager.sunlightQueue.add(new Light(new Vector3i(pos.x, pos.y, pos.z-1)));
 			}else{
-				Vector3i pos = new Vector3i(this.pos.x+x, this.pos.y+y, this.pos.z+z);
+				this.setSunlight(pos.x, pos.y, pos.z, 0, false);
+				this.setBlockLight(pos.x, pos.y, pos.z, 0, false);
 				worldManager.lightRemovalQueue.add(new LightRemoval(pos, (byte)15, this));
 				worldManager.sunlightRemovalQueue.add(new LightRemoval(pos, (byte)15, this));
 			}

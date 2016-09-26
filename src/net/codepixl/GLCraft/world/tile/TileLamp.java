@@ -29,7 +29,7 @@ public class TileLamp extends Tile{
 	@Override
 	public boolean isTransparent() {
 		// TODO Auto-generated method stub
-		return true;
+		return false;
 	}
 
 	@Override
