@@ -116,13 +116,12 @@ public class WorldManager {
 		}
 		i = activeChunks.values().iterator();
 		
-		this.currentChunk = 0;
+		/*this.currentChunk = 0;
 		while(i.hasNext()){
 			this.currentChunk++;
 			int progress = (int) (((float)currentChunk/(float)Math.pow(Constants.worldLengthChunks, 3))*100f);
 			centralManager.renderSplashText("Lighting...", progress+"%", progress);
-			i.next().light();
-		}
+		}*/
 		
 		i = activeChunks.values().iterator();
 		
@@ -132,7 +131,8 @@ public class WorldManager {
 			int progress = (int) (((float)currentChunk/(float)Math.pow(Constants.worldLengthChunks, 3))*100f);
 			centralManager.renderSplashText("Decorating...", progress+"%", progress);
 			Chunk c = i.next();
-			c.rebuild();
+			c.rebuildBase(true);
+			c.rebuildBase(false);
 			c.rebuildTickTiles();
 		}
 		centralManager.renderSplashText("Hold on...", "Beaming you down");
@@ -339,7 +339,8 @@ public class WorldManager {
 		Iterator<Chunk> i = this.activeChunks.values().iterator();
 		while(i.hasNext()){
 			Chunk c = i.next();
-			c.rebuild();
+			c.rebuildBase(true);
+			c.rebuildBase(false);
 			c.rebuildTickTiles();
 		}
 			
@@ -381,7 +382,7 @@ public class WorldManager {
 	}
 	
 	public int getTileAtPos(int x, int y, int z){
-		Chunk c = getChunk(new Vector3f(x,y,z));
+		Chunk c = getChunk(new Vector3i(x,y,z));
 		if(c == null)
 			return -1;
 		return c.getTileAtCoord(x-(int)c.getPos().x, y-(int)c.getPos().y, z-(int)c.getPos().z);
@@ -400,7 +401,10 @@ public class WorldManager {
 	
 	public byte getMetaAtPos(int x, int y, int z){
 		Chunk c = getChunk(x,y,z);
-		return c.getMetaAtCoord(x-(int)c.getPos().x, y-(int)c.getPos().y, z-(int)c.getPos().z);
+		if(c != null)
+			return c.getMetaAtCoord(x-(int)c.getPos().x, y-(int)c.getPos().y, z-(int)c.getPos().z);
+		else
+			return -1;
 	}
 	
 	public void setTileAtPos(int x, int y, int z, byte tile, boolean rebuild){
@@ -460,11 +464,13 @@ public class WorldManager {
 	}
 	
 	public void blockUpdate(int x, int y, int z){
-		getChunk(x,y,z).blockUpdate(x,y,z);
+		Chunk c = getChunk(x,y,z);
+		if(c != null)
+		c.blockUpdate(x, y, z);
 	}
 	
 	public Chunk getChunk(int x, int y, int z){
-		return getChunk(new Vector3f(x,y,z));
+		return getChunk(new Vector3i(x,y,z));
 	}
 	
 	@Deprecated
@@ -478,25 +484,13 @@ public class WorldManager {
 		}
 	}
 	
-	public Chunk getChunk(Vector3f pos){
-		Vector3f opos = pos;
-		pos = new Vector3f(pos);
-		pos.x = (float) ((int)pos.x/16*16);
-		pos.y = (float) ((int)pos.y/16*16);
-		pos.z = (float) ((int)pos.z/16*16);
-		Chunk c = activeChunks.get(new Vector3i(pos));
-		if(c != null)
-			return c;
-		else
-			return activeChunks.get(new Vector3i(0,0,0));
-	}
-	
-	public int getLight(int x, int y, int z,boolean ChunkCoords){
-		Vector3f posi = MathUtils.coordsToChunkPos(x, y, z);
-		if(getChunk(posi) != null)
-			if(isInBounds(new Vector3f(x,y,z)))
-				return getChunk(posi).getLight(new Vector3f(x,y,z),ChunkCoords);
-		return 0;
+	public Chunk getChunk(Vector3i pos){
+		Vector3i vector3i = new Vector3i(pos);
+		vector3i.x = (int) (Math.floor(vector3i.x/16f)*16);
+		vector3i.y = (int) (Math.floor(vector3i.y/16f)*16);
+		vector3i.z = (int) (Math.floor(vector3i.z/16f)*16);
+		Chunk c = activeChunks.get(vector3i);
+		return c;
 	}
 	
 	public boolean isInBounds(Vector3f pos){
@@ -508,46 +502,6 @@ public class WorldManager {
 			return false;
 		return true;
 	}
-
-	public void setLight(int x, int y, int z, int light, boolean ChunkCoords) {
-		Vector3f posi = MathUtils.coordsToChunkPos(x, y, z);
-		if(getChunk(posi) != null)
-		getChunk(posi).setLight(new Vector3f(x,y,z),light,ChunkCoords);
-
-	}
-	
-	public void putLight(int x, int y, int z, int light){
-	     int xDecreasing = x - 1;
-	     int xIncreasing = x + 1;
-	     int yDecreasing = y - 1;
-	     int yIncreasing = y + 1;
-	     int zDecreasing = z - 1;
-	     int zIncreasing = z + 1;
-	     if(isInBounds(new Vector3f(x,y,z)))
-        	 setLight(x,y,z,light,false);
-	     light-=1;
-	     if (light > 0)
-	     {
-	         if(getLight(xIncreasing, y, z, false) < light && Tile.getTile((byte)getTileAtPos(x,y,z)).isTransparent()){
-	        	 putLight(xIncreasing, y, z, light);
-	         }
-	         if(getLight(xDecreasing, y, z, false) < light && Tile.getTile((byte)getTileAtPos(x,y,z)).isTransparent()){
-	        	 putLight(xDecreasing, y, z, light);
-	         }
-	         if(getLight(x, yIncreasing, z, false) < light && Tile.getTile((byte)getTileAtPos(x,y,z)).isTransparent()){
-	        	 putLight(x, yIncreasing, z, light);
-	         }
-	         if(getLight(x, yDecreasing, z, false) < light && Tile.getTile((byte)getTileAtPos(x,y,z)).isTransparent()){
-	        	 putLight(x, yDecreasing, z, light);
-	         }
-	         if(getLight(x, y, zIncreasing, false) < light && Tile.getTile((byte)getTileAtPos(x,y,z)).isTransparent()){
-	        	 putLight(x, y, zIncreasing, light);
-	         }
-	         if(getLight(x, y, zDecreasing, false) < light && Tile.getTile((byte)getTileAtPos(x,y,z)).isTransparent()){
-	        	 putLight(x, y, zDecreasing, light);
-	         }
-	     }
-	 }
 
 	public int getTileAtPos(Vector3f p) {
 		return getTileAtPos((int)p.x,(int)p.y,(int)p.z);
@@ -619,6 +573,38 @@ public class WorldManager {
 
 	public byte getMetaAtPos(Vector3f pos) {
 		return getMetaAtPos((int)pos.x, (int)pos.y, (int)pos.z);
+	}
+	
+	public int getSunlight(int x, int y, int z) {
+		Chunk c = getChunk(x,y,z);
+		if(c != null)
+			return c.getSunlight(x, y, z);
+		else
+			return -1;
+	}
+
+	public void setSunlight(int x, int y, int z, int val, boolean relight) {
+		Chunk c = getChunk(x,y,z);
+		if(c != null)
+			c.setSunlight(x, y, z, val, relight);
+	}
+
+	public int getBlockLight(int x, int y, int z) {
+		Chunk c = getChunk(x,y,z);
+		if(c != null)
+			return c.getBlockLight(x, y, z);
+		else
+			return -1;
+	}
+	
+	public void setBlockLight(int x, int y, int z, int val, boolean relight) {
+		Chunk c = getChunk(x,y,z);
+		if(c != null)
+			c.setBlockLight(x, y, z, val, relight);
+	}
+
+	public Chunk getChunk(Vector3f pos) {
+		return getChunk(new Vector3i(pos));
 	}
 	
 }

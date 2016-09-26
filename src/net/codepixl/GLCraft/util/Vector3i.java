@@ -35,7 +35,7 @@ public class Vector3i {
 	
 	@Override
 	public int hashCode() {
-	    int hash = (x << 2)+(y << 1)+(z);
+	    int hash = (((new Integer(x).hashCode())*31+new Integer(y).hashCode())*31+new Integer(z));
 	    return hash;
 	}
 	

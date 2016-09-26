@@ -314,4 +314,18 @@ public class Tile {
 	public byte getPowerLevel(int x, int y, int z, WorldManager w){
 		return 0;
 	}
+	
+	public byte getLightLevel(){
+		return 0;
+	}
+	
+	/**
+	 * Please note this is not actual render transparency, but rather how much the light level goes down when passing through this block. 15 means solid, 0 means no loss.
+	 */
+	public byte getTransparency(){
+		if(this.isTransparent())
+			return 1;
+		else
+			return 15;
+	}
 }

@@ -10,19 +10,20 @@ import static org.lwjgl.opengl.GL11.glEndList;
 import static org.lwjgl.opengl.GL11.glGenLists;
 import static org.lwjgl.opengl.GL11.glNewList;
 
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.Queue;
 
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.util.vector.Vector3f;
 
-import com.evilco.mc.nbt.stream.NbtOutputStream;
 import com.evilco.mc.nbt.tag.TagByteArray;
 import com.evilco.mc.nbt.tag.TagCompound;
 import com.evilco.mc.nbt.tag.TagFloat;
+import com.nishu.utils.Color4f;
 import com.nishu.utils.ShaderProgram;
 
 import net.codepixl.GLCraft.render.RenderType;
@@ -40,7 +41,7 @@ public class Chunk {
 	private WorldManager worldManager;
 	private Vector3f pos;
 	private volatile byte [][][] tiles;
-	private volatile int [][][] light;
+	private volatile byte [][][] light;
 	private volatile byte [][][] meta;
 	private ShaderProgram shader;
 	public int vcID, transvcID;
@@ -55,6 +56,9 @@ public class Chunk {
 	private ArrayList<Vector3f> tickTiles = new ArrayList<Vector3f>();
 	private ArrayList<Vector3f> tempTickTiles = new ArrayList<Vector3f>();
 	private ArrayList<Vector3f> scheduledBlockUpdates = new ArrayList<Vector3f>();
+	private Queue<Light> lightQueue = new LinkedList<Light>();
+	private Queue<LightRemoval> lightRemovalQueue = new LinkedList<LightRemoval>();
+	private ArrayList<Chunk> lightRebuildQueue = new ArrayList<Chunk>();
 	
 	public Chunk(ShaderProgram shader, int type, float x, float y, float z, WorldManager w, boolean fromBuf){
 		this.pos = new Vector3f(x,y,z);
@@ -310,7 +314,7 @@ public static void createCustomTree(int x, int y, int z,Tile trunk,Tile leaf, by
 		vcID = tmp*2;
 		transvcID = vcID+1;
 		tiles = new byte[sizeX][sizeY][sizeZ];
-		light = new int[sizeX][sizeY][sizeZ];
+		light = new byte[sizeX][sizeY][sizeZ];
 		meta = new byte[sizeX][sizeY][sizeZ];
 		if(!bufChunk && !blank){
 			createChunk();
@@ -341,7 +345,6 @@ public static void createCustomTree(int x, int y, int z,Tile trunk,Tile leaf, by
 	
 	public void update(){
 		if(needsRebuild){
-			light();
 			rebuildBase(true);
 			rebuildBase(false);
 			needsRebuild = false;
@@ -356,6 +359,83 @@ public static void createCustomTree(int x, int y, int z,Tile trunk,Tile leaf, by
 				tickTiles.add(v);
 			}
 		}
+	}
+	
+	private void relight(){
+		lightRebuildQueue.clear();
+		while(!lightRemovalQueue.isEmpty()){
+			LightRemoval next = lightRemovalQueue.poll();
+			Vector3i npos = next.pos;
+			Vector3i pos = new Vector3i(npos.x+1, npos.y, npos.z);
+			evalLightRemoval(npos,pos,next);
+			pos = new Vector3i(npos.x-1, npos.y, npos.z);
+			evalLightRemoval(npos,pos,next);
+			pos = new Vector3i(npos.x, npos.y+1, npos.z);
+			evalLightRemoval(npos,pos,next);
+			pos = new Vector3i(npos.x, npos.y-1, npos.z);
+			evalLightRemoval(npos,pos,next);
+			pos = new Vector3i(npos.x, npos.y, npos.z+1);
+			evalLightRemoval(npos,pos,next);
+			pos = new Vector3i(npos.x, npos.y, npos.z-1);
+			evalLightRemoval(npos,pos,next);
+		}
+		while(!lightQueue.isEmpty()){
+			Light nextl = lightQueue.poll();
+			Vector3i next = nextl.pos;
+			Vector3i pos = new Vector3i(next.x+1, next.y, next.z);
+			evalLight(nextl,pos);
+			pos = new Vector3i(next.x-1, next.y, next.z);
+			evalLight(nextl,pos);
+			pos = new Vector3i(next.x, next.y+1, next.z);
+			evalLight(nextl,pos);
+			pos = new Vector3i(next.x, next.y-1, next.z);
+			evalLight(nextl,pos);
+			pos = new Vector3i(next.x, next.y, next.z+1);
+			evalLight(nextl,pos);
+			pos = new Vector3i(next.x, next.y, next.z-1);
+			evalLight(nextl,pos);
+		}
+		for(Chunk c : lightRebuildQueue){
+			if(c != this)
+				c.rebuild();
+		}
+	}
+	
+	private void evalLight(Light next, Vector3i dest){
+		int bl, dbl;
+		bl = next.chunk.getBlockLight(next.pos.x, next.pos.y, next.pos.z);
+		Chunk c = worldManager.getChunk(dest.x, dest.y, dest.z);
+		if(c != null){
+			dbl = c.getBlockLight(dest.x, dest.y, dest.z);
+			if(dbl < bl-1){
+				lightQueue.add(new Light(dest, c));
+				byte tra = Tile.getTile((byte) worldManager.getTileAtPos(dest.x, dest.y, dest.z)).getTransparency();
+				byte res = 0;
+				if(tra < bl)
+					res = (byte) (bl-tra);
+				c.setBlockLight(dest.x, dest.y, dest.z, res, false);
+				lightRebuildQueue.add(c);
+			}
+		}
+	}
+	
+	private void evalLightRemoval(Vector3i src, Vector3i dest, LightRemoval rem){
+		Chunk c = worldManager.getChunk(dest.x, dest.y, dest.z);
+		if(c != null){
+			int dbl = c.getBlockLight(dest.x, dest.y, dest.z);
+			int bl = rem.level;
+			if(dbl != 0 && dbl < bl){
+				c.setBlockLight(dest.x, dest.y, dest.z, 0, false);
+				lightRemovalQueue.add(new LightRemoval(dest, (byte) dbl, c));
+			}else if(dbl >= bl){
+				lightQueue.add(new Light(dest,c));
+			}
+			lightRebuildQueue.add(c);
+		}
+	}
+	
+	private boolean inBounds(int x, int y, int z){
+		return x < Constants.CHUNKSIZE && x >= 0 && y < Constants.CHUNKSIZE && y >= 0 && z < Constants.CHUNKSIZE && z >= 0;
 	}
 	
 	public void tick(){
@@ -417,7 +497,8 @@ public static void createCustomTree(int x, int y, int z,Tile trunk,Tile leaf, by
 		queueRebuild();
 	}
 	
-	private void rebuildBase(boolean translucent){
+	protected void rebuildBase(boolean translucent){
+		relight();
 		if(type != CentralManager.AIRCHUNK){
 			if(translucent)
 				glNewList(transvcID, GL_COMPILE);
@@ -431,6 +512,22 @@ public static void createCustomTree(int x, int y, int z,Tile trunk,Tile leaf, by
 						Tile t = Tile.getTile(tiles[x][y][z]);
 						boolean shouldRender = translucent ? t.isTranslucent() : !t.isTranslucent();
 						if(shouldRender && t != Tile.Air && !checkTileNotInView(x+(int)pos.getX(),y+(int)pos.getY(),z+(int)pos.getZ())){
+							float[] light = new float[]{
+								worldManager.getBlockLight(x+(int)pos.x,y+(int)pos.y-1,z+(int)pos.z)/15f+0.1f,
+								worldManager.getBlockLight(x+(int)pos.x,y+(int)pos.y+1,z+(int)pos.z)/15f+0.1f,
+								worldManager.getBlockLight(x+(int)pos.x,y+(int)pos.y,z+(int)pos.z-1)/15f+0.1f,
+								worldManager.getBlockLight(x+(int)pos.x,y+(int)pos.y,z+(int)pos.z+1)/15f+0.1f,
+								worldManager.getBlockLight(x+(int)pos.x+1,y+(int)pos.y,z+(int)pos.z)/15f+0.1f,
+								worldManager.getBlockLight(x+(int)pos.x-1,y+(int)pos.y,z+(int)pos.z)/15f+0.1f,
+							};
+							Color4f[] col = new Color4f[]{
+									new Color4f(t.getColor().r*light[0],t.getColor().g*light[0],t.getColor().b*light[0],t.getColor().a),
+									new Color4f(t.getColor().r*light[1],t.getColor().g*light[1],t.getColor().b*light[1],t.getColor().a),
+									new Color4f(t.getColor().r*light[2],t.getColor().g*light[2],t.getColor().b*light[2],t.getColor().a),
+									new Color4f(t.getColor().r*light[3],t.getColor().g*light[3],t.getColor().b*light[3],t.getColor().a),
+									new Color4f(t.getColor().r*light[4],t.getColor().g*light[4],t.getColor().b*light[4],t.getColor().a),
+									new Color4f(t.getColor().r*light[5],t.getColor().g*light[5],t.getColor().b*light[5],t.getColor().a),
+							};
 							/**if(tiles[x][y][z] != Tile.TallGrass.getId()){
 								//System.out.println(Tile.getTile(tiles[x][y][z]).getName());
 								//System.out.println(pos);
@@ -442,25 +539,25 @@ public static void createCustomTree(int x, int y, int z,Tile trunk,Tile leaf, by
 							if(t.getRenderType() == RenderType.CUBE){
 								glBegin(GL_QUADS);
 								if(t.hasMetaTextures()){
-									Shape.createCube(pos.x+x, pos.y+y, pos.z+z, t.getColor(), t.getTexCoords(meta[x][y][z]), 1);
+									Shape.createCube(pos.x+x, pos.y+y, pos.z+z, col, t.getTexCoords(meta[x][y][z]), 1);
 								}else{
-									Shape.createCube(pos.x+x, pos.y+y, pos.z+z, t.getColor(), t.getTexCoords(), 1);
+									Shape.createCube(pos.x+x, pos.y+y, pos.z+z, col, t.getTexCoords(), 1);
 								}
 								glEnd();
 							}else if(t.getRenderType() == RenderType.CROSS){
 								glBegin(GL_QUADS);
 								if(t.hasMetaTextures()){
-									Shape.createCross(pos.x+x, pos.y+y, pos.z+z, t.getColor(), t.getTexCoords(meta[x][y][z]), 1);
+									Shape.createCross(pos.x+x, pos.y+y, pos.z+z, col[1], t.getTexCoords(meta[x][y][z]), 1);
 								}else{
-									Shape.createCross(pos.x+x, pos.y+y, pos.z+z, t.getColor(), t.getTexCoords(), 1);
+									Shape.createCross(pos.x+x, pos.y+y, pos.z+z, col[1], t.getTexCoords(), 1);
 								}
 								glEnd();
 							}else if(t.getRenderType() == RenderType.FLAT){
 								glBegin(GL_QUADS);
 								if(t.hasMetaTextures()){
-									Shape.createFlat(pos.x+x, pos.y+y+0.01f, pos.z+z, t.getColor(), t.getTexCoords(meta[x][y][z]), 1);
+									Shape.createFlat(pos.x+x, pos.y+y+0.01f, pos.z+z, col[1], t.getTexCoords(meta[x][y][z]), 1);
 								}else{
-									Shape.createFlat(pos.x+x, pos.y+y+0.01f, pos.z+z, t.getColor(), t.getTexCoords(), 1);
+									Shape.createFlat(pos.x+x, pos.y+y+0.01f, pos.z+z, col[1], t.getTexCoords(), 1);
 								}
 								glEnd();
 							}else if(t.getRenderType() == RenderType.CUSTOM){
@@ -534,7 +631,6 @@ public static void createCustomTree(int x, int y, int z,Tile trunk,Tile leaf, by
 		if(inBounds){
 			meta[x][y][z] = met;
 			if(rebuild){
-				queueLight();
 				/**worldManager.getChunkAtCoords(MathUtils.coordsToChunkPos((int)ax-7, (int)ay, (int)az)).queueLight();
 				worldManager.getChunkAtCoords(MathUtils.coordsToChunkPos((int)ax+7, (int)ay, (int)az)).queueLight();
 				worldManager.getChunkAtCoords(MathUtils.coordsToChunkPos((int)ax, (int)ay-7, (int)az)).queueLight();
@@ -574,7 +670,9 @@ public static void createCustomTree(int x, int y, int z,Tile trunk,Tile leaf, by
 				}
 				Iterator<Chunk> i = toRebuild.iterator();
 				while(i.hasNext()){
-					i.next().rebuild();
+					Chunk c = i.next();
+					if(c != null)
+						c.rebuild();
 				}
 			}
 		}
@@ -590,18 +688,21 @@ public static void createCustomTree(int x, int y, int z,Tile trunk,Tile leaf, by
 			float ay = y+pos.y;
 			float az = z+pos.z;
 			Tile.getTile(tiles[x][y][z]).onBreak((int)ax, (int)ay, (int)az, false, source, worldManager);
-			if(tiles[x][y][z] == Tile.Lamp.getId()){
-				this.light[x][y][z] = 0;
-			}
 			if(tickTiles.contains(new Vector3f(x,y,z)) || Tile.getTile(tile).needsConstantTick()){
 				queueTickTileUpdate(x,y,z);
 			}
+			if(Tile.getTile(tiles[x][y][z]).getLightLevel() > 0){
+				byte level = (byte) getBlockLight(x+(int)pos.x,y+(int)pos.y,z+(int)pos.z);
+				setBlockLight(x+(int)pos.x,y+(int)pos.y,z+(int)pos.z,0,false);
+				removeBlockLight(x+(int)pos.x,y+(int)pos.y,z+(int)pos.z,level);
+			}
 			tiles[x][y][z] = tile;
 			setMetaAtPos(x,y,z,meta,rebuild);
+			if(Tile.getTile(tile).getLightLevel() > 0)
+				setBlockLight(x+(int)pos.x,y+(int)pos.y,z+(int)pos.z,Tile.getTile(tile).getLightLevel(),true);
 			Tile.getTile(tile).onPlace((int)ax, (int)ay, (int)az, worldManager);
 			//ALWAYS assume that the rebuild argument will be false (except in special cases) because the setting of the meta rebuilds the chunk.
 			if(rebuild){
-				queueLight();
 				rebuild();
 				/**worldManager.getChunkAtCoords(MathUtils.coordsToChunkPos((int)ax-7, (int)ay, (int)az)).queueLight();
 				worldManager.getChunkAtCoords(MathUtils.coordsToChunkPos((int)ax+7, (int)ay, (int)az)).queueLight();
@@ -627,11 +728,6 @@ public static void createCustomTree(int x, int y, int z,Tile trunk,Tile leaf, by
 	
 	private void queueTickTileUpdate(int x, int y, int z) {
 		tempTickTiles.add(new Vector3f(x,y,z));
-	}
-
-	private void queueLight() {
-		this.light = new int[Constants.CHUNKSIZE][Constants.CHUNKSIZE][Constants.CHUNKSIZE];
-		queueRebuild();
 	}
 
 	public void queueRebuild() {
@@ -663,42 +759,6 @@ public static void createCustomTree(int x, int y, int z,Tile trunk,Tile leaf, by
 		return pos;
 	}
 
-	public int getLight(Vector3f posi, boolean ChunkPos) {
-		if(ChunkPos){
-			if(light.length > posi.x && light[0].length > posi.y && light[0][0].length > posi.z)
-				return light[(int)posi.x][(int)posi.y][(int)posi.z];
-		}else{
-			if(light.length > posi.x-(int)pos.x && light[0].length > posi.y-(int)pos.y && light[0][0].length > posi.z-(int)pos.z)
-				return light[(int)posi.x-(int)pos.x][(int)posi.y-(int)pos.y][(int)posi.z-(int)pos.z];
-		}
-		return 0;
-	}
-
-	public void setLight(Vector3f posi, int light, boolean ChunkPos) {
-		if(ChunkPos){
-			if(this.light.length > posi.x && this.light[0].length > posi.y && this.light[0][0].length > posi.z)
-				this.light[(int)posi.x][(int)posi.y][(int)posi.z] = light;
-		}else{
-			if(this.light.length > posi.x-(int)pos.x && this.light[0].length > posi.y-(int)pos.y && this.light[0][0].length > posi.z-(int)pos.z)
-				this.light[(int)posi.x-(int)pos.x][(int)posi.y-(int)pos.y][(int)posi.z-(int)pos.z] = light;
-		}
-	}
-
-	public void light() {
-		/**worldManager.s.addCurrentChunk(1);
-		int progress = (int)(((float)worldManager.s.currentChunk()/(float)worldManager.s.total)*33);
-		worldManager.s.getSplash().setProgress(progress,"Lighting chunks "+progress+"%");
-		for(int x = 0; x < sizeX; x++){
-			for(int y = 0; y < sizeY; y++){
-				for(int z = 0; z < sizeZ; z++){
-					if(tiles[x][y][z] == Tile.Light.getId()){
-						worldManager.putLight(x+(int)pos.x, y+(int)pos.y, z+(int)pos.z, 10);
-					}
-				}
-			}
-		}**/
-	}
-
 	/**
 	 * Position is in WORLD coordinates.
 	 */
@@ -709,4 +769,52 @@ public static void createCustomTree(int x, int y, int z,Tile trunk,Tile leaf, by
 		if(inBoundsOne && inBoundsTwo && inBoundsThree)
 			scheduledBlockUpdates.add(new Vector3f(x,y,z));
 	}
+	
+	// Get the bits XXXX0000
+	public int getSunlight(int x, int y, int z) {
+	    return (light[x-(int)this.pos.x][y-(int)this.pos.y][z-(int)this.pos.z] >> 4) & 0xF;
+	}
+
+	// Set the bits XXXX0000
+	public void setSunlight(int x, int y, int z, int val, boolean relight) {
+		light[x-(int)this.pos.x][y-(int)this.pos.y][z-(int)this.pos.z] = (byte) ((light[x-(int)this.pos.x][y-(int)this.pos.y][z-(int)this.pos.z] & 0xF) | (val << 4));
+	}
+
+	// Get the bits 0000XXXX
+	public int getBlockLight(int x, int y, int z) {
+	    return light[x-(int)this.pos.x][y-(int)this.pos.y][z-(int)this.pos.z] & 0xF;
+	}
+	
+	// Set the bits 0000XXXX
+	public void setBlockLight(int x, int y, int z, int val, boolean relight) {
+		light[x-(int)this.pos.x][y-(int)this.pos.y][z-(int)this.pos.z] = (byte) ((light[x-(int)this.pos.x][y-(int)this.pos.y][z-(int)this.pos.z] & 0xF0) | val);
+		if(relight){
+			lightQueue.add(new Light(new Vector3i(x,y,z), this));
+		}
+	}
+	
+	private void removeBlockLight(int x, int y, int z, byte level){
+		lightRemovalQueue.add(new LightRemoval(new Vector3i(x,y,z), level, this));
+	}
+	
+	private class LightRemoval{
+		public Vector3i pos;
+		public byte level;
+		public Chunk chunk;
+		public LightRemoval(Vector3i pos, byte level, Chunk chunk){
+			this.pos = pos;
+			this.level = level;
+			this.chunk = chunk;
+		}
+	}
+	
+	private class Light{
+		public Vector3i pos;
+		public Chunk chunk;
+		public Light(Vector3i pos, Chunk chunk){
+			this.pos = pos;
+			this.chunk = chunk;
+		}
+	}
+	
 }

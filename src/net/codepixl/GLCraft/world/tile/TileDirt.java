@@ -32,5 +32,10 @@ public class TileDirt extends Tile{
 	public float getHardness(){
 		return 0.5f;
 	}
+	
+	@Override
+	public byte getLightLevel(){
+		return 15;
+	}
 
 }

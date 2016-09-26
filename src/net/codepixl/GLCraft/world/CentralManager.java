@@ -223,8 +223,12 @@ public class CentralManager extends Screen{
 				if(Keyboard.isKeyDown(Keyboard.KEY_APOSTROPHE)){
 					worldManager.entityManager.add(new EntityTestHostile(pos, worldManager));
 				}
+				if(Keyboard.isKeyDown(Keyboard.KEY_L)){
+					Chunk c = worldManager.getChunk(pos);
+					System.out.println(worldManager.getBlockLight((int)pos.x, (int)pos.y, (int)pos.z));
+				}
 				if(Keyboard.isKeyDown(Keyboard.KEY_G)){
-					worldManager.entityManager.getPlayer().addToInventory(new ItemStack(Tile.DiamondOre, 1));
+					worldManager.setTileAtPos(pos, Tile.TallGrass.getId(), true);
 				}
 				/*Vector3f pos = worldManager.entityManager.getPlayer().getPos();
 				if(Keyboard.isKeyDown(Keyboard.KEY_F)){
@@ -405,7 +409,7 @@ public class CentralManager extends Screen{
 	private void renderText(){
 		render2D();
 		glColor3f(1f,1f,1f);
-		Constants.FONT.drawString(10, 10, "GLCraft Alpha "+GLCraft.version);
+		Constants.FONT.drawString(10, 10, "GLCraft Beta "+GLCraft.version);
 		if(messageTime > 0){
 			messageTime -= Time.getDelta();
 			if(messageTime < 0)
