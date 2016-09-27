@@ -192,11 +192,11 @@ public class Chunk {
 			for(int y = 0; y < this.sizeY; y++){
 				for(int z = 0; z < this.sizeZ; z++){
 					tiles[x][y][z] = tbuf[i];
-					if(Tile.getTile(tiles[x][y][z]).getLightLevel() > 0){
-						worldManager.lightQueue.add(new Light(new Vector3i(x+(int)this.pos.x,y+(int)this.pos.y,z+(int)this.pos.z),this));
-						this.light[x][y][z] = Tile.getTile(tiles[x][y][z]).getLightLevel();
-					}
 					meta[x][y][z] = mbuf[i];
+					if(Tile.getTile(tiles[x][y][z]).getLightLevel(meta[x][y][z]) > 0){
+						worldManager.lightQueue.add(new Light(new Vector3i(x+(int)this.pos.x,y+(int)this.pos.y,z+(int)this.pos.z),this));
+						this.light[x][y][z] = Tile.getTile(tiles[x][y][z]).getLightLevel(meta[x][y][z]);
+					}
 					i++;
 				}
 			}
@@ -493,7 +493,7 @@ public class Chunk {
 								}
 								glEnd();
 							}else if(t.getRenderType() == RenderType.CUSTOM){
-								t.customRender(pos.x+x, pos.y+y, pos.z+z, worldManager, this);
+								t.customRender(pos.x+x, pos.y+y, pos.z+z, col, worldManager, this);
 							}
 						}else{
 							/**int posX = (int)pos.x+x;
@@ -631,7 +631,7 @@ public class Chunk {
 			if(tickTiles.contains(new Vector3f(x,y,z)) || Tile.getTile(tile).needsConstantTick()){
 				queueTickTileUpdate(x,y,z);
 			}
-			if(Tile.getTile(tiles[x][y][z]).getLightLevel() > 0){
+			if(Tile.getTile(tiles[x][y][z]).getLightLevel(this.meta[x][y][z]) > 0){
 				byte level = (byte) getBlockLight(x+(int)pos.x,y+(int)pos.y,z+(int)pos.z);
 				setBlockLight(x+(int)pos.x,y+(int)pos.y,z+(int)pos.z,0,false);
 				removeBlockLight(x+(int)pos.x,y+(int)pos.y,z+(int)pos.z,level);
@@ -639,8 +639,8 @@ public class Chunk {
 			tiles[x][y][z] = tile;
 			setMetaAtPos(x,y,z,meta,rebuild);
 			Vector3i pos = new Vector3i(this.pos.x+x, this.pos.y+y, this.pos.z+z);
-			if(Tile.getTile(tile).getLightLevel() > 0)
-				setBlockLight(pos.x,pos.y,pos.z,Tile.getTile(tile).getLightLevel(),true);
+			if(Tile.getTile(tile).getLightLevel(meta) > 0)
+				setBlockLight(pos.x,pos.y,pos.z,Tile.getTile(tile).getLightLevel(meta),true);
 			else if(Tile.getTile(tile).getTransparency() < 15){
 				worldManager.lightQueue.add(new Light(new Vector3i(pos.x+1, pos.y, pos.z)));
 				worldManager.lightQueue.add(new Light(new Vector3i(pos.x-1, pos.y, pos.z)));

@@ -123,7 +123,7 @@ public class TileDoor extends Tile{
 	}
 	
 	@Override
-	public void customRender(float x, float y, float z, WorldManager w, Chunk c){
+	public void customRender(float x, float y, float z, Color4f[] col, WorldManager w, Chunk c){
 		byte meta = (byte) w.getMetaAtPos(x,y,z);
 		/*
 		 * bottom - first top - second front - third back - fourth left -
@@ -152,9 +152,9 @@ public class TileDoor extends Tile{
 		}
 		GL11.glBegin(GL11.GL_QUADS);
 		if(meta < 2)
-			Shape.createRect(x, y, z, Color4f.WHITE, texCoords, 0.0625f, 1f, 1f);
+			Shape.createRect(x, y, z, col, texCoords, 0.0625f, 1f, 1f);
 		else
-			Shape.createRect(x, y, z, Color4f.WHITE, texCoords, 1f, 1f, 0.0625f);
+			Shape.createRect(x, y, z, col, texCoords, 1f, 1f, 0.0625f);
 		GL11.glEnd();
 	}
 }

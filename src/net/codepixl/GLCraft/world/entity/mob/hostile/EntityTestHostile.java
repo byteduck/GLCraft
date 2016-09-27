@@ -32,7 +32,7 @@ public class EntityTestHostile extends Hostile{
 		GL11.glTranslatef(getX(), getY(), getZ());
 		GL11.glRotatef(this.rot.y, 0f, 2.0f, 0f);
 		GL11.glBegin(GL11.GL_QUADS);
-		Shape.createCube(-0.5f,0,-0.5f, Color4f.WHITE, Tile.Lava.getTexCoords(), 1f);
+		Shape.createCube(-0.5f,0,-0.5f, this.getColor(), Tile.Lava.getTexCoords(), 1f);
 		//Shape.createCube(-0.5f,1,-0.5f, Color4f.WHITE, Tile.Fire.getTexCoords(), 1f);
 		//Shape.createCube(-1.5f,1,-0.5f, Color4f.WHITE, Tile.Fire.getTexCoords(), 1f);
 		//Shape.createCube(0.5f,1,-0.5f, Color4f.WHITE, Tile.Fire.getTexCoords(), 1f);

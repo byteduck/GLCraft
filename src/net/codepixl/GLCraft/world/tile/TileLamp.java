@@ -39,7 +39,7 @@ public class TileLamp extends Tile{
 	}
 	
 	@Override
-	public byte getLightLevel(){
+	public byte getLightLevel(byte meta){
 		return 15;
 	}
 

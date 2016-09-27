@@ -84,7 +84,7 @@ public class TileBluestone extends Tile{
 	}
 	
 	@Override
-	public void customRender(float x, float y, float z, WorldManager w, Chunk c){
+	public void customRender(float x, float y, float z, Color4f[] color, WorldManager w, Chunk c){
 		float col = w.getMetaAtPos((int)x, (int)y, (int)z)/15f;
 		glBegin(GL_QUADS);
 		float[] texCoords = TextureManager.texture("tiles.bluestone_center");
@@ -340,6 +340,11 @@ public class TileBluestone extends Tile{
 			return true;
 		}
 		return false;
+	}
+	
+	@Override
+	public byte getLightLevel(byte meta){
+		return (byte) (meta == 0 ? 2 : 10);
 	}
 
 }

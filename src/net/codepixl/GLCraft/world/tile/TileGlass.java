@@ -74,7 +74,7 @@ public class TileGlass extends Tile{
 	}
 	
 	@Override
-	public void customRender(float x, float y, float z, WorldManager w, Chunk c){
+	public void customRender(float x, float y, float z, Color4f[] col, WorldManager w, Chunk c){
 		float size;
 		byte meta = w.getMetaAtPos((int)x, (int)y, (int)z);
 		if(meta == 0){
@@ -106,7 +106,7 @@ public class TileGlass extends Tile{
 				tempTexCoords[i*2+1] = TextureManager.texture("misc.nothing")[1];
 			}
 		}
-		Shape.createCube(0, 0, 0, Color4f.WHITE, tempTexCoords, 1f);
+		Shape.createCube(0, 0, 0, col, tempTexCoords, 1f);
 		GL11.glEnd();
 		GL11.glPopMatrix();
 	}

@@ -637,6 +637,13 @@ public class WorldManager {
 		}else
 			return 0;
 	}
+	
+	public float getLightIntensity(int x, int y, int z){
+		float ret = getLight(x,y,z)/15f+0.1f;
+		if(ret > 1)
+			ret = 1;
+		return ret;
+	}
 
 	public Chunk getChunk(Vector3f pos) {
 		return getChunk(new Vector3i(pos));
@@ -725,7 +732,7 @@ public class WorldManager {
 					sunlightQueue.add(new Light(dest, c));
 					byte tra = Tile.getTile((byte)getTileAtPos(dest.x, dest.y, dest.z)).getTransparency();
 					byte res = 0;
-					if(bl == 15 && downwards)
+					if(bl == 15 && downwards && tra <= 1)
 						tra-=1;
 					if(tra < bl)
 						res = (byte) (bl-tra);

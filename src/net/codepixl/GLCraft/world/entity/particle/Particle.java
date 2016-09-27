@@ -49,7 +49,7 @@ public class Particle extends EntitySolid{
 		GL11.glRotatef(-this.rot.z, 1.0f, 0f, 0f);
 		GL11.glRotatef(180, 0f, 0f, 1.0f);
 		GL11.glBegin(GL11.GL_QUADS);
-		Shape.createSprite(0,0,0, Color4f.WHITE, this.texCoords, this.size);
+		Shape.createSprite(0,0,0, this.getColor(), this.texCoords, this.size);
 		GL11.glEnd();
 		GL11.glPopMatrix();
 	}

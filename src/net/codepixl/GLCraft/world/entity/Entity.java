@@ -9,6 +9,7 @@ import com.evilco.mc.nbt.tag.TagFloat;
 import com.evilco.mc.nbt.tag.TagList;
 import com.evilco.mc.nbt.tag.TagLong;
 import com.evilco.mc.nbt.tag.TagString;
+import com.nishu.utils.Color4f;
 import com.nishu.utils.Time;
 
 import net.codepixl.GLCraft.util.GameObj;
@@ -27,6 +28,7 @@ public class Entity implements GameObj{
 	protected boolean dead = false;
 	public long timeAlive = 0;
 	public float onFire = 0;
+	public float light = 0f;
 	
 	public Entity(float x, float y, float z, WorldManager worldManager){
 		this.pos = new Vector3f(x,y,z);
@@ -72,6 +74,10 @@ public class Entity implements GameObj{
 		this.pos.x = x;
 		this.pos.y = y;
 		this.pos.z = z;
+	}
+	
+	public Color4f getColor(){
+		return new Color4f(this.light, this.light, this.light, 1f);
 	}
 	
 	public void setRot(Vector3f rot){
@@ -158,6 +164,7 @@ public class Entity implements GameObj{
 
 	@Override
 	public void update() {
+		this.light = worldManager.getLightIntensity((int)this.pos.x, (int)this.pos.y, (int)this.pos.z);
 		timeAlive+=(Time.getDelta()*1000f);
 		this.rot = MathUtils.modulus(this.rot, 360f);
 		if(this.onFire>0f){

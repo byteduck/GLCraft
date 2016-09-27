@@ -35,7 +35,7 @@ public class EntityFallingBlock extends EntitySolid{
 	@Override
 	public void render(){
 		GL11.glBegin(GL11.GL_QUADS);
-		Shape.createCube(pos.x-0.5f, pos.y, pos.z-0.5f, Color4f.WHITE, tile.getTexCoords(), 1f);
+		Shape.createCube(pos.x-0.5f, pos.y, pos.z-0.5f, this.getColor(), tile.getTexCoords(), 1f);
 		GL11.glEnd();
 	}
 	

@@ -182,7 +182,22 @@ public class Tile {
 		return RenderType.CUBE;
 	}
 	
-	public void customRender(float x, float y, float z, WorldManager w, Chunk c){
+	/**
+	 * If this tiles rendertype is custom, it will call this when rendered.
+	 * @param x The xpos of the tile.
+	 * @param y The ypos of the tile.
+	 * @param z The zpos of the tile.
+	 * @param color The color of the light at that location multiplied by this tile's color.<br>
+	 * color[0] - Light below
+	 * color[1] - Light above
+	 * color[2] - Light z-
+	 * color[3] - Light z+
+	 * color[4] - Light x+
+	 * color[5] - Light x-
+	 * @param w The WorldManager
+	 * @param c The Chunk this is in.
+	 */
+	public void customRender(float x, float y, float z, Color4f[] color, WorldManager w, Chunk c){
 		
 	}
 	
@@ -315,7 +330,7 @@ public class Tile {
 		return 0;
 	}
 	
-	public byte getLightLevel(){
+	public byte getLightLevel(byte meta){
 		return 0;
 	}
 	

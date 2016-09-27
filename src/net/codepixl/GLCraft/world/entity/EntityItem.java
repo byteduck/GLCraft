@@ -75,34 +75,34 @@ public class EntityItem extends EntitySolid{
 				Tile tile = itemstack.getTile();
 				if(tile.getRenderType() == RenderType.CUBE){
 					if(tile.hasMetaTextures()){
-						Shape.createCube(0+((float)i*0.05f), yPos+((float)i*0.05f), 0+((float)i*0.05f), tile.getColor(), tile.getTexCoords(itemstack.getMeta()), size);
+						Shape.createCube(0+((float)i*0.05f), yPos+((float)i*0.05f), 0+((float)i*0.05f), this.getColor(), tile.getTexCoords(itemstack.getMeta()), size);
 					}else{
-						Shape.createCube(0+((float)i*0.05f), yPos+((float)i*0.05f), 0+((float)i*0.05f), tile.getColor(), tile.getTexCoords(), size);
+						Shape.createCube(0+((float)i*0.05f), yPos+((float)i*0.05f), 0+((float)i*0.05f), this.getColor(), tile.getTexCoords(), size);
 					}
 				}else if(tile.getRenderType() == RenderType.CROSS){
 					if(tile.hasMetaTextures()){
-						Shape.createCross(0+((float)i*0.05f), yPos+((float)i*0.05f), 0+((float)i*0.05f), tile.getColor(), tile.getTexCoords(itemstack.getMeta()), size);
+						Shape.createCross(0+((float)i*0.05f), yPos+((float)i*0.05f), 0+((float)i*0.05f), this.getColor(), tile.getTexCoords(itemstack.getMeta()), size);
 					}else{
-						Shape.createCross(0+((float)i*0.05f), yPos+((float)i*0.05f), 0+((float)i*0.05f), tile.getColor(), tile.getTexCoords(), size);
+						Shape.createCross(0+((float)i*0.05f), yPos+((float)i*0.05f), 0+((float)i*0.05f), this.getColor(), tile.getTexCoords(), size);
 					}
 				}else if(tile.getRenderType() == RenderType.FLAT){
 					if(tile.hasMetaTextures()){
-						Shape.createPlane(0+((float)i*0.05f), yPos+((float)i*0.05f), 0+((float)i*0.05f), tile.getColor(), tile.getTexCoords(itemstack.getMeta()), size);
+						Shape.createPlane(0+((float)i*0.05f), yPos+((float)i*0.05f), 0+((float)i*0.05f), this.getColor(), tile.getTexCoords(itemstack.getMeta()), size);
 					}else{
-						Shape.createPlane(0+((float)i*0.05f), yPos+((float)i*0.05f), 0+((float)i*0.05f), tile.getColor(), tile.getTexCoords(), size);
+						Shape.createPlane(0+((float)i*0.05f), yPos+((float)i*0.05f), 0+((float)i*0.05f), this.getColor(), tile.getTexCoords(), size);
 					}
 				}else{
 					if(tile.getCustomRenderType() == RenderType.CUBE){
 						if(tile.hasMetaTextures()){
-							Shape.createCube(0+((float)i*0.05f), yPos+((float)i*0.05f), 0+((float)i*0.05f), tile.getColor(), tile.getTexCoords(itemstack.getMeta()), size);
+							Shape.createCube(0+((float)i*0.05f), yPos+((float)i*0.05f), 0+((float)i*0.05f), this.getColor(), tile.getTexCoords(itemstack.getMeta()), size);
 						}else{
-							Shape.createCube(0+((float)i*0.05f), yPos+((float)i*0.05f), 0+((float)i*0.05f), tile.getColor(), tile.getTexCoords(), size);
+							Shape.createCube(0+((float)i*0.05f), yPos+((float)i*0.05f), 0+((float)i*0.05f), this.getColor(), tile.getTexCoords(), size);
 						}
 					}else if(tile.getCustomRenderType() == RenderType.CROSS){
 						if(tile.hasMetaTextures()){
-							Shape.createCross(0+((float)i*0.05f), yPos+((float)i*0.05f), 0+((float)i*0.05f), tile.getColor(), tile.getTexCoords(itemstack.getMeta()), size);
+							Shape.createCross(0+((float)i*0.05f), yPos+((float)i*0.05f), 0+((float)i*0.05f), this.getColor(), tile.getTexCoords(itemstack.getMeta()), size);
 						}else{
-							Shape.createCross(0+((float)i*0.05f), yPos+((float)i*0.05f), 0+((float)i*0.05f), tile.getColor(), tile.getTexCoords(), size);
+							Shape.createCross(0+((float)i*0.05f), yPos+((float)i*0.05f), 0+((float)i*0.05f), this.getColor(), tile.getTexCoords(), size);
 						}
 					}else{
 						GL11.glEnd();
@@ -111,9 +111,9 @@ public class EntityItem extends EntitySolid{
 						GL11.glRotatef(180, 1.0f, 0, 0);
 						GL11.glBegin(GL11.GL_QUADS);
 						if(tile.hasMetaTextures()){
-							Shape.createPlane(0+((float)i*0.05f), yPos+((float)i*0.05f), 0+((float)i*0.05f), tile.getColor(), tile.getIconCoords(itemstack.getMeta()), size);
+							Shape.createPlane(0+((float)i*0.05f), yPos+((float)i*0.05f), 0+((float)i*0.05f), this.getColor(), tile.getIconCoords(itemstack.getMeta()), size);
 						}else{
-							Shape.createPlane(0+((float)i*0.05f), yPos+((float)i*0.05f), 0+((float)i*0.05f), tile.getColor(), tile.getIconCoords(), size);
+							Shape.createPlane(0+((float)i*0.05f), yPos+((float)i*0.05f), 0+((float)i*0.05f), this.getColor(), tile.getIconCoords(), size);
 						}
 					}
 				}

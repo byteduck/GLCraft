@@ -27,7 +27,7 @@ public class EntityTestAnimal extends Animal{
 		GL11.glTranslatef(getX(), getY(), getZ());
 		GL11.glRotatef(this.rot.y, 0f, 2.0f, 0f);
 		GL11.glBegin(GL11.GL_QUADS);
-		Shape.createCube(-0.5f, 0, -0.5f, Color4f.WHITE, Tile.Glass.getTexCoords(), 1f);
+		Shape.createCube(-0.5f, 0, -0.5f, this.getColor(), Tile.Glass.getTexCoords(), 1f);
 		GL11.glEnd();
 		GL11.glPopMatrix();
 	}

@@ -47,7 +47,7 @@ public class TileWater extends Tile{
 	}
 	
 	@Override
-	public void customRender(float x, float y, float z, WorldManager w, Chunk c){
+	public void customRender(float x, float y, float z, Color4f[] col, WorldManager w, Chunk c){
 		float size = getHeight(w.getMetaAtPos(x,y,z));
 		GL11.glPushMatrix();
 		GL11.glTranslatef(x, y, z);
@@ -62,8 +62,8 @@ public class TileWater extends Tile{
 		float[] cornerHeight = new float[4];
 		for(int i = 0; i < 4; i++)
 			cornerHeight[i] = getCornerHeight(i,x,y,z,w);
-
 		if(sideShouldRender(0,x,y,z,w)){
+			GL11.glColor3f(col[0].r, col[0].g, col[0].b);
 			GL11.glBegin(GL11.GL_QUADS);
 			GL11.glTexCoord2f(this.getTexCoords()[0], this.getTexCoords()[1]);
 			GL11.glVertex3f(0, 0, 0);
@@ -76,6 +76,7 @@ public class TileWater extends Tile{
 			GL11.glEnd();
 		}
 		if(sideShouldRender(1,x,y,z,w)){
+			GL11.glColor3f(col[1].r, col[1].g, col[1].b);
 			GL11.glBegin(GL11.GL_QUADS);
 			GL11.glTexCoord2f(this.getTexCoords()[0], this.getTexCoords()[1]);
 			GL11.glVertex3f(0, cornerHeight[0], 0);
@@ -88,6 +89,7 @@ public class TileWater extends Tile{
 			GL11.glEnd();
 		}
 		if(sideShouldRender(2,x,y,z,w)){
+			GL11.glColor3f(col[2].r, col[2].g, col[2].b);
 			GL11.glBegin(GL11.GL_QUADS);
 			GL11.glTexCoord2f(this.getTexCoords()[0], this.getTexCoords()[1]);
 			GL11.glVertex3f(0, 0, 0);
@@ -100,6 +102,7 @@ public class TileWater extends Tile{
 			GL11.glEnd();
 		}
 		if(sideShouldRender(3,x,y,z,w)){
+			GL11.glColor3f(col[3].r, col[3].g, col[3].b);
 			GL11.glBegin(GL11.GL_QUADS);
 			GL11.glTexCoord2f(this.getTexCoords()[0], this.getTexCoords()[1]);
 			GL11.glVertex3f(0, 0, 1);
@@ -112,6 +115,7 @@ public class TileWater extends Tile{
 			GL11.glEnd();
 		}
 		if(sideShouldRender(4,x,y,z,w)){
+			GL11.glColor3f(col[4].r, col[4].g, col[4].b);
 			GL11.glBegin(GL11.GL_QUADS);
 			GL11.glTexCoord2f(this.getTexCoords()[0], this.getTexCoords()[1]);
 			GL11.glVertex3f(1, 0, 0);
@@ -124,6 +128,7 @@ public class TileWater extends Tile{
 			GL11.glEnd();
 		}
 		if(sideShouldRender(5,x,y,z,w)){
+			GL11.glColor3f(col[5].r, col[5].g, col[5].b);
 			GL11.glBegin(GL11.GL_QUADS);
 			GL11.glTexCoord2f(this.getTexCoords()[0], this.getTexCoords()[1]);
 			GL11.glVertex3f(0, 0, 0);
@@ -275,6 +280,11 @@ public class TileWater extends Tile{
 	@Override
 	public boolean isTranslucent(){
 		return true;
+	}
+	
+	@Override
+	public byte getTransparency(){
+		return 3;
 	}
 
 	@Override
