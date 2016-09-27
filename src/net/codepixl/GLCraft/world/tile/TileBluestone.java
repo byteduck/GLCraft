@@ -18,6 +18,7 @@ import net.codepixl.GLCraft.render.Shape;
 import net.codepixl.GLCraft.render.TextureManager;
 import net.codepixl.GLCraft.util.AABB;
 import net.codepixl.GLCraft.util.BreakSource;
+import net.codepixl.GLCraft.util.EnumFacing;
 import net.codepixl.GLCraft.world.Chunk;
 import net.codepixl.GLCraft.world.WorldManager;
 import net.codepixl.GLCraft.world.item.ItemStack;
@@ -311,7 +312,7 @@ public class TileBluestone extends Tile{
 	}
 	
 	@Override
-	public void onPlace(int x, int y, int z, WorldManager w){
+	public void onPlace(int x, int y, int z, EnumFacing facing, WorldManager w){
 		Vector3f one = new Vector3f(x+1,y,z);
 		Vector3f two = new Vector3f(x-1,y,z);
 		Vector3f three = new Vector3f(x,y,z+1);
@@ -326,7 +327,7 @@ public class TileBluestone extends Tile{
 	@Override
 	public void onBreak(int x, int y, int z, boolean drop, BreakSource source, WorldManager w){
 		super.onBreak(x,y,z,drop,source, w);
-		onPlace(x,y,z,w);
+		onPlace(x,y,z,EnumFacing.NORTH,w);
 	}
 	
 	@Override

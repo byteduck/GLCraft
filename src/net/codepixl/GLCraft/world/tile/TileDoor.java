@@ -11,6 +11,7 @@ import net.codepixl.GLCraft.render.TextureManager;
 import net.codepixl.GLCraft.util.AABB;
 import net.codepixl.GLCraft.util.BreakSource;
 import net.codepixl.GLCraft.util.Constants;
+import net.codepixl.GLCraft.util.EnumFacing;
 import net.codepixl.GLCraft.world.Chunk;
 import net.codepixl.GLCraft.world.WorldManager;
 import net.codepixl.GLCraft.world.entity.EntityItem;
@@ -117,7 +118,7 @@ public class TileDoor extends Tile{
 	}
 	
 	@Override
-	public void onPlace(int x, int y, int z, WorldManager w){
+	public void onPlace(int x, int y, int z, EnumFacing facing, WorldManager w){
 		if(w.getMetaAtPos(x,y,z) != 1)
 			w.setTileAtPos(x, y+1, z, getId(), true, (byte)1);
 	}

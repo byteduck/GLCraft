@@ -155,13 +155,13 @@ public class Shape {
 
 				// right face (10, 11)
 				glColor4f(color.r, color.g, color.b, color.a);
-				glTexCoord2f(texCoords[0] + currentSpritesheet.uniformSize(), texCoords[1] + currentSpritesheet.uniformSize());
+				glTexCoord2f(texCoords[10] + currentSpritesheet.uniformSize(), texCoords[11] + currentSpritesheet.uniformSize());
 				glVertex3f(x, y, z + sizeZ);
-				glTexCoord2f(texCoords[0], texCoords[1] + currentSpritesheet.uniformSize());
+				glTexCoord2f(texCoords[10], texCoords[11] + currentSpritesheet.uniformSize());
 				glVertex3f(x, y, z);
-				glTexCoord2f(texCoords[0], texCoords[1]);
+				glTexCoord2f(texCoords[10], texCoords[11]);
 				glVertex3f(x, y + sizeY, z);
-				glTexCoord2f(texCoords[0] + currentSpritesheet.uniformSize(), texCoords[1]);
+				glTexCoord2f(texCoords[10] + currentSpritesheet.uniformSize(), texCoords[11]);
 				glVertex3f(x, y + sizeY, z + sizeZ);
 			}
 			}catch(NullPointerException e){

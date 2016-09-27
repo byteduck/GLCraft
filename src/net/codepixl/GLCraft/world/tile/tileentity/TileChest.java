@@ -33,6 +33,11 @@ public class TileChest extends TileTileEntity{
 	}
 	
 	@Override
+	public boolean metaRotate(){
+		return true;
+	}
+	
+	@Override
 	public String[] getMultiTextureNames(){
 		return new String[]{
 			"chest_top",

@@ -30,6 +30,8 @@ import net.codepixl.GLCraft.render.RenderType;
 import net.codepixl.GLCraft.render.Shape;
 import net.codepixl.GLCraft.util.BreakSource;
 import net.codepixl.GLCraft.util.Constants;
+import net.codepixl.GLCraft.util.EnumFacing;
+import net.codepixl.GLCraft.util.Utils;
 import net.codepixl.GLCraft.util.Vector2i;
 import net.codepixl.GLCraft.util.Vector3i;
 import net.codepixl.GLCraft.world.WorldManager.Light;
@@ -470,11 +472,27 @@ public class Chunk {
 							}**/
 							if(t.getRenderType() == RenderType.CUBE){
 								glBegin(GL_QUADS);
-								if(t.hasMetaTextures()){
-									Shape.createCube(pos.x+x, pos.y+y, pos.z+z, col, t.getTexCoords(meta[x][y][z]), 1);
-								}else{
-									Shape.createCube(pos.x+x, pos.y+y, pos.z+z, col, t.getTexCoords(), 1);
+								float[] texCoords;
+								if(t.hasMetaTextures())
+									texCoords = t.getTexCoords(meta[x][y][z]);
+								else
+									texCoords = t.getTexCoords();
+								if(t.metaRotate()){
+									switch(meta[x][y][z]){
+										case 0:
+											break;
+										case 1:
+											texCoords = new float[]{texCoords[0],texCoords[1],texCoords[2],texCoords[3],texCoords[10],texCoords[11],texCoords[4],texCoords[5],texCoords[6],texCoords[7],texCoords[8],texCoords[9]};
+											break;
+										case 2:
+											texCoords = new float[]{texCoords[0],texCoords[1],texCoords[2],texCoords[3],texCoords[6],texCoords[7],texCoords[8],texCoords[9],texCoords[10],texCoords[11],texCoords[4],texCoords[5]};
+											break;
+										case 3:
+											texCoords = new float[]{texCoords[0],texCoords[1],texCoords[2],texCoords[3],texCoords[8],texCoords[9],texCoords[10],texCoords[11],texCoords[4],texCoords[5],texCoords[6],texCoords[7]};
+											break;
+									}
 								}
+								Shape.createCube(pos.x+x, pos.y+y, pos.z+z, col, texCoords, 1);
 								glEnd();
 							}else if(t.getRenderType() == RenderType.CROSS){
 								glBegin(GL_QUADS);
@@ -660,7 +678,7 @@ public class Chunk {
 				worldManager.lightRemovalQueue.add(new LightRemoval(pos, (byte)15, this));
 				worldManager.sunlightRemovalQueue.add(new LightRemoval(pos, (byte)15, this));
 			}
-			Tile.getTile(tile).onPlace((int)ax, (int)ay, (int)az, worldManager);
+			//Tile.getTile(tile).onPlace((int)ax, (int)ay, (int)az, EnumFacing.NORTH, worldManager);
 			//ALWAYS assume that the rebuild argument will be false (except in special cases) because the setting of the meta rebuilds the chunk.
 			if(rebuild){
 				rebuild();

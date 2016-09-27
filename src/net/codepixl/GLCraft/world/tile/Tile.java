@@ -11,6 +11,7 @@ import net.codepixl.GLCraft.render.TextureManager;
 import net.codepixl.GLCraft.util.AABB;
 import net.codepixl.GLCraft.util.BreakSource;
 import net.codepixl.GLCraft.util.Constants;
+import net.codepixl.GLCraft.util.EnumFacing;
 import net.codepixl.GLCraft.world.Chunk;
 import net.codepixl.GLCraft.world.WorldManager;
 import net.codepixl.GLCraft.world.entity.Entity;
@@ -210,8 +211,9 @@ public class Tile {
 		Tile.tileMap.put(getId(), this);
 	}
 	
-	public void onPlace(int x, int y, int z, WorldManager w){
-		
+	public void onPlace(int x, int y, int z, EnumFacing playerFacing, WorldManager w){
+		if(this.metaRotate())
+			w.setMetaAtPos(x, y, z, (byte) ((byte)playerFacing.removeUpDown().inverse().value-(byte)2), true);
 	}
 	
 	public boolean canPlace(int x, int y, int z, WorldManager w){
@@ -342,5 +344,9 @@ public class Tile {
 			return 1;
 		else
 			return 15;
+	}
+
+	public boolean metaRotate() {
+		return false;
 	}
 }

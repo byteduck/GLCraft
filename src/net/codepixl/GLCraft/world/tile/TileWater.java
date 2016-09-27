@@ -9,6 +9,7 @@ import net.codepixl.GLCraft.render.RenderType;
 import net.codepixl.GLCraft.render.Shape;
 import net.codepixl.GLCraft.render.TextureManager;
 import net.codepixl.GLCraft.util.AABB;
+import net.codepixl.GLCraft.util.EnumFacing;
 import net.codepixl.GLCraft.util.Spritesheet;
 import net.codepixl.GLCraft.world.Chunk;
 import net.codepixl.GLCraft.world.WorldManager;
@@ -390,7 +391,7 @@ public class TileWater extends Tile{
 	}
 	
 	@Override
-	public void onPlace(int x, int y, int z, WorldManager w){
+	public void onPlace(int x, int y, int z, EnumFacing facing, WorldManager w){
 		w.blockUpdate(x, y, z);
 	}
 	

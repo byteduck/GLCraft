@@ -419,12 +419,13 @@ public class CentralManager extends Screen{
 		}
 		if(renderDebug){
 			EntityPlayer p = getEntityManager().getPlayer();
-			Constants.FONT.drawString(10,Constants.FONT.getLineHeight()+10, "X:"+(int)p.getX()+" Y:"+(int)p.getY()+" Z:"+(int)p.getZ());
-			Constants.FONT.drawString(10,Constants.FONT.getLineHeight()*2+10, "RotX:"+(int)p.getRot().x+" RotY:"+(int)p.getRot().y+" RotZ:"+(int)p.getRot().z);
-			Constants.FONT.drawString(10,Constants.FONT.getLineHeight()*3+10, "FPS:"+Constants.FPS);
-			Constants.FONT.drawString(10,Constants.FONT.getLineHeight()*4+10, "Entities:"+worldManager.entityManager.totalEntities());
+			Constants.FONT.drawString(10,Constants.FONT.getLineHeight()+10, "X: "+(int)p.getX()+" Y: "+(int)p.getY()+" Z: "+(int)p.getZ());
+			Constants.FONT.drawString(10,Constants.FONT.getLineHeight()*2+10, "RotX: "+(int)p.getRot().x+" RotY: "+(int)p.getRot().y+" RotZ: "+(int)p.getRot().z);
+			Constants.FONT.drawString(10,Constants.FONT.getLineHeight()*3+10, "Facing: "+p.getEnumFacing().removeUpDown());
+			Constants.FONT.drawString(10,Constants.FONT.getLineHeight()*4+10, "FPS: "+Constants.FPS);
+			Constants.FONT.drawString(10,Constants.FONT.getLineHeight()*5+10, "Entities: "+worldManager.entityManager.totalEntities());
 			Iterator<DebugTimer> i = DebugTimer.getTimers().iterator();
-			int ind = 5;
+			int ind = 6;
 			while(i.hasNext()){
 				Constants.FONT.drawString(10,Constants.FONT.getLineHeight()*ind+10, i.next().toString());
 				ind++;

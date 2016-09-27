@@ -491,6 +491,7 @@ public class EntityPlayer extends Mob {
 									}
 									if(!r.origPos.equals(r.pos) && worldManager.getEntityManager().getPlayer().getSelectedItemStack().getTile().canPlace((int) r.pos.x, (int) r.pos.y, (int) r.pos.z, worldManager)){
 										worldManager.setTileAtPos((int) r.pos.x, (int) r.pos.y, (int) r.pos.z, this.getSelectedItemStack().getTile().getId(), true, this.getSelectedItemStack().getMeta());
+										worldManager.getEntityManager().getPlayer().getSelectedItemStack().getTile().onPlace((int) r.pos.x, (int) r.pos.y, (int) r.pos.z, this.getEnumFacing(), worldManager);
 										int sub = worldManager.getEntityManager().getPlayer().getSelectedItemStack().subFromStack(1);
 										if(sub > 0) {
 											worldManager.getEntityManager().getPlayer().getInventory()[worldManager.getEntityManager().getPlayer().getSelectedSlot()] = new ItemStack();
@@ -513,7 +514,7 @@ public class EntityPlayer extends Mob {
 							}
 							if(!r.origPos.equals(r.pos)){
 								worldManager.setTileAtPos((int) r.pos.x, (int) r.pos.y, (int) r.pos.z, tileToPlace.getId(), true, metaToPlace);
-								worldManager.getEntityManager().getPlayer().getSelectedItemStack().getTile().onPlace((int) r.pos.x, (int) r.pos.y, (int) r.pos.z, worldManager);
+								worldManager.getEntityManager().getPlayer().getSelectedItemStack().getTile().onPlace((int) r.pos.x, (int) r.pos.y, (int) r.pos.z, this.getEnumFacing(), worldManager);
 							}
 							setBuildCooldown(0.2f);
 							r.next();

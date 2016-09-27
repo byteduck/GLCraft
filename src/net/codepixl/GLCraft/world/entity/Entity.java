@@ -12,6 +12,7 @@ import com.evilco.mc.nbt.tag.TagString;
 import com.nishu.utils.Color4f;
 import com.nishu.utils.Time;
 
+import net.codepixl.GLCraft.util.EnumFacing;
 import net.codepixl.GLCraft.util.GameObj;
 import net.codepixl.GLCraft.util.MathUtils;
 import net.codepixl.GLCraft.world.WorldManager;
@@ -220,5 +221,27 @@ public class Entity implements GameObj{
 
 	public void setVel(Vector3f vel) {
 		this.vel = vel;
+	}
+	
+	public EnumFacing getEnumFacing(){
+		if(this.getRot().z <= 0){ //up
+			if(this.getRot().y >= 315 || this.getRot().y < 45)
+				return EnumFacing.UPN;
+			else if(this.getRot().y >= 45 && this.getRot().y < 135)
+				return EnumFacing.UPW;
+			else if(this.getRot().y >= 135 && this.getRot().y < 225)
+				return EnumFacing.UPS;
+			else
+				return EnumFacing.UPE;
+		}else{ //down
+			if(this.getRot().y >= 315 || this.getRot().y < 45)
+				return EnumFacing.DOWNN;
+			else if(this.getRot().y >= 45 && this.getRot().y < 135)
+				return EnumFacing.DOWNW;
+			else if(this.getRot().y >= 135 && this.getRot().y < 225)
+				return EnumFacing.DOWNS;
+			else
+				return EnumFacing.DOWNE;
+		}
 	}
 }
