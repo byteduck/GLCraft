@@ -1,5 +1,6 @@
 package net.codepixl.GLCraft.GUI.Inventory;
 
+import net.codepixl.GLCraft.GLCraft;
 import net.codepixl.GLCraft.GUI.GUIScreen;
 import net.codepixl.GLCraft.GUI.Inventory.Elements.GUISlot;
 import net.codepixl.GLCraft.util.Constants;
@@ -40,7 +41,7 @@ public class GUIInventoryScreen extends GUIScreen{
 	@Override
 	public void onClose(){
 		super.onClose();
-		EntityPlayer p = Constants.world.getWorldManager().getEntityManager().getPlayer();
+		EntityPlayer p = GLCraft.getGLCraft().getEntityManager().getPlayer();
 		if(!p.mouseItem.isNull()){
 			p.dropItem(p.mouseItem);
 		}

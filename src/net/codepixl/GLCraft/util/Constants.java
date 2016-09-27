@@ -23,7 +23,6 @@ public class Constants {
 	public static final String GLCRAFTDIR = getGamePath();
 	public static int maxFPS = 60;
 	public static int GAME_STATE = START_SCREEN;
-	public static CentralManager world;
 	public static int worldLength = CHUNKSIZE * worldLengthChunks;
 	public static int WIDTH = 1000;
 	public static int HEIGHT = 700;
@@ -67,10 +66,6 @@ public class Constants {
 
 	public static void setState(int state) {
 		GAME_STATE = state;
-	}
-
-	public static void setWorld(CentralManager w) {
-		world = w;
 	}
 
 	public static byte[] trim(byte[] bytes) {

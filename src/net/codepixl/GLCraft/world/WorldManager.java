@@ -64,7 +64,7 @@ public class WorldManager {
 	private static WorldManager cw;
 	private boolean saving = false;
 	private Save currentSave;
-	public long worldTime;
+	private long worldTime;
 	public Queue<Light> lightQueue = new LinkedList<Light>();
 	public Queue<Light> sunlightQueue = new LinkedList<Light>();
 	public Queue<LightRemoval> lightRemovalQueue = new LinkedList<LightRemoval>();
@@ -818,7 +818,7 @@ public class WorldManager {
 		}
 		public Light(Vector3i pos) {
 			this.pos = pos;
-			this.chunk = Constants.world.getWorldManager().getChunk(pos);
+			this.chunk = GLCraft.getGLCraft().getWorldManager().getChunk(pos);
 		}
 	}
 	

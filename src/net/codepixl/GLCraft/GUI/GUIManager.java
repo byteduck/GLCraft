@@ -114,7 +114,7 @@ public class GUIManager {
 		if (GUIOpen)
 			currentGUI.renderMain();
 		renderMouseItem();
-		EntityPlayer p = Constants.world.getWorldManager().getEntityManager().getPlayer();
+		EntityPlayer p = GLCraft.getGLCraft().getEntityManager().getPlayer();
 		if(p.mouseItem.isNull() && p.hoverSlot != null && p.hoverSlot.showLabel && p.hoverSlot.hover && !p.hoverSlot.itemstack.isNull()){
 			TextureImpl.unbind();
 			GL11.glDisable(GL11.GL_TEXTURE_2D);
@@ -134,7 +134,7 @@ public class GUIManager {
 	}
 
 	public void input(){
-		EntityPlayer p = Constants.world.getWorldManager().getEntityManager().getPlayer();
+		EntityPlayer p = GLCraft.getGLCraft().getEntityManager().getPlayer();
 		p.hoverSlot = null;
 		if (GUIOpen){
 			currentGUI.input(0,0);
@@ -162,7 +162,7 @@ public class GUIManager {
 	
 	public void renderMouseItem(){
 		if(this.currentGUI != null && this.currentGUI.shouldRenderMouseItem()){
-			EntityPlayer player = Constants.world.getWorldManager().getEntityManager().getPlayer();
+			EntityPlayer player = GLCraft.getGLCraft().getEntityManager().getPlayer();
 			player.mouseItem.renderIcon(Mouse.getX(), -Mouse.getY()+Constants.HEIGHT, 64);
 		}
 	}

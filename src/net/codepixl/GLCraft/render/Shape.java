@@ -415,10 +415,10 @@ public class Shape {
 
 	private static Color4f getColor(Vector3f pos) {
 		/**
-		 * Constants.world.getWorldManager().s.addCurrentTile(1); int progress =
-		 * (int) (Constants.world.getWorldManager().s.currentTilePercentage() *
+		 * GLCraft.getGLCraft().getWorldManager().s.addCurrentTile(1); int progress =
+		 * (int) (GLCraft.getGLCraft().getWorldManager().s.currentTilePercentage() *
 		 * 0.33 + 66);
-		 * Constants.world.getWorldManager().s.getSplash().setProgress(progress,
+		 * GLCraft.getGLCraft().getWorldManager().s.getSplash().setProgress(progress,
 		 * "Lighting chunks "+progress+"%"); float minDist = 7; Color4f color =
 		 * new Color4f(0.1f,0.1f,0.1f,1.0f); for(int i = 0; i < lights.size();
 		 * i++){ Vector3f lPos = lights.get(i); float dist =
@@ -429,7 +429,7 @@ public class Shape {
 		 **/
 		/**
 		 * float light =
-		 * (float)Constants.world.getWorldManager().getLight((int)pos.x,
+		 * (float)GLCraft.getGLCraft().getWorldManager().getLight((int)pos.x,
 		 * (int)pos.y, (int)pos.z, false)/(float)7; if(light < 0.2f) light =
 		 * 0.2f; return new Color4f(light,light,light,1.0f);
 		 **/

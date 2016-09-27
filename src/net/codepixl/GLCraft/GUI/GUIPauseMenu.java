@@ -7,6 +7,7 @@ import org.lwjgl.opengl.GL11;
 
 import com.sun.corba.se.impl.orbutil.closure.Constant;
 
+import net.codepixl.GLCraft.GLCraft;
 import net.codepixl.GLCraft.GUI.Elements.GUIButton;
 import net.codepixl.GLCraft.GUI.Elements.GUILabel;
 import net.codepixl.GLCraft.GUI.Elements.GUISlider;
@@ -93,6 +94,6 @@ public class GUIPauseMenu extends GUIScreen{
 	
 	@Override
 	public void update(){
-		this.savingIcon.visible = Constants.world.getWorldManager().isSaving();
+		this.savingIcon.visible = GLCraft.getGLCraft().getWorldManager().isSaving();
 	}
 }

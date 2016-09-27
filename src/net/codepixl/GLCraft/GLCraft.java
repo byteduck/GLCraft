@@ -74,7 +74,6 @@ import org.lwjgl.opengl.PixelFormat;
 import org.newdawn.slick.opengl.PNGDecoder;
 import org.newdawn.slick.opengl.TextureImpl;
 
-import com.nishu.utils.GameLoop;
 import com.nishu.utils.Screen;
 import com.nishu.utils.Time;
 import com.nishu.utils.Window;
@@ -90,12 +89,15 @@ import net.codepixl.GLCraft.util.logging.CrashHandler;
 import net.codepixl.GLCraft.util.logging.TeeOutputStream;
 import net.codepixl.GLCraft.world.CentralManager;
 import net.codepixl.GLCraft.world.WorldManager;
+import net.codepixl.GLCraft.world.entity.EntityManager;
 import net.codepixl.GLCraft.world.item.Item;
 import net.codepixl.GLCraft.world.tile.Tile;
 
 public class GLCraft extends Screen{
-	private CentralManager world;
+	private CentralManager centralManager;
+	private WorldManager worldManager;
 	private PluginManager pluginManager;
+	private EntityManager entityManager;
 	private static GLCraft glcraft;
 	public static boolean isDevEnvironment = false;
 	public static boolean loadExtPlugins = true;
@@ -164,7 +166,9 @@ public class GLCraft extends Screen{
 		Item.itemMap.toString();
 		
 		initCamera();
-		world = new CentralManager();
+		centralManager = new CentralManager();
+		worldManager = centralManager.getWorldManager();
+		entityManager = worldManager.getEntityManager();
 		String pluginsFolder = Constants.GLCRAFTDIR+"/plugins";
 		new File(pluginsFolder).mkdirs();
 		pluginManager = new PluginManager(pluginsFolder);
@@ -242,7 +246,7 @@ public class GLCraft extends Screen{
 	@Override
 	public void update() {
 		DebugTimer.startTimer("loop_time");
-		world.update();
+		centralManager.update();
 		pluginManager.update();
 		// TODO Auto-generated method stub
 	}
@@ -255,14 +259,14 @@ public class GLCraft extends Screen{
 		}
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		glClearColor(0.0f,0.749019608f,1.0f,0.0f);
-		world.render();
+		centralManager.render();
 		DebugTimer.endTimer("loop_time");
 	}
 
 	@Override
 	public void dispose() {
 		// TODO Auto-generated method stub
-		world.dispose();
+		centralManager.dispose();
 	}
 	
 	public static void main(String[] args) throws IOException, LWJGLException{
@@ -308,5 +312,17 @@ public class GLCraft extends Screen{
             is.close();
         }
     }
+
+	public WorldManager getWorldManager() {
+		return worldManager;
+	}
+
+	public EntityManager getEntityManager() {
+		return entityManager;
+	}
+	
+	public CentralManager getCentralManager(){
+		return this.centralManager;
+	}
 
 }

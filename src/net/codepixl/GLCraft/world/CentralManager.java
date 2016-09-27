@@ -127,7 +127,6 @@ public class CentralManager extends Screen{
 
 	@Override
 	public void init() {
-		Constants.setWorld(this);
 		initGUIManager();
 		
 		TextureManager.initTextures();
