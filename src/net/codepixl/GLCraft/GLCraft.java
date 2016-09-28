@@ -103,6 +103,7 @@ public class GLCraft extends Screen{
 	public static boolean loadExtPlugins = true;
 	public static String version = "0.1 Pre-release 1";
 	private Plugin devPlugin;
+	public boolean spendRemainingTime = true;
 	
 	public static GLCraft getGLCraft(){
 		return glcraft;
@@ -136,6 +137,7 @@ public class GLCraft extends Screen{
 		long ltime = Time.getTime();
 		double secondCounter = 0;
 		while(!Display.isCloseRequested()){
+			ltime = Time.getTime();
 			update();
 			render();
 			Window.update();
@@ -146,14 +148,27 @@ public class GLCraft extends Screen{
 				Constants.FPS = (int) (1d/Time.getDelta());
 				secondCounter = 0;
 			}
+			Constants.QFPS = (int) (1d/((Time.getTime()-ltime)/(double)Time.SECOND));
+			//So basically what this piece of code does is it will spend (1000000000/(FPS))-TimeSpentUpdatingAndRendering nanoseconds rebuilding chunks every frame.
+			if(Constants.QFPS > 0 && spendRemainingTime){
+				long nsBuildingChunks = 1000000000/Constants.QFPS;
+				long targTime = ltime+nsBuildingChunks;
+				doRemainingTime(targTime);
+			}
 			Time.setDelta((Time.getTime()-ltime)/(double)Time.SECOND);
-			ltime = Time.getTime();
 		}
 		
 		WorldManager.saveWorld(true);
 		
 	}
 	
+	private void doRemainingTime(long targTime) {
+	    //worldManager.rebuildNextChunk();
+		while(System.nanoTime() < targTime){
+		    worldManager.rebuildNextChunk();
+		}
+	}
+
 	@Override
 	public void init() {
 		Constants.gatherSystemInfo();

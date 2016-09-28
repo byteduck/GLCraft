@@ -423,8 +423,9 @@ public class CentralManager extends Screen{
 			Constants.FONT.drawString(10,Constants.FONT.getLineHeight()*3+10, "Facing: "+p.getEnumFacing().removeUpDown());
 			Constants.FONT.drawString(10,Constants.FONT.getLineHeight()*4+10, "FPS: "+Constants.FPS);
 			Constants.FONT.drawString(10,Constants.FONT.getLineHeight()*5+10, "Entities: "+worldManager.entityManager.totalEntities());
+			Constants.FONT.drawString(10,Constants.FONT.getLineHeight()*6+10, "Time: "+worldManager.getTime());
 			Iterator<DebugTimer> i = DebugTimer.getTimers().iterator();
-			int ind = 6;
+			int ind = 7;
 			while(i.hasNext()){
 				Constants.FONT.drawString(10,Constants.FONT.getLineHeight()*ind+10, i.next().toString());
 				ind++;

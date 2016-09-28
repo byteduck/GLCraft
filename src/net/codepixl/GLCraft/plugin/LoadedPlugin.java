@@ -24,7 +24,7 @@ public class LoadedPlugin {
 	public String description;
 	public String mainClass;
 	public String glVersion;
-	public ClassLoader loader;
+	public URLClassLoader loader;
 	Plugin plugin;
 	public LoadedPlugin(String path) throws IOException, ClassNotFoundException, InstantiationException, IllegalAccessException{
 		try{
@@ -41,6 +41,7 @@ public class LoadedPlugin {
 			this.glVersion = json.getString("GLCraftVersion");
 			if(!this.glVersion.equals(GLCraft.version)){
 				JOptionPane.showMessageDialog(null, "The Plugin "+this.name+" is for a newer/older version of GLCraft. It will be deleted.",  "Error", JOptionPane.ERROR_MESSAGE);
+				loader.close();
 				deleteDirectory(new File(path));
 			}else{
 				plugin = (Plugin) loader.loadClass(mainClass).newInstance();
@@ -94,6 +95,8 @@ public class LoadedPlugin {
 	
 	private static boolean deleteDirectory(File directory) {
 	    if(directory.exists()){
+	    	if(directory.isFile())
+	    		return directory.delete();
 	        File[] files = directory.listFiles();
 	        if(null!=files){
 	            for(int i=0; i<files.length; i++) {

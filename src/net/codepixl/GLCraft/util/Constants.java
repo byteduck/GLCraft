@@ -26,6 +26,7 @@ public class Constants {
 	public static int worldLength = CHUNKSIZE * worldLengthChunks;
 	public static int WIDTH = 1000;
 	public static int HEIGHT = 700;
+	public static int dayLengthMS = 1200000;
 	public static String[] SystemProperty = new String[54];
 	public static String[] SystemPropertyName = new String[] { "java.runtime.name", "sun.boot.library.path",
 			"java.vm.version", "java.vm.vendor", "java.vendor.url", "path.separator", "java.vm.name",
@@ -39,7 +40,8 @@ public class Constants {
 			"java.specification.vendor", "user.language", "awt.toolkit", "java.vm.info", "java.version",
 			"java.ext.dirs", "sun.boot.class.path", "java.vendor", "file.separator", "java.vendor.url.bug",
 			"sun.cpu.endian", "sun.io.unicode.encoding", "sun.font.fontmanager", "sun.desktop", "sun.cpu.isalist"};
-	public static int FPS = 0;
+	public static int FPS = 0; //FPS that updates every so often
+	public static int QFPS = 0; //FPS that updates every frame
 
 	public static void gatherSystemInfo() {
 

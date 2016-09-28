@@ -34,6 +34,7 @@ import net.codepixl.GLCraft.util.BreakSource;
 import net.codepixl.GLCraft.util.Constants;
 import net.codepixl.GLCraft.util.DebugTimer;
 import net.codepixl.GLCraft.util.Frustum;
+import net.codepixl.GLCraft.util.GameTime;
 import net.codepixl.GLCraft.util.MathUtils;
 import net.codepixl.GLCraft.util.OpenSimplexNoise;
 import net.codepixl.GLCraft.util.Spritesheet;
@@ -41,7 +42,6 @@ import net.codepixl.GLCraft.util.Vector2i;
 import net.codepixl.GLCraft.util.Vector3i;
 import net.codepixl.GLCraft.util.data.saves.Save;
 import net.codepixl.GLCraft.util.data.saves.SaveManager;
-import net.codepixl.GLCraft.world.WorldManager.Light;
 import net.codepixl.GLCraft.world.entity.Entity;
 import net.codepixl.GLCraft.world.entity.EntityManager;
 import net.codepixl.GLCraft.world.entity.EntitySolid;
@@ -65,11 +65,13 @@ public class WorldManager {
 	private boolean saving = false;
 	private Save currentSave;
 	private long worldTime;
+	private GameTime gameTime = new GameTime(0);
 	public Queue<Light> lightQueue = new LinkedList<Light>();
 	public Queue<Light> sunlightQueue = new LinkedList<Light>();
 	public Queue<LightRemoval> lightRemovalQueue = new LinkedList<LightRemoval>();
 	public ArrayList<Chunk> lightRebuildQueue = new ArrayList<Chunk>();
 	public Queue<LightRemoval> sunlightRemovalQueue = new LinkedList<LightRemoval>();
+	private int currentRebuild = 0;
 	
 	public WorldManager(CentralManager w){
 		this.centralManager = w;
@@ -203,6 +205,7 @@ public class WorldManager {
 		}
 		
 		worldTime+=Time.getDelta()*1000;
+		gameTime.updateTime(worldTime);
 		
 	}
 	
@@ -302,7 +305,10 @@ public class WorldManager {
 	}
 	
 	public float getSkyLightIntensity(){
-		return 1;
+		if(this.gameTime.getHours() < 12)
+			return this.gameTime.getHours()/12f+this.gameTime.getMinutes()/600f;
+		else
+			return (-this.gameTime.getHours()+24)/12f+this.gameTime.getMinutes()/600f;
 	}
 	
 	public void saveChunks(String name) throws IOException{
@@ -798,6 +804,14 @@ public class WorldManager {
 		}
 	}
 	
+	public long getWorldTime(){
+		return this.worldTime;
+	}
+	
+	public GameTime getTime(){
+		return this.gameTime;
+	}
+	
 	public static class LightRemoval{
 		public Vector3i pos;
 		public byte level;
@@ -819,6 +833,16 @@ public class WorldManager {
 		public Light(Vector3i pos) {
 			this.pos = pos;
 			this.chunk = GLCraft.getGLCraft().getWorldManager().getChunk(pos);
+		}
+	}
+
+	public void rebuildNextChunk() {
+		if(activeChunks.size() > 0){
+			Chunk c = (new ArrayList<Chunk>(activeChunks.values())).get(currentRebuild);
+			c.rebuildBase(true);
+			c.rebuildBase(false);
+			currentRebuild++;
+			currentRebuild%=activeChunks.size();
 		}
 	}
 	
