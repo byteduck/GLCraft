@@ -53,12 +53,8 @@ public class Constants {
 	}
 
 	public static String getGamePath() {
-		if ("Linux".equals(System.getProperty("os.name"))) {
-			return System.getProperty("user.home") + "/GLCraft/";
-		} else {
-			return System.getProperty("user.home") + "\\GLCraft\\";
-		}
-	}
+               return System.getProperty("user.home") + File.separator + "GLCraft" + File.separator;
+        }
 
 	public static void setDoneGenerating(boolean generating) {
 		doneGenerating = generating;
