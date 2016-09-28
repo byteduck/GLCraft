@@ -2,9 +2,9 @@ package net.codepixl.GLCraft.util;
 
 public class GameTime{
 
-	private static final float HOURLENGTH = Constants.dayLengthMS/24;
-	private static final float MINUTELENGTH = Constants.dayLengthMS/24/60;
-	private static final float SECONDLENGTH = Constants.dayLengthMS/24/60/60;
+	private static final float HOURLENGTH = Constants.dayLengthMS/24f;
+	private static final float MINUTELENGTH = Constants.dayLengthMS/24f/60f;
+	private static final float SECONDLENGTH = Constants.dayLengthMS/24f/60f/60f;
 	
 	private int hours;
 	private int minutes;

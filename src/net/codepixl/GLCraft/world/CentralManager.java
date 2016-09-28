@@ -308,9 +308,13 @@ public class CentralManager extends Screen{
 		GL11.glTranslatef(cloudMove, 127f, 1000f);
 		GL11.glRotatef(-90f, 1f, 0f, 0f);
 		GL11.glBegin(GL_QUADS);
-		Shape.createPlane(-4000f, 0, 0, new Color4f(1f,1f,1f,0.5f), new float[]{0f,0f}, 2000f);
-		Shape.createPlane(0, 0, 0, new Color4f(1f,1f,1f,0.5f), new float[]{0f,0f}, 2000f);
-		Shape.createPlane(-2000f, 0, 0, new Color4f(1f,1f,1f,0.5f), new float[]{0f,0f}, 2000f);
+		float lightIntensity = worldManager.getSkyLightIntensity();
+		lightIntensity+=0.05;
+		if(lightIntensity > 1)
+			lightIntensity = 1;
+		Shape.createPlane(-4000f, 0, 0, new Color4f(lightIntensity,lightIntensity,lightIntensity,0.5f), new float[]{0f,0f}, 2000f);
+		Shape.createPlane(0, 0, 0, new Color4f(lightIntensity,lightIntensity,lightIntensity,0.5f), new float[]{0f,0f}, 2000f);
+		Shape.createPlane(-2000f, 0, 0, new Color4f(lightIntensity,lightIntensity,lightIntensity,0.5f), new float[]{0f,0f}, 2000f);
 		GL11.glEnd();
 		Spritesheet.atlas.bind();
 		Shape.currentSpritesheet = Spritesheet.atlas;

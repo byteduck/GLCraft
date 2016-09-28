@@ -60,6 +60,7 @@ public class Chunk {
 	private ArrayList<Vector3f> tickTiles = new ArrayList<Vector3f>();
 	private ArrayList<Vector3f> tempTickTiles = new ArrayList<Vector3f>();
 	private ArrayList<Vector3f> scheduledBlockUpdates = new ArrayList<Vector3f>();
+	private boolean visible = false;
 	
 	public Chunk(ShaderProgram shader, int type, float x, float y, float z, WorldManager w, boolean fromBuf){
 		this.pos = new Vector3f(x,y,z);
@@ -436,8 +437,10 @@ public class Chunk {
 		if(type != CentralManager.AIRCHUNK){
 			if(translucent)
 				glNewList(transvcID, GL_COMPILE);
-			else
+			else{
 				glNewList(vcID, GL_COMPILE);
+				visible = false;
+			}
 			for(int x = 0; x < sizeX; x++){
 				for(int y = 0; y < sizeY; y++){
 					for(int z = 0; z < sizeZ; z++){
@@ -446,6 +449,8 @@ public class Chunk {
 						Tile t = Tile.getTile(tiles[x][y][z]);
 						boolean shouldRender = translucent ? t.isTranslucent() : !t.isTranslucent();
 						if(shouldRender && t != Tile.Air && !checkTileNotInView(x+(int)pos.getX(),y+(int)pos.getY(),z+(int)pos.getZ())){
+							if(!translucent)
+								visible = true;
 							float[] light = new float[]{
 								getLightIntensity(x,y-1,z),
 								getLightIntensity(x,y+1,z),
@@ -773,6 +778,10 @@ public class Chunk {
 	
 	private void removeBlockLight(int x, int y, int z, byte level){
 		worldManager.lightRemovalQueue.add(new LightRemoval(new Vector3i(x,y,z), level, this));
+	}
+	
+	public boolean isVisible(){
+		return visible;
 	}
 	
 }

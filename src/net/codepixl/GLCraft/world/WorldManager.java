@@ -312,11 +312,11 @@ public class WorldManager {
 	public float getSkyLightIntensity(){
 		float ret;
 		int mins = this.gameTime.getHours()*60+this.gameTime.getMinutes();
-		if(this.gameTime.getHours() >= 4 && this.gameTime.getHours() <= 7)
-			ret = (mins-240)/240f;
-		else if(this.gameTime.getHours() >= 17 && this.gameTime.getHours() <= 20)
-			ret = (-(mins-1020)+1020)/240f;
-		else if(this.gameTime.getHours() < 4 || this.gameTime.getHours() > 20)
+		if(this.gameTime.getHours() >= 4 && this.gameTime.getHours() <= 10)
+			ret = (mins-240)/420f;
+		else if(this.gameTime.getHours() >= 13 && this.gameTime.getHours() <= 19)
+			ret = (-(mins-780)+420)/420f;
+		else if(this.gameTime.getHours() < 4 || this.gameTime.getHours() > 19)
 			ret = 0;
 		else
 			ret = 1;
@@ -853,6 +853,11 @@ public class WorldManager {
 	public void rebuildNextChunk() {
 		if(activeChunks.size() > 0){
 			Chunk c = (new ArrayList<Chunk>(activeChunks.values())).get(currentRebuild);
+			while(!c.isVisible()){
+				currentRebuild++;
+				currentRebuild%=activeChunks.size();
+				c = (new ArrayList<Chunk>(activeChunks.values())).get(currentRebuild);
+			}
 			c.rebuildBase(true);
 			c.rebuildBase(false);
 			currentRebuild++;
