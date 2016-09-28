@@ -155,6 +155,8 @@ public class WorldManager {
 			centralManager.renderSplashText("ERROR", "There was an error saving.");
 			while(true){}
 		}
+		this.worldTime = Constants.dayLengthMS/2;
+		this.gameTime = new GameTime(this.worldTime);
 	}
 	
 	public void showMessage(double seconds, String message){
@@ -561,6 +563,8 @@ public class WorldManager {
 				}
 			}
 		}
+		this.worldTime = s.worldTime;
+		this.gameTime = new GameTime(s.worldTime);
 		boolean success = SaveManager.loadWorld(this, s.name);
 		if(success){
 			this.doneGenerating = true;

@@ -10,8 +10,10 @@ public class GameTime{
 	private int minutes;
 	private int seconds;
 	private int days;
+	private long timestamp;
 	
 	public GameTime(long millis){
+		this.timestamp = millis;
 		int rtime = (int) (millis % Constants.dayLengthMS);
 		this.setHours(rtime/HOURLENGTH);
 		this.setMinutes((rtime/MINUTELENGTH) % 60);
@@ -20,6 +22,7 @@ public class GameTime{
 	}
 	
 	public void updateTime(long millis){
+		this.timestamp = millis;
 		int rtime = (int) (millis % Constants.dayLengthMS);
 		this.setHours(rtime/HOURLENGTH);
 		this.setMinutes((rtime/MINUTELENGTH) % 60);
@@ -31,7 +34,7 @@ public class GameTime{
 		return hours;
 	}
 
-	public void setHours(int hours) {
+	private void setHours(int hours) {
 		this.hours = hours;
 	}
 
@@ -39,7 +42,7 @@ public class GameTime{
 		return minutes;
 	}
 
-	public void setMinutes(int minutes) {
+	private void setMinutes(int minutes) {
 		this.minutes = minutes;
 	}
 
@@ -47,7 +50,7 @@ public class GameTime{
 		return seconds;
 	}
 
-	public void setSeconds(int seconds) {
+	private void setSeconds(int seconds) {
 		this.seconds = seconds;
 	}
 
@@ -55,8 +58,12 @@ public class GameTime{
 		return days;
 	}
 
-	public void setDays(int days) {
+	private void setDays(int days) {
 		this.days = days;
+	}
+	
+	public long getTimeStamp(){
+		return this.timestamp;
 	}
 	
 	@Override

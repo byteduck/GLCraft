@@ -6,7 +6,7 @@ import net.codepixl.GLCraft.util.Constants;
 
 public class Save implements Comparable<Save>{
 	public String name,dispName,version,format;
-	public long timestamp;
+	public long timestamp, worldTime;
 	public Save(String name, String dispName, String version, String format){
 		this.name = name;
 		this.dispName = dispName;
@@ -14,12 +14,13 @@ public class Save implements Comparable<Save>{
 		this.format = format;
 	}
 	
-	public Save(String name, String dispName, String version, String format, long timestamp){
+	public Save(String name, String dispName, String version, String format, long timestamp, long worldTime){
 		this.name = name;
 		this.dispName = dispName;
 		this.version = version;
 		this.format = format;
 		this.timestamp = timestamp;
+		this.worldTime = worldTime;
 	}
 	
 	public File getFolder(){

@@ -50,6 +50,8 @@ public class SaveManager {
     	
 		tsave.name = tsave.name.replaceAll("[^ a-zA-Z0-9.-]", "_");
 		
+		tsave.worldTime = tworldManager.getWorldTime();
+		
 		final WorldManager worldManager = tworldManager;
 		final Save save = tsave;
 		final boolean quit = tquit;
@@ -287,6 +289,8 @@ public class SaveManager {
 		save.timestamp = new Date().getTime();
 		TagLong timeTag = new TagLong("timestamp", save.timestamp);
 		t.setTag(timeTag);
+		TagLong worldTimeTag = new TagLong("worldTime", save.worldTime);
+		t.setTag(worldTimeTag);
 		nbtOutputStream.write(t);
 		nbtOutputStream.close();
 	}
@@ -300,7 +304,13 @@ public class SaveManager {
 				nbtInputStream.close();
 				long timestamp = 0;
 				timestamp = tag.getLong("timestamp");
-				return new Save(name,tag.getString("name"),tag.getString("version"),tag.getString("format"),timestamp);
+				long worldTime = Constants.dayLengthMS/2;
+				try{
+					worldTime = tag.getLong("worldTime");
+				}catch(TagNotFoundException | NullPointerException e){
+					
+				}
+				return new Save(name,tag.getString("name"),tag.getString("version"),tag.getString("format"),timestamp,worldTime);
 			}catch(TagNotFoundException | NullPointerException e){
 				System.err.println("WARNING: world "+name+" is corrupted!");
 				return null;
