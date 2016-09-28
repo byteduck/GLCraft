@@ -373,42 +373,46 @@ public class Shape {
 	}
 
 	public static void createTexturelessCube(float x, float y, float z, Color4f color, float size) {
+		createTexturelessRect(x,y,z,color,size,size,size);
+	}
+	
+	public static void createTexturelessRect(float x, float y, float z, Color4f color, float sizex, float sizey, float sizez) {
 		glColor4f(color.r, color.g, color.b, color.a);
 		// bottom face
-		glVertex3f(x, y, z + size);
-		glVertex3f(x + size, y, z + size);
-		glVertex3f(x + size, y, z);
+		glVertex3f(x, y, z + sizez);
+		glVertex3f(x + sizex, y, z + sizez);
+		glVertex3f(x + sizex, y, z);
 		glVertex3f(x, y, z);
 
 		// top face
-		glVertex3f(x, y + size, z);
-		glVertex3f(x + size, y + size, z);
-		glVertex3f(x + size, y + size, z + size);
-		glVertex3f(x, y + size, z + size);
+		glVertex3f(x, y + sizey, z);
+		glVertex3f(x + sizex, y + sizey, z);
+		glVertex3f(x + sizex, y + sizey, z + sizez);
+		glVertex3f(x, y + sizey, z + sizez);
 
 		// front face
 		glVertex3f(x, y, z);
-		glVertex3f(x + size, y, z);
-		glVertex3f(x + size, y + size, z);
-		glVertex3f(x, y + size, z);
+		glVertex3f(x + sizex, y, z);
+		glVertex3f(x + sizex, y + sizey, z);
+		glVertex3f(x, y + sizey, z);
 
 		// back face
-		glVertex3f(x, y + size, z + size);
-		glVertex3f(x + size, y + size, z + size);
-		glVertex3f(x + size, y, z + size);
-		glVertex3f(x, y, z + size);
+		glVertex3f(x, y + sizey, z + sizez);
+		glVertex3f(x + sizex, y + sizey, z + sizez);
+		glVertex3f(x + sizex, y, z + sizez);
+		glVertex3f(x, y, z + sizez);
 
 		// left face
-		glVertex3f(x + size, y, z);
-		glVertex3f(x + size, y, z + size);
-		glVertex3f(x + size, y + size, z + size);
-		glVertex3f(x + size, y + size, z);
+		glVertex3f(x + sizex, y, z);
+		glVertex3f(x + sizex, y, z + sizez);
+		glVertex3f(x + sizex, y + sizey, z + sizez);
+		glVertex3f(x + sizex, y + sizey, z);
 
 		// right face
-		glVertex3f(x, y, z + size);
+		glVertex3f(x, y, z + sizez);
 		glVertex3f(x, y, z);
-		glVertex3f(x, y + size, z);
-		glVertex3f(x, y + size, z + size);
+		glVertex3f(x, y + sizey, z);
+		glVertex3f(x, y + sizey, z + sizez);
 
 		glColor4f(1, 1, 1, 1);
 	}
@@ -456,7 +460,7 @@ public class Shape {
 		glVertex2f(x + size, y);
 	}
 	
-	public static void createTexturelessRect(float x, float y, float width, float height, Color4f color){
+	public static void createTexturelessRect2D(float x, float y, float width, float height, Color4f color){
 		glColor4f(color.r, color.g, color.b, color.a);
 		glVertex2f(x, y);
 		glVertex2f(x, y + height);

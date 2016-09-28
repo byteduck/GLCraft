@@ -43,10 +43,16 @@ public class TileLeaf extends Tile{
 		// TODO Auto-generated method stub
 		return false;
 	}
+	
 	@Override
 	public void onBreak(int x, int y, int z, boolean drop, BreakSource source, WorldManager worldManager){
 		if(drop && Constants.rand.nextFloat() < 0.1){
 			worldManager.spawnEntity(new EntityItem(new ItemStack(Tile.Sapling),(float)x+0.5f,(float)y+0.5f,(float)z+0.5f,worldManager));
 		}
+	}
+	
+	@Override
+	public byte getTransparency(){
+		return 2;
 	}
 }

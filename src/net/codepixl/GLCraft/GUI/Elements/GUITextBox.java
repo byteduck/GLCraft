@@ -47,11 +47,11 @@ public class GUITextBox extends GUIScreen{
 		GL11.glDisable(GL11.GL_TEXTURE_2D);
 		
 		GL11.glBegin(GL11.GL_QUADS);
-		Shape.createTexturelessRect(0, 0, width, height, Color4f.BLACK);
+		Shape.createTexturelessRect2D(0, 0, width, height, Color4f.BLACK);
 		GL11.glEnd();
 		
 		GL11.glBegin(GL11.GL_LINE_LOOP);
-		Shape.createTexturelessRect(0, 0, width, height, Color4f.WHITE);
+		Shape.createTexturelessRect2D(0, 0, width, height, Color4f.WHITE);
 		GL11.glEnd();
 		
 		GL11.glEnable(GL11.GL_TEXTURE_2D);

@@ -54,10 +54,10 @@ public class GUIProgressBar extends GUIScreen{
 			GL11.glRotatef(-90f, 0, 0, 1f);
 		glDisable(GL_TEXTURE_2D);
 		glBegin(GL_QUADS);
-		Shape.createTexturelessRect(0, 0, length, height, bgcolor);
+		Shape.createTexturelessRect2D(0, 0, length, height, bgcolor);
 		glEnd();
 		glBegin(GL_QUADS);
-		Shape.createTexturelessRect(0, 0, length*((float)progress/100f), height, color);
+		Shape.createTexturelessRect2D(0, 0, length*((float)progress/100f), height, color);
 		glEnd();
 		glEnable(GL_TEXTURE_2D);
 		GL11.glPopMatrix();

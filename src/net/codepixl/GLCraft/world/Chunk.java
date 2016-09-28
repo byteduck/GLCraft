@@ -441,6 +441,7 @@ public class Chunk {
 				glNewList(vcID, GL_COMPILE);
 				visible = false;
 			}
+			glBegin(GL_QUADS);
 			for(int x = 0; x < sizeX; x++){
 				for(int y = 0; y < sizeY; y++){
 					for(int z = 0; z < sizeZ; z++){
@@ -476,7 +477,6 @@ public class Chunk {
 								Shape.createCross(pos.x+x, pos.y+y, pos.z+z, Tile.getTile(tiles[x][y][z]).getColor(), Tile.getTile(tiles[x][y][z]).getTexCoords(), 1);
 							}**/
 							if(t.getRenderType() == RenderType.CUBE){
-								glBegin(GL_QUADS);
 								float[] texCoords;
 								if(t.hasMetaTextures())
 									texCoords = t.getTexCoords(meta[x][y][z]);
@@ -498,25 +498,22 @@ public class Chunk {
 									}
 								}
 								Shape.createCube(pos.x+x, pos.y+y, pos.z+z, col, texCoords, 1);
-								glEnd();
 							}else if(t.getRenderType() == RenderType.CROSS){
-								glBegin(GL_QUADS);
 								if(t.hasMetaTextures()){
 									Shape.createCross(pos.x+x, pos.y+y, pos.z+z, col[1], t.getTexCoords(meta[x][y][z]), 1);
 								}else{
 									Shape.createCross(pos.x+x, pos.y+y, pos.z+z, col[1], t.getTexCoords(), 1);
 								}
-								glEnd();
 							}else if(t.getRenderType() == RenderType.FLAT){
-								glBegin(GL_QUADS);
 								if(t.hasMetaTextures()){
 									Shape.createFlat(pos.x+x, pos.y+y+0.01f, pos.z+z, col[1], t.getTexCoords(meta[x][y][z]), 1);
 								}else{
 									Shape.createFlat(pos.x+x, pos.y+y+0.01f, pos.z+z, col[1], t.getTexCoords(), 1);
 								}
-								glEnd();
 							}else if(t.getRenderType() == RenderType.CUSTOM){
+								glEnd();
 								t.customRender(pos.x+x, pos.y+y, pos.z+z, col, worldManager, this);
+								glBegin(GL_QUADS);
 							}
 						}else{
 							/**int posX = (int)pos.x+x;
@@ -528,6 +525,7 @@ public class Chunk {
 					}
 				}
 			}
+			glEnd();
 			glEndList();
 		}
 	}

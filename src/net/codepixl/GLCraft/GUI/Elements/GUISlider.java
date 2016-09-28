@@ -40,15 +40,15 @@ public class GUISlider extends GUIScreen{
 		GL11.glDisable(GL11.GL_TEXTURE_2D);
 		
 		GL11.glBegin(GL11.GL_QUADS);
-		Shape.createTexturelessRect(0, 0, width, height, Color4f.BLACK);
+		Shape.createTexturelessRect2D(0, 0, width, height, Color4f.BLACK);
 		GL11.glEnd();
 		
 		GL11.glBegin(GL11.GL_LINE_LOOP);
-		Shape.createTexturelessRect(0, 0, width, height, Color4f.GRAY);
+		Shape.createTexturelessRect2D(0, 0, width, height, Color4f.GRAY);
 		GL11.glEnd();
 		
 		GL11.glBegin(GL11.GL_QUADS);
-		Shape.createTexturelessRect(((float)(val-min)/(float)(max-min))*(width-10), 0, 10f, height, Color4f.WHITE);
+		Shape.createTexturelessRect2D(((float)(val-min)/(float)(max-min))*(width-10), 0, 10f, height, Color4f.WHITE);
 		GL11.glEnd();
 		
 		GL11.glEnable(GL11.GL_TEXTURE_2D);

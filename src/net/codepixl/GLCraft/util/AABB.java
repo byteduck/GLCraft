@@ -10,10 +10,14 @@ import java.util.Arrays;
 
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.util.vector.Vector3f;
+import org.newdawn.slick.opengl.TextureImpl;
 
 import com.nishu.utils.Color4f;
 
+import net.codepixl.GLCraft.GLCraft;
 import net.codepixl.GLCraft.render.Shape;
+import net.codepixl.GLCraft.render.TextureManager;
+import net.codepixl.GLCraft.world.tile.Tile;
 
 public class AABB {
 	public double center[];
@@ -76,9 +80,16 @@ public class AABB {
 
 	public void render() {
 		glPushMatrix();
+		GL11.glDisable(GL11.GL_TEXTURE_2D);
+		GL11.glPolygonMode(GL11.GL_FRONT_AND_BACK, GL11.GL_LINE);
+		GL11.glDisable(GL11.GL_CULL_FACE);
+		GL11.glLineWidth(0.5f);
 		glBegin(GL_QUADS);
-		Shape.createCube((float)pos[0] - (float)r[0]*2, (float)pos[1], (float)pos[2] - (float)r[2]*2, new Color4f(1.0f, 1.0f, 1.0f, 1.0f), new float[] { 0f, 0f }, (float)r[0]*2f);
+		Shape.createTexturelessRect((float)pos[0]-(float)r[0], (float)pos[1], (float)pos[2]-(float)r[2], Color4f.WHITE, (float)r[0]*2, (float)r[1]*2, (float)r[2]*2);
 		glEnd();
+		GL11.glEnable(GL11.GL_CULL_FACE);
+		GL11.glEnable(GL11.GL_TEXTURE_2D);
+		GL11.glPolygonMode(GL11.GL_FRONT_AND_BACK, GL11.GL_FILL);
 		glPopMatrix();
 	}
 }
