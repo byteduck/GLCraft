@@ -55,7 +55,7 @@ public class Constants {
 	}
 
 	public static String getGamePath() {
-               return System.getProperty("user.home") + System.getProperty("File.separator") + "GLCraft" + System.getProperty("File.separator");
+               return System.getProperty("user.home") + System.getProperty("file.separator") + "GLCraft" + System.getProperty("file.separator");
         }
 
 	public static void setDoneGenerating(boolean generating) {
