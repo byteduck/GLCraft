@@ -129,7 +129,7 @@ public class GLCraft extends Screen{
 		
 		Display.setFullscreen(false);
 		Display.setDisplayMode(new DisplayMode(1000, 700));
-		Display.setTitle("GLCraft");
+		Display.setTitle("GLCraft v"+version);
 		Display.create(new PixelFormat(8,8,8));
 		
 		initGL();
