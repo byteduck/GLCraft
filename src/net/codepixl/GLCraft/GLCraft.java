@@ -273,7 +273,6 @@ public class GLCraft extends Screen{
 			Constants.HEIGHT = Display.getHeight();
 		}
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-		glClearColor(0.0f,0.749019608f,1.0f,0.0f);
 		centralManager.render();
 		DebugTimer.endTimer("loop_time");
 	}

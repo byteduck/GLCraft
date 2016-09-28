@@ -1,5 +1,7 @@
 package net.codepixl.GLCraft.world;
 
+import static org.lwjgl.opengl.GL11.glClearColor;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -299,6 +301,7 @@ public class WorldManager {
 				i.next().render(true);
 			}
 			DebugTimer.endTimer("chunk_render");
+			glClearColor(0.0f,0.749019608f*getSkyLightIntensity(),1.0f*getSkyLightIntensity(),0.0f);
 		}
 	}
 	
@@ -307,10 +310,17 @@ public class WorldManager {
 	}
 	
 	public float getSkyLightIntensity(){
-		if(this.gameTime.getHours() < 12)
-			return this.gameTime.getHours()/12f+this.gameTime.getMinutes()/600f;
+		float ret;
+		int mins = this.gameTime.getHours()*60+this.gameTime.getMinutes();
+		if(this.gameTime.getHours() >= 4 && this.gameTime.getHours() <= 7)
+			ret = (mins-240)/240f;
+		else if(this.gameTime.getHours() >= 17 && this.gameTime.getHours() <= 20)
+			ret = (-(mins-1020)+1020)/240f;
+		else if(this.gameTime.getHours() < 4 || this.gameTime.getHours() > 20)
+			ret = 0;
 		else
-			return (-this.gameTime.getHours()+24)/12f+this.gameTime.getMinutes()/600f;
+			ret = 1;
+		return ret;
 	}
 	
 	public void saveChunks(String name) throws IOException{

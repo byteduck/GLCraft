@@ -2,9 +2,9 @@ package net.codepixl.GLCraft.util;
 
 public class GameTime{
 
-	private static final int HOURLENGTH = Constants.dayLengthMS/24;
-	private static final int MINUTELENGTH = Constants.dayLengthMS/24/60;
-	private static final int SECONDLENGTH = Constants.dayLengthMS/24/60/60;
+	private static final float HOURLENGTH = Constants.dayLengthMS/24;
+	private static final float MINUTELENGTH = Constants.dayLengthMS/24/60;
+	private static final float SECONDLENGTH = Constants.dayLengthMS/24/60/60;
 	
 	private int hours;
 	private int minutes;
@@ -14,19 +14,19 @@ public class GameTime{
 	
 	public GameTime(long millis){
 		this.timestamp = millis;
-		int rtime = (int) (millis % Constants.dayLengthMS);
-		this.setHours(rtime/HOURLENGTH);
-		this.setMinutes((rtime/MINUTELENGTH) % 60);
-		this.setSeconds((rtime/SECONDLENGTH) % 60);
+		float rtime = (int) (millis % Constants.dayLengthMS);
+		this.setHours((int)(rtime/HOURLENGTH));
+		this.setMinutes((int) ((rtime/MINUTELENGTH) % 60));
+		this.setSeconds((int) ((rtime/SECONDLENGTH) % 60));
 		this.setDays((int)(millis/Constants.dayLengthMS));
 	}
 	
 	public void updateTime(long millis){
 		this.timestamp = millis;
-		int rtime = (int) (millis % Constants.dayLengthMS);
-		this.setHours(rtime/HOURLENGTH);
-		this.setMinutes((rtime/MINUTELENGTH) % 60);
-		this.setSeconds((rtime/SECONDLENGTH) % 60);
+		float rtime = (int) (millis % Constants.dayLengthMS);
+		this.setHours((int) (rtime/HOURLENGTH));
+		this.setMinutes((int) ((rtime/MINUTELENGTH) % 60));
+		this.setSeconds((int) ((rtime/SECONDLENGTH) % 60));
 		this.setDays((int)(millis/Constants.dayLengthMS));
 	}
 
