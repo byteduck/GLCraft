@@ -208,7 +208,7 @@ public class WorldManager {
 			DebugTimer.endTimer("chunk_tick");
 		}
 		
-		worldTime+=Time.getDelta()*1000;
+		worldTime+=Time.getDelta()*100000;
 		gameTime.updateTime(worldTime);
 		
 	}

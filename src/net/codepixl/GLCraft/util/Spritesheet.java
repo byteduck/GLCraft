@@ -11,6 +11,7 @@ public class Spritesheet {
 	
 	public static Spritesheet atlas;
 	public static Spritesheet clouds = new Spritesheet("textures/clouds.png",1);
+	public static Spritesheet stars = new Spritesheet("textures/misc/stars.png",1);
 	
 	public Spritesheet(String path, float size){
 		this.path = path;

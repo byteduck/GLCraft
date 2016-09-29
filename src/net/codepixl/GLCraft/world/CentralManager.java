@@ -317,6 +317,25 @@ public class CentralManager extends Screen{
 		GL11.glEnd();
 		worldManager.shader.release();
 		GL11.glPopMatrix();
+
+		Spritesheet.stars.bind();
+		Shape.currentSpritesheet = Spritesheet.stars;
+		
+		GL11.glCullFace(GL11.GL_BACK);
+		worldManager.shader.use();
+		GL11.glPushMatrix();
+		GL11.glTranslatef(worldManager.getEntityManager().getPlayer().getX(), worldManager.getEntityManager().getPlayer().getY(), worldManager.getEntityManager().getPlayer().getZ());
+		GL11.glRotatef((worldManager.getWorldTime() - (Constants.dayLengthMS/24*5f) % Constants.dayLengthMS)/(float)Constants.dayLengthMS*360f, 0, 0, 1);
+		//GL11.glRotatef(45, 0, 1, 0);
+		GL11.glTranslatef(-250,-250,-250);
+		GL11.glBegin(GL11.GL_QUADS);
+		float intensity = -worldManager.getSkyLightIntensity()+1f;
+		Shape.createCube(0, 0, 0, new Color4f(1, 1, 1, intensity), new float[]{0,0}, 500);
+		GL11.glEnd();
+		GL11.glPopMatrix();
+		worldManager.shader.release();
+		GL11.glCullFace(GL11.GL_FRONT);
+
 		Spritesheet.atlas.bind();
 		Shape.currentSpritesheet = Spritesheet.atlas;
 		
