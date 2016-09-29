@@ -17,12 +17,14 @@ import java.util.Queue;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import org.lwjgl.opengl.GL11;
 import org.lwjgl.util.vector.Vector3f;
 
 import com.evilco.mc.nbt.stream.NbtInputStream;
 import com.evilco.mc.nbt.stream.NbtOutputStream;
 import com.evilco.mc.nbt.tag.ITag;
 import com.evilco.mc.nbt.tag.TagCompound;
+import com.nishu.utils.Color4f;
 import com.nishu.utils.Shader;
 import com.nishu.utils.ShaderProgram;
 import com.nishu.utils.Time;
@@ -31,6 +33,7 @@ import net.codepixl.GLCraft.GLCraft;
 import net.codepixl.GLCraft.GUI.GUIManager;
 import net.codepixl.GLCraft.GUI.Inventory.GUICrafting;
 import net.codepixl.GLCraft.GUI.Inventory.GUICraftingAdvanced;
+import net.codepixl.GLCraft.render.Shape;
 import net.codepixl.GLCraft.util.AABB;
 import net.codepixl.GLCraft.util.BreakSource;
 import net.codepixl.GLCraft.util.Constants;
@@ -393,13 +396,12 @@ public class WorldManager {
 		ArrayList<AABB> arraylist = new ArrayList<AABB>();
 		AABB mAABB = entitySolid.getAABB();
 		mAABB.render();
-		for(int x = (int) (entitySolid.getX()-1); x < entitySolid.getX()+mAABB.getSize().x; x++){
-			for(int y = (int) (entitySolid.getY()-1); y < entitySolid.getY()+mAABB.getSize().y+1; y++){
-				for(int z = (int) (entitySolid.getZ()-1); z < entitySolid.getZ()+mAABB.getSize().z; z++){
+		for(int x = (int) (entitySolid.getX()-mAABB.getSize().x*3); x < entitySolid.getX()+mAABB.getSize().x; x++){
+			for(int y = (int) (entitySolid.getY()-mAABB.getSize().y*3); y < entitySolid.getY()+mAABB.getSize().y+1; y++){
+				for(int z = (int) (entitySolid.getZ()-mAABB.getSize().z*3); z < entitySolid.getZ()+mAABB.getSize().z; z++){
 					if(!Tile.getTile((byte)getTileAtPos(x,y,z)).canPassThrough()){
 						AABB aabb = Tile.getTile((byte)getTileAtPos(x,y,z)).getAABB(x,y,z,getMetaAtPos(x,y,z),this);
-						//if(!AABB.testAABB(aabb, mAABB))
-							arraylist.add(aabb);
+						arraylist.add(aabb);
 					}
 				}
 			}
@@ -415,8 +417,7 @@ public class WorldManager {
 				for(int z = (int) (entitySolid.getZ()-1); z < entitySolid.getZ()+mAABB.getSize().z; z++){
 					if(Tile.getTile((byte)getTileAtPos(x,y,z)) == t){
 						AABB aabb = Tile.getTile((byte)getTileAtPos(x,y,z)).getAABB(x,y,z,getMetaAtPos(x,y,z),this);
-						//if(!AABB.testAABB(aabb, mAABB))
-							arraylist.add(aabb);
+						arraylist.add(aabb);
 					}
 				}
 			}

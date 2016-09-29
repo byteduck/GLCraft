@@ -66,7 +66,7 @@ public class GUIGame extends GUIScreen{
 		super.render();
 		EntityPlayer p = worldManager.getEntityManager().getPlayer();
 		Spritesheet.atlas.bind();
-		if(!p.tileAtEye().isTransparent()){
+		if(p.tileAtEye().hasTexture() && !p.tileAtEye().isTransparent()){
 			glPushMatrix();
 			glBegin(GL_QUADS);
 			float[] texCoords;

@@ -29,13 +29,13 @@ public class TileVoid extends Tile{
 	@Override
 	public boolean isTransparent() {
 		// TODO Auto-generated method stub
-		return true;
+		return false;
 	}
 
 	@Override
 	public boolean canPassThrough() {
 		// TODO Auto-generated method stub
-		return true;
+		return false;
 	}
 
 }
