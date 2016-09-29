@@ -1,5 +1,7 @@
 package net.codepixl.GLCraft.util;
 
+import java.util.Random;
+
 import org.lwjgl.util.vector.Vector3f;
 
 import com.nishu.utils.Color4f;
@@ -109,5 +111,14 @@ public class MathUtils {
     
     public static Vector3f modulus(Vector3f f, float mod){
     	return new Vector3f(f.x % mod, f.y % mod, f.z % mod);
+    }
+    
+    public static Vector3f randomSpherePoint(Random r, float size){
+		double z = Constants.randDouble(r, -1, 1);
+		double rxy = Math.sqrt(1f - z*z);
+		double phi = Constants.randDouble(r, 0f, 2*Math.PI);
+		double x = rxy * Math.cos(phi);
+		double y = rxy * Math.sin(phi);
+		return new Vector3f((float)x*size,(float)y*size,(float)z*size);
     }
 }

@@ -3,10 +3,9 @@ package net.codepixl.GLCraft.util;
 import java.awt.Font;
 import java.util.Arrays;
 import java.util.Random;
-import org.newdawn.slick.TrueTypeFont;
-import com.nishu.utils.Color4f;
 
-import net.codepixl.GLCraft.world.CentralManager;
+import org.lwjgl.util.vector.Vector3f;
+import org.newdawn.slick.TrueTypeFont;
 
 public class Constants {
 	public static Random rand = new Random();
@@ -42,6 +41,7 @@ public class Constants {
 			"sun.cpu.endian", "sun.io.unicode.encoding", "sun.font.fontmanager", "sun.desktop", "sun.cpu.isalist"};
 	public static int FPS = 0; //FPS that updates every so often
 	public static int QFPS = 0; //FPS that updates every frame
+	public static Vector3f[] stars;
 
 	public static void gatherSystemInfo() {
 
@@ -76,11 +76,19 @@ public class Constants {
 	}
 
 	public static int randInt(int min, int max) {
+		return randInt(rand,min,max);
+	}
+	
+	public static int randInt(Random rand, int min, int max) {
 		int randomNum = rand.nextInt((max - min) + 1) + min;
 		return randomNum;
 	}
 
 	public static float randFloat(float min, float max) {
+		return randFloat(rand,min,max);
+	}
+	
+	public static float randFloat(Random rand, float min, float max) {
 		float randomNum = rand.nextFloat() * (max - min) + min;
 		return randomNum;
 	}
@@ -90,8 +98,20 @@ public class Constants {
 	}
 
 	public static double randDouble(double max, double min) {
+		return randDouble(rand,max,min);
+	}
+	
+	public static double randDouble(Random rand, double max, double min) {
 		double randomNum = rand.nextDouble() * (max - min) + min;
 		return randomNum;
+	}
+	
+	public static void generateStars(){
+		Random r = new Random(10023L);
+		stars = new Vector3f[3000];
+		for(int i = 0; i < stars.length; i++){
+			stars[i] = MathUtils.randomSpherePoint(r, 500);
+		}
 	}
 
 }

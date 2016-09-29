@@ -129,6 +129,8 @@ public class CentralManager extends Screen{
 	public void init() {
 		initGUIManager();
 		
+		Constants.generateStars();
+		
 		TextureManager.initTextures();
 		try {
 			CraftingManager.initRecipes();
@@ -303,39 +305,7 @@ public class CentralManager extends Screen{
 	}
 	
 	private void renderSky(){
-		Spritesheet.clouds.bind();
-		Shape.currentSpritesheet = Spritesheet.clouds;
-		GL11.glPushMatrix();
-		GL11.glTranslatef(cloudMove, 127f, 1000f);
-		GL11.glRotatef(-90f, 1f, 0f, 0f);
-		worldManager.shader.use();
-		GL11.glBegin(GL_QUADS);
-		float lightIntensity = worldManager.getSkyLightIntensity();
-		Shape.createPlane(-4000f, 0, 0, new Color4f(lightIntensity,lightIntensity,lightIntensity,0.5f), new float[]{0f,0f}, 2000f);
-		Shape.createPlane(0, 0, 0, new Color4f(lightIntensity,lightIntensity,lightIntensity,0.5f), new float[]{0f,0f}, 2000f);
-		Shape.createPlane(-2000f, 0, 0, new Color4f(lightIntensity,lightIntensity,lightIntensity,0.5f), new float[]{0f,0f}, 2000f);
-		GL11.glEnd();
-		worldManager.shader.release();
-		GL11.glPopMatrix();
-
-		Spritesheet.stars.bind();
-		Shape.currentSpritesheet = Spritesheet.stars;
 		
-		GL11.glCullFace(GL11.GL_BACK);
-		worldManager.shader.use();
-		GL11.glPushMatrix();
-		GL11.glTranslatef(worldManager.getEntityManager().getPlayer().getX(), worldManager.getEntityManager().getPlayer().getY(), worldManager.getEntityManager().getPlayer().getZ());
-		GL11.glRotatef((worldManager.getWorldTime() - (Constants.dayLengthMS/24*5f) % Constants.dayLengthMS)/(float)Constants.dayLengthMS*360f, 0, 0, 1);
-		//GL11.glRotatef(45, 0, 1, 0);
-		GL11.glTranslatef(-250,-250,-250);
-		GL11.glBegin(GL11.GL_QUADS);
-		float intensity = -worldManager.getSkyLightIntensity()+1f;
-		Shape.createCube(0, 0, 0, new Color4f(1, 1, 1, intensity), new float[]{0,0}, 500);
-		GL11.glEnd();
-		GL11.glPopMatrix();
-		worldManager.shader.release();
-		GL11.glCullFace(GL11.GL_FRONT);
-
 		Spritesheet.atlas.bind();
 		Shape.currentSpritesheet = Spritesheet.atlas;
 		
@@ -356,6 +326,39 @@ public class CentralManager extends Screen{
 	    Shape.createCube(0, 0, 0, Color4f.WHITE, TextureManager.texture("misc.moon"), 75f);
 	    GL11.glEnd();
 	    GL11.glPopMatrix();
+		
+		GL11.glDisable(GL11.GL_TEXTURE_2D);
+		GL11.glPointSize(1f);
+		GL11.glPushMatrix();
+		GL11.glTranslatef(worldManager.getEntityManager().getPlayer().getX(), worldManager.getEntityManager().getPlayer().getY(), worldManager.getEntityManager().getPlayer().getZ());
+		GL11.glRotatef((worldManager.getWorldTime() - (Constants.dayLengthMS/24*5f) % Constants.dayLengthMS)/(float)Constants.dayLengthMS*360f, 0, 0, 1);
+		GL11.glBegin(GL11.GL_POINTS);
+		float intensity = (-worldManager.getSkyLightIntensity()+0.5f)*2f;
+		GL11.glColor4f(1f, 1f, 1f, intensity);
+		for(int i = 0; i < Constants.stars.length; i++){
+	    	GL11.glVertex3f(Constants.stars[i].x, Constants.stars[i].y, Constants.stars[i].z);
+	    }
+		GL11.glEnd();
+		GL11.glPopMatrix();
+		GL11.glEnable(GL11.GL_TEXTURE_2D);
+		
+		Spritesheet.clouds.bind();
+		Shape.currentSpritesheet = Spritesheet.clouds;
+		GL11.glPushMatrix();
+		GL11.glTranslatef(cloudMove, 127f, 1000f);
+		GL11.glRotatef(-90f, 1f, 0f, 0f);
+		worldManager.shader.use();
+		GL11.glBegin(GL_QUADS);
+		float lightIntensity = worldManager.getSkyLightIntensity();
+		Shape.createPlane(-4000f, 0, 0, new Color4f(lightIntensity,lightIntensity,lightIntensity,0.5f), new float[]{0f,0f}, 2000f);
+		Shape.createPlane(0, 0, 0, new Color4f(lightIntensity,lightIntensity,lightIntensity,0.5f), new float[]{0f,0f}, 2000f);
+		Shape.createPlane(-2000f, 0, 0, new Color4f(lightIntensity,lightIntensity,lightIntensity,0.5f), new float[]{0f,0f}, 2000f);
+		GL11.glEnd();
+		worldManager.shader.release();
+		GL11.glPopMatrix();
+		
+		Spritesheet.atlas.bind();
+		Shape.currentSpritesheet = Spritesheet.atlas;
 	}
 	
 	@Deprecated
