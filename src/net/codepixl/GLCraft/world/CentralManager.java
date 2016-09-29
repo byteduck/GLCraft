@@ -271,10 +271,10 @@ public class CentralManager extends Screen{
 			glLoadIdentity();
 			render3D();
 			worldManager.render();
+			renderSky();
 			if(this.renderDebug && this.pathfinder != null && this.pathfinder.path.size() > 0)
 				this.pathfinder.renderPath();
 			currentBlock = raycast();
-			renderClouds();
 			renderEtc();
 			//renderInventory();
 		}
@@ -302,22 +302,41 @@ public class CentralManager extends Screen{
 		return worldManager.getEntityManager().getPlayer().raycast();
 	}
 	
-	private void renderClouds(){
+	private void renderSky(){
 		Spritesheet.clouds.bind();
 		Shape.currentSpritesheet = Spritesheet.clouds;
+		GL11.glPushMatrix();
 		GL11.glTranslatef(cloudMove, 127f, 1000f);
 		GL11.glRotatef(-90f, 1f, 0f, 0f);
+		worldManager.shader.use();
 		GL11.glBegin(GL_QUADS);
 		float lightIntensity = worldManager.getSkyLightIntensity();
-		lightIntensity+=0.05;
-		if(lightIntensity > 1)
-			lightIntensity = 1;
 		Shape.createPlane(-4000f, 0, 0, new Color4f(lightIntensity,lightIntensity,lightIntensity,0.5f), new float[]{0f,0f}, 2000f);
 		Shape.createPlane(0, 0, 0, new Color4f(lightIntensity,lightIntensity,lightIntensity,0.5f), new float[]{0f,0f}, 2000f);
 		Shape.createPlane(-2000f, 0, 0, new Color4f(lightIntensity,lightIntensity,lightIntensity,0.5f), new float[]{0f,0f}, 2000f);
 		GL11.glEnd();
+		worldManager.shader.release();
+		GL11.glPopMatrix();
 		Spritesheet.atlas.bind();
 		Shape.currentSpritesheet = Spritesheet.atlas;
+		
+		GL11.glPushMatrix();
+		GL11.glTranslatef(worldManager.getEntityManager().getPlayer().getX(), worldManager.getEntityManager().getPlayer().getY(), worldManager.getEntityManager().getPlayer().getZ());
+		GL11.glRotatef((worldManager.getWorldTime() - (Constants.dayLengthMS/24*5f) % Constants.dayLengthMS)/(float)Constants.dayLengthMS*360f,0.0f,0.0f,1.0f);
+	    GL11.glTranslatef(500f, -37.5f, -37.5f);
+	    GL11.glBegin(GL11.GL_QUADS);
+	    Shape.createCube(0, 0, 0, Color4f.WHITE, TextureManager.texture("misc.sun"), 75f);
+	    GL11.glEnd();
+	    GL11.glPopMatrix();
+	    
+	    GL11.glPushMatrix();
+		GL11.glTranslatef(worldManager.getEntityManager().getPlayer().getX(), worldManager.getEntityManager().getPlayer().getY(), worldManager.getEntityManager().getPlayer().getZ());
+		GL11.glRotatef((worldManager.getWorldTime() - (Constants.dayLengthMS/24*18f) % Constants.dayLengthMS)/(float)Constants.dayLengthMS*360f,0.0f,0.0f,1.0f);
+	    GL11.glTranslatef(500f, -37.5f, -37.5f);
+	    GL11.glBegin(GL11.GL_QUADS);
+	    Shape.createCube(0, 0, 0, Color4f.WHITE, TextureManager.texture("misc.moon"), 75f);
+	    GL11.glEnd();
+	    GL11.glPopMatrix();
 	}
 	
 	@Deprecated

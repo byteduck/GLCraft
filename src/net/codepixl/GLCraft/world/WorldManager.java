@@ -312,14 +312,18 @@ public class WorldManager {
 	public float getSkyLightIntensity(){
 		float ret;
 		int mins = this.gameTime.getHours()*60+this.gameTime.getMinutes();
-		if(this.gameTime.getHours() >= 4 && this.gameTime.getHours() <= 10)
-			ret = (mins-240)/420f;
-		else if(this.gameTime.getHours() >= 13 && this.gameTime.getHours() <= 19)
-			ret = (-(mins-780)+420)/420f;
+		if(this.gameTime.getHours() >= 4 && this.gameTime.getHours() <= 9)
+			ret = ((mins-240)/360f)*0.85f+0.15f;
+		else if(this.gameTime.getHours() >= 14 && this.gameTime.getHours() <= 19)
+			ret = ((-(mins-780)+360)/360f)*0.85f+0.15f;
 		else if(this.gameTime.getHours() < 4 || this.gameTime.getHours() > 19)
-			ret = 0;
+			ret = 0.15f;
 		else
 			ret = 1;
+		if(ret < 0.15f)
+			ret = 0.15f;
+		else if(ret > 1f)
+			ret = 1f;
 		return ret;
 	}
 	

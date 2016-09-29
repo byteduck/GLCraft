@@ -532,7 +532,7 @@ public class Chunk {
 	
 	private float getLightIntensity(int x, int y, int z){
 		Vector3i pos = new Vector3i(x+(int)this.pos.x,y+(int)this.pos.y,z+(int)this.pos.z);
-		float ret = ((float)worldManager.getBlockLight(pos.x, pos.y, pos.z)+(float)worldManager.getSunlight(pos.x, pos.y, pos.z)*worldManager.getSkyLightIntensity())/15f+0.1f;
+		float ret = ((float)worldManager.getBlockLight(pos.x, pos.y, pos.z)+(float)worldManager.getSunlight(pos.x, pos.y, pos.z)*worldManager.getSkyLightIntensity())/15f;
 		if(ret > 1)
 			ret = 1;
 		return ret;
