@@ -23,7 +23,8 @@ Italic means half completed.
  * ~~A GUI manager to make showing and hiding GUIs easier~~
  * ~~A GUIScreen class to make building guis easier~~
   * *Subclasses like ~~GUIButton~~, GUITextField, GUIImage, etc*
-* Lighting - I worked on it a while ago but due to all of the bugs I stopped.
+* ~~Lighting~~
+ * ~~Day and night cycle~~
 * Infinite world
 * ~~2x2 Crafting System~~
 * ~~3x3 Crafting System~~
@@ -32,10 +33,10 @@ Italic means half completed.
 * *Animals/Monsters*
 * *Sound*
 * ~~Better menu~~
-* Options menu
+* *Options menu*
 * ~~Tile entities~~
 * *Better collision system to allow for custom collision hit boxes*
-* ~Make placing blocks actually work~
+* ~~Make placing blocks actually work~~
 * ~~Saving and Loading worlds~~
 * Much, much more!
 
