@@ -1,4 +1,4 @@
-package net.codepixl.GLCraft.packet;
+package net.codepixl.GLCraft.network.packet;
 
 import org.apache.commons.lang3.SerializationUtils;
 
