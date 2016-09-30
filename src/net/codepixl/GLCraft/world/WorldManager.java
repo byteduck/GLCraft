@@ -77,6 +77,7 @@ public class WorldManager {
 	public ArrayList<Chunk> lightRebuildQueue = new ArrayList<Chunk>();
 	public Queue<LightRemoval> sunlightRemovalQueue = new LinkedList<LightRemoval>();
 	private int currentRebuild = 0;
+	public boolean isServer = false;
 	
 	public WorldManager(CentralManager w){
 		this.centralManager = w;
@@ -272,7 +273,7 @@ public class WorldManager {
 	ArrayList<Chunk> toRender = new ArrayList<Chunk>();
 	
 	public void render(){
-		if(doneGenerating){
+		if(doneGenerating && !this.isServer){
 			toRender.clear();
 			DebugTimer.startTimer("chunk_render");
 			Spritesheet.atlas.bind();

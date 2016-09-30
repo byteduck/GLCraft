@@ -70,6 +70,7 @@ import org.lwjgl.opengl.Display;
 import org.lwjgl.opengl.DisplayMode;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.PixelFormat;
+import org.lwjgl.util.vector.Vector3f;
 import org.newdawn.slick.opengl.PNGDecoder;
 import org.newdawn.slick.opengl.TextureImpl;
 
@@ -78,6 +79,8 @@ import com.nishu.utils.Time;
 import com.nishu.utils.Window;
 
 import net.codepixl.GLCraft.GUI.GUIManager;
+import net.codepixl.GLCraft.network.packet.PacketPlayerLoginResponse;
+import net.codepixl.GLCraft.network.packet.PacketPlayerPos;
 import net.codepixl.GLCraft.plugin.Plugin;
 import net.codepixl.GLCraft.plugin.PluginManager;
 import net.codepixl.GLCraft.render.TextureManager;
@@ -284,7 +287,6 @@ public class GLCraft extends Screen{
 	
 	public static void main(String[] args) throws IOException, LWJGLException{
 		Thread.setDefaultUncaughtExceptionHandler(new CrashHandler());
-		
 		try{
 			Files.deleteIfExists(new File(System.getProperty("user.home")+"/GLCraft/GLCraft.log").toPath());
 		}catch(FileSystemException e){

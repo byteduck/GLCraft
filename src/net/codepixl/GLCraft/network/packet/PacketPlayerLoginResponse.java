@@ -1,12 +1,17 @@
 package net.codepixl.GLCraft.network.packet;
 
+import org.lwjgl.util.vector.Vector3f;
+
 public class PacketPlayerLoginResponse extends Packet{
 	
 	public int entityID;
+	public float x,y,z;
 	
-	public PacketPlayerLoginResponse(int id){
-		super((byte) 0x1);
+	public PacketPlayerLoginResponse(int id, Vector3f pos){
 		this.entityID = id;
+		this.x = pos.x;
+		this.y = pos.y;
+		this.z = pos.z;
 	}
 	
 }

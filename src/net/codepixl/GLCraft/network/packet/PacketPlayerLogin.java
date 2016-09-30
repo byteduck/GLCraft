@@ -6,7 +6,6 @@ public class PacketPlayerLogin extends Packet{
 	public String name;
 	
 	public PacketPlayerLogin(String name){
-		super((byte) 0x0);
 		this.name = name;
 	}
 	

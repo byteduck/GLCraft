@@ -12,22 +12,29 @@ import org.lwjgl.util.vector.Vector3f;
 
 import net.codepixl.GLCraft.GLCraft;
 import net.codepixl.GLCraft.network.packet.Packet;
+import net.codepixl.GLCraft.network.packet.PacketBlockChange;
 import net.codepixl.GLCraft.network.packet.PacketPlayerAdd;
 import net.codepixl.GLCraft.network.packet.PacketPlayerLogin;
 import net.codepixl.GLCraft.network.packet.PacketPlayerLoginResponse;
 import net.codepixl.GLCraft.network.packet.PacketUtil;
+import net.codepixl.GLCraft.world.WorldManager;
 import net.codepixl.GLCraft.world.entity.mob.EntityPlayer;
+import net.codepixl.GLCraft.world.entity.mob.EntityPlayerMP;
 
 public class Server{
+	
+	public static int SERVER_PORT = 54567;
 	
 	public DatagramSocket server;
 	public HashMap<InetAddress, ServerClient> clients;
 	public ConnectionRunnable connectionRunnable;
 	public Thread connectionThread;
+	public WorldManager worldManager;
 	
-	public Server() throws IOException{
+	public Server(WorldManager w) throws IOException{
 		clients = new HashMap<InetAddress, ServerClient>();
-		server = new DatagramSocket(4445);
+		server = new DatagramSocket(54567);
+		this.worldManager = w;
 		connectionRunnable = new ConnectionRunnable(this);
 		connectionThread = new Thread(connectionRunnable);
 		connectionThread.start();
@@ -48,15 +55,21 @@ public class Server{
 		}
 	}
 
-	public void handlePacket(DatagramPacket dgp, Packet p){
+	public void handlePacket(DatagramPacket dgp, Packet op){
 		try{
-			if(p instanceof PacketPlayerLogin){ //Player login
-				PacketPlayerLogin p2 = (PacketPlayerLogin)p;
+			if(op instanceof PacketPlayerLogin){
+				PacketPlayerLogin p = (PacketPlayerLogin)op;
 				ServerClient c = new ServerClient(dgp.getAddress(), dgp.getPort(), this.server);
 				clients.put(c.addr, c);
-				c.writePacket(new PacketPlayerLoginResponse(10));
-				sendToAllClients(new PacketPlayerAdd(10, p2.name));
-				System.out.println("[SERVER] New player logged in: "+p2.name);
+				EntityPlayerMP mp = new EntityPlayerMP(0,100f,0, worldManager);
+				this.worldManager.entityManager.add(mp);
+				c.writePacket(new PacketPlayerLoginResponse(mp.getID(),mp.getPos()));
+				sendToAllClients(new PacketPlayerAdd(mp.getID(), p.name, mp.getPos()));
+				System.out.println("[SERVER] New player logged in: "+p.name);
+			}else if(op instanceof PacketBlockChange){
+				PacketBlockChange p = (PacketBlockChange)op;
+				sendToAllClients(p);
+				worldManager.setTileAtPos(p.x, p.y, p.z, p.id, p.source, true, p.meta);
 			}
 		}catch(IOException e){
 			e.printStackTrace();
