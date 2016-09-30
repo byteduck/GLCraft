@@ -13,6 +13,7 @@ import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map.Entry;
 
 import javax.swing.JOptionPane;
 
@@ -29,7 +30,6 @@ import net.codepixl.GLCraft.util.MathUtils;
 import net.codepixl.GLCraft.util.Vector3i;
 import net.codepixl.GLCraft.world.WorldManager;
 import net.codepixl.GLCraft.world.entity.mob.EntityPlayer;
-import net.codepixl.GLCraft.world.entity.mob.PlayerMP;
 import net.codepixl.GLCraft.world.entity.mob.animal.EntityTestAnimal;
 import net.codepixl.GLCraft.world.entity.mob.hostile.EntityTestHostile;
 import net.codepixl.GLCraft.world.entity.particle.Particle;
@@ -40,13 +40,11 @@ import net.codepixl.GLCraft.world.entity.tileentity.TileEntityFurnace;
 public class EntityManager implements GameObj{
 	
 	private static HashMap<String, Class> registeredEntities = new HashMap<String, Class>();
-	private ArrayList<Entity> entities;
+	private HashMap<Integer, Entity> entities;
 	private ArrayList<Entity> toAdd;
 	private ArrayList<Entity> toRemove;
-	private ArrayList<TileEntity> tileEntities;
 	boolean shouldRemoveAll = false;
 	private EntityPlayer player;
-	private PlayerMP otherPlayer;
 	private WorldManager w;
 	public boolean iterating = false;
 	
@@ -60,10 +58,9 @@ public class EntityManager implements GameObj{
 	
 	public void init(){
 		currentId = 0;
-		entities = new ArrayList<Entity>();
+		entities = new HashMap<Integer,Entity>();
 		toAdd = new ArrayList<Entity>();
 		toRemove = new ArrayList<Entity>();
-		tileEntities = new ArrayList<TileEntity>();
 		registerEntities();
 		initGL();
 	}
@@ -92,11 +89,6 @@ public class EntityManager implements GameObj{
 		add(player);
 	}
 	
-	public void initPlayerMP(){
-		otherPlayer = new PlayerMP(new Vector3f(0,0,0),w);
-		add(otherPlayer);
-	}
-	
 	private void initGL(){
 		mobRenderID = glGenLists(1);
 	}
@@ -109,9 +101,9 @@ public class EntityManager implements GameObj{
 		NbtOutputStream nbtOutputStream = new NbtOutputStream(outputStream);
 		TagCompound root = new TagCompound("");
 		TagList list = new TagList("Entities");
-		Iterator<Entity> i = this.entities.iterator();
+		Iterator<Entry<Integer,Entity>> i = this.entities.entrySet().iterator();
 		while(i.hasNext()){
-			final Entity e = i.next();
+			final Entity e = i.next().getValue();
 			if(!(e instanceof EntityPlayer)){
 				try{
 					TagCompound t = e.mainWriteToNBT();
@@ -148,10 +140,10 @@ public class EntityManager implements GameObj{
 			itt.remove();
 		}
 		if(shouldRemoveAll){
-			Iterator<Entity> it = entities.iterator();
+			Iterator<Entry<Integer,Entity>> it = this.entities.entrySet().iterator();
 			iterating = true;
 		    while (it.hasNext()) {
-		        Entity e = it.next();
+		        Entity e = it.next().getValue();
 		        if(e instanceof EntityPlayer){}else{it.remove();}
 		    }
 		    iterating = false;
@@ -160,16 +152,13 @@ public class EntityManager implements GameObj{
 		Iterator<Entity> i = toAdd.iterator();
 		while(i.hasNext()){
 			Entity e = i.next();
-			entities.add(e);
-			if(e instanceof TileEntity){
-				tileEntities.add((TileEntity) e);
-			}
+			entities.put(e.getID(),e);
 			i.remove();
 		}
-	    Iterator<Entity> it = entities.iterator();
+		Iterator<Entry<Integer,Entity>> it = this.entities.entrySet().iterator();
 	    iterating = true;
 	    while (it.hasNext()) {
-	        Entity e = it.next();
+	        Entity e = it.next().getValue();
 	        if(e.isDead() && !(e instanceof EntityPlayer)){
 	        	it.remove();
 	        }
@@ -178,14 +167,18 @@ public class EntityManager implements GameObj{
 	    iterating = false;
 	    DebugTimer.endTimer("ai_time");
 	}
+	
+	public Entity getEntity(int id){
+		return this.entities.get(id);
+	}
 
 	@Override
 	public void render() {
 		// TODO Auto-generated method stub
-		Iterator<Entity> it = entities.iterator();
+		Iterator<Entry<Integer,Entity>> it = this.entities.entrySet().iterator();
 		iterating = true;
 	    while (it.hasNext()) {
-	    	Entity e = it.next();
+	    	Entity e = it.next().getValue();
 	    	w.shader.use();
 	        e.render();
 	        w.shader.release();
@@ -199,10 +192,10 @@ public class EntityManager implements GameObj{
 	
 	public List<Entity> getEntitiesInRadiusOfEntity(Entity e, float rad){
 		ArrayList<Entity> list = new ArrayList<Entity>();
-		Iterator<Entity> it = entities.iterator();
+		Iterator<Entry<Integer,Entity>> it = this.entities.entrySet().iterator();
 		iterating = true;
 	    while (it.hasNext()) {
-	    	Entity ent = it.next();
+	    	Entity ent = it.next().getValue();
 	        if(MathUtils.distance(ent.getPos(), e.getPos()) < rad && ent != e && !ent.isDead() && !e.isDead()){
 	        	list.add(ent);
 	        }
@@ -219,10 +212,10 @@ public class EntityManager implements GameObj{
 	
 	public List<Entity> getEntitiesInRadiusOfEntityOfType(Entity e, Class type, float rad){
 		ArrayList<Entity> list = new ArrayList<Entity>();
-		Iterator<Entity> it = entities.iterator();
+		Iterator<Entry<Integer,Entity>> it = this.entities.entrySet().iterator();
 		iterating = true;
 	    while (it.hasNext()) {
-	    	Entity ent = it.next();
+	    	Entity ent = it.next().getValue();
 	        if(type.isInstance(ent) && MathUtils.distance(ent.getPos(), e.getPos()) < rad && ent != e && !ent.isDead() && !e.isDead()){
 	        	list.add(ent);
 	        }
@@ -247,16 +240,13 @@ public class EntityManager implements GameObj{
 		return player;
 	}
 
-	public PlayerMP getPlayerMP() {
-		// TODO Auto-generated method stub
-		return this.otherPlayer;
-	}
-
 	public void add(Entity e) {
 		if(registeredEntities.containsValue(e.getClass()))
 			this.toAdd.add(e);
-		else
+		else{
 			System.err.println("Tried to add unregistered entity "+e.getClass().getName());
+			new Throwable().printStackTrace();
+		}
 	}
 	
 	public void remove(Entity e){
@@ -273,12 +263,12 @@ public class EntityManager implements GameObj{
 	}
 	
 	public TileEntity getTileEntityForPos(int x, int y, int z){
-		Iterator<TileEntity> i = tileEntities.iterator();
+		Iterator<Entry<Integer,Entity>> it = this.entities.entrySet().iterator();
 		TileEntity ret = null;
-		while(i.hasNext()){
-			TileEntity e = i.next();
-			if(e.getBlockpos().equals(new Vector3i(x,y,z))){
-				ret = e;
+		while(it.hasNext()){
+			Entity e = it.next().getValue();
+			if( e instanceof TileEntity && ((TileEntity)e).getBlockpos().equals(new Vector3i(x,y,z))){
+				ret = (TileEntity)e;
 			}
 		}
 		return ret;

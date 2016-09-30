@@ -77,8 +77,10 @@ import org.newdawn.slick.opengl.TextureImpl;
 import com.nishu.utils.Screen;
 import com.nishu.utils.Time;
 import com.nishu.utils.Window;
+import com.sun.org.apache.xerces.internal.util.SynchronizedSymbolTable;
 
 import net.codepixl.GLCraft.GUI.GUIManager;
+import net.codepixl.GLCraft.network.Compressor;
 import net.codepixl.GLCraft.network.packet.PacketPlayerLoginResponse;
 import net.codepixl.GLCraft.network.packet.PacketPlayerPos;
 import net.codepixl.GLCraft.plugin.Plugin;

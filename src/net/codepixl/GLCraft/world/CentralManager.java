@@ -48,6 +48,7 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.io.PipedInputStream;
+import java.net.InetAddress;
 import java.nio.ByteBuffer;
 import java.nio.FloatBuffer;
 import java.text.SimpleDateFormat;
@@ -79,6 +80,10 @@ import net.codepixl.GLCraft.GUI.GUIServer;
 import net.codepixl.GLCraft.GUI.GUISinglePlayer;
 import net.codepixl.GLCraft.GUI.GUIStartScreen;
 import net.codepixl.GLCraft.GUI.Inventory.Elements.GUISlot;
+import net.codepixl.GLCraft.network.Client;
+import net.codepixl.GLCraft.network.Compressor;
+import net.codepixl.GLCraft.network.Server;
+import net.codepixl.GLCraft.network.packet.PacketSendChunk;
 import net.codepixl.GLCraft.render.Shape;
 import net.codepixl.GLCraft.render.TextureManager;
 import net.codepixl.GLCraft.sound.SoundManager;
@@ -91,6 +96,7 @@ import net.codepixl.GLCraft.world.crafting.CraftingManager;
 import net.codepixl.GLCraft.world.crafting.Recipe.InvalidRecipeException;
 import net.codepixl.GLCraft.world.entity.EntityManager;
 import net.codepixl.GLCraft.world.entity.mob.EntityPlayer;
+import net.codepixl.GLCraft.world.entity.mob.EntityPlayerMP;
 import net.codepixl.GLCraft.world.entity.mob.AI.pathfinding.Pathfinder;
 import net.codepixl.GLCraft.world.entity.mob.animal.EntityTestAnimal;
 import net.codepixl.GLCraft.world.entity.mob.hostile.EntityTestHostile;
@@ -228,6 +234,18 @@ public class CentralManager extends Screen{
 					Chunk c = worldManager.getChunk(pos);
 					System.out.println(worldManager.getLight((int)pos.x, (int)pos.y, (int)pos.z));
 				}
+				/*if(Keyboard.isKeyDown(Keyboard.KEY_G)){
+					try {
+						Server s = new Server(worldManager, Server.DEFAULT_SERVER_PORT);
+						worldManager.isServer = false;
+						Client c = new Client(worldManager, Client.DEFAULT_CLIENT_PORT);
+						Client.ServerConnectionState cs = c.connectToServer(InetAddress.getLocalHost(), s.getPort());
+						System.out.println("Connection was a success: "+cs.success);
+					} catch (IOException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+				}*/
 				/*Vector3f pos = worldManager.entityManager.getPlayer().getPos();
 				if(Keyboard.isKeyDown(Keyboard.KEY_F)){
 					worldManager.setTileAtPos(pos, Tile.Furnace.getId(), true);

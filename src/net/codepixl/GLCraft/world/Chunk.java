@@ -781,5 +781,13 @@ public class Chunk {
 	public boolean isVisible(){
 		return visible;
 	}
+
+	public byte[][][] getTiles(){
+		return tiles;
+	}
+	
+	public byte[][][] getMeta(){
+		return meta;
+	}
 	
 }

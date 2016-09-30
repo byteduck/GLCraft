@@ -55,6 +55,7 @@ public class EntityPlayer extends Mob {
 	private Tile tileToPlace;
 	private byte metaToPlace;
 	public GUISlot hoverSlot;
+	private String name;
 	
 	public EntityPlayer(Vector3f pos, WorldManager w) {
 		super(pos, w);
@@ -70,6 +71,11 @@ public class EntityPlayer extends Mob {
 		qPressed = false;
 		prevSelect = new Vector3f(-1, -1, -1);
 		eyeLevel = 1.6f;
+		this.name = "Player"+Constants.randInt(0, 10000);
+	}
+	
+	public void setName(String name){
+		this.name = name;
 	}
 	
 	@Override
@@ -556,6 +562,10 @@ public class EntityPlayer extends Mob {
 			return TextureManager.texture("gui.bubble");
 		}
 		return TextureManager.texture("misc.nothing");
+	}
+
+	public String getName() {
+		return this.name;
 	}
 	
 }
