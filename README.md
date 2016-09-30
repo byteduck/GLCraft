@@ -22,7 +22,7 @@ Italic means half completed.
 * ~~Better GUI System~~
  * ~~A GUI manager to make showing and hiding GUIs easier~~
  * ~~A GUIScreen class to make building guis easier~~
-  * *Subclasses like ~~GUIButton~~, GUITextField, GUIImage, etc*
+  * *Subclasses like ~~GUIButton~~, ~~GUITextField~~, ~~GUIImage~~, etc*
 * ~~Lighting~~
  * ~~Day and night cycle~~
 * Infinite world

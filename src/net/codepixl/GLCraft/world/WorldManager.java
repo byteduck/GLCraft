@@ -304,7 +304,7 @@ public class WorldManager {
 				i.next().render(true);
 			}
 			DebugTimer.endTimer("chunk_render");
-			float intensity = (getSkyLightIntensity()-0.05f)/0.9f;
+			float intensity = (getSkyLightIntensity()-0.1f)/0.85f;
 			glClearColor(0.0f,0.749019608f*intensity,1.0f*intensity,0.0f);
 		}
 	}
@@ -317,11 +317,11 @@ public class WorldManager {
 		float ret;
 		int mins = this.gameTime.getHours()*60+this.gameTime.getMinutes();
 		if(this.gameTime.getHours() >= 4 && this.gameTime.getHours() <= 9)
-			ret = ((mins-240)/360f)*0.9f+0.1f;
+			ret = ((mins-240)/360f)*0.85f+0.15f;
 		else if(this.gameTime.getHours() >= 14 && this.gameTime.getHours() <= 19)
-			ret = ((-(mins-840)+360)/360f)*0.9f+0.1f;
+			ret = ((-(mins-840)+360)/360f)*0.85f+0.15f;
 		else if(this.gameTime.getHours() < 4 || this.gameTime.getHours() > 19)
-			ret = 0.1f;
+			ret = 0.15f;
 		else
 			ret = 1;
 		return ret;
