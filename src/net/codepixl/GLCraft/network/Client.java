@@ -6,6 +6,7 @@ import java.net.DatagramSocket;
 import java.net.InetAddress;
 import java.net.SocketException;
 
+import net.codepixl.GLCraft.GLCraft;
 import net.codepixl.GLCraft.network.packet.Packet;
 import net.codepixl.GLCraft.network.packet.PacketPlayerLogin;
 import net.codepixl.GLCraft.network.packet.PacketPlayerLoginResponse;
@@ -27,6 +28,7 @@ public class Client{
 	public Client(WorldManager w, int port) throws IOException{
 		socket = new DatagramSocket(port);
 		this.worldManager = w;
+		GLCraft.getGLCraft().setClient(this);
 		this.connectionState = new ServerConnectionState();
 		connectionRunnable = new ConnectionRunnable(this);
 		connectionThread = new Thread(connectionRunnable);

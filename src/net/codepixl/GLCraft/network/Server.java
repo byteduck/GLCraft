@@ -10,6 +10,7 @@ import java.util.Map.Entry;
 
 import org.lwjgl.util.vector.Vector3f;
 
+import net.codepixl.GLCraft.GLCraft;
 import net.codepixl.GLCraft.network.packet.Packet;
 import net.codepixl.GLCraft.network.packet.PacketBlockChange;
 import net.codepixl.GLCraft.network.packet.PacketPlayerAdd;
@@ -34,7 +35,7 @@ public class Server{
 		clients = new HashMap<InetAddress, ServerClient>();
 		socket = new DatagramSocket(port);
 		this.worldManager = w;
-		w.isServer = true;
+		GLCraft.getGLCraft().setServer(this);
 		connectionRunnable = new ConnectionRunnable(this);
 		connectionThread = new Thread(connectionRunnable);
 		connectionThread.start();

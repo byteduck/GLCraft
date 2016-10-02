@@ -63,26 +63,21 @@ import java.nio.ByteBuffer;
 import java.nio.file.FileSystemException;
 import java.nio.file.Files;
 
-import javax.swing.JOptionPane;
-
 import org.lwjgl.LWJGLException;
 import org.lwjgl.opengl.Display;
 import org.lwjgl.opengl.DisplayMode;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.PixelFormat;
-import org.lwjgl.util.vector.Vector3f;
 import org.newdawn.slick.opengl.PNGDecoder;
 import org.newdawn.slick.opengl.TextureImpl;
 
 import com.nishu.utils.Screen;
 import com.nishu.utils.Time;
 import com.nishu.utils.Window;
-import com.sun.org.apache.xerces.internal.util.SynchronizedSymbolTable;
 
 import net.codepixl.GLCraft.GUI.GUIManager;
-import net.codepixl.GLCraft.network.Compressor;
-import net.codepixl.GLCraft.network.packet.PacketPlayerLoginResponse;
-import net.codepixl.GLCraft.network.packet.PacketPlayerPos;
+import net.codepixl.GLCraft.network.Client;
+import net.codepixl.GLCraft.network.Server;
 import net.codepixl.GLCraft.plugin.Plugin;
 import net.codepixl.GLCraft.plugin.PluginManager;
 import net.codepixl.GLCraft.render.TextureManager;
@@ -98,16 +93,18 @@ import net.codepixl.GLCraft.world.item.Item;
 import net.codepixl.GLCraft.world.tile.Tile;
 
 public class GLCraft extends Screen{
-	private CentralManager centralManager;
-	private WorldManager worldManager;
+	private CentralManager clientCentralManager, serverCentralManager;
+	private WorldManager clientWorldManager, serverWorldManager;
 	private PluginManager pluginManager;
-	private EntityManager entityManager;
 	private static GLCraft glcraft;
 	public static boolean isDevEnvironment = false;
 	public static boolean loadExtPlugins = true;
 	public static String version = "0.1 Pre-release 1";
 	private Plugin devPlugin;
 	public boolean spendRemainingTime = true;
+	private Server server;
+	private Client client;
+	private boolean isServer = false;
 	
 	public static GLCraft getGLCraft(){
 		return glcraft;
@@ -169,7 +166,7 @@ public class GLCraft extends Screen{
 	private void doRemainingTime(long targTime) {
 	    //worldManager.rebuildNextChunk();
 		while(System.nanoTime() < targTime){
-		    worldManager.rebuildNextChunk();
+		    clientWorldManager.rebuildNextChunk();
 		}
 	}
 
@@ -185,9 +182,8 @@ public class GLCraft extends Screen{
 		Item.itemMap.toString();
 		
 		initCamera();
-		centralManager = new CentralManager();
-		worldManager = centralManager.getWorldManager();
-		entityManager = worldManager.getEntityManager();
+		clientCentralManager = new CentralManager();
+		clientWorldManager = clientCentralManager.getWorldManager();
 		String pluginsFolder = Constants.GLCRAFTDIR+"/plugins";
 		new File(pluginsFolder).mkdirs();
 		pluginManager = new PluginManager(pluginsFolder);
@@ -265,7 +261,7 @@ public class GLCraft extends Screen{
 	@Override
 	public void update() {
 		DebugTimer.startTimer("loop_time");
-		centralManager.update();
+		clientCentralManager.update();
 		pluginManager.update();
 		// TODO Auto-generated method stub
 	}
@@ -277,14 +273,14 @@ public class GLCraft extends Screen{
 			Constants.HEIGHT = Display.getHeight();
 		}
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-		centralManager.render();
+		clientCentralManager.render();
 		DebugTimer.endTimer("loop_time");
 	}
 
 	@Override
 	public void dispose() {
 		// TODO Auto-generated method stub
-		centralManager.dispose();
+		clientCentralManager.dispose();
 	}
 	
 	public static void main(String[] args) throws IOException, LWJGLException{
@@ -292,8 +288,8 @@ public class GLCraft extends Screen{
 		try{
 			Files.deleteIfExists(new File(System.getProperty("user.home")+"/GLCraft/GLCraft.log").toPath());
 		}catch(FileSystemException e){
-			JOptionPane.showMessageDialog(null, "You can only run one GLCraft instance at a time.", "GLCraft", JOptionPane.ERROR_MESSAGE);
-			System.exit(0);
+			//JOptionPane.showMessageDialog(null, "You can only run one GLCraft instance at a time.", "GLCraft", JOptionPane.ERROR_MESSAGE);
+			//System.exit(0);
 		}
 		Files.createDirectories(new File(System.getProperty("user.home")+"/GLCraft").toPath());
 		FileOutputStream lfos = new FileOutputStream(System.getProperty("user.home")+"/GLCraft/GLCraft.log");
@@ -330,16 +326,49 @@ public class GLCraft extends Screen{
         }
     }
 
-	public WorldManager getWorldManager() {
-		return worldManager;
+	public WorldManager getWorldManager(boolean server) {
+		if(server)
+			return serverWorldManager;
+		else
+			return clientWorldManager;
 	}
 
-	public EntityManager getEntityManager() {
-		return entityManager;
+	public EntityManager getEntityManager(boolean server) {
+		if(server)
+			return serverWorldManager.getEntityManager();
+		else
+			return clientWorldManager.getEntityManager();
 	}
 	
-	public CentralManager getCentralManager(){
-		return this.centralManager;
+	public CentralManager getCentralManager(boolean server){
+		if(server)
+			return serverCentralManager;
+		else
+			return clientCentralManager;
+	}
+	
+	public Server getServer(){
+		return this.server;
+	}
+	
+	public Client getClient(){
+		return this.client;
+	}
+
+	public boolean isServer() {
+		return isServer;
+	}
+	
+	public void setIsServer(boolean serv){
+		this.isServer = serv;
+	}
+
+	public void setServer(Server server){
+		this.server = server;
+	}
+	
+	public void setClient(Client client){
+		this.client = client;
 	}
 
 }

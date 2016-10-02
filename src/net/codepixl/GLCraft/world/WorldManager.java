@@ -77,7 +77,7 @@ public class WorldManager {
 	public ArrayList<Chunk> lightRebuildQueue = new ArrayList<Chunk>();
 	public Queue<LightRemoval> sunlightRemovalQueue = new LinkedList<LightRemoval>();
 	private int currentRebuild = 0;
-	public boolean isServer = false;
+	public boolean isServer;
 	
 	public WorldManager(CentralManager w){
 		this.centralManager = w;
@@ -273,7 +273,7 @@ public class WorldManager {
 	ArrayList<Chunk> toRender = new ArrayList<Chunk>();
 	
 	public void render(){
-		if(doneGenerating && !this.isServer){
+		if(doneGenerating && !GLCraft.getGLCraft().isServer()){
 			toRender.clear();
 			DebugTimer.startTimer("chunk_render");
 			Spritesheet.atlas.bind();
@@ -849,7 +849,7 @@ public class WorldManager {
 		}
 		public Light(Vector3i pos) {
 			this.pos = pos;
-			this.chunk = GLCraft.getGLCraft().getWorldManager().getChunk(pos);
+			this.chunk = GLCraft.getGLCraft().getWorldManager(false).getChunk(pos);
 		}
 	}
 

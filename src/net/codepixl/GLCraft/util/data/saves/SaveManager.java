@@ -213,9 +213,9 @@ public class SaveManager {
 	private static boolean upgradeWorld(Save s) throws IOException {
 		while(!s.format.equals(currentFormat)){
 			if(s.format.equals(formatV1)){
-				GLCraft.getGLCraft().getCentralManager().initSplashText();
+				GLCraft.getGLCraft().getCentralManager(false).initSplashText();
 				for(int chunk = 0; chunk < 1000; chunk++){
-					GLCraft.getGLCraft().getCentralManager().renderSplashText("Upgrading world...", "V1 to V2", (int) (((float)chunk/1000f)*100));
+					GLCraft.getGLCraft().getCentralManager(false).renderSplashText("Upgrading world...", "V1 to V2", (int) (((float)chunk/1000f)*100));
 					FileInputStream inputStream = new FileInputStream(new File(s.getFolder(),"chunks/chunk"+chunk+".nbt"));
 					NbtInputStream nbtInputStream = new NbtInputStream(inputStream);
 					TagCompound tag = (TagCompound) nbtInputStream.readTag();
@@ -238,10 +238,10 @@ public class SaveManager {
 				}
 				s.format = formatV2;
 			}else if(s.format.equals(formatV2)){
-				GLCraft.getGLCraft().getCentralManager().initSplashText();
+				GLCraft.getGLCraft().getCentralManager(false).initSplashText();
 				HashMap<Vector2i, TagCompound> regions = new HashMap<Vector2i, TagCompound>();
 				for(int chunk = 0; chunk < 1000; chunk++){
-					GLCraft.getGLCraft().getCentralManager().renderSplashText("Upgrading world...", "V2 to V3 (reading chunks)", (int) (((float)chunk/1000f)*100));
+					GLCraft.getGLCraft().getCentralManager(false).renderSplashText("Upgrading world...", "V2 to V3 (reading chunks)", (int) (((float)chunk/1000f)*100));
 					FileInputStream inputStream = new FileInputStream(new File(s.getFolder(),"chunks/chunk"+chunk+".nbt"));
 					NbtInputStream nbtInputStream = new NbtInputStream(inputStream);
 					TagCompound tag = (TagCompound) nbtInputStream.readTag();
@@ -260,7 +260,7 @@ public class SaveManager {
 				Iterator<Entry<Vector2i, TagCompound>> i = regions.entrySet().iterator();
 				new File(s.getFolder(),"region/").mkdirs();
 				while(i.hasNext()){
-					GLCraft.getGLCraft().getCentralManager().renderSplashText("Upgrading world...", "V2 to V3 (saving regions)");
+					GLCraft.getGLCraft().getCentralManager(false).renderSplashText("Upgrading world...", "V2 to V3 (saving regions)");
 					Entry<Vector2i, TagCompound> next = i.next();
 					NbtOutputStream out = new NbtOutputStream(new FileOutputStream(new File(s.getFolder(),"region/r"+next.getKey().toString().replace("[","").replace("]","").replace(',', '.')+".nbt")));
 					out.write(next.getValue());

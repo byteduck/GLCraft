@@ -94,6 +94,6 @@ public class GUIPauseMenu extends GUIScreen{
 	
 	@Override
 	public void update(){
-		this.savingIcon.visible = GLCraft.getGLCraft().getWorldManager().isSaving();
+		this.savingIcon.visible = GLCraft.getGLCraft().getWorldManager(false).isSaving();
 	}
 }

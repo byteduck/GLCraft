@@ -41,7 +41,7 @@ public class GUIInventoryScreen extends GUIScreen{
 	@Override
 	public void onClose(){
 		super.onClose();
-		EntityPlayer p = GLCraft.getGLCraft().getEntityManager().getPlayer();
+		EntityPlayer p = GLCraft.getGLCraft().getEntityManager(false).getPlayer();
 		if(!p.mouseItem.isNull()){
 			p.dropItem(p.mouseItem);
 		}
