@@ -4,12 +4,14 @@ import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
-import java.net.SocketException;
 
 import net.codepixl.GLCraft.GLCraft;
 import net.codepixl.GLCraft.network.packet.Packet;
 import net.codepixl.GLCraft.network.packet.PacketPlayerLogin;
 import net.codepixl.GLCraft.network.packet.PacketPlayerLoginResponse;
+import net.codepixl.GLCraft.network.packet.PacketRespawn;
+import net.codepixl.GLCraft.network.packet.PacketSendChunk;
+import net.codepixl.GLCraft.network.packet.PacketSetBufferSize;
 import net.codepixl.GLCraft.network.packet.PacketUtil;
 import net.codepixl.GLCraft.world.WorldManager;
 
@@ -44,7 +46,25 @@ public class Client{
 				}else{
 					this.connectionState = new ServerConnectionState(p.message);
 				}
+			}else if(op instanceof PacketSendChunk){
+				PacketSendChunk p = (PacketSendChunk)op;
+				if(!p.failed){
+					if(p.type == PacketSendChunk.TYPE_CHUNK){
+						worldManager.updateChunk(p, true);
+					}else{
+						worldManager.doneGenerating = false;
+						worldManager.chunksLeftToDownload = p.numChunks;
+					}
+				}
+			}else if(op instanceof PacketSetBufferSize){
+				PacketSetBufferSize p = (PacketSetBufferSize)op;
+				if(p.bufferSize <= 1000000){ //Make sure the size is <= 1M (to prevent attacks)
+					this.socket.setReceiveBufferSize(p.bufferSize);
+				}
+			}else if(op instanceof PacketRespawn){
+				this.worldManager.getEntityManager().getPlayer().respawn();
 			}else{
+				System.err.println("[CLIENT] Received unhandled packet: "+op.getClass());
 				//throw new IOException("Invalid Packet "+op.getClass());
 			}
 		}catch(Exception e){
@@ -61,6 +81,7 @@ public class Client{
 		socket.send(dgp);
 		
 		while(!connectionState.connected);
+		this.connectedServer = new ClientServer(this, addr, port);
 		
 		return connectionState;
 	}
@@ -87,7 +108,6 @@ public class Client{
 					Packet p = PacketUtil.getPacket(rec.getData());
 					client.handlePacket(rec, p);
 				} catch (IOException e) {
-					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
 			}

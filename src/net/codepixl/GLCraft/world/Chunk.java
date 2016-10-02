@@ -12,6 +12,7 @@ import static org.lwjgl.opengl.GL11.glNewList;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -26,6 +27,7 @@ import com.evilco.mc.nbt.tag.TagFloat;
 import com.nishu.utils.Color4f;
 import com.nishu.utils.ShaderProgram;
 
+import net.codepixl.GLCraft.network.packet.PacketSendChunk;
 import net.codepixl.GLCraft.render.RenderType;
 import net.codepixl.GLCraft.render.Shape;
 import net.codepixl.GLCraft.util.BreakSource;
@@ -68,18 +70,7 @@ public class Chunk {
 		this.type = type;
 		this.worldManager = w;
 		initGL(fromBuf, false);
-		init();
-	}
-	
-	//new blank chunk
-	public Chunk(ShaderProgram shader, float x, float y, float z, WorldManager w){
-		this.pos = new Vector3f(x,y,z);
-		this.shader = shader;
-		this.type = type;
-		this.worldManager = w;
-		this.type = CentralManager.MIXEDCHUNK;
-		initGL(false, true);
-		init();
+		init(false, false);
 	}
 	
 	public Chunk(ShaderProgram shader, int type, float x, float y, float z,WorldManager w){
@@ -88,7 +79,7 @@ public class Chunk {
 		this.type = type;
 		this.worldManager = w;
 		initGL(false, false);
-		init();
+		init(false, false);
 	}
 	
 	public Chunk(ShaderProgram shader, int type, Vector3f pos, WorldManager w){
@@ -97,7 +88,16 @@ public class Chunk {
 		this.shader = shader;
 		this.type = type;
 		initGL(false, false);
-		init();
+		init(false, false);
+	}
+	
+	public Chunk(ShaderProgram shader, Vector3f pos, WorldManager w){
+		this.worldManager = w;
+		this.pos = pos;
+		this.shader = shader;
+		this.type = CentralManager.MIXEDCHUNK;
+		initGL(false, true);
+		init(false, true);
 	}
 	
 	private void createChunk(){
@@ -313,12 +313,21 @@ public class Chunk {
 	}
 	
 	public void initGL(boolean bufChunk, boolean blank){
+		if(!this.worldManager.isServer){
+			int tmp = glGenLists(1);
+			vcID = tmp*2;
+			transvcID = vcID+1;
+		}
+	}
+
+	private void createBufChunk() {
+		
+	}
+
+	public void init(boolean bufChunk, boolean blank){
 		sizeX = Constants.CHUNKSIZE;
 		sizeY = Constants.CHUNKSIZE;
 		sizeZ = Constants.CHUNKSIZE;
-		int tmp = glGenLists(1);
-		vcID = tmp*2;
-		transvcID = vcID+1;
 		tiles = new byte[sizeX][sizeY][sizeZ];
 		light = new byte[sizeX][sizeY][sizeZ];
 		meta = new byte[sizeX][sizeY][sizeZ];
@@ -327,14 +336,6 @@ public class Chunk {
 		}else if(!blank && bufChunk){
 			createBufChunk();
 		}
-	}
-
-	private void createBufChunk() {
-		
-	}
-
-	public void init(){
-		
 	}
 	
 	public void render(boolean translucent){
@@ -435,6 +436,7 @@ public class Chunk {
 	
 	protected void rebuildBase(boolean translucent){
 		if(type != CentralManager.AIRCHUNK){
+							
 			if(translucent)
 				glNewList(transvcID, GL_COMPILE);
 			else{
@@ -788,6 +790,20 @@ public class Chunk {
 	
 	public byte[][][] getMeta(){
 		return meta;
+	}
+
+	public void updateTiles(PacketSendChunk c) {
+		this.tiles = Arrays.copyOf(c.tiles, c.tiles.length);
+		this.meta = Arrays.copyOf(c.meta, c.meta.length);
+		for(int x = 0; x < c.light.length; x++)
+			for(int y = 0; y < c.light[0].length; y++)
+				for(int z = 0; z < c.light[0][0].length; z++)
+					this.light[x][y][z] = c.light[x][y][z];
+		this.rebuild();
+	}
+
+	public byte[][][] getLight() {
+		return light;
 	}
 	
 }

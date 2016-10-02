@@ -1,8 +1,10 @@
 package net.codepixl.GLCraft.util;
 
+import java.io.Serializable;
+
 import org.lwjgl.util.vector.Vector3f;
 
-public class Vector3i {
+public class Vector3i implements Serializable{
 	public int x,y,z;
 	public Vector3i(int x, int y, int z){
 		this.x = x;

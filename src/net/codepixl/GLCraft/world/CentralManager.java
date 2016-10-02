@@ -49,6 +49,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.PipedInputStream;
 import java.net.InetAddress;
+import java.net.UnknownHostException;
 import java.nio.ByteBuffer;
 import java.nio.FloatBuffer;
 import java.text.SimpleDateFormat;
@@ -83,6 +84,7 @@ import net.codepixl.GLCraft.GUI.Inventory.Elements.GUISlot;
 import net.codepixl.GLCraft.network.Client;
 import net.codepixl.GLCraft.network.Compressor;
 import net.codepixl.GLCraft.network.Server;
+import net.codepixl.GLCraft.network.packet.Packet;
 import net.codepixl.GLCraft.network.packet.PacketSendChunk;
 import net.codepixl.GLCraft.render.Shape;
 import net.codepixl.GLCraft.render.TextureManager;
@@ -117,11 +119,16 @@ public class CentralManager extends Screen{
 	private SoundManager soundManager;
 	private double messageTime = 0;
 	private String message = "";
+	public boolean isServer;
+	private Server server;
+	private Client client;
 	
 	public static final int AIRCHUNK = 0, MIXEDCHUNK = 1;
 
-	public CentralManager(){
-		initGL();
+	public CentralManager(boolean server){
+		isServer = server;
+		if(!server)
+			initGL();
 		init();
 	}
 	
@@ -133,21 +140,33 @@ public class CentralManager extends Screen{
 
 	@Override
 	public void init() {
-		initGUIManager();
+		if(!isServer){
+			initGUIManager();
+			Constants.generateStars();
+			TextureManager.initTextures();
+		}
 		
-		Constants.generateStars();
-		
-		TextureManager.initTextures();
 		try {
 			CraftingManager.initRecipes();
 		} catch (InvalidRecipeException e) {
 			e.printStackTrace();
 		}
-		worldManager = new WorldManager(this);
-		guiManager.setGameGUI(new GUIGame(worldManager));
-		GLCraft.renderSplashText("Starting Central Manager...", "Starting Sound System");
-		soundManager = new SoundManager();
-		SoundManager.setMainManager(soundManager);
+		worldManager = new WorldManager(this, isServer);
+		if(!isServer){
+			guiManager.setGameGUI(new GUIGame(worldManager));
+			GLCraft.renderSplashText("Starting Central Manager...", "Starting Sound System");
+			soundManager = new SoundManager();
+			SoundManager.setMainManager(soundManager);
+		}
+		
+		try{
+			if(isServer)
+				server = new Server(worldManager, Server.DEFAULT_SERVER_PORT);
+			else
+				client = new Client(worldManager, Client.DEFAULT_CLIENT_PORT);
+		}catch(IOException e){
+			e.printStackTrace();
+		}
 		
 		//INIT DEBUGS
 		DebugTimer.addTimer("total_render");
@@ -182,99 +201,101 @@ public class CentralManager extends Screen{
 	private Vector3i pathfindPos = new Vector3i(0,0,0);
 
 	private void input(){
-		guiManager.input();
-		if(Mouse.isButtonDown(0) && guiManager.mouseShouldBeGrabbed()){
-			Mouse.setGrabbed(true);
-		}else if(!guiManager.mouseShouldBeGrabbed()){
-			Mouse.setGrabbed(false);
-		}
-		if(Keyboard.isKeyDown(Keyboard.KEY_LMENU) && Keyboard.isKeyDown(Keyboard.KEY_C)){
-			CrashHandler.invokeCrash();
-		}
-		while(Keyboard.next()){
-			if(Keyboard.getEventKeyState()){
-				if(Keyboard.isKeyDown(Keyboard.KEY_F3)){
-					renderDebug = !renderDebug;
-				}
-				if(Keyboard.isKeyDown(Keyboard.KEY_ESCAPE)){
-					GUIScreen g = guiManager.getCurrentGUI();
-					if(guiManager.isGUIOpen() && g.canBeExited()){
-						guiManager.closeGUI(true);
-						Mouse.setGrabbed(true);
-					}else if(guiManager.getCurrentGUIName().equals("nogui")){
-						guiManager.showGUI("pauseMenu");
+		if(!isServer){
+			guiManager.input();
+			if(Mouse.isButtonDown(0) && guiManager.mouseShouldBeGrabbed()){
+				Mouse.setGrabbed(true);
+			}else if(!guiManager.mouseShouldBeGrabbed()){
+				Mouse.setGrabbed(false);
+			}
+			if(Keyboard.isKeyDown(Keyboard.KEY_LMENU) && Keyboard.isKeyDown(Keyboard.KEY_C)){
+				CrashHandler.invokeCrash();
+			}
+			while(Keyboard.next()){
+				if(Keyboard.getEventKeyState()){
+					if(Keyboard.isKeyDown(Keyboard.KEY_F3)){
+						renderDebug = !renderDebug;
 					}
-				}
-				if(Keyboard.isKeyDown(Keyboard.KEY_E)){
-					if(guiManager.getCurrentGUIName() == "crafting" || guiManager.getCurrentGUIName() == "adv_crafting"){
-						guiManager.closeGUI(true);
-						Mouse.setGrabbed(true);
-					}else{
-						guiManager.showGUI("crafting");
+					if(Keyboard.isKeyDown(Keyboard.KEY_ESCAPE)){
+						GUIScreen g = guiManager.getCurrentGUI();
+						if(guiManager.isGUIOpen() && g.canBeExited()){
+							guiManager.closeGUI(true);
+							Mouse.setGrabbed(true);
+						}else if(guiManager.getCurrentGUIName().equals("nogui")){
+							guiManager.showGUI("pauseMenu");
+						}
 					}
-				}
-				if(Keyboard.isKeyDown(Keyboard.KEY_F2)){
-					takeScreenshot();
-				}
-				Vector3f pos = worldManager.entityManager.getPlayer().getPos();
-				if(Keyboard.isKeyDown(Keyboard.KEY_O)){
-					pathfindPos = new Vector3i(pos);
-				}
-				if(Keyboard.isKeyDown(Keyboard.KEY_P)){
-					pathfinder = new Pathfinder(new Vector3i(pos), pathfindPos, worldManager);
-					pathfinder.pathfind(1000);
-				}
-				if(Keyboard.isKeyDown(Keyboard.KEY_SEMICOLON)){
-					worldManager.entityManager.add(new EntityTestAnimal(pos, worldManager));
-				}
-				if(Keyboard.isKeyDown(Keyboard.KEY_APOSTROPHE)){
-					worldManager.entityManager.add(new EntityTestHostile(pos, worldManager));
-				}
-				if(Keyboard.isKeyDown(Keyboard.KEY_L)){
-					Chunk c = worldManager.getChunk(pos);
-					System.out.println(worldManager.getLight((int)pos.x, (int)pos.y, (int)pos.z));
-				}
-				/*if(Keyboard.isKeyDown(Keyboard.KEY_G)){
-					try {
-						Server s = new Server(worldManager, Server.DEFAULT_SERVER_PORT);
-						worldManager.isServer = false;
-						Client c = new Client(worldManager, Client.DEFAULT_CLIENT_PORT);
-						Client.ServerConnectionState cs = c.connectToServer(InetAddress.getLocalHost(), s.getPort());
-						System.out.println("Connection was a success: "+cs.success);
-					} catch (IOException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
+					if(Keyboard.isKeyDown(Keyboard.KEY_E)){
+						if(guiManager.getCurrentGUIName() == "crafting" || guiManager.getCurrentGUIName() == "adv_crafting"){
+							guiManager.closeGUI(true);
+							Mouse.setGrabbed(true);
+						}else{
+							guiManager.showGUI("crafting");
+						}
 					}
-				}*/
-				/*Vector3f pos = worldManager.entityManager.getPlayer().getPos();
-				if(Keyboard.isKeyDown(Keyboard.KEY_F)){
-					worldManager.setTileAtPos(pos, Tile.Furnace.getId(), true);
+					if(Keyboard.isKeyDown(Keyboard.KEY_F2)){
+						takeScreenshot();
+					}
+					Vector3f pos = worldManager.entityManager.getPlayer().getPos();
+					if(Keyboard.isKeyDown(Keyboard.KEY_O)){
+						pathfindPos = new Vector3i(pos);
+					}
+					if(Keyboard.isKeyDown(Keyboard.KEY_P)){
+						pathfinder = new Pathfinder(new Vector3i(pos), pathfindPos, worldManager);
+						pathfinder.pathfind(1000);
+					}
+					if(Keyboard.isKeyDown(Keyboard.KEY_SEMICOLON)){
+						worldManager.entityManager.add(new EntityTestAnimal(pos, worldManager));
+					}
+					if(Keyboard.isKeyDown(Keyboard.KEY_APOSTROPHE)){
+						worldManager.entityManager.add(new EntityTestHostile(pos, worldManager));
+					}
+					if(Keyboard.isKeyDown(Keyboard.KEY_L)){
+						Chunk c = worldManager.getChunk(pos);
+						System.out.println(worldManager.getLight((int)pos.x, (int)pos.y, (int)pos.z));
+					}
+					/*if(Keyboard.isKeyDown(Keyboard.KEY_G)){
+						try {
+							Server s = new Server(worldManager, Server.DEFAULT_SERVER_PORT);
+							worldManager.isServer = false;
+							Client c = new Client(worldManager, Client.DEFAULT_CLIENT_PORT);
+							Client.ServerConnectionState cs = c.connectToServer(InetAddress.getLocalHost(), s.getPort());
+							System.out.println("Connection was a success: "+cs.success);
+						} catch (IOException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
+					}*/
+					/*Vector3f pos = worldManager.entityManager.getPlayer().getPos();
+					if(Keyboard.isKeyDown(Keyboard.KEY_F)){
+						worldManager.setTileAtPos(pos, Tile.Furnace.getId(), true);
+					}
+					if(Keyboard.isKeyDown(Keyboard.KEY_P)){
+						pathfinder = new Pathfinder(new Vector3i(pos), pathfindPos, worldManager);
+						pathfinder.pathfind(1000);
+					}
+					if(Keyboard.isKeyDown(Keyboard.KEY_O)){
+						pathfindPos = new Vector3i(pos);
+					}
+					if(Keyboard.isKeyDown(Keyboard.KEY_B)){
+						worldManager.setTileAtPos(pos, Tile.BluestoneOre.getId(), true);
+					}
+					if(Keyboard.isKeyDown(Keyboard.KEY_M)){
+						System.out.println(worldManager.getMetaAtPos((int)pos.x, (int)pos.y, (int)pos.z));
+					}
+					if(Keyboard.isKeyDown(Keyboard.KEY_T)){
+						worldManager.setTileAtPos(pos, Tile.Tnt.getId(), true);
+					}
+					if(Keyboard.isKeyDown(Keyboard.KEY_SEMICOLON)){
+						worldManager.entityManager.add(new EntityTestAnimal(pos, worldManager));
+					}
+					if(Keyboard.isKeyDown(Keyboard.KEY_APOSTROPHE)){
+						worldManager.entityManager.add(new EntityTestHostile(pos, worldManager));
+					}
+					if(Keyboard.isKeyDown(Keyboard.KEY_G)){
+						worldManager.entityManager.getPlayer().addToInventory(new ItemStack(Tile.Grass, 64));
+					}*/
 				}
-				if(Keyboard.isKeyDown(Keyboard.KEY_P)){
-					pathfinder = new Pathfinder(new Vector3i(pos), pathfindPos, worldManager);
-					pathfinder.pathfind(1000);
-				}
-				if(Keyboard.isKeyDown(Keyboard.KEY_O)){
-					pathfindPos = new Vector3i(pos);
-				}
-				if(Keyboard.isKeyDown(Keyboard.KEY_B)){
-					worldManager.setTileAtPos(pos, Tile.BluestoneOre.getId(), true);
-				}
-				if(Keyboard.isKeyDown(Keyboard.KEY_M)){
-					System.out.println(worldManager.getMetaAtPos((int)pos.x, (int)pos.y, (int)pos.z));
-				}
-				if(Keyboard.isKeyDown(Keyboard.KEY_T)){
-					worldManager.setTileAtPos(pos, Tile.Tnt.getId(), true);
-				}
-				if(Keyboard.isKeyDown(Keyboard.KEY_SEMICOLON)){
-					worldManager.entityManager.add(new EntityTestAnimal(pos, worldManager));
-				}
-				if(Keyboard.isKeyDown(Keyboard.KEY_APOSTROPHE)){
-					worldManager.entityManager.add(new EntityTestHostile(pos, worldManager));
-				}
-				if(Keyboard.isKeyDown(Keyboard.KEY_G)){
-					worldManager.entityManager.getPlayer().addToInventory(new ItemStack(Tile.Grass, 64));
-				}*/
 			}
 		}
 	}
@@ -286,24 +307,26 @@ public class CentralManager extends Screen{
 	
 	@Override
 	public void render() {
-		DebugTimer.getTimer("total_render").start();
-		if(Constants.GAME_STATE == Constants.GAME){
-			glLoadIdentity();
-			render3D();
-			worldManager.render();
-			renderSky();
-			if(this.renderDebug && this.pathfinder != null && this.pathfinder.path.size() > 0)
-				this.pathfinder.renderPath();
-			currentBlock = raycast();
-			renderEtc();
-			//renderInventory();
+		if(!isServer){
+			DebugTimer.getTimer("total_render").start();
+			if(Constants.GAME_STATE == Constants.GAME){
+				glLoadIdentity();
+				render3D();
+				worldManager.render();
+				renderSky();
+				if(this.renderDebug && this.pathfinder != null && this.pathfinder.path.size() > 0)
+					this.pathfinder.renderPath();
+				currentBlock = raycast();
+				renderEtc();
+				//renderInventory();
+			}
+			render2D();
+			guiManager.render();
+			if(Constants.GAME_STATE == Constants.GAME)
+				renderText();
+			glDisable(GL_TEXTURE_2D);
+			DebugTimer.getTimer("total_render").end();
 		}
-		render2D();
-		guiManager.render();
-		if(Constants.GAME_STATE == Constants.GAME)
-			renderText();
-		glDisable(GL_TEXTURE_2D);
-		DebugTimer.getTimer("total_render").end();
 	}
 
 	private void renderEtc() {
@@ -571,14 +594,16 @@ public class CentralManager extends Screen{
 	@Override
 	public void update(){
 		DebugTimer.getTimer("total_update").start();
-		guiManager.update();
-		guiManager.setShowGame(Constants.GAME_STATE == Constants.GAME);
+		if(!isServer){
+			guiManager.update();
+			guiManager.setShowGame(Constants.GAME_STATE == Constants.GAME);
+			input();
+			cloudMove+=Time.getDelta()*2;
+			cloudMove = cloudMove % 2000f;
+		}
 		if(Constants.GAME_STATE == Constants.GAME){
 			worldManager.update();
 		}
-		input();
-		cloudMove+=Time.getDelta()*2;
-		cloudMove = cloudMove % 2000f;
 		DebugTimer.getTimer("total_update").end();
 	}
 	
@@ -602,46 +627,73 @@ public class CentralManager extends Screen{
 	}
 	
 	public void renderSplashText(String line1, String line2){
-		int CENTER = Constants.WIDTH/2;
-		int HCENTER = Constants.HEIGHT/2;
-		glClearColor(0,0,0,1);
-		GL11.glClear(GL11.GL_COLOR_BUFFER_BIT);
-		String ltext = "GLCraft is generating the world...";
-		Constants.FONT.drawString(CENTER-Constants.FONT.getWidth(ltext)/2,30, ltext);
-		Constants.FONT.drawString(CENTER-Constants.FONT.getWidth(line1)/2,HCENTER-Constants.FONT.getHeight(line1), line1);
-		Constants.FONT.drawString(CENTER-Constants.FONT.getWidth(line2)/2,HCENTER+Constants.FONT.getHeight(line2), line2);
-		TextureImpl.unbind();
-		Display.update();
+		if(!isServer){
+			int CENTER = Constants.WIDTH/2;
+			int HCENTER = Constants.HEIGHT/2;
+			glClearColor(0,0,0,1);
+			GL11.glClear(GL11.GL_COLOR_BUFFER_BIT);
+			String ltext = "GLCraft is generating the world...";
+			Constants.FONT.drawString(CENTER-Constants.FONT.getWidth(ltext)/2,30, ltext);
+			Constants.FONT.drawString(CENTER-Constants.FONT.getWidth(line1)/2,HCENTER-Constants.FONT.getHeight(line1), line1);
+			Constants.FONT.drawString(CENTER-Constants.FONT.getWidth(line2)/2,HCENTER+Constants.FONT.getHeight(line2), line2);
+			TextureImpl.unbind();
+			Display.update();
+		}
 	}
 	
 	public void renderSplashText(String line1, String line2, int percent){
-		int CENTER = Constants.WIDTH/2;
-		int HCENTER = Constants.HEIGHT/2;
-		glClearColor(0,0,0,1);
-		GL11.glClear(GL11.GL_COLOR_BUFFER_BIT);
-		String ltext = "GLCraft is loading...";
-		Constants.FONT.drawString(CENTER-Constants.FONT.getWidth(ltext)/2,30, ltext);
-		Constants.FONT.drawString(CENTER-Constants.FONT.getWidth(line1)/2,HCENTER-Constants.FONT.getHeight(line1), line1);
-		Constants.FONT.drawString(CENTER-Constants.FONT.getWidth(line2)/2,HCENTER+Constants.FONT.getHeight(line2), line2);
-		TextureImpl.unbind();
-		glLoadIdentity();
-		render2D();
-		glDisable(GL_TEXTURE_2D);
-		glColor3f(0.1f,0.2f,0.1f);
-		glBegin(GL_QUADS);
-		glVertex2f(CENTER-100,HCENTER+100);
-		glVertex2f(CENTER-100,HCENTER+110);
-		glVertex2f(CENTER+100,HCENTER+110);
-		glVertex2f(CENTER+100,HCENTER+100);
-		glEnd();
-		glColor3f(0.3f,0.5f,0.3f);
-		glBegin(GL_QUADS);
-		glVertex2f(CENTER-100,HCENTER+100);
-		glVertex2f(CENTER-100,HCENTER+110);
-		glVertex2f(CENTER+(percent*2-100),HCENTER+110);
-		glVertex2f(CENTER+(percent*2-100),HCENTER+100);
-		glEnd();
-		glEnable(GL_TEXTURE_2D);
-		Display.update();
+		if(!isServer){
+			int CENTER = Constants.WIDTH/2;
+			int HCENTER = Constants.HEIGHT/2;
+			glClearColor(0,0,0,1);
+			GL11.glClear(GL11.GL_COLOR_BUFFER_BIT);
+			String ltext = "GLCraft is loading...";
+			Constants.FONT.drawString(CENTER-Constants.FONT.getWidth(ltext)/2,30, ltext);
+			Constants.FONT.drawString(CENTER-Constants.FONT.getWidth(line1)/2,HCENTER-Constants.FONT.getHeight(line1), line1);
+			Constants.FONT.drawString(CENTER-Constants.FONT.getWidth(line2)/2,HCENTER+Constants.FONT.getHeight(line2), line2);
+			TextureImpl.unbind();
+			glLoadIdentity();
+			render2D();
+			glDisable(GL_TEXTURE_2D);
+			glColor3f(0.1f,0.2f,0.1f);
+			glBegin(GL_QUADS);
+			glVertex2f(CENTER-100,HCENTER+100);
+			glVertex2f(CENTER-100,HCENTER+110);
+			glVertex2f(CENTER+100,HCENTER+110);
+			glVertex2f(CENTER+100,HCENTER+100);
+			glEnd();
+			glColor3f(0.3f,0.5f,0.3f);
+			glBegin(GL_QUADS);
+			glVertex2f(CENTER-100,HCENTER+100);
+			glVertex2f(CENTER-100,HCENTER+110);
+			glVertex2f(CENTER+(percent*2-100),HCENTER+110);
+			glVertex2f(CENTER+(percent*2-100),HCENTER+100);
+			glEnd();
+			glEnable(GL_TEXTURE_2D);
+			Display.update();
+		}
+	}
+
+	public Client.ServerConnectionState connectToLocalServer() throws UnknownHostException, IOException{
+		return this.client.connectToServer(InetAddress.getLocalHost(), Server.DEFAULT_SERVER_PORT);
+	}
+	
+	public Server getServer(){
+		return server;
+	}
+	
+	public Client getClient(){
+		return client;
+	}
+	
+	public void sendPacket(Packet p){
+		try {
+			if(isServer)
+				server.sendToAllClients(p);
+			else
+				client.sendToServer(p);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 }

@@ -46,7 +46,8 @@ public class GUISinglePlayer extends GUIScreen{
 				String name = textBox.getText();
 				if(name == null || name.trim().equals("")){}else{
 					Constants.setState(Constants.GAME);
-					GLCraft.getGLCraft().getWorldManager(false).createWorld(name);
+					GLCraft.getGLCraft().getWorldManager(false).createBlankWorld();
+					GLCraft.getGLCraft().getWorldManager(true).createWorld(name);
 					glDisable(GL_TEXTURE_2D);
 					GUIManager.getMainManager().closeGUI(false);
 				}
@@ -57,7 +58,8 @@ public class GUISinglePlayer extends GUIScreen{
 		loadWorld = new GUIButton("Load World", LOADWORLDX, LOADWORLDY, new Callable<Void>() {
 			@Override
 			public Void call() throws Exception {
-				if(!GLCraft.getGLCraft().getWorldManager(false).loadWorld(selectedSave.save)){
+				GLCraft.getGLCraft().getWorldManager(false).createBlankWorld();
+				if(!GLCraft.getGLCraft().getWorldManager(true).loadWorld(selectedSave.save)){
 					return null;
 				}
 				Constants.setState(Constants.GAME);

@@ -46,6 +46,8 @@ public class SaveManager {
 	public static String currentFormat = formatV3;
 	
 	public static boolean saveWorld(WorldManager tworldManager, Save tsave, boolean tquit){
+		if(!tworldManager.isServer) //Only servers should save worlds
+			return false;
     	System.out.println("Saving world "+tsave+"...");
     	
 		tsave.name = tsave.name.replaceAll("[^ a-zA-Z0-9.-]", "_");
@@ -61,7 +63,7 @@ public class SaveManager {
 			public void run() {
 				// TODO Auto-generated method stub
 				//PLAYER SAVING
-				EntityPlayer p = worldManager.getEntityManager().getPlayer();
+				/*EntityPlayer p = worldManager.getEntityManager().getPlayer();
 				TagCompound compound = new TagCompound("Player");
 				TagList posList = new TagList("Pos");
 				posList.addTag(new TagFloat("",p.getPos().x));
@@ -91,16 +93,16 @@ public class SaveManager {
 						inventory.addTag(slot);
 					}
 				}
-				compound.setTag (inventory);
+				compound.setTag (inventory);*/
 				
 				try{
-					File f = new File(Constants.GLCRAFTDIR+"saves/"+save.name+"/");
+					/*File f = new File(Constants.GLCRAFTDIR+"saves/"+save.name+"/");
 					f.mkdirs();
 					FileOutputStream outputStream;
 					outputStream = new FileOutputStream(new File(f,"player.nbt"));
 					NbtOutputStream nbtOutputStream = new NbtOutputStream(outputStream);
 					nbtOutputStream.write(compound);
-					nbtOutputStream.close();
+					nbtOutputStream.close();*/
 					
 					//WORLD SAVING
 					worldManager.saveChunks(save.name);
@@ -125,6 +127,8 @@ public class SaveManager {
 	}
 
 	public static boolean loadWorld(WorldManager worldManager, String name) {
+		if(!worldManager.isServer) //Only servers should load worlds
+			return false;
 		try {
 			FileInputStream inputStream;
 			NbtInputStream nbtInputStream;
@@ -144,14 +148,14 @@ public class SaveManager {
 				return false;
 			}
 			
-			EntityPlayer p = worldManager.getEntityManager().getPlayer();
+			//EntityPlayer p = worldManager.getEntityManager().getPlayer();
 			
 			//WORLD LOADING
 			worldManager.loadChunks(s);
 			
 			//ENTITY & PLAYER LOADING
 			worldManager.entityManager.removeAll();
-			p.setInventory(new ItemStack[p.getInventorySize()]);
+			/*p.setInventory(new ItemStack[p.getInventorySize()]);
 			for(int i = 0; i < p.getInventorySize(); i++){
 				p.setInventory(i, new ItemStack());
 			}
@@ -175,7 +179,7 @@ public class SaveManager {
 				p.setRot(new Vector3f(rot.get(0).getValue(),rot.get(1).getValue(),rot.get(2).getValue()));
 				List<TagFloat> vel = tag.getList("Vel", TagFloat.class);
 				p.setVel(new Vector3f(vel.get(0).getValue(),vel.get(1).getValue(),vel.get(2).getValue()));
-			}
+			}*/
 			inputStream = new FileInputStream(Constants.GLCRAFTDIR+"saves/"+name+"/entities.nbt");
 			nbtInputStream = new NbtInputStream(inputStream);
 			tag = (TagCompound)nbtInputStream.readTag();

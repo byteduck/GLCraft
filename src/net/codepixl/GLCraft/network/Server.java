@@ -6,6 +6,7 @@ import java.net.DatagramSocket;
 import java.net.InetAddress;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map.Entry;
 
 import org.lwjgl.util.vector.Vector3f;
@@ -17,7 +18,11 @@ import net.codepixl.GLCraft.network.packet.PacketPlayerAdd;
 import net.codepixl.GLCraft.network.packet.PacketPlayerLogin;
 import net.codepixl.GLCraft.network.packet.PacketPlayerLoginResponse;
 import net.codepixl.GLCraft.network.packet.PacketPlayerPos;
+import net.codepixl.GLCraft.network.packet.PacketRespawn;
+import net.codepixl.GLCraft.network.packet.PacketSendChunk;
+import net.codepixl.GLCraft.network.packet.PacketSetBufferSize;
 import net.codepixl.GLCraft.network.packet.PacketUtil;
+import net.codepixl.GLCraft.util.Constants;
 import net.codepixl.GLCraft.world.WorldManager;
 import net.codepixl.GLCraft.world.entity.mob.EntityPlayerMP;
 
@@ -80,6 +85,11 @@ public class Server{
 				c.player.setPos(new Vector3f(p.pos[0],p.pos[1],p.pos[2]));
 				c.player.setRot(new Vector3f(p.rot[0],p.rot[1],p.rot[2]));
 				c.player.setVel(new Vector3f(p.vel[0],p.vel[1],p.vel[2]));
+			}else if(op instanceof PacketSetBufferSize){
+				PacketSetBufferSize p = (PacketSetBufferSize)op;
+				if(p.bufferSize <= 1000000){ //Make sure the size is <= 1M (to prevent attacks)
+					this.socket.setReceiveBufferSize(p.bufferSize);
+				}
 			}
 		}catch(IOException e){
 			e.printStackTrace();
@@ -137,5 +147,19 @@ public class Server{
 	
 	public int getPort(){
 		return socket.getLocalPort();
+	}
+
+	public void sendChunkPackets() throws IOException{
+		sendToAllClients(new PacketSetBufferSize(1000000));
+		sendToAllClients(new PacketSendChunk(Constants.worldLengthChunks*Constants.worldLengthChunks*Constants.worldLengthChunks));
+		for(Entry<InetAddress,ServerClient> e : clients.entrySet()){
+			ServerClient c = e.getValue();
+			List<PacketSendChunk> chunks = worldManager.getChunkPackets(c.player);
+			for(PacketSendChunk ch : chunks){
+				c.writePacket(ch);
+			}
+		}
+		sendToAllClients(new PacketRespawn());
+		sendToAllClients(new PacketSetBufferSize(10000));
 	}
 }

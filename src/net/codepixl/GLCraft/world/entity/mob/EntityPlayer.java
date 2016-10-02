@@ -23,6 +23,7 @@ import com.nishu.utils.Time;
 
 import net.codepixl.GLCraft.GUI.GUIManager;
 import net.codepixl.GLCraft.GUI.Inventory.Elements.GUISlot;
+import net.codepixl.GLCraft.network.packet.PacketPlayerPos;
 import net.codepixl.GLCraft.render.RenderType;
 import net.codepixl.GLCraft.render.Shape;
 import net.codepixl.GLCraft.render.TextureManager;
@@ -130,6 +131,8 @@ public class EntityPlayer extends Mob {
 			}
 			this.breakProgress += Time.getDelta() * multiplier;
 		}
+		
+		worldManager.sendPacket(new PacketPlayerPos(this));
 	}
 	
 	public void respawn(){

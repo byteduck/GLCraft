@@ -30,6 +30,7 @@ import net.codepixl.GLCraft.util.MathUtils;
 import net.codepixl.GLCraft.util.Vector3i;
 import net.codepixl.GLCraft.world.WorldManager;
 import net.codepixl.GLCraft.world.entity.mob.EntityPlayer;
+import net.codepixl.GLCraft.world.entity.mob.EntityPlayerMP;
 import net.codepixl.GLCraft.world.entity.mob.animal.EntityTestAnimal;
 import net.codepixl.GLCraft.world.entity.mob.hostile.EntityTestHostile;
 import net.codepixl.GLCraft.world.entity.particle.Particle;
@@ -47,12 +48,14 @@ public class EntityManager implements GameObj{
 	private EntityPlayer player;
 	private WorldManager w;
 	public boolean iterating = false;
+	public boolean isServer;
 	
 	private int mobRenderID;
 	private int currentId;
 	
-	public EntityManager(WorldManager w){
+	public EntityManager(WorldManager w, boolean isServer){
 		this.w = w;
+		this.isServer = isServer;
 		init();
 	}
 	
@@ -62,7 +65,8 @@ public class EntityManager implements GameObj{
 		toAdd = new ArrayList<Entity>();
 		toRemove = new ArrayList<Entity>();
 		registerEntities();
-		initGL();
+		if(!isServer)
+			initGL();
 	}
 	
 	private static void registerEntities(){
@@ -74,6 +78,7 @@ public class EntityManager implements GameObj{
 		registerEntity("TileEntityChest", TileEntityChest.class);
 		registerEntity("EntityFallingBlock", EntityFallingBlock.class);
 		registerEntity("TileEntityFurnace", TileEntityFurnace.class);
+		registerEntity("EntityPlayerMP", EntityPlayerMP.class);
 	}
 	
 	public static void registerEntity(String name, Class entity){
@@ -244,6 +249,16 @@ public class EntityManager implements GameObj{
 		if(registeredEntities.containsValue(e.getClass()))
 			this.toAdd.add(e);
 		else{
+			System.err.println("Tried to add unregistered entity "+e.getClass().getName());
+			new Throwable().printStackTrace();
+		}
+	}
+	
+	public void add(Entity e, int id) {
+		if(registeredEntities.containsValue(e.getClass())){
+			e.setId(id);
+			this.toAdd.add(e);
+		}else{
 			System.err.println("Tried to add unregistered entity "+e.getClass().getName());
 			new Throwable().printStackTrace();
 		}

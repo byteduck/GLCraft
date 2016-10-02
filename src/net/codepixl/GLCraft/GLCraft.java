@@ -182,8 +182,18 @@ public class GLCraft extends Screen{
 		Item.itemMap.toString();
 		
 		initCamera();
-		clientCentralManager = new CentralManager();
+		clientCentralManager = new CentralManager(false);
+		serverCentralManager = new CentralManager(true);
 		clientWorldManager = clientCentralManager.getWorldManager();
+		serverWorldManager = serverCentralManager.getWorldManager();
+		
+		try {
+			clientCentralManager.connectToLocalServer();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
 		String pluginsFolder = Constants.GLCRAFTDIR+"/plugins";
 		new File(pluginsFolder).mkdirs();
 		pluginManager = new PluginManager(pluginsFolder);
@@ -262,6 +272,7 @@ public class GLCraft extends Screen{
 	public void update() {
 		DebugTimer.startTimer("loop_time");
 		clientCentralManager.update();
+		serverCentralManager.update();
 		pluginManager.update();
 		// TODO Auto-generated method stub
 	}
@@ -355,6 +366,9 @@ public class GLCraft extends Screen{
 		return this.client;
 	}
 
+	/**
+	 * @return Returns if this GLCraft instance is a DEDICATED server.
+	 */
 	public boolean isServer() {
 		return isServer;
 	}
