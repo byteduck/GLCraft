@@ -351,7 +351,7 @@ public class Chunk {
 	}
 	
 	public void update(){
-		if(needsRebuild){
+		if(needsRebuild && !worldManager.isServer){
 			worldManager.relight();
 			rebuildBase(true);
 			rebuildBase(false);
@@ -435,7 +435,7 @@ public class Chunk {
 	}
 	
 	protected void rebuildBase(boolean translucent){
-		if(type != CentralManager.AIRCHUNK){
+		if(type != CentralManager.AIRCHUNK && !this.worldManager.isServer){
 							
 			if(translucent)
 				glNewList(transvcID, GL_COMPILE);
@@ -650,7 +650,8 @@ public class Chunk {
 			float ax = x+pos.x;
 			float ay = y+pos.y;
 			float az = z+pos.z;
-			Tile.getTile(tiles[x][y][z]).onBreak((int)ax, (int)ay, (int)az, false, source, worldManager);
+			if(this.worldManager.isServer)
+				Tile.getTile(tiles[x][y][z]).onBreak((int)ax, (int)ay, (int)az, source.type == BreakSource.Type.PLAYER, source, worldManager);
 			if(tickTiles.contains(new Vector3f(x,y,z)) || Tile.getTile(tile).needsConstantTick()){
 				queueTickTileUpdate(x,y,z);
 			}

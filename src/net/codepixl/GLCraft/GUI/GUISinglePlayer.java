@@ -47,7 +47,9 @@ public class GUISinglePlayer extends GUIScreen{
 				if(name == null || name.trim().equals("")){}else{
 					Constants.setState(Constants.GAME);
 					GLCraft.getGLCraft().getWorldManager(false).createBlankWorld();
+					GLCraft.getGLCraft().prepareLocalServer();
 					GLCraft.getGLCraft().getWorldManager(true).createWorld(name);
+					GLCraft.getGLCraft().connectLocalServer();
 					glDisable(GL_TEXTURE_2D);
 					GUIManager.getMainManager().closeGUI(false);
 				}
@@ -59,9 +61,11 @@ public class GUISinglePlayer extends GUIScreen{
 			@Override
 			public Void call() throws Exception {
 				GLCraft.getGLCraft().getWorldManager(false).createBlankWorld();
+				GLCraft.getGLCraft().prepareLocalServer();
 				if(!GLCraft.getGLCraft().getWorldManager(true).loadWorld(selectedSave.save)){
 					return null;
 				}
+				GLCraft.getGLCraft().connectLocalServer();
 				Constants.setState(Constants.GAME);
 				glDisable(GL_TEXTURE_2D);
 				GUIManager.getMainManager().closeGUI(false);

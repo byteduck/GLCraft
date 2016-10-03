@@ -477,7 +477,7 @@ public class EntityPlayer extends Mob {
 					if(Mouse.isButtonDown(0) && getBreakCooldown() == 0f && GUIManager.getMainManager().sendPlayerInput()) {
 						this.wasBreaking = true;
 						if(Tile.getTile((byte) worldManager.getTileAtPos((int) r.pos.x, (int) r.pos.y, (int) r.pos.z)).getHardness() <= this.breakProgress) {
-							Tile.getTile((byte) worldManager.getTileAtPos((int) r.pos.x, (int) r.pos.y, (int) r.pos.z)).onBreak((int) r.pos.x, (int) r.pos.y, (int) r.pos.z, true, new BreakSource(this), worldManager);
+							//Tile.getTile((byte) worldManager.getTileAtPos((int) r.pos.x, (int) r.pos.y, (int) r.pos.z)).onBreak((int) r.pos.x, (int) r.pos.y, (int) r.pos.z, true, new BreakSource(this), worldManager);
 							worldManager.setTileAtPos((int) r.pos.x, (int) r.pos.y, (int) r.pos.z, (byte) 0, new BreakSource(this), true);
 							setBreakCooldown(0.05f);
 							this.breakProgress = 0f;

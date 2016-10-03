@@ -5,15 +5,24 @@ import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
 
+import org.lwjgl.util.vector.Vector3f;
+
 import net.codepixl.GLCraft.GLCraft;
 import net.codepixl.GLCraft.network.packet.Packet;
+import net.codepixl.GLCraft.network.packet.PacketAddEntity;
+import net.codepixl.GLCraft.network.packet.PacketBlockChange;
+import net.codepixl.GLCraft.network.packet.PacketPlayerAdd;
 import net.codepixl.GLCraft.network.packet.PacketPlayerLogin;
 import net.codepixl.GLCraft.network.packet.PacketPlayerLoginResponse;
+import net.codepixl.GLCraft.network.packet.PacketPlayerPos;
 import net.codepixl.GLCraft.network.packet.PacketRespawn;
 import net.codepixl.GLCraft.network.packet.PacketSendChunk;
 import net.codepixl.GLCraft.network.packet.PacketSetBufferSize;
 import net.codepixl.GLCraft.network.packet.PacketUtil;
+import net.codepixl.GLCraft.network.packet.PacketWorldTime;
 import net.codepixl.GLCraft.world.WorldManager;
+import net.codepixl.GLCraft.world.entity.Entity;
+import net.codepixl.GLCraft.world.entity.mob.EntityPlayerMP;
 
 public class Client{
 	
@@ -43,6 +52,7 @@ public class Client{
 				PacketPlayerLoginResponse p = (PacketPlayerLoginResponse)op;
 				if(p.accept){
 					this.connectionState = new ServerConnectionState(p.entityID);
+					this.worldManager.getEntityManager().getPlayer().setId(p.entityID);
 				}else{
 					this.connectionState = new ServerConnectionState(p.message);
 				}
@@ -63,6 +73,25 @@ public class Client{
 				}
 			}else if(op instanceof PacketRespawn){
 				this.worldManager.getEntityManager().getPlayer().respawn();
+			}else if(op instanceof PacketWorldTime){
+				this.worldManager.setWorldTime(((PacketWorldTime)op).worldTime);
+			}else if(op instanceof PacketPlayerAdd){
+				PacketPlayerAdd p = ((PacketPlayerAdd) op);
+				if(p.entityID != this.worldManager.getEntityManager().getPlayer().getID())
+					this.worldManager.spawnEntity(new EntityPlayerMP(new Vector3f(p.x, p.y, p.z), this.worldManager));
+			}else if(op instanceof PacketPlayerPos){
+				PacketPlayerPos p = (PacketPlayerPos)op;
+				Entity e = this.worldManager.entityManager.getEntity(p.entityID);
+				e.setPos(p.pos[0], p.pos[1], p.pos[2]);
+				e.setRot(p.rot[0], p.rot[1], p.rot[2]);
+			}else if(op instanceof PacketBlockChange){
+				PacketBlockChange p = (PacketBlockChange) op;
+				this.worldManager.setTileAtPos(p.x, p.y, p.z, p.id, p.source, true);
+			}else if(op instanceof PacketAddEntity){
+				PacketAddEntity p = (PacketAddEntity) op;
+				Entity e = ((PacketAddEntity) op).getEntity(worldManager);
+				if(e != null)
+					worldManager.spawnEntity(e);
 			}else{
 				System.err.println("[CLIENT] Received unhandled packet: "+op.getClass());
 				//throw new IOException("Invalid Packet "+op.getClass());

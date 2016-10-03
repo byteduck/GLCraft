@@ -16,7 +16,6 @@ import net.codepixl.GLCraft.world.entity.tileentity.TileEntityChest;
 
 public class NBTUtil {
 	public static Entity readEntity(TagCompound t, WorldManager w) throws UnexpectedTagTypeException, TagNotFoundException, NoSuchMethodException, SecurityException, IllegalAccessException, IllegalArgumentException, InvocationTargetException{
-		
 		if(t.getString("type") != null){
 			Class c = w.getEntityManager().getRegisteredEntity(t.getString("type"));
 			Method m = c.getMethod("fromNBT", TagCompound.class, WorldManager.class);

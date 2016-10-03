@@ -248,4 +248,10 @@ public class Entity implements GameObj{
 	public void setId(int id) {
 		this.id = id;
 	}
+
+	public void setRot(float x, float y, float z) {
+		this.rot.x = x;
+		this.rot.y = y;
+		this.rot.z = z;
+	}
 }

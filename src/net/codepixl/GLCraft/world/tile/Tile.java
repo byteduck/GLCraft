@@ -126,7 +126,8 @@ public class Tile {
 		if(drop){
 			ItemStack is = getDrop(x, y, z, source, worldManager);
 			if(!is.isNull()){
-				worldManager.spawnEntity(new EntityItem(is,(float)x+0.5f,(float)y+0.5f,(float)z+0.5f,worldManager));
+				EntityItem e = new EntityItem(is,(float)x+0.5f,(float)y+0.5f,(float)z+0.5f,worldManager);
+				worldManager.spawnEntity(e);
 				for(int i=1; i<5; i++){
 					Particle particle = new Particle(new Vector3f(x+Constants.randFloat(0,1),y+Constants.randFloat(0,1),z+Constants.randFloat(0,1)), new Vector3f(Constants.randFloat(-0.1f, 0.1f),0,Constants.randFloat(-0.1f, 0.1f)), worldManager);
 					if(this.hasMetaTextures() == false){

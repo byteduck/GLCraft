@@ -23,6 +23,7 @@ import com.evilco.mc.nbt.stream.NbtOutputStream;
 import com.evilco.mc.nbt.tag.TagCompound;
 import com.evilco.mc.nbt.tag.TagList;
 
+import net.codepixl.GLCraft.network.packet.PacketAddEntity;
 import net.codepixl.GLCraft.util.Constants;
 import net.codepixl.GLCraft.util.DebugTimer;
 import net.codepixl.GLCraft.util.GameObj;
@@ -51,7 +52,6 @@ public class EntityManager implements GameObj{
 	public boolean isServer;
 	
 	private int mobRenderID;
-	private int currentId;
 	
 	public EntityManager(WorldManager w, boolean isServer){
 		this.w = w;
@@ -60,7 +60,6 @@ public class EntityManager implements GameObj{
 	}
 	
 	public void init(){
-		currentId = 0;
 		entities = new HashMap<Integer,Entity>();
 		toAdd = new ArrayList<Entity>();
 		toRemove = new ArrayList<Entity>();
@@ -91,7 +90,7 @@ public class EntityManager implements GameObj{
 	
 	public void initPlayer(){
 		player = new EntityPlayer(new Vector3f(16,200,16),w);
-		add(player);
+		toAdd.add(player);
 	}
 	
 	private void initGL(){
@@ -158,6 +157,8 @@ public class EntityManager implements GameObj{
 		while(i.hasNext()){
 			Entity e = i.next();
 			entities.put(e.getID(),e);
+			if(!(e instanceof EntityPlayer))
+				w.sendPacket(new PacketAddEntity(e));
 			i.remove();
 		}
 		Iterator<Entry<Integer,Entity>> it = this.entities.entrySet().iterator();
@@ -265,12 +266,15 @@ public class EntityManager implements GameObj{
 	}
 	
 	public void remove(Entity e){
-			this.toRemove.add(e);
+		this.toRemove.add(e);
 	}
 	
 	public int getNewId(){
-		currentId++;
-		return currentId;
+		int id = Constants.randInt(1, Integer.MAX_VALUE);
+		while(entities.containsKey(id)){
+			id = Constants.randInt(1, Integer.MAX_VALUE);
+		}
+		return id;
 	}
 
 	public int totalEntities() {

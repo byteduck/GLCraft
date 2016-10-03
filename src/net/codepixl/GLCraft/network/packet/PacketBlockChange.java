@@ -10,11 +10,12 @@ public class PacketBlockChange extends Packet{
 	public int x,y,z;
 	public byte id,meta;
 	
-	public PacketBlockChange(Vector3f pos, byte id, byte meta, BreakSource source) {
+	public PacketBlockChange(int x, int y, int z, byte id, byte meta, BreakSource source) {
 		this.source = source;
-		this.x = (int) pos.x;
-		this.y = (int) pos.y;
-		this.z = (int) pos.z;
+		this.source.sendPacket = false;
+		this.x = x;
+		this.y = y;
+		this.z = z;
 		this.meta = meta;
 		this.id = id;
 	}

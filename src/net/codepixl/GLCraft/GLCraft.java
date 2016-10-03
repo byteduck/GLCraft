@@ -58,6 +58,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.PrintStream;
+import java.net.InetAddress;
 import java.net.URL;
 import java.nio.ByteBuffer;
 import java.nio.file.FileSystemException;
@@ -183,16 +184,9 @@ public class GLCraft extends Screen{
 		
 		initCamera();
 		clientCentralManager = new CentralManager(false);
-		serverCentralManager = new CentralManager(true);
+		//serverCentralManager = new CentralManager(true);
 		clientWorldManager = clientCentralManager.getWorldManager();
-		serverWorldManager = serverCentralManager.getWorldManager();
-		
-		try {
-			clientCentralManager.connectToLocalServer();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		//serverWorldManager = serverCentralManager.getWorldManager();
 		
 		String pluginsFolder = Constants.GLCRAFTDIR+"/plugins";
 		new File(pluginsFolder).mkdirs();
@@ -272,7 +266,8 @@ public class GLCraft extends Screen{
 	public void update() {
 		DebugTimer.startTimer("loop_time");
 		clientCentralManager.update();
-		serverCentralManager.update();
+		if(serverCentralManager != null)
+			serverCentralManager.update();
 		pluginManager.update();
 		// TODO Auto-generated method stub
 	}
@@ -383,6 +378,19 @@ public class GLCraft extends Screen{
 	
 	public void setClient(Client client){
 		this.client = client;
+	}
+
+	public void prepareLocalServer() {
+		this.serverCentralManager = new CentralManager(true);
+		this.serverWorldManager = this.serverCentralManager.getWorldManager();
+	}
+	
+	public void connectLocalServer() {
+		try{
+			this.clientCentralManager.getClient().connectToServer(InetAddress.getLocalHost(), this.serverCentralManager.getServer().getPort());
+		}catch (IOException e){
+			e.printStackTrace();
+		}
 	}
 
 }

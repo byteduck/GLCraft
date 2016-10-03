@@ -13,6 +13,7 @@ public class BreakSource implements Serializable{
 	public int entityID;
 	public transient EntityPlayer player;
 	public transient Mob mob;
+	public boolean sendPacket = true;
 	
 	public BreakSource(EntityPlayer p){
 		this.type = Type.PLAYER;

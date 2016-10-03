@@ -33,6 +33,7 @@ import net.codepixl.GLCraft.GUI.GUIManager;
 import net.codepixl.GLCraft.GUI.Inventory.GUICrafting;
 import net.codepixl.GLCraft.GUI.Inventory.GUICraftingAdvanced;
 import net.codepixl.GLCraft.network.packet.Packet;
+import net.codepixl.GLCraft.network.packet.PacketBlockChange;
 import net.codepixl.GLCraft.network.packet.PacketSendChunk;
 import net.codepixl.GLCraft.util.AABB;
 import net.codepixl.GLCraft.util.BreakSource;
@@ -82,6 +83,7 @@ public class WorldManager {
 	ArrayList<Chunk> toRender = new ArrayList<Chunk>();
 	public int chunksLeftToDownload = 0;
 	private Queue<Callable<Void>> actionQueue = new LinkedList<Callable<Void>>();
+	public boolean sendBlockPackets = true;
 	
 	public WorldManager(CentralManager w, boolean isServer){
 		this.centralManager = w;
@@ -122,6 +124,7 @@ public class WorldManager {
 	}
 	
 	public void createWorld(String name){
+		this.sendBlockPackets = false;
 		System.out.println("Creating Chunks...");
 		elevationNoise = new OpenSimplexNoise(Constants.rand.nextLong());
 		roughnessNoise = new OpenSimplexNoise(Constants.rand.nextLong());
@@ -182,13 +185,7 @@ public class WorldManager {
 		}
 		this.worldTime = Constants.dayLengthMS/2;
 		this.gameTime = new GameTime(this.worldTime);
-		System.out.println("DEEDLE");
-		try {
-			this.centralManager.getServer().sendChunkPackets();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		this.sendBlockPackets = true;
 	}
 	
 	public void showMessage(double seconds, String message){
@@ -245,7 +242,7 @@ public class WorldManager {
 			DebugTimer.endTimer("chunk_tick");
 		}
 		
-		worldTime+=Time.getDelta()*10000;
+		worldTime+=Time.getDelta()*1000;
 		gameTime.updateTime(worldTime);
 		
 	}
@@ -502,6 +499,8 @@ public class WorldManager {
 		blockUpdate(x,y-1,z);
 		blockUpdate(x,y,z+1);
 		blockUpdate(x,y,z-1);
+		if(sendBlockPackets && source.sendPacket)
+			this.sendPacket(new PacketBlockChange(x,y,z,tile,meta,source));
 		return;
 	}
 	
@@ -594,6 +593,7 @@ public class WorldManager {
 	}
 
 	public boolean loadWorld(Save s) {
+		this.sendBlockPackets = false;
 		this.currentSave = s;
 		centralManager.initSplashText();
 		centralManager.renderSplashText("Loading World...", "Hold on...");
@@ -608,14 +608,9 @@ public class WorldManager {
 		this.worldTime = s.worldTime;
 		this.gameTime = new GameTime(s.worldTime);
 		boolean success = SaveManager.loadWorld(this, s.name);
+		this.sendBlockPackets = true;
 		if(success){
 			this.doneGenerating = true;
-			try {
-				this.centralManager.getServer().sendChunkPackets();
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
 			return true;
 		}else{
 			return false;
@@ -932,6 +927,10 @@ public class WorldManager {
 				});
 			}
 		}
+	}
+
+	public void setWorldTime(long worldTime) {
+		this.worldTime = worldTime;
 	}
 	
 }

@@ -22,6 +22,7 @@ import net.codepixl.GLCraft.network.packet.PacketRespawn;
 import net.codepixl.GLCraft.network.packet.PacketSendChunk;
 import net.codepixl.GLCraft.network.packet.PacketSetBufferSize;
 import net.codepixl.GLCraft.network.packet.PacketUtil;
+import net.codepixl.GLCraft.network.packet.PacketWorldTime;
 import net.codepixl.GLCraft.util.Constants;
 import net.codepixl.GLCraft.world.WorldManager;
 import net.codepixl.GLCraft.world.entity.mob.EntityPlayerMP;
@@ -68,12 +69,14 @@ public class Server{
 			ServerClient c = clients.get(dgp.getAddress());
 			if(op instanceof PacketPlayerLogin){
 				PacketPlayerLogin p = (PacketPlayerLogin)op;
-				EntityPlayerMP mp = new EntityPlayerMP(0,100f,0, worldManager);
+				EntityPlayerMP mp = new EntityPlayerMP(new Vector3f(), worldManager);
 				c = new ServerClient(dgp.getAddress(), dgp.getPort(), this.socket, mp);
 				clients.put(c.addr, c);
 				this.worldManager.entityManager.add(mp);
 				c.writePacket(new PacketPlayerLoginResponse(mp.getID(),mp.getPos()));
+				c.writePacket(new PacketWorldTime(worldManager.getWorldTime()));
 				sendToAllClients(new PacketPlayerAdd(mp.getID(), p.name, mp.getPos()));
+				this.sendChunkPackets();
 				System.out.println("[SERVER] New player logged in: "+p.name);
 			}else if(op instanceof PacketBlockChange){
 				PacketBlockChange p = (PacketBlockChange)op;
@@ -81,7 +84,7 @@ public class Server{
 				worldManager.setTileAtPos(p.x, p.y, p.z, p.id, p.source, true, p.meta);
 			}else if(op instanceof PacketPlayerPos){
 				PacketPlayerPos p = (PacketPlayerPos)op;
-				sendToAllClientsExcept(new PacketPlayerPos(p,c.player.getID()),c);
+				sendToAllClientsExcept(new PacketPlayerPos(p),c);
 				c.player.setPos(new Vector3f(p.pos[0],p.pos[1],p.pos[2]));
 				c.player.setRot(new Vector3f(p.rot[0],p.rot[1],p.rot[2]));
 				c.player.setVel(new Vector3f(p.vel[0],p.vel[1],p.vel[2]));
