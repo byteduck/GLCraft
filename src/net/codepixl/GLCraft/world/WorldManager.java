@@ -17,14 +17,12 @@ import java.util.Queue;
 import java.util.Timer;
 import java.util.TimerTask;
 
-import org.lwjgl.opengl.GL11;
 import org.lwjgl.util.vector.Vector3f;
 
 import com.evilco.mc.nbt.stream.NbtInputStream;
 import com.evilco.mc.nbt.stream.NbtOutputStream;
 import com.evilco.mc.nbt.tag.ITag;
 import com.evilco.mc.nbt.tag.TagCompound;
-import com.nishu.utils.Color4f;
 import com.nishu.utils.Shader;
 import com.nishu.utils.ShaderProgram;
 import com.nishu.utils.Time;
@@ -33,7 +31,8 @@ import net.codepixl.GLCraft.GLCraft;
 import net.codepixl.GLCraft.GUI.GUIManager;
 import net.codepixl.GLCraft.GUI.Inventory.GUICrafting;
 import net.codepixl.GLCraft.GUI.Inventory.GUICraftingAdvanced;
-import net.codepixl.GLCraft.render.Shape;
+import net.codepixl.GLCraft.network.packet.Packet;
+import net.codepixl.GLCraft.network.packet.PacketSendChunk;
 import net.codepixl.GLCraft.util.AABB;
 import net.codepixl.GLCraft.util.BreakSource;
 import net.codepixl.GLCraft.util.Constants;
@@ -51,6 +50,7 @@ import net.codepixl.GLCraft.world.entity.Entity;
 import net.codepixl.GLCraft.world.entity.EntityManager;
 import net.codepixl.GLCraft.world.entity.EntitySolid;
 import net.codepixl.GLCraft.world.entity.mob.EntityPlayer;
+import net.codepixl.GLCraft.world.entity.mob.EntityPlayerMP;
 import net.codepixl.GLCraft.world.entity.tileentity.TileEntity;
 import net.codepixl.GLCraft.world.tile.Tile;
 import net.codepixl.GLCraft.world.tile.tick.TickHelper;
@@ -78,10 +78,13 @@ public class WorldManager {
 	public Queue<LightRemoval> sunlightRemovalQueue = new LinkedList<LightRemoval>();
 	private int currentRebuild = 0;
 	public boolean isServer;
+	ArrayList<Chunk> toRender = new ArrayList<Chunk>();
+	public int chunksLeftToDownload = 0;
 	
-	public WorldManager(CentralManager w){
+	public WorldManager(CentralManager w, boolean isServer){
 		this.centralManager = w;
 		cw = this;
+		this.isServer = isServer;
 		initGL();
 		init();
 		scheduleSaving();
@@ -94,11 +97,26 @@ public class WorldManager {
 	}
 	
 	private void init(){
-		entityManager = new EntityManager(this);
-		entityManager.initPlayer();
+		entityManager = new EntityManager(this, isServer);
 		activeChunks = new HashMap<Vector3i,Chunk>();
-		GUIManager.getMainManager().addGUI(new GUICrafting(entityManager.getPlayer()), "crafting");
-		GUIManager.getMainManager().addGUI(new GUICraftingAdvanced(entityManager.getPlayer()), "adv_crafting");
+		if(!isServer){
+			entityManager.initPlayer();
+			GUIManager.getMainManager().addGUI(new GUICrafting(entityManager.getPlayer()), "crafting");
+			GUIManager.getMainManager().addGUI(new GUICraftingAdvanced(entityManager.getPlayer()), "adv_crafting");
+		}
+	}
+	
+	public void createBlankWorld(){
+		for(int x = 0; x < Constants.worldLengthChunks; x++){
+			for(int y = 0; y < Constants.worldLengthChunks; y++){
+				for(int z = 0; z < Constants.worldLengthChunks; z++){
+					Chunk c = new Chunk(shader, new Vector3f(x * Constants.CHUNKSIZE, y * Constants.CHUNKSIZE, z * Constants.CHUNKSIZE), this);
+					activeChunks.put(new Vector3i(c.getPos()), c);
+					//saveChunk(activeChunks.get(activeChunks.size() - 1));
+				}
+			}
+		}
+		this.doneGenerating = true;
 	}
 	
 	public void createWorld(String name){
@@ -152,7 +170,7 @@ public class WorldManager {
 		centralManager.renderSplashText("Hold on...", "Beaming you down");
 		reSunlight();
 		System.out.println("Done!");
-		entityManager.getPlayer().respawn();
+		if(!isServer) entityManager.getPlayer().respawn();
 		doneGenerating = true;
 		String saveName = name.replaceAll("[^ a-zA-Z0-9.-]", "_");
 		this.currentSave = new Save(saveName, name, GLCraft.version, SaveManager.currentFormat);
@@ -163,6 +181,13 @@ public class WorldManager {
 		}
 		this.worldTime = Constants.dayLengthMS/2;
 		this.gameTime = new GameTime(this.worldTime);
+		System.out.println("DEEDLE");
+		try {
+			this.centralManager.getServer().sendChunkPackets();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 	
 	public void showMessage(double seconds, String message){
@@ -212,7 +237,7 @@ public class WorldManager {
 			DebugTimer.endTimer("chunk_tick");
 		}
 		
-		worldTime+=Time.getDelta()*1000;
+		worldTime+=Time.getDelta()*10000;
 		gameTime.updateTime(worldTime);
 		
 	}
@@ -270,10 +295,8 @@ public class WorldManager {
 		entityManager.add(e);
 	}
 	
-	ArrayList<Chunk> toRender = new ArrayList<Chunk>();
-	
 	public void render(){
-		if(doneGenerating && !GLCraft.getGLCraft().isServer()){
+		if(doneGenerating && !this.isServer){
 			toRender.clear();
 			DebugTimer.startTimer("chunk_render");
 			Spritesheet.atlas.bind();
@@ -384,7 +407,7 @@ public class WorldManager {
 			
 	}
 	
-	private void reSunlight() {
+	public void reSunlight() {
 		for(int x = 0; x < Constants.worldLength; x++)
 			for(int z = 0; z < Constants.worldLength; z++){
 				sunlightQueue.add(new Light(new Vector3i(x,Constants.worldLength-1,z)));
@@ -571,7 +594,7 @@ public class WorldManager {
 		for(int x = 0; x < Constants.worldLengthChunks; x++){
 			for(int y = 0; y < Constants.worldLengthChunks; y++){
 				for(int z = 0; z < Constants.worldLengthChunks; z++){
-					Chunk c = new Chunk(shader, x * Constants.CHUNKSIZE, y * Constants.CHUNKSIZE, z * Constants.CHUNKSIZE, this);
+					Chunk c = new Chunk(shader, new Vector3f(x * Constants.CHUNKSIZE, y * Constants.CHUNKSIZE, z * Constants.CHUNKSIZE), this);
 					activeChunks.put(new Vector3i(c.getPos()), c);
 				}
 			}
@@ -581,6 +604,12 @@ public class WorldManager {
 		boolean success = SaveManager.loadWorld(this, s.name);
 		if(success){
 			this.doneGenerating = true;
+			try {
+				this.centralManager.getServer().sendChunkPackets();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 			return true;
 		}else{
 			return false;
@@ -628,6 +657,7 @@ public class WorldManager {
 			return c.getSunlight(x, y, z);
 		else
 			return 0;
+		
 	}
 
 	public void setSunlight(int x, int y, int z, int val, boolean relight) {
@@ -865,6 +895,30 @@ public class WorldManager {
 			c.rebuildBase(false);
 			currentRebuild++;
 			currentRebuild%=activeChunks.size();
+		}
+	}
+	
+	public void sendPacket(Packet p){
+		centralManager.sendPacket(p);
+	}
+
+	public List<PacketSendChunk> getChunkPackets(EntityPlayerMP player){
+		ArrayList<PacketSendChunk> send = new ArrayList<PacketSendChunk>();
+		for(Entry<Vector3i, Chunk> e : this.activeChunks.entrySet()){
+			Chunk c = e.getValue();
+			send.add(new PacketSendChunk(c, player));
+		}
+		return send;
+	}
+
+	public void updateChunk(PacketSendChunk p, boolean initial) {
+		getChunk(p.pos).updateTiles(p);
+		if(initial){
+			chunksLeftToDownload--;
+			if(chunksLeftToDownload <= 0){
+				this.doneGenerating = true;
+				this.reSunlight();
+			}
 		}
 	}
 	
