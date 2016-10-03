@@ -795,10 +795,6 @@ public class Chunk {
 	public void updateTiles(PacketSendChunk c) {
 		this.tiles = Arrays.copyOf(c.tiles, c.tiles.length);
 		this.meta = Arrays.copyOf(c.meta, c.meta.length);
-		for(int x = 0; x < c.light.length; x++)
-			for(int y = 0; y < c.light[0].length; y++)
-				for(int z = 0; z < c.light[0][0].length; z++)
-					this.light[x][y][z] = c.light[x][y][z];
 		this.rebuild();
 	}
 

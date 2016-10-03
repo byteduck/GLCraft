@@ -13,7 +13,6 @@ public class PacketSendChunk extends Packet{
 	
 	public byte[][][] tiles;
 	public byte[][][] meta;
-	public byte[][][] light;
 	public transient EntityPlayerMP sendTo;
 	public boolean failed = false;
 	public Vector3i pos;
@@ -23,7 +22,6 @@ public class PacketSendChunk extends Packet{
 	public PacketSendChunk(Chunk c, EntityPlayerMP sendTo){
 		this.tiles = c.getTiles();
 		this.meta = c.getMeta();
-		this.light = c.getLight();
 		this.sendTo = sendTo;
 		this.pos = new Vector3i(c.getPos());
 		this.type = TYPE_CHUNK;

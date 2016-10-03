@@ -16,6 +16,7 @@ import java.util.Map.Entry;
 import java.util.Queue;
 import java.util.Timer;
 import java.util.TimerTask;
+import java.util.concurrent.Callable;
 
 import org.lwjgl.util.vector.Vector3f;
 
@@ -80,6 +81,7 @@ public class WorldManager {
 	public boolean isServer;
 	ArrayList<Chunk> toRender = new ArrayList<Chunk>();
 	public int chunksLeftToDownload = 0;
+	private Queue<Callable<Void>> actionQueue = new LinkedList<Callable<Void>>();
 	
 	public WorldManager(CentralManager w, boolean isServer){
 		this.centralManager = w;
@@ -168,7 +170,6 @@ public class WorldManager {
 			c.rebuildTickTiles();
 		}
 		centralManager.renderSplashText("Hold on...", "Beaming you down");
-		reSunlight();
 		System.out.println("Done!");
 		if(!isServer) entityManager.getPlayer().respawn();
 		doneGenerating = true;
@@ -210,6 +211,13 @@ public class WorldManager {
 	}
 	
 	public void update(){
+		if(!actionQueue.isEmpty())
+			try {
+				actionQueue.poll().call();
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		
 		DebugTimer.startTimer("entity_update");
 		entityManager.update();
 		DebugTimer.endTimer("entity_update");
@@ -402,8 +410,6 @@ public class WorldManager {
 			c.rebuildBase(false);
 			c.rebuildTickTiles();
 		}
-		
-		reSunlight();
 			
 	}
 	
@@ -917,7 +923,13 @@ public class WorldManager {
 			chunksLeftToDownload--;
 			if(chunksLeftToDownload <= 0){
 				this.doneGenerating = true;
-				this.reSunlight();
+				this.actionQueue .add(new Callable<Void>(){
+					@Override
+					public Void call() throws Exception{
+						reSunlight();
+						return null;
+					}
+				});
 			}
 		}
 	}
