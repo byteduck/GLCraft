@@ -24,6 +24,7 @@ import com.evilco.mc.nbt.tag.TagCompound;
 import com.evilco.mc.nbt.tag.TagList;
 
 import net.codepixl.GLCraft.network.packet.PacketAddEntity;
+import net.codepixl.GLCraft.network.packet.PacketRemoveEntity;
 import net.codepixl.GLCraft.util.Constants;
 import net.codepixl.GLCraft.util.DebugTimer;
 import net.codepixl.GLCraft.util.GameObj;
@@ -140,8 +141,10 @@ public class EntityManager implements GameObj{
 		Iterator<Entity> itt = toRemove.iterator();
 		while(itt.hasNext()){
 			Entity e = itt.next();
-			entities.remove(e);
+			entities.remove(e.getID());
 			itt.remove();
+			if(isServer)
+				w.sendPacket(new PacketRemoveEntity(e.getID()));
 		}
 		if(shouldRemoveAll){
 			Iterator<Entry<Integer,Entity>> it = this.entities.entrySet().iterator();
@@ -157,7 +160,7 @@ public class EntityManager implements GameObj{
 		while(i.hasNext()){
 			Entity e = i.next();
 			entities.put(e.getID(),e);
-			if(!(e instanceof EntityPlayer))
+			if(!(e instanceof EntityPlayer) && isServer)
 				w.sendPacket(new PacketAddEntity(e));
 			i.remove();
 		}
@@ -166,6 +169,8 @@ public class EntityManager implements GameObj{
 	    while (it.hasNext()) {
 	        Entity e = it.next().getValue();
 	        if(e.isDead() && !(e instanceof EntityPlayer)){
+	        	if(isServer)
+					w.sendPacket(new PacketRemoveEntity(e.getID()));
 	        	it.remove();
 	        }
 	        e.update();
@@ -295,6 +300,18 @@ public class EntityManager implements GameObj{
 
 	public Class getRegisteredEntity(String name) {
 		return registeredEntities.get(name);
+	}
+
+	public void changeEntityID(int from, int to) {
+		Entity e = getEntity(from);
+		if(e != null){
+			entities.remove(from);
+			entities.put(to, e);
+		}
+	}
+
+	public boolean removeNow(int entityID) {
+		return this.entities.remove(entityID) != null;
 	}
 
 }

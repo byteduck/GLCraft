@@ -22,9 +22,9 @@ import net.codepixl.GLCraft.network.packet.PacketPlayerPos;
 import net.codepixl.GLCraft.network.packet.PacketRespawn;
 import net.codepixl.GLCraft.network.packet.PacketSendChunk;
 import net.codepixl.GLCraft.network.packet.PacketSetBufferSize;
+import net.codepixl.GLCraft.network.packet.PacketUpdateEntity;
 import net.codepixl.GLCraft.network.packet.PacketUtil;
 import net.codepixl.GLCraft.network.packet.PacketWorldTime;
-import net.codepixl.GLCraft.network.packet.PacketAddEntity;
 import net.codepixl.GLCraft.util.Constants;
 import net.codepixl.GLCraft.world.WorldManager;
 import net.codepixl.GLCraft.world.entity.mob.EntityPlayerMP;
@@ -102,6 +102,9 @@ public class Server{
 			}else if(op instanceof PacketOnPlace){
 				PacketOnPlace p = (PacketOnPlace)op;
 				Tile.getTile(p.tile).onPlace(p.x, p.y, p.z, p.meta, p.facing, worldManager);
+			}else if(op instanceof PacketUpdateEntity){
+			}else{
+				System.err.println("Unhandled Packet: "+op.getClass());
 			}
 		}catch(IOException e){
 			e.printStackTrace();

@@ -132,6 +132,17 @@ public class ItemStack{
 			this.isTile = false;
 		}
 	}
+	public ItemStack(Item i, int count, byte meta){
+		if(i != null){
+			this.count = count;
+			isTile = false;
+			item = i;
+			this.meta = meta;
+		}else{
+			this.isNull = true;
+			this.isTile = false;
+		}
+	}
 	public boolean isTile(){
 		return isTile;
 	}

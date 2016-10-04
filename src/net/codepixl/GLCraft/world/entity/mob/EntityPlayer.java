@@ -23,6 +23,7 @@ import com.nishu.utils.Time;
 
 import net.codepixl.GLCraft.GUI.GUIManager;
 import net.codepixl.GLCraft.GUI.Inventory.Elements.GUISlot;
+import net.codepixl.GLCraft.network.packet.PacketPlayerAction;
 import net.codepixl.GLCraft.network.packet.PacketOnPlace;
 import net.codepixl.GLCraft.network.packet.PacketPlayerPos;
 import net.codepixl.GLCraft.render.RenderType;
@@ -106,16 +107,6 @@ public class EntityPlayer extends Mob {
 		}
 		updateBreakCooldown();
 		updateBuildCooldown();
-		Iterator<Entity> i = (Iterator<Entity>) worldManager.getEntityManager().getEntitiesInRadiusOfEntityOfType(this, EntityItem.class, 1f).iterator();
-		while(i.hasNext()){
-			EntityItem e = (EntityItem) i.next();
-			if(e.getCount() > 0) {
-				e.setCount(this.addToInventory(e.getItemStack()));
-				if(e.getCount() <= 0) {
-					e.setDead(true);
-				}
-			}
-		}
 		
 		if(!wasBreaking) {
 			this.breakProgress = 0;
@@ -194,17 +185,9 @@ public class EntityPlayer extends Mob {
 		}
 		
 	}
-	public void dropItem(ItemStack item,int amount,Vector3f pos, Vector3f direction, WorldManager w){
-		EntityItem e = new EntityItem(new ItemStack(item, amount), pos.x, pos.y, pos.z, w);
-		e.setVelocity(MathUtils.RotToVel(direction, 1f));
-		w.spawnEntity(e);
-	}
 	public void dropItem(ItemStack item){
-		if(!item.isNull()){
-			EntityItem e = new EntityItem(item, pos.x, pos.y+this.eyeLevel, pos.z, worldManager);
-			e.setVelocity(MathUtils.RotToVel(this.getRot(), 1f));
-			worldManager.spawnEntity(e);
-		}
+		if(item != null && !item.isNull())
+			worldManager.sendPacket(PacketPlayerAction.dropOtherItem(this,item));
 	}
 	public void updateKeyboard(float delay, float speed) {
 		boolean keyUp = Keyboard.isKeyDown(Keyboard.KEY_W);
@@ -227,7 +210,7 @@ public class EntityPlayer extends Mob {
 					getInventory()[selectedSlot] = new ItemStack();
 				}
 			}
-			worldManager.spawnEntity(e);
+			worldManager.sendPacket(PacketPlayerAction.dropHeldItem(this));
 		}
 		qPressed = q;
 		if(keyUp && keyRight && !keyLeft && !keyDown) {

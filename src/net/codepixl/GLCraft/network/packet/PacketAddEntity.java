@@ -15,6 +15,7 @@ import net.codepixl.GLCraft.world.entity.NBTUtil;
 
 public class PacketAddEntity extends Packet{
 	public byte[] entityData;
+	public int entityID;
 	public PacketAddEntity(Entity e){
 		TagCompound t = e.mainWriteToNBT();
 		ByteArrayOutputStream ops = new ByteArrayOutputStream();
@@ -28,11 +29,14 @@ public class PacketAddEntity extends Packet{
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
 		}
+		this.entityID = e.getID();
 	}
 	
 	public Entity getEntity(WorldManager w) throws IOException, NoSuchMethodException, SecurityException, IllegalAccessException, IllegalArgumentException, InvocationTargetException{
 		ByteArrayInputStream bis = new ByteArrayInputStream(entityData);
 		NbtInputStream in = new NbtInputStream(bis);
-		return NBTUtil.readEntity((TagCompound)in.readTag(), w);
+		Entity e = NBTUtil.readEntity((TagCompound)in.readTag(), w);
+		e.setId(entityID);
+		return e;
 	}
 }

@@ -12,6 +12,7 @@ import com.evilco.mc.nbt.tag.TagString;
 import com.nishu.utils.Color4f;
 import com.nishu.utils.Time;
 
+import net.codepixl.GLCraft.network.packet.PacketUpdateEntity;
 import net.codepixl.GLCraft.util.EnumFacing;
 import net.codepixl.GLCraft.util.GameObj;
 import net.codepixl.GLCraft.util.MathUtils;
@@ -30,6 +31,7 @@ public class Entity implements GameObj{
 	public long timeAlive = 0;
 	public float onFire = 0;
 	public float light = 0f;
+	private boolean needsDataUpdate = false;
 	
 	public Entity(float x, float y, float z, WorldManager worldManager){
 		this.pos = new Vector3f(x,y,z);
@@ -165,6 +167,10 @@ public class Entity implements GameObj{
 
 	@Override
 	public void update() {
+		if(this.needsDataUpdate){
+			worldManager.sendPacket(new PacketUpdateEntity(this,PacketUpdateEntity.Type.UPDATENBT));
+			this.needsDataUpdate = false;
+		}
 		this.light = worldManager.getLightIntensity((int)this.pos.x, (int)this.pos.y, (int)this.pos.z);
 		timeAlive+=(Time.getDelta()*1000f);
 		this.rot = MathUtils.modulus(this.rot, 360f);
@@ -183,6 +189,7 @@ public class Entity implements GameObj{
 			this.onFire = 0;
 		}
 		voidHurt();
+		worldManager.sendPacket(new PacketUpdateEntity(this, PacketUpdateEntity.Type.POSITION));
 	}
 
 	@Override
@@ -223,6 +230,12 @@ public class Entity implements GameObj{
 		this.vel = vel;
 	}
 	
+	public void setVel(float x, float y, float z){
+		this.vel.x = x;
+		this.vel.y = y;
+		this.vel.z = z;
+	}
+	
 	public EnumFacing getEnumFacing(){
 		if(this.getRot().z <= 0){ //up
 			if(this.getRot().y >= 315 || this.getRot().y < 45)
@@ -246,6 +259,7 @@ public class Entity implements GameObj{
 	}
 
 	public void setId(int id) {
+		worldManager.entityManager.changeEntityID(this.id, id);
 		this.id = id;
 	}
 
@@ -253,5 +267,9 @@ public class Entity implements GameObj{
 		this.rot.x = x;
 		this.rot.y = y;
 		this.rot.z = z;
+	}
+	
+	public void needsDataUpdate(){
+		this.needsDataUpdate  = true;
 	}
 }

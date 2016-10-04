@@ -14,20 +14,43 @@ import net.codepixl.GLCraft.world.entity.Entity;
 import net.codepixl.GLCraft.world.entity.NBTUtil;
 
 public class PacketUpdateEntity extends Packet{
+	
+	public enum Type{
+		UPDATENBT, POSITION;
+	}
+	
 	public byte[] entityData;
-	public PacketUpdateEntity(Entity e){
-		TagCompound t = e.mainWriteToNBT();
-		ByteArrayOutputStream ops = new ByteArrayOutputStream();
-		NbtOutputStream o = new NbtOutputStream(ops);
-		try {
-			o.write(t);
-			o.close();
-			this.entityData = ops.toByteArray();
-			ops.close();
-		} catch (IOException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
+	public float x,y,z,xr,yr,zr,xv,yv,zv;
+	public int entityID;
+	public Type type;
+	
+	public PacketUpdateEntity(Entity e, Type type){
+		if(type == Type.UPDATENBT){
+			TagCompound t = e.mainWriteToNBT();
+			ByteArrayOutputStream ops = new ByteArrayOutputStream();
+			NbtOutputStream o = new NbtOutputStream(ops);
+			try {
+				o.write(t);
+				o.close();
+				this.entityData = ops.toByteArray();
+				ops.close();
+			} catch (IOException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+		}else if(type == Type.POSITION){
+			this.x = e.getX();
+			this.y = e.getY();
+			this.z = e.getZ();
+			this.xr = e.getRot().x;
+			this.yr = e.getRot().y;
+			this.zr = e.getRot().z;
+			this.xv = e.getVel().x;
+			this.yv = e.getVel().y;
+			this.zv = e.getVel().z;
 		}
+		this.entityID = e.getID();
+		this.type = type;
 	}
 	
 	public Entity getEntity(WorldManager w) throws IOException, NoSuchMethodException, SecurityException, IllegalAccessException, IllegalArgumentException, InvocationTargetException{

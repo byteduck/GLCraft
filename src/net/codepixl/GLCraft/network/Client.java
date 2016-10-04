@@ -15,9 +15,12 @@ import net.codepixl.GLCraft.network.packet.PacketPlayerAdd;
 import net.codepixl.GLCraft.network.packet.PacketPlayerLogin;
 import net.codepixl.GLCraft.network.packet.PacketPlayerLoginResponse;
 import net.codepixl.GLCraft.network.packet.PacketPlayerPos;
+import net.codepixl.GLCraft.network.packet.PacketRemoveEntity;
 import net.codepixl.GLCraft.network.packet.PacketRespawn;
 import net.codepixl.GLCraft.network.packet.PacketSendChunk;
 import net.codepixl.GLCraft.network.packet.PacketSetBufferSize;
+import net.codepixl.GLCraft.network.packet.PacketSetInventory;
+import net.codepixl.GLCraft.network.packet.PacketUpdateEntity;
 import net.codepixl.GLCraft.network.packet.PacketUtil;
 import net.codepixl.GLCraft.network.packet.PacketWorldTime;
 import net.codepixl.GLCraft.world.WorldManager;
@@ -94,8 +97,41 @@ public class Client{
 			}else if(op instanceof PacketAddEntity){
 				PacketAddEntity p = (PacketAddEntity) op;
 				Entity e = ((PacketAddEntity) op).getEntity(worldManager);
-				if(e != null)
+				if(e != null){
 					worldManager.spawnEntity(e);
+				}
+			}else if(op instanceof PacketUpdateEntity){
+				PacketUpdateEntity p = (PacketUpdateEntity) op;
+				Entity e;
+				switch(p.type){
+					case POSITION:
+						e = worldManager.getEntityManager().getEntity(p.entityID);
+						if(e != null){
+							e.setPos(p.x, p.y, p.z);
+							e.setRot(p.xr, p.yr, p.zr);
+							e.setVel(p.xv, p.yv, p.zv);
+						}
+						break;
+					case UPDATENBT:
+						e = worldManager.getEntityManager().getEntity(p.entityID);
+						if(e != null){
+							worldManager.getEntityManager().remove(e);
+							e = p.getEntity(worldManager);
+							worldManager.getEntityManager().add(e);
+						}
+						break;
+				}
+			}else if(op instanceof PacketRemoveEntity){
+				PacketRemoveEntity p = (PacketRemoveEntity)op;
+				Entity e = worldManager.getEntityManager().getEntity(p.entityID);
+				if(e != null){
+					worldManager.entityManager.remove(e);
+				}
+			}else if(op instanceof PacketSetInventory){
+				PacketSetInventory p = (PacketSetInventory)op;
+				if(this.worldManager.getEntityManager().getPlayer().getID() == p.entityID){
+					p.setInventory(worldManager);
+				}
 			}else{
 				System.err.println("[CLIENT] Received unhandled packet: "+op.getClass());
 				//throw new IOException("Invalid Packet "+op.getClass());

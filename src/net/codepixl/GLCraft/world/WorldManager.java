@@ -704,7 +704,7 @@ public class WorldManager {
 	}
 	
 	public float getLightIntensity(int x, int y, int z){
-		float ret = getLight(x,y,z)/15f+0.1f;
+		float ret = ((float)getBlockLight(x, y, z)+(float)getSunlight(x, y, z)*getSkyLightIntensity())/15f;
 		if(ret > 1)
 			ret = 1;
 		return ret;
