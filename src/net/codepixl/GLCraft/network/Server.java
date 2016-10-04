@@ -15,6 +15,7 @@ import net.codepixl.GLCraft.GLCraft;
 import net.codepixl.GLCraft.network.packet.Packet;
 import net.codepixl.GLCraft.network.packet.PacketBlockChange;
 import net.codepixl.GLCraft.network.packet.PacketOnPlace;
+import net.codepixl.GLCraft.network.packet.PacketPlayerAction;
 import net.codepixl.GLCraft.network.packet.PacketPlayerAdd;
 import net.codepixl.GLCraft.network.packet.PacketPlayerLogin;
 import net.codepixl.GLCraft.network.packet.PacketPlayerLoginResponse;
@@ -22,11 +23,13 @@ import net.codepixl.GLCraft.network.packet.PacketPlayerPos;
 import net.codepixl.GLCraft.network.packet.PacketRespawn;
 import net.codepixl.GLCraft.network.packet.PacketSendChunk;
 import net.codepixl.GLCraft.network.packet.PacketSetBufferSize;
+import net.codepixl.GLCraft.network.packet.PacketSetInventory;
 import net.codepixl.GLCraft.network.packet.PacketUpdateEntity;
 import net.codepixl.GLCraft.network.packet.PacketUtil;
 import net.codepixl.GLCraft.network.packet.PacketWorldTime;
 import net.codepixl.GLCraft.util.Constants;
 import net.codepixl.GLCraft.world.WorldManager;
+import net.codepixl.GLCraft.world.entity.Entity;
 import net.codepixl.GLCraft.world.entity.mob.EntityPlayerMP;
 import net.codepixl.GLCraft.world.tile.Tile;
 
@@ -103,6 +106,21 @@ public class Server{
 				PacketOnPlace p = (PacketOnPlace)op;
 				Tile.getTile(p.tile).onPlace(p.x, p.y, p.z, p.meta, p.facing, worldManager);
 			}else if(op instanceof PacketUpdateEntity){
+			}else if(op instanceof PacketSetInventory){
+				PacketSetInventory p = (PacketSetInventory)op;
+				p.setInventory(worldManager);
+			}else if(op instanceof PacketPlayerAction){
+				PacketPlayerAction p = (PacketPlayerAction)op;
+				Entity e;
+				switch(p.type){
+				case DROPHELDITEM:
+					e = worldManager.getEntityManager().getEntity(p.entityID);
+					if(e != null && e instanceof EntityPlayerMP)
+						((EntityPlayerMP)e).dropHeldItem(p.all);
+					break;
+				case DROPOTHERITEM:
+					break;
+				}
 			}else{
 				System.err.println("Unhandled Packet: "+op.getClass());
 			}

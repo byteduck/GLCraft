@@ -225,10 +225,12 @@ public class Mob extends EntitySolid implements GameObj{
 	
 	public void setInventory(ItemStack[] inventory) {
 		this.inventory = inventory;
+		this.needsDataUpdate();
 	}
 	
 	public void setInventory(int i, ItemStack it){
 		this.inventory[i] = it;
+		this.needsDataUpdate();
 	}
 
 	public boolean canBreathe(){

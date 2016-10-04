@@ -132,14 +132,6 @@ public class EntityItem extends EntitySolid{
 		if(this.getCount() <= 0 || this.timeAlive > 300000 || this.itemstack.isNull()){
 			this.setDead(true);
 		}
-		while(!Tile.getTile((byte)worldManager.getTileAtPos(this.getPos())).canPassThrough()){
-			this.setY((float) (this.getY()+0.1f));
-		}
-		if(timeAlive % 2000 <=1000){
-			yPos = MathUtils.easeInOutQuad((float)timeAlive/1000f, 0f, 0.3f, 1f);
-		}else{
-			yPos = MathUtils.easeInOutQuad((float)timeAlive/1000f, 0.3f, -0.3f, 1f);
-		}
 		Iterator<Entity> i = worldManager.getEntityManager().getEntitiesInRadiusOfEntityOfType(this, EntityItem.class, 0.75f).iterator();
 		while(i.hasNext()){
 			EntityItem e = (EntityItem)i.next();
@@ -148,7 +140,20 @@ public class EntityItem extends EntitySolid{
 				this.itemstack.count+=e.itemstack.count;
 			}
 		}
-		this.setRotY((float) (this.getRot().y+Time.getDelta()*50));
+		while(!Tile.getTile((byte)worldManager.getTileAtPos(this.getPos())).canPassThrough()){
+			this.setY((float) (this.getY()+0.1f));
+		}
+		this.rot.y = (float) (this.rot.y+Time.getDelta()*50);
+	}
+	
+	@Override
+	public void clientUpdate(){
+		super.clientUpdate();
+		if(timeAlive % 2000 <=1000){
+			yPos = MathUtils.easeInOutQuad((float)timeAlive/1000f, 0f, 0.3f, 1f);
+		}else{
+			yPos = MathUtils.easeInOutQuad((float)timeAlive/1000f, 0.3f, -0.3f, 1f);
+		}
 	}
 	
 	@Override

@@ -5,11 +5,15 @@ import java.util.Iterator;
 import org.lwjgl.util.vector.Vector3f;
 
 import net.codepixl.GLCraft.network.packet.PacketSetInventory;
+import net.codepixl.GLCraft.util.MathUtils;
 import net.codepixl.GLCraft.world.WorldManager;
 import net.codepixl.GLCraft.world.entity.Entity;
 import net.codepixl.GLCraft.world.entity.EntityItem;
+import net.codepixl.GLCraft.world.item.ItemStack;
 
 public class EntityPlayerMP extends EntityPlayer{
+
+	public boolean needsInventoryUpdate = false;
 
 	public EntityPlayerMP(Vector3f pos, WorldManager w) {
 		super(pos, w);
@@ -20,7 +24,6 @@ public class EntityPlayerMP extends EntityPlayer{
 	
 	@Override
 	public void update(){
-		boolean needsInventoryUpdate = false;
 		Iterator<Entity> i = (Iterator<Entity>) worldManager.getEntityManager().getEntitiesInRadiusOfEntityOfType(this, EntityItem.class, 1f).iterator();
 		while(i.hasNext()){
 			needsInventoryUpdate = true;
@@ -32,8 +35,10 @@ public class EntityPlayerMP extends EntityPlayer{
 				}
 			}
 		}
-		if(needsInventoryUpdate)
+		if(needsInventoryUpdate){
 			worldManager.sendPacket(new PacketSetInventory(this));
+			this.needsInventoryUpdate = false;
+		}
 	}
 	
 	@Override
@@ -41,5 +46,23 @@ public class EntityPlayerMP extends EntityPlayer{
 	
 	@Override
 	public void updateKeyboard(float a, float b){}
+
+	public void dropHeldItem(boolean all) {
+		ItemStack i = this.getSelectedItemStack();
+		if(!i.isNull()){
+			EntityItem e = new EntityItem(i, pos.x, pos.y+this.eyeLevel, pos.z, worldManager);
+			
+			e.setVelocity(MathUtils.RotToVel(this.getRot(), 1f));
+			worldManager.spawnEntity(e);
+		}
+		if(all)
+			this.setSelectedItemStack(new ItemStack());
+		else{
+			this.getSelectedItemStack().count--;
+			if(this.getSelectedItemStack().count <= 0)
+				this.setSelectedItemStack(new ItemStack());
+		}
+		this.needsInventoryUpdate = true;
+	}
 
 }

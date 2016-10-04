@@ -17,6 +17,7 @@ import net.codepixl.GLCraft.util.EnumFacing;
 import net.codepixl.GLCraft.util.GameObj;
 import net.codepixl.GLCraft.util.MathUtils;
 import net.codepixl.GLCraft.world.WorldManager;
+import net.codepixl.GLCraft.world.entity.mob.EntityPlayer;
 import net.codepixl.GLCraft.world.tile.Tile;
 import net.codepixl.GLCraft.world.tile.TileFire;
 import net.codepixl.GLCraft.world.tile.TileLava;
@@ -167,13 +168,10 @@ public class Entity implements GameObj{
 
 	@Override
 	public void update() {
-		if(this.needsDataUpdate){
+		if(this.needsDataUpdate && !(this instanceof EntityPlayer)){
 			worldManager.sendPacket(new PacketUpdateEntity(this,PacketUpdateEntity.Type.UPDATENBT));
 			this.needsDataUpdate = false;
 		}
-		this.light = worldManager.getLightIntensity((int)this.pos.x, (int)this.pos.y, (int)this.pos.z);
-		timeAlive+=(Time.getDelta()*1000f);
-		this.rot = MathUtils.modulus(this.rot, 360f);
 		if(this.onFire>0f){
 			this.onFire-=Time.getDelta();
 		}else{
@@ -190,6 +188,12 @@ public class Entity implements GameObj{
 		}
 		voidHurt();
 		worldManager.sendPacket(new PacketUpdateEntity(this, PacketUpdateEntity.Type.POSITION));
+	}
+	
+	public void clientUpdate(){
+		this.light = worldManager.getLightIntensity((int)this.pos.x, (int)this.pos.y, (int)this.pos.z);
+		timeAlive+=(Time.getDelta()*1000f);
+		this.rot = MathUtils.modulus(this.rot, 360f);
 	}
 
 	@Override

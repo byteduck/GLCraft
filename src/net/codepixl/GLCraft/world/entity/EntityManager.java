@@ -168,14 +168,18 @@ public class EntityManager implements GameObj{
 	    iterating = true;
 	    while (it.hasNext()) {
 	        Entity e = it.next().getValue();
-	        if(e.isDead() && !(e instanceof EntityPlayer)){
-	        	if(isServer)
-					w.sendPacket(new PacketRemoveEntity(e.getID()));
+	        if(isServer && e.isDead() && !(e instanceof EntityPlayer)){
+				w.sendPacket(new PacketRemoveEntity(e.getID()));
 	        	it.remove();
 	        }
-	        e.update();
+	        if(this.isServer)
+	        	e.update();
+	        else
+	        	e.clientUpdate();
 	    }
 	    iterating = false;
+		if(this.getPlayer() != null)
+			this.getPlayer().update();
 	    DebugTimer.endTimer("ai_time");
 	}
 	

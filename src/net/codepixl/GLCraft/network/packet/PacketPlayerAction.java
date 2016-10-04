@@ -15,14 +15,17 @@ public class PacketPlayerAction extends Packet {
 	public byte meta;
 	public boolean isTile;
 	public int count;
+	public boolean all;
 	
 	private PacketPlayerAction(EntityPlayer p, Type type){
 		this.entityID = p.getID();
 		this.type = type;
 	}
 	
-	public static PacketPlayerAction dropHeldItem(EntityPlayer p){
-		return new PacketPlayerAction(p,Type.DROPHELDITEM);
+	public static PacketPlayerAction dropHeldItem(EntityPlayer p, boolean all){
+		PacketPlayerAction pa = new PacketPlayerAction(p,Type.DROPHELDITEM);
+		pa.all = all;
+		return pa;
 	}
 	
 	public static PacketPlayerAction dropOtherItem(EntityPlayer p, ItemStack stack){

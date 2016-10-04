@@ -35,7 +35,7 @@ public class PacketSetInventory extends Packet{
 	}
 	public void setInventory(WorldManager w){
 		Entity e = w.getEntityManager().getEntity(this.entityID);
-		if(e instanceof EntityPlayer){
+		if(e != null && e instanceof EntityPlayer){
 			for(int i = 0; i < invid.length; i++){
 				if(!invisNull[i])
 					if(invisTile[i])

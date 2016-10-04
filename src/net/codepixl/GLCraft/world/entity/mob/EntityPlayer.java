@@ -24,8 +24,10 @@ import com.nishu.utils.Time;
 import net.codepixl.GLCraft.GUI.GUIManager;
 import net.codepixl.GLCraft.GUI.Inventory.Elements.GUISlot;
 import net.codepixl.GLCraft.network.packet.PacketPlayerAction;
+import net.codepixl.GLCraft.network.packet.PacketPlayerDead;
 import net.codepixl.GLCraft.network.packet.PacketOnPlace;
 import net.codepixl.GLCraft.network.packet.PacketPlayerPos;
+import net.codepixl.GLCraft.network.packet.PacketSetInventory;
 import net.codepixl.GLCraft.render.RenderType;
 import net.codepixl.GLCraft.render.Shape;
 import net.codepixl.GLCraft.render.TextureManager;
@@ -59,6 +61,7 @@ public class EntityPlayer extends Mob {
 	private byte metaToPlace;
 	public GUISlot hoverSlot;
 	private String name;
+	private boolean updatedInventory;
 	
 	public EntityPlayer(Vector3f pos, WorldManager w) {
 		super(pos, w);
@@ -96,10 +99,12 @@ public class EntityPlayer extends Mob {
 		SoundManager.getMainManager().setPosAndRot(pos, rot);
 		this.rot.x = MathUtils.towardsZero(this.rot.x, (float) (Time.getDelta()*30f));
 		if(this.isDead()){
-			worldManager.showMessage(5.0, DeathMessage.getMessage("Player", getLastDamageSource()));
+			this.setDead(false);
+			worldManager.sendPacket(new PacketPlayerDead(this));
+			/*worldManager.showMessage(5.0, DeathMessage.getMessage("Player", getLastDamageSource()));
 			this.setDead(false);
 			this.dropAllItems();
-			this.respawn();
+			this.respawn();*/
 		}
 		if(GUIManager.getMainManager().sendPlayerInput()){
 			updateMouse();
@@ -125,6 +130,11 @@ public class EntityPlayer extends Mob {
 		}
 		
 		worldManager.sendPacket(new PacketPlayerPos(this));
+		
+		if(this.updatedInventory){
+			this.updatedInventory = false;
+			worldManager.sendPacket(new PacketSetInventory(this));
+		}
 	}
 	
 	public void respawn(){
@@ -143,8 +153,8 @@ public class EntityPlayer extends Mob {
 	
 	@Override
 	public void hurt(float damage, DamageSource source){
-			super.hurt(damage, source);
-			this.rot.x = 5f;
+		super.hurt(damage, source);
+		this.rot.x = 5f;
 	}
 	
 	public void updateMouse() {
@@ -199,18 +209,7 @@ public class EntityPlayer extends Mob {
 		boolean ctrl = Keyboard.isKeyDown(Keyboard.KEY_LCONTROL);
 		boolean q = Keyboard.isKeyDown(Keyboard.KEY_Q);
 		if(q && !qPressed && !getInventory()[selectedSlot].isNull()) {
-			EntityItem e = new EntityItem(new ItemStack(getInventory()[selectedSlot], 1), getPos().x, getPos().y + 1.5f, getPos().z, worldManager);
-			e.setVelocity(MathUtils.RotToVel(this.getRot(), 1f));
-			if(ctrl) {
-				e.setCount(getInventory()[selectedSlot].count);
-				getInventory()[selectedSlot] = new ItemStack();
-			}else{
-				int sub = getInventory()[selectedSlot].subFromStack(1);
-				if(sub > 0) {
-					getInventory()[selectedSlot] = new ItemStack();
-				}
-			}
-			worldManager.sendPacket(PacketPlayerAction.dropHeldItem(this));
+			worldManager.sendPacket(PacketPlayerAction.dropHeldItem(this, ctrl));
 		}
 		qPressed = q;
 		if(keyUp && keyRight && !keyLeft && !keyDown) {
@@ -488,6 +487,7 @@ public class EntityPlayer extends Mob {
 										int sub = worldManager.getEntityManager().getPlayer().getSelectedItemStack().subFromStack(1);
 										if(sub > 0) {
 											worldManager.getEntityManager().getPlayer().getInventory()[worldManager.getEntityManager().getPlayer().getSelectedSlot()] = new ItemStack();
+											this.updatedInventory = true;
 										}
 										setBuildCooldown(0.2f);
 										r.next();
