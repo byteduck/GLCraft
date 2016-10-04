@@ -22,7 +22,7 @@ import net.codepixl.GLCraft.world.tile.Tile;
 
 public class EntityItem extends EntitySolid{
 	private ItemStack itemstack;
-	private float yPos;
+	private float yPos, yRot;
 	private final float size = 0.3f;
 	
 	public EntityItem(ItemStack s, float x, float y, float z, WorldManager worldManager) {
@@ -62,7 +62,7 @@ public class EntityItem extends EntitySolid{
 		for(int i = 0; i < count; i++){
 			GL11.glPushMatrix();
 			GL11.glTranslatef(getX(), getY(), getZ());
-			GL11.glRotatef(this.getRot().y, 0f, 1.0f, 0f);
+			GL11.glRotatef(this.yRot, 0f, 1.0f, 0f);
 			if(itemstack.isTile()){
 				GL11.glTranslatef(-size/2, 0f, -size/2f);
 			}else{
@@ -71,7 +71,7 @@ public class EntityItem extends EntitySolid{
 			}
 			GL11.glBegin(GL11.GL_QUADS);
 			if(itemstack.isTile()){
-				GL11.glRotatef(this.getRot().y, 0f, 1.0f, 0f);
+				GL11.glRotatef(this.yRot, 0f, 1.0f, 0f);
 				Tile tile = itemstack.getTile();
 				if(tile.getRenderType() == RenderType.CUBE){
 					if(tile.hasMetaTextures()){
@@ -143,7 +143,6 @@ public class EntityItem extends EntitySolid{
 		while(!Tile.getTile((byte)worldManager.getTileAtPos(this.getPos())).canPassThrough()){
 			this.setY((float) (this.getY()+0.1f));
 		}
-		this.rot.y = (float) (this.rot.y+Time.getDelta()*50);
 	}
 	
 	@Override
@@ -154,6 +153,8 @@ public class EntityItem extends EntitySolid{
 		}else{
 			yPos = MathUtils.easeInOutQuad((float)timeAlive/1000f, 0.3f, -0.3f, 1f);
 		}
+
+		this.yRot = (float) (this.yRot+Time.getDelta()*50);
 	}
 	
 	@Override

@@ -48,8 +48,10 @@ public class EntityPlayerMP extends EntityPlayer{
 	public void updateKeyboard(float a, float b){}
 
 	public void dropHeldItem(boolean all) {
-		ItemStack i = this.getSelectedItemStack();
+		ItemStack i = new ItemStack(this.getSelectedItemStack());
 		if(!i.isNull()){
+			if(!all)
+				i.count = 1;
 			EntityItem e = new EntityItem(i, pos.x, pos.y+this.eyeLevel, pos.z, worldManager);
 			
 			e.setVelocity(MathUtils.RotToVel(this.getRot(), 1f));

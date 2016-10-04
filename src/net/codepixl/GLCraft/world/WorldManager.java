@@ -227,20 +227,21 @@ public class WorldManager {
 		}
 		DebugTimer.endTimer("chunk_update");
 		
-		
-		tick+=Time.getDelta();
-		if(tick > 1.0f/20f){
-			DebugTimer.startTimer("chunk_tick");
-			tick = 0f;
-			i = activeChunks.values().iterator();
-			while(i.hasNext()){
-				i.next().tick();
+		if(this.isServer){
+			tick+=Time.getDelta();
+			if(tick > 1.0f/20f){
+				DebugTimer.startTimer("chunk_tick");
+				tick = 0f;
+				i = activeChunks.values().iterator();
+				while(i.hasNext()){
+					i.next().tick();
+				}
+				Iterator<TickHelper> iter = Tile.tickMap.values().iterator();
+				while(iter.hasNext()){
+					iter.next().setUpdated(false);
+				}
+				DebugTimer.endTimer("chunk_tick");
 			}
-			Iterator<TickHelper> iter = Tile.tickMap.values().iterator();
-			while(iter.hasNext()){
-				iter.next().setUpdated(false);
-			}
-			DebugTimer.endTimer("chunk_tick");
 		}
 		
 		worldTime+=Time.getDelta()*1000;
@@ -527,7 +528,7 @@ public class WorldManager {
 	}
 	
 	public void setMetaAtPos(int x, int y, int z, byte meta, boolean rebuild, boolean blockUpdate, boolean updateSelf){
-		setMetaAtPos(x,y,z,meta,rebuild,blockUpdate,updateSelf);
+		setMetaAtPos(x,y,z,meta,rebuild,true,blockUpdate,updateSelf);
 	}
 	
 	public void setMetaAtPos(int x, int y, int z, byte meta, boolean rebuild, boolean sendPacket, boolean blockUpdate, boolean updateSelf){
@@ -715,74 +716,81 @@ public class WorldManager {
 	}
 	
 	public void relight(){
-		lightRebuildQueue.clear();
-		while(!lightRemovalQueue.isEmpty()){
-			LightRemoval next = lightRemovalQueue.poll();
-			Vector3i npos = next.pos;
-			Vector3i pos = new Vector3i(npos.x+1, npos.y, npos.z);
-			evalLightRemoval(npos,pos,next);
-			pos = new Vector3i(npos.x-1, npos.y, npos.z);
-			evalLightRemoval(npos,pos,next);
-			pos = new Vector3i(npos.x, npos.y+1, npos.z);
-			evalLightRemoval(npos,pos,next);
-			pos = new Vector3i(npos.x, npos.y-1, npos.z);
-			evalLightRemoval(npos,pos,next);
-			pos = new Vector3i(npos.x, npos.y, npos.z+1);
-			evalLightRemoval(npos,pos,next);
-			pos = new Vector3i(npos.x, npos.y, npos.z-1);
-			evalLightRemoval(npos,pos,next);
-		}
-		while(!lightQueue.isEmpty()){
-			Light nextl = lightQueue.poll();
-			Vector3i next = nextl.pos;
-			Vector3i pos = new Vector3i(next.x+1, next.y, next.z);
-			evalLight(nextl,pos);
-			pos = new Vector3i(next.x-1, next.y, next.z);
-			evalLight(nextl,pos);
-			pos = new Vector3i(next.x, next.y+1, next.z);
-			evalLight(nextl,pos);
-			pos = new Vector3i(next.x, next.y-1, next.z);
-			evalLight(nextl,pos);
-			pos = new Vector3i(next.x, next.y, next.z+1);
-			evalLight(nextl,pos);
-			pos = new Vector3i(next.x, next.y, next.z-1);
-			evalLight(nextl,pos);
-		}
-		while(!sunlightRemovalQueue.isEmpty()){
-			LightRemoval next = sunlightRemovalQueue.poll();
-			Vector3i npos = next.pos;
-			this.setSunlight(npos.x, npos.y, npos.z, 0, false);
-			Vector3i pos = new Vector3i(npos.x+1, npos.y, npos.z);
-			evalSunlightRemoval(npos,pos,next,false);
-			pos = new Vector3i(npos.x-1, npos.y, npos.z);
-			evalSunlightRemoval(npos,pos,next,false);
-			pos = new Vector3i(npos.x, npos.y+1, npos.z);
-			evalSunlightRemoval(npos,pos,next,false);
-			pos = new Vector3i(npos.x, npos.y-1, npos.z);
-			evalSunlightRemoval(npos,pos,next,true);
-			pos = new Vector3i(npos.x, npos.y, npos.z+1);
-			evalSunlightRemoval(npos,pos,next,false);
-			pos = new Vector3i(npos.x, npos.y, npos.z-1);
-			evalSunlightRemoval(npos,pos,next,false);
-		}
-		while(!sunlightQueue.isEmpty()){
-			Light nextl = sunlightQueue.poll();
-			Vector3i next = nextl.pos;
-			Vector3i pos = new Vector3i(next.x+1, next.y, next.z);
-			evalSunlight(nextl,pos,false);
-			pos = new Vector3i(next.x-1, next.y, next.z);
-			evalSunlight(nextl,pos,false);
-			pos = new Vector3i(next.x, next.y+1, next.z);
-			evalSunlight(nextl,pos,false);
-			pos = new Vector3i(next.x, next.y-1, next.z);
-			evalSunlight(nextl,pos,true);
-			pos = new Vector3i(next.x, next.y, next.z+1);
-			evalSunlight(nextl,pos,false);
-			pos = new Vector3i(next.x, next.y, next.z-1);
-			evalSunlight(nextl,pos,false);
-		}
-		for(Chunk c : lightRebuildQueue){
-			c.rebuild();
+		if(!this.isServer){
+			lightRebuildQueue.clear();
+			while(!lightRemovalQueue.isEmpty()){
+				LightRemoval next = lightRemovalQueue.poll();
+				Vector3i npos = next.pos;
+				Vector3i pos = new Vector3i(npos.x+1, npos.y, npos.z);
+				evalLightRemoval(npos,pos,next);
+				pos = new Vector3i(npos.x-1, npos.y, npos.z);
+				evalLightRemoval(npos,pos,next);
+				pos = new Vector3i(npos.x, npos.y+1, npos.z);
+				evalLightRemoval(npos,pos,next);
+				pos = new Vector3i(npos.x, npos.y-1, npos.z);
+				evalLightRemoval(npos,pos,next);
+				pos = new Vector3i(npos.x, npos.y, npos.z+1);
+				evalLightRemoval(npos,pos,next);
+				pos = new Vector3i(npos.x, npos.y, npos.z-1);
+				evalLightRemoval(npos,pos,next);
+			}
+			while(!lightQueue.isEmpty()){
+				Light nextl = lightQueue.poll();
+				Vector3i next = nextl.pos;
+				Vector3i pos = new Vector3i(next.x+1, next.y, next.z);
+				evalLight(nextl,pos);
+				pos = new Vector3i(next.x-1, next.y, next.z);
+				evalLight(nextl,pos);
+				pos = new Vector3i(next.x, next.y+1, next.z);
+				evalLight(nextl,pos);
+				pos = new Vector3i(next.x, next.y-1, next.z);
+				evalLight(nextl,pos);
+				pos = new Vector3i(next.x, next.y, next.z+1);
+				evalLight(nextl,pos);
+				pos = new Vector3i(next.x, next.y, next.z-1);
+				evalLight(nextl,pos);
+			}
+			while(!sunlightRemovalQueue.isEmpty()){
+				LightRemoval next = sunlightRemovalQueue.poll();
+				Vector3i npos = next.pos;
+				this.setSunlight(npos.x, npos.y, npos.z, 0, false);
+				Vector3i pos = new Vector3i(npos.x+1, npos.y, npos.z);
+				evalSunlightRemoval(npos,pos,next,false);
+				pos = new Vector3i(npos.x-1, npos.y, npos.z);
+				evalSunlightRemoval(npos,pos,next,false);
+				pos = new Vector3i(npos.x, npos.y+1, npos.z);
+				evalSunlightRemoval(npos,pos,next,false);
+				pos = new Vector3i(npos.x, npos.y-1, npos.z);
+				evalSunlightRemoval(npos,pos,next,true);
+				pos = new Vector3i(npos.x, npos.y, npos.z+1);
+				evalSunlightRemoval(npos,pos,next,false);
+				pos = new Vector3i(npos.x, npos.y, npos.z-1);
+				evalSunlightRemoval(npos,pos,next,false);
+			}
+			while(!sunlightQueue.isEmpty()){
+				Light nextl = sunlightQueue.poll();
+				Vector3i next = nextl.pos;
+				Vector3i pos = new Vector3i(next.x+1, next.y, next.z);
+				evalSunlight(nextl,pos,false);
+				pos = new Vector3i(next.x-1, next.y, next.z);
+				evalSunlight(nextl,pos,false);
+				pos = new Vector3i(next.x, next.y+1, next.z);
+				evalSunlight(nextl,pos,false);
+				pos = new Vector3i(next.x, next.y-1, next.z);
+				evalSunlight(nextl,pos,true);
+				pos = new Vector3i(next.x, next.y, next.z+1);
+				evalSunlight(nextl,pos,false);
+				pos = new Vector3i(next.x, next.y, next.z-1);
+				evalSunlight(nextl,pos,false);
+			}
+			for(Chunk c : lightRebuildQueue){
+				c.rebuild();
+			}
+		}else{
+			this.sunlightQueue.clear();
+			this.sunlightRemovalQueue.clear();
+			this.lightQueue.clear();
+			this.lightRemovalQueue.clear();
 		}
 	}
 	

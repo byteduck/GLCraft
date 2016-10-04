@@ -118,7 +118,11 @@ public class TextureManager {
 				BufferedImage image;
 				LoadedPlugin p = GLCraft.getGLCraft().getPluginManager().getLoadedPlugin(next.plugin);
 				try {
-					image = ImageIO.read(p.loader.getResourceAsStream(next.loc));
+					if(!GLCraft.getGLCraft().isDevEnvironment){
+						image = ImageIO.read(p.loader.getResourceAsStream(next.loc));
+					}else{
+						image = ImageIO.read(new File("res",next.loc));
+					}
 					g.drawImage(image, x*16, y*16, null);
 					atlasCoords.put(next.name, new float[]{(float)x*(1f/(float)maxWidth),(float)y*(1f/(float)maxWidth)});
 				} catch (IOException | IllegalArgumentException e) {

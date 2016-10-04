@@ -121,4 +121,15 @@ public class MathUtils {
 		double y = rxy * Math.sin(phi);
 		return new Vector3f((float)x*size,(float)y*size,(float)z*size);
     }
+    
+    public static boolean equals(Vector3f a, Vector3f b, float range){
+    	boolean flag = true;
+    	if(Math.abs(a.x-b.x) > range)
+    		flag = false;
+    	if(Math.abs(a.y-b.y) > range)
+    		flag = false;
+    	if(Math.abs(a.z-b.z) > range)
+    		flag = false;
+    	return flag;
+    }
 }

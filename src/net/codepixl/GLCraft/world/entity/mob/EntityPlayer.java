@@ -129,8 +129,6 @@ public class EntityPlayer extends Mob {
 			this.breakProgress += Time.getDelta() * multiplier;
 		}
 		
-		worldManager.sendPacket(new PacketPlayerPos(this));
-		
 		if(this.updatedInventory){
 			this.updatedInventory = false;
 			worldManager.sendPacket(new PacketSetInventory(this));

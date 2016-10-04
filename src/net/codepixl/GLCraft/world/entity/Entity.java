@@ -12,6 +12,7 @@ import com.evilco.mc.nbt.tag.TagString;
 import com.nishu.utils.Color4f;
 import com.nishu.utils.Time;
 
+import net.codepixl.GLCraft.network.packet.PacketPlayerPos;
 import net.codepixl.GLCraft.network.packet.PacketUpdateEntity;
 import net.codepixl.GLCraft.util.EnumFacing;
 import net.codepixl.GLCraft.util.GameObj;
@@ -26,6 +27,7 @@ import net.codepixl.GLCraft.world.tile.TileWater;
 public class Entity implements GameObj{
 	protected Vector3f pos, rot;
 	private Vector3f vel;
+	public Vector3f lpos = new Vector3f(), lrot = new Vector3f(), lvel = new Vector3f();
 	protected int id;
 	public WorldManager worldManager;
 	protected boolean dead = false;
@@ -33,6 +35,7 @@ public class Entity implements GameObj{
 	public float onFire = 0;
 	public float light = 0f;
 	private boolean needsDataUpdate = false;
+	private float posPacketTimer = 0;
 	
 	public Entity(float x, float y, float z, WorldManager worldManager){
 		this.pos = new Vector3f(x,y,z);
@@ -167,7 +170,7 @@ public class Entity implements GameObj{
 	}
 
 	@Override
-	public void update() {
+	public void update(){
 		if(this.needsDataUpdate && !(this instanceof EntityPlayer)){
 			worldManager.sendPacket(new PacketUpdateEntity(this,PacketUpdateEntity.Type.UPDATENBT));
 			this.needsDataUpdate = false;
@@ -187,7 +190,26 @@ public class Entity implements GameObj{
 			this.onFire = 0;
 		}
 		voidHurt();
-		worldManager.sendPacket(new PacketUpdateEntity(this, PacketUpdateEntity.Type.POSITION));
+		posPacketTimer += Time.getDelta();
+		if(posPacketTimer > 0.05){
+			boolean update = false;
+			if(!MathUtils.equals(pos, lpos, 0.05f))
+				update = true;
+			if(!update && !MathUtils.equals(rot, lrot, 0.05f))
+				update = true;
+			if(!update && !MathUtils.equals(vel, lvel, 0.05f))
+				update = true;
+			if(update){
+				if(!(this instanceof EntityPlayer))
+					worldManager.sendPacket(new PacketUpdateEntity(this, PacketUpdateEntity.Type.POSITION));
+				else
+					worldManager.sendPacket(new PacketPlayerPos((EntityPlayer)this));
+				posPacketTimer = 0;
+			}
+			lpos = new Vector3f(this.getPos());
+			lvel = new Vector3f(this.getVel());
+			lrot = new Vector3f(this.getRot());
+		}
 	}
 	
 	public void clientUpdate(){

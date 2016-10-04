@@ -357,14 +357,16 @@ public class Chunk {
 			rebuildBase(false);
 			needsRebuild = false;
 		}
-		Iterator<Vector3f> it = tempTickTiles.iterator();
-		while(it.hasNext()){
-			Vector3f v = it.next();
-			it.remove();
-			tickTiles.remove(v);
-			Tile t = Tile.getTile(tiles[(int) v.x][(int) v.y][(int) v.z]);
-			if(t.needsConstantTick()){
-				tickTiles.add(v);
+		if(this.worldManager.isServer){
+			Iterator<Vector3f> it = tempTickTiles.iterator();
+			while(it.hasNext()){
+				Vector3f v = it.next();
+				it.remove();
+				tickTiles.remove(v);
+				Tile t = Tile.getTile(tiles[(int) v.x][(int) v.y][(int) v.z]);
+				if(t.needsConstantTick()){
+					tickTiles.add(v);
+				}
 			}
 		}
 	}
@@ -712,7 +714,8 @@ public class Chunk {
 	}
 	
 	private void queueTickTileUpdate(int x, int y, int z) {
-		tempTickTiles.add(new Vector3f(x,y,z));
+		if(this.worldManager.isServer)
+			tempTickTiles.add(new Vector3f(x,y,z));
 	}
 
 	public void queueRebuild() {
