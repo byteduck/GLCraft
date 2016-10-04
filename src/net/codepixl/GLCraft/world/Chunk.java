@@ -406,10 +406,12 @@ public class Chunk {
 		it = new ArrayList<Vector3f>(scheduledBlockUpdates).iterator();
 		while(it.hasNext()){
 			Vector3f tmp = it.next();
-			Vector3i v = new Vector3i(tmp);
 			scheduledBlockUpdates.remove(tmp);
-			Vector3i local = new Vector3i(v.x-getPos().x, v.y-getPos().y, v.z-getPos().z);
-			Tile.getTile(tiles[local.x][local.y][local.z]).blockUpdate(v.x, v.y, v.z, worldManager);
+			if(tmp != null){
+				Vector3i v = new Vector3i(tmp);
+				Vector3i local = new Vector3i(v.x-getPos().x, v.y-getPos().y, v.z-getPos().z);
+				Tile.getTile(tiles[local.x][local.y][local.z]).blockUpdate(v.x, v.y, v.z, worldManager);
+			}
 		}
 	}
 	
@@ -655,7 +657,7 @@ public class Chunk {
 			if(tickTiles.contains(new Vector3f(x,y,z)) || Tile.getTile(tile).needsConstantTick()){
 				queueTickTileUpdate(x,y,z);
 			}
-			if(Tile.getTile(tiles[x][y][z]).getLightLevel(this.meta[x][y][z]) > 0){
+			if(!worldManager.isServer && Tile.getTile(tiles[x][y][z]).getLightLevel(this.meta[x][y][z]) > 0){
 				byte level = (byte) getBlockLight(x+(int)pos.x,y+(int)pos.y,z+(int)pos.z);
 				setBlockLight(x+(int)pos.x,y+(int)pos.y,z+(int)pos.z,0,false);
 				removeBlockLight(x+(int)pos.x,y+(int)pos.y,z+(int)pos.z,level);
@@ -663,9 +665,9 @@ public class Chunk {
 			tiles[x][y][z] = tile;
 			setMetaAtPos(x,y,z,meta,rebuild);
 			Vector3i pos = new Vector3i(this.pos.x+x, this.pos.y+y, this.pos.z+z);
-			if(Tile.getTile(tile).getLightLevel(meta) > 0)
+			if(!worldManager.isServer && Tile.getTile(tile).getLightLevel(meta) > 0)
 				setBlockLight(pos.x,pos.y,pos.z,Tile.getTile(tile).getLightLevel(meta),true);
-			else if(Tile.getTile(tile).getTransparency() < 15){
+			else if(!worldManager.isServer && Tile.getTile(tile).getTransparency() < 15){
 				worldManager.lightQueue.add(new Light(new Vector3i(pos.x+1, pos.y, pos.z)));
 				worldManager.lightQueue.add(new Light(new Vector3i(pos.x-1, pos.y, pos.z)));
 				worldManager.lightQueue.add(new Light(new Vector3i(pos.x, pos.y+1, pos.z)));
@@ -678,13 +680,12 @@ public class Chunk {
 				worldManager.sunlightQueue.add(new Light(new Vector3i(pos.x, pos.y-1, pos.z)));
 				worldManager.sunlightQueue.add(new Light(new Vector3i(pos.x, pos.y, pos.z+1)));
 				worldManager.sunlightQueue.add(new Light(new Vector3i(pos.x, pos.y, pos.z-1)));
-			}else{
+			}else if(!worldManager.isServer){
 				this.setSunlight(pos.x, pos.y, pos.z, 0, false);
 				this.setBlockLight(pos.x, pos.y, pos.z, 0, false);
 				worldManager.lightRemovalQueue.add(new LightRemoval(pos, (byte)15, this));
 				worldManager.sunlightRemovalQueue.add(new LightRemoval(pos, (byte)15, this));
 			}
-			//Tile.getTile(tile).onPlace((int)ax, (int)ay, (int)az, EnumFacing.NORTH, worldManager);
 			//ALWAYS assume that the rebuild argument will be false (except in special cases) because the setting of the meta rebuilds the chunk.
 			if(rebuild){
 				rebuild();
@@ -750,8 +751,9 @@ public class Chunk {
 		boolean inBoundsOne = (x-getPos().x >= 0) && (x-getPos().x < tiles.length);
 		boolean inBoundsTwo = (y-getPos().y >= 0) && (y-getPos().y < tiles[0].length);
 		boolean inBoundsThree = (z-getPos().z >= 0) && (z-getPos().z < tiles[0][0].length);
-		if(inBoundsOne && inBoundsTwo && inBoundsThree)
+		if(inBoundsOne && inBoundsTwo && inBoundsThree){
 			scheduledBlockUpdates.add(new Vector3f(x,y,z));
+		}
 	}
 	
 	// Get the bits XXXX0000

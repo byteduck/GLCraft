@@ -86,7 +86,11 @@ public class Client{
 				e.setRot(p.rot[0], p.rot[1], p.rot[2]);
 			}else if(op instanceof PacketBlockChange){
 				PacketBlockChange p = (PacketBlockChange) op;
-				this.worldManager.setTileAtPos(p.x, p.y, p.z, p.id, p.source, true);
+				if(!p.justMeta)
+					worldManager.setTileAtPos(p.x, p.y, p.z, p.id, p.source, true, p.meta);
+				else{
+					worldManager.setMetaAtPos(p.x, p.y, p.z, p.meta, false, true);
+				}
 			}else if(op instanceof PacketAddEntity){
 				PacketAddEntity p = (PacketAddEntity) op;
 				Entity e = ((PacketAddEntity) op).getEntity(worldManager);

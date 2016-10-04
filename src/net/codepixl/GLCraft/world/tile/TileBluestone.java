@@ -312,7 +312,7 @@ public class TileBluestone extends Tile{
 	}
 	
 	@Override
-	public void onPlace(int x, int y, int z, EnumFacing facing, WorldManager w){
+	public void onPlace(int x, int y, int z,  byte meta, EnumFacing facing, WorldManager w){
 		Vector3f one = new Vector3f(x+1,y,z);
 		Vector3f two = new Vector3f(x-1,y,z);
 		Vector3f three = new Vector3f(x,y,z+1);
@@ -327,7 +327,7 @@ public class TileBluestone extends Tile{
 	@Override
 	public void onBreak(int x, int y, int z, boolean drop, BreakSource source, WorldManager w){
 		super.onBreak(x,y,z,drop,source, w);
-		onPlace(x,y,z,EnumFacing.NORTH,w);
+		onPlace(x,y,z,(byte)0,EnumFacing.NORTH,w);
 	}
 	
 	@Override

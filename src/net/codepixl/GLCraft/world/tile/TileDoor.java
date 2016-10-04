@@ -118,8 +118,8 @@ public class TileDoor extends Tile{
 	}
 	
 	@Override
-	public void onPlace(int x, int y, int z, EnumFacing facing, WorldManager w){
-		if(w.getMetaAtPos(x,y,z) != 1)
+	public void onPlace(int x, int y, int z, byte meta, EnumFacing facing, WorldManager w){
+		if(meta != 1)
 			w.setTileAtPos(x, y+1, z, getId(), true, (byte)1);
 	}
 	

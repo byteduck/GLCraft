@@ -131,9 +131,9 @@ public class Tile {
 				for(int i=1; i<5; i++){
 					Particle particle = new Particle(new Vector3f(x+Constants.randFloat(0,1),y+Constants.randFloat(0,1),z+Constants.randFloat(0,1)), new Vector3f(Constants.randFloat(-0.1f, 0.1f),0,Constants.randFloat(-0.1f, 0.1f)), worldManager);
 					if(this.hasMetaTextures() == false){
-						particle.setTexCoords(this.getTexCoords());
+						particle.setTexName("tiles."+this.getIconName());
 					}else{
-						particle.setTexCoords(this.getIconCoords(worldManager.getMetaAtPos(x, y, z)));
+						particle.setTexName("tiles."+this.getIconName(worldManager.getMetaAtPos(x,y,z)));
 					}
 					particle.setLifeTime(Constants.randFloat(0.3f,0.7f));
 					worldManager.entityManager.add(particle);
@@ -212,9 +212,19 @@ public class Tile {
 		Tile.tileMap.put(getId(), this);
 	}
 	
-	public void onPlace(int x, int y, int z, EnumFacing playerFacing, WorldManager w){
-		if(this.metaRotate())
+	/**
+	 * Important: DO NOT ever count on this being called after the tile is actually placed. One packet might get there before the other.
+	 * @param x
+	 * @param y
+	 * @param z
+	 * @param meta
+	 * @param playerFacing
+	 * @param w
+	 */
+	public void onPlace(int x, int y, int z, byte meta, EnumFacing playerFacing, WorldManager w){
+		if(this.metaRotate()){
 			w.setMetaAtPos(x, y, z, (byte) ((byte)playerFacing.removeUpDown().inverse().value-(byte)2), true);
+		}
 	}
 	
 	public boolean canPlace(int x, int y, int z, WorldManager w){

@@ -18,6 +18,7 @@ import java.util.Timer;
 import java.util.TimerTask;
 import java.util.concurrent.Callable;
 
+import org.lwjgl.opengl.GL11;
 import org.lwjgl.util.vector.Vector3f;
 
 import com.evilco.mc.nbt.stream.NbtInputStream;
@@ -517,11 +518,19 @@ public class WorldManager {
 		}
 	}
 	
+	public void setMetaAtPos(int x, int y, int z, byte meta, boolean sendPacket, boolean rebuild){
+		setMetaAtPos(x,y,z,meta,rebuild,sendPacket,true,true);
+	}
+	
 	public void setMetaAtPos(int x, int y, int z, byte meta, boolean rebuild){
-		setMetaAtPos(x,y,z,meta,rebuild,true,true);
+		setMetaAtPos(x,y,z,meta,rebuild,true,true,true);
 	}
 	
 	public void setMetaAtPos(int x, int y, int z, byte meta, boolean rebuild, boolean blockUpdate, boolean updateSelf){
+		setMetaAtPos(x,y,z,meta,rebuild,blockUpdate,updateSelf);
+	}
+	
+	public void setMetaAtPos(int x, int y, int z, byte meta, boolean rebuild, boolean sendPacket, boolean blockUpdate, boolean updateSelf){
 		Chunk c = getChunk(x,y,z);
 		c.setMetaAtPos(x-(int)c.getPos().x, y-(int)c.getPos().y, z-(int)c.getPos().z,meta, rebuild);
 		if(blockUpdate){
@@ -533,6 +542,8 @@ public class WorldManager {
 			blockUpdate(x,y,z+1);
 			blockUpdate(x,y,z-1);
 		}
+		if(sendPacket && sendBlockPackets)
+			this.sendPacket(new PacketBlockChange(x,y,z,meta));
 		return;
 	}
 	
@@ -889,7 +900,10 @@ public class WorldManager {
 			Chunk c = (new ArrayList<Chunk>(activeChunks.values())).get(currentRebuild);
 			while(!c.isVisible()){
 				currentRebuild++;
-				currentRebuild%=activeChunks.size();
+				if(currentRebuild >= activeChunks.size()){
+					currentRebuild = 0;
+					break;
+				}
 				c = (new ArrayList<Chunk>(activeChunks.values())).get(currentRebuild);
 			}
 			c.rebuildBase(true);

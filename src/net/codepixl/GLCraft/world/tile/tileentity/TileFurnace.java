@@ -25,7 +25,6 @@ public class TileFurnace extends TileTileEntity{
 
 	@Override
 	public TileEntity getSpawnTileEntity(int x, int y, int z, WorldManager w){
-		//System.out.println("DOOT OOOODOT");
 		return new TileEntityFurnace(x, y, z, w);
 	}
 	

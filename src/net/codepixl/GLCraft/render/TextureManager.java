@@ -58,6 +58,7 @@ public class TextureManager {
 		addTexture("misc.floppy",MISC+"floppy.png");
 		addTexture("misc.sun",MISC+"sun.png");
 		addTexture("misc.moon",MISC+"moon.png");
+		addTexture("misc.no_img",MISC+"no_img.png");
 	}
 	public static void regenerateAtlas(){
 		atlasCoords = new HashMap<String,float[]>();
@@ -173,7 +174,10 @@ public class TextureManager {
 		}
 	}
 	public static float[] texture(String s){
-		return atlasCoords.get(s.toLowerCase());
+		if(atlasCoords.containsKey(s))
+			return atlasCoords.get(s.toLowerCase());
+		else
+			return atlasCoords.get("misc.no_img");
 	}
 	public static float[] itemStackIcon(ItemStack i) {
 		if(!i.isNull()){

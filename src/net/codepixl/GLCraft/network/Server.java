@@ -14,6 +14,7 @@ import org.lwjgl.util.vector.Vector3f;
 import net.codepixl.GLCraft.GLCraft;
 import net.codepixl.GLCraft.network.packet.Packet;
 import net.codepixl.GLCraft.network.packet.PacketBlockChange;
+import net.codepixl.GLCraft.network.packet.PacketOnPlace;
 import net.codepixl.GLCraft.network.packet.PacketPlayerAdd;
 import net.codepixl.GLCraft.network.packet.PacketPlayerLogin;
 import net.codepixl.GLCraft.network.packet.PacketPlayerLoginResponse;
@@ -23,9 +24,11 @@ import net.codepixl.GLCraft.network.packet.PacketSendChunk;
 import net.codepixl.GLCraft.network.packet.PacketSetBufferSize;
 import net.codepixl.GLCraft.network.packet.PacketUtil;
 import net.codepixl.GLCraft.network.packet.PacketWorldTime;
+import net.codepixl.GLCraft.network.packet.PacketAddEntity;
 import net.codepixl.GLCraft.util.Constants;
 import net.codepixl.GLCraft.world.WorldManager;
 import net.codepixl.GLCraft.world.entity.mob.EntityPlayerMP;
+import net.codepixl.GLCraft.world.tile.Tile;
 
 public class Server{
 	
@@ -81,7 +84,10 @@ public class Server{
 			}else if(op instanceof PacketBlockChange){
 				PacketBlockChange p = (PacketBlockChange)op;
 				sendToAllClients(p);
-				worldManager.setTileAtPos(p.x, p.y, p.z, p.id, p.source, true, p.meta);
+				if(!p.justMeta)
+					worldManager.setTileAtPos(p.x, p.y, p.z, p.id, p.source, false, p.meta);
+				else
+					worldManager.setMetaAtPos(p.x, p.y, p.z, p.meta, false, false);
 			}else if(op instanceof PacketPlayerPos){
 				PacketPlayerPos p = (PacketPlayerPos)op;
 				sendToAllClientsExcept(new PacketPlayerPos(p),c);
@@ -93,6 +99,9 @@ public class Server{
 				if(p.bufferSize <= 1000000){ //Make sure the size is <= 1M (to prevent attacks)
 					this.socket.setReceiveBufferSize(p.bufferSize);
 				}
+			}else if(op instanceof PacketOnPlace){
+				PacketOnPlace p = (PacketOnPlace)op;
+				Tile.getTile(p.tile).onPlace(p.x, p.y, p.z, p.meta, p.facing, worldManager);
 			}
 		}catch(IOException e){
 			e.printStackTrace();

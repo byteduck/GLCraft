@@ -391,7 +391,7 @@ public class TileWater extends Tile{
 	}
 	
 	@Override
-	public void onPlace(int x, int y, int z, EnumFacing facing, WorldManager w){
+	public void onPlace(int x, int y, int z, byte meta, EnumFacing facing, WorldManager w){
 		w.blockUpdate(x, y, z);
 	}
 	

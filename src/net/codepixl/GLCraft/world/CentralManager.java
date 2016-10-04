@@ -203,7 +203,7 @@ public class CentralManager extends Screen{
 	private void input(){
 		if(!isServer){
 			guiManager.input();
-			if(Mouse.isButtonDown(0) && guiManager.mouseShouldBeGrabbed()){
+			if(!Mouse.isGrabbed() && Mouse.isButtonDown(0) && guiManager.mouseShouldBeGrabbed()){
 				Mouse.setGrabbed(true);
 			}else if(!guiManager.mouseShouldBeGrabbed()){
 				Mouse.setGrabbed(false);

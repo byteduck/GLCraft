@@ -8,8 +8,8 @@ import net.codepixl.GLCraft.world.tile.Tile;
 
 public class TileTileEntity extends Tile{
 	@Override
-	public void onPlace(int x, int y, int z, EnumFacing facing, WorldManager w){
-		super.onPlace(x, y, z, facing, w);
+	public void onPlace(int x, int y, int z, byte meta, EnumFacing facing, WorldManager w){
+		super.onPlace(x, y, z, meta, facing, w);
 		w.entityManager.add(this.getSpawnTileEntity(x,y,z,w));
 	}
 	

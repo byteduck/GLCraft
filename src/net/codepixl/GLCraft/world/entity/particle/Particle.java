@@ -5,15 +5,20 @@ import java.util.List;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.util.vector.Vector3f;
 
+import com.evilco.mc.nbt.error.TagNotFoundException;
+import com.evilco.mc.nbt.error.UnexpectedTagTypeException;
 import com.evilco.mc.nbt.tag.TagCompound;
-import com.nishu.utils.Color4f;
+import com.evilco.mc.nbt.tag.TagFloat;
+import com.evilco.mc.nbt.tag.TagString;
 import com.nishu.utils.Time;
 
 import net.codepixl.GLCraft.render.Shape;
+import net.codepixl.GLCraft.render.TextureManager;
 import net.codepixl.GLCraft.util.AABB;
 import net.codepixl.GLCraft.world.WorldManager;
 import net.codepixl.GLCraft.world.entity.Entity;
 import net.codepixl.GLCraft.world.entity.EntitySolid;
+import net.codepixl.GLCraft.world.entity.NBTUtil;
 import net.codepixl.GLCraft.world.entity.mob.EntityPlayer;
 import net.codepixl.GLCraft.world.tile.Tile;
 
@@ -22,8 +27,9 @@ public class Particle extends EntitySolid{
 	private float texCoords[];
 	private float size;
 	private float lifetime;
+	private String texName;
 	
-	public Particle(Vector3f pos, Vector3f vel,WorldManager w){
+	public Particle(Vector3f pos, Vector3f vel, WorldManager w){
 		super(pos,new Vector3f(0,0,0),new Vector3f(0,0,0),w);
 		this.texCoords = Tile.Lava.getTexCoords();
 		this.size = 0.2f;
@@ -35,6 +41,11 @@ public class Particle extends EntitySolid{
 	
 	public void setTexCoords(float[] tc){
 		this.texCoords = tc;
+	}
+	
+	public void setTexName(String name){
+		this.texCoords = TextureManager.texture(name);
+		this.texName = name;
 	}
 	
 	public void setSize(float size){
@@ -77,14 +88,28 @@ public class Particle extends EntitySolid{
 	public void RegisterParicle(){
 		
 	}
-	
-	public static Entity fromNBT(TagCompound t, WorldManager w){
-		return null;
-	}
 
 	public void setLifeTime(float l) {
 		this.lifetime = l;
 	}
-
+	
+	@Override
+	public void writeToNBT(TagCompound t){
+		TagFloat tSize = new TagFloat("size",size);
+		TagFloat tLifetime = new TagFloat("lifetime",lifetime);
+		String texName = this.texName == null ? "" : this.texName;
+		TagString tTexName = new TagString("texName",texName);
+		t.setTag(tSize);
+		t.setTag(tLifetime);
+		t.setTag(tTexName);
+	}
+	
+	public static Entity fromNBT(TagCompound t, WorldManager w) throws UnexpectedTagTypeException, TagNotFoundException{
+		Particle p = new Particle(NBTUtil.vecFromList("Pos", t), NBTUtil.vecFromList("Vel", t), w);
+		p.setTexName(t.getString("texName"));
+		p.setSize(t.getFloat("size"));
+		p.setLifeTime(t.getFloat("lifetime"));
+		return p;
+	}
 	
 }
