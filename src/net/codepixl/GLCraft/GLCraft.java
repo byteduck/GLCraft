@@ -187,6 +187,7 @@ public class GLCraft extends Screen{
 		//serverCentralManager = new CentralManager(true);
 		clientWorldManager = clientCentralManager.getWorldManager();
 		//serverWorldManager = serverCentralManager.getWorldManager();
+
 		
 		String pluginsFolder = Constants.GLCRAFTDIR+"/plugins";
 		new File(pluginsFolder).mkdirs();
@@ -289,11 +290,13 @@ public class GLCraft extends Screen{
 		clientCentralManager.dispose();
 	}
 	
+	
 	public static void main(String[] args) throws IOException, LWJGLException{
 		Thread.setDefaultUncaughtExceptionHandler(new CrashHandler());
 		try{
 			Files.deleteIfExists(new File(System.getProperty("user.home")+"/GLCraft/GLCraft.log").toPath());
 		}catch(FileSystemException e){
+			e.printStackTrace();
 			//JOptionPane.showMessageDialog(null, "You can only run one GLCraft instance at a time.", "GLCraft", JOptionPane.ERROR_MESSAGE);
 			//System.exit(0);
 		}

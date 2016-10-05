@@ -751,11 +751,13 @@ public class Chunk {
 	 * Position is in WORLD coordinates.
 	 */
 	public void blockUpdate(int x, int y, int z) {
-		boolean inBoundsOne = (x-getPos().x >= 0) && (x-getPos().x < tiles.length);
-		boolean inBoundsTwo = (y-getPos().y >= 0) && (y-getPos().y < tiles[0].length);
-		boolean inBoundsThree = (z-getPos().z >= 0) && (z-getPos().z < tiles[0][0].length);
-		if(inBoundsOne && inBoundsTwo && inBoundsThree){
-			scheduledBlockUpdates.add(new Vector3f(x,y,z));
+		if(this.worldManager.isServer){
+			boolean inBoundsOne = (x-getPos().x >= 0) && (x-getPos().x < tiles.length);
+			boolean inBoundsTwo = (y-getPos().y >= 0) && (y-getPos().y < tiles[0].length);
+			boolean inBoundsThree = (z-getPos().z >= 0) && (z-getPos().z < tiles[0][0].length);
+			if(inBoundsOne && inBoundsTwo && inBoundsThree){
+				scheduledBlockUpdates.add(new Vector3f(x,y,z));
+			}
 		}
 	}
 	

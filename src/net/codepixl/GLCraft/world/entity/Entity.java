@@ -215,7 +215,7 @@ public class Entity implements GameObj{
 	public void clientUpdate(){
 		this.light = worldManager.getLightIntensity((int)this.pos.x, (int)this.pos.y, (int)this.pos.z);
 		timeAlive+=(Time.getDelta()*1000f);
-		this.rot = MathUtils.modulus(this.rot, 360f);
+		MathUtils.modulus(this.rot, 360f);
 	}
 
 	@Override

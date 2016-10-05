@@ -65,6 +65,7 @@ public class TexturePackManagerWindow extends JFrame {
 					InputStream in = zf.getInputStream(zf.getEntry("preview.png"));
 					tpicon = ImageIO.read(in);
 					zf.close();
+					in.close();
 				} catch (IOException e) {
 					e.printStackTrace();
 					tpicon = (BufferedImage) ogIcon.getScaledInstance(ogIcon.getWidth(), ogIcon.getHeight(), Image.SCALE_FAST);

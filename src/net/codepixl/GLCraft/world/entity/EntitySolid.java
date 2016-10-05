@@ -9,12 +9,15 @@ import com.nishu.utils.Time;
 import net.codepixl.GLCraft.util.AABB;
 import net.codepixl.GLCraft.util.MathUtils;
 import net.codepixl.GLCraft.world.WorldManager;
+import net.codepixl.GLCraft.world.entity.mob.EntityPlayer;
+import net.codepixl.GLCraft.world.entity.mob.EntityPlayerMP;
 import net.codepixl.GLCraft.world.tile.Tile;
 
 public class EntitySolid extends Entity{
 	
 	public AABB aabb;
 	public boolean onGround = false;
+	public Vector3f collideVec = new Vector3f();
 	
 	public EntitySolid(float x, float y, float z, WorldManager worldManager){
 		super(x,y,z,worldManager);
@@ -54,10 +57,10 @@ public class EntitySolid extends Entity{
 				boolean found = false;
 				float u = 1;
 				while(!found){
-					Vector3f to = MathUtils.PointAlongLine(this.getPos(), toPos, u);
-					toAABB.update(to);
+					MathUtils.PointAlongLine(this.getPos(), toPos, collideVec, u);
+					toAABB.update(collideVec);
 					if(!AABB.testAABB(toAABB, next)){
-						toPos = to;
+						toPos = collideVec;
 						found = true;
 					}
 					u = u/2f;
@@ -147,6 +150,35 @@ public class EntitySolid extends Entity{
 			this.getVelocity().x = 0;
 			this.getVelocity().y = 0;
 			this.getVelocity().z = 0;
+		}
+	}
+	
+	@Override
+	public void clientUpdate(){
+		super.clientUpdate();
+		//All of this is to move the entity based on it's last position & velocity from the server, so movement looks smooth.
+		if(!(this instanceof EntityPlayer) || this instanceof EntityPlayerMP){
+			aabb.update(new Vector3f(pos.x+(float)aabb.r[0],pos.y,pos.z+(float)aabb.r[2]));
+			/*while(testHitHead(new Vector3f(this.getX(),this.getY()+this.aabb.getSize().y+0.01f,this.getZ()))){
+				this.getVel().y = 0f;
+			}*/
+			this.move((this.getVelocity().x * (float)Time.getDelta() * 10),(this.getVelocity().y * (float)Time.getDelta() * 10),(this.getVelocity().z * (float)Time.getDelta() * 10));
+			if(this.isInWater()){
+				this.getVelocity().y = MathUtils.towardsValue(this.getVelocity().y, (float)Time.getDelta()*3, -0.2f);
+			}else if(this.getVelocity().y > -3f && !onGround){
+				this.getVelocity().y -= Time.getDelta()*3;
+			}else if(!onGround){
+				this.getVelocity().y = -3f;
+			}else{
+				this.getVelocity().y = 0.0f;
+			}
+			this.getVelocity().x = MathUtils.towardsZero(this.getVelocity().x,(float)Time.getDelta());
+			this.getVelocity().z = MathUtils.towardsZero(this.getVelocity().z,(float)Time.getDelta());
+			if(onGround){
+				this.getVelocity().x = 0;
+				this.getVelocity().y = 0;
+				this.getVelocity().z = 0;
+			}
 		}
 	}
 	

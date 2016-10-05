@@ -128,6 +128,7 @@ public class EntityManager implements GameObj{
 		root.setTag(list);
 		nbtOutputStream.write(root);
 		nbtOutputStream.close();
+		outputStream.close();
 	}
 	
 	public void removeAll(){

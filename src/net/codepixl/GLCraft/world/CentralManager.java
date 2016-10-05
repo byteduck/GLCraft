@@ -151,6 +151,7 @@ public class CentralManager extends Screen{
 		} catch (InvalidRecipeException e) {
 			e.printStackTrace();
 		}
+		
 		worldManager = new WorldManager(this, isServer);
 		if(!isServer){
 			guiManager.setGameGUI(new GUIGame(worldManager));
@@ -162,8 +163,9 @@ public class CentralManager extends Screen{
 		try{
 			if(isServer)
 				server = new Server(worldManager, Server.DEFAULT_SERVER_PORT);
-			else
+			else{
 				client = new Client(worldManager, Client.DEFAULT_CLIENT_PORT);
+			}
 		}catch(IOException e){
 			e.printStackTrace();
 		}

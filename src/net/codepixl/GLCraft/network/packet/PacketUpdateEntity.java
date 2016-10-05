@@ -35,7 +35,11 @@ public class PacketUpdateEntity extends Packet{
 				this.entityData = ops.toByteArray();
 				ops.close();
 			} catch (IOException e1) {
-				// TODO Auto-generated catch block
+				try {
+					o.close();
+				} catch (IOException e2) {
+					e2.printStackTrace();
+				}
 				e1.printStackTrace();
 			}
 		}else if(type == Type.POSITION){
@@ -56,6 +60,8 @@ public class PacketUpdateEntity extends Packet{
 	public Entity getEntity(WorldManager w) throws IOException, NoSuchMethodException, SecurityException, IllegalAccessException, IllegalArgumentException, InvocationTargetException{
 		ByteArrayInputStream bis = new ByteArrayInputStream(entityData);
 		NbtInputStream in = new NbtInputStream(bis);
+		TagCompound t = (TagCompound) in.readTag();
+		in.close();
 		return NBTUtil.readEntity((TagCompound)in.readTag(), w);
 	}
 }

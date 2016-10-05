@@ -86,12 +86,10 @@ public class MathUtils {
     }
     
     //Gives point along a line where the line is a to b. U is the percent along the line.
-    public static Vector3f PointAlongLine(Vector3f a, Vector3f b, float u){
-    	Vector3f ret = new Vector3f();
-    	ret.x = (1-u)*a.x+u*b.x;
-    	ret.y = (1-u)*a.y+u*b.y;
-    	ret.z = (1-u)*a.z+u*b.z;
-    	return ret;
+    public static void PointAlongLine(Vector3f a, Vector3f b, Vector3f dest, float u){
+    	dest.x = (1-u)*a.x+u*b.x;
+    	dest.y = (1-u)*a.y+u*b.y;
+    	dest.z = (1-u)*a.z+u*b.z;
     }
     
     public static float easeInOutQuad(float t, float b, float c, float d) {
@@ -105,12 +103,10 @@ public class MathUtils {
     	return c*t/d + b;
     }
     
-    public static Vector3f noEasingVec(float t, Vector3f from, Vector3f to, float d){
-    	return new Vector3f(noEasing(t,from.x,to.x,d),noEasing(t,from.y,to.y,d),noEasing(t,from.z,to.z,d));
-    }
-    
-    public static Vector3f modulus(Vector3f f, float mod){
-    	return new Vector3f(f.x % mod, f.y % mod, f.z % mod);
+    public static void modulus(Vector3f f, float mod){
+    	f.x%=mod;
+    	f.y%=mod;
+    	f.z%=mod;
     }
     
     public static Vector3f randomSpherePoint(Random r, float size){

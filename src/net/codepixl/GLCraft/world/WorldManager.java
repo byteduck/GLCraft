@@ -69,7 +69,6 @@ public class WorldManager {
 	public CentralManager centralManager;
 	public float tick = 0f;
 	public int currentChunk = 0;
-	private static WorldManager cw;
 	private boolean saving = false;
 	private Save currentSave;
 	private long worldTime;
@@ -85,11 +84,13 @@ public class WorldManager {
 	public int chunksLeftToDownload = 0;
 	private Queue<Callable<Void>> actionQueue = new LinkedList<Callable<Void>>();
 	public boolean sendBlockPackets = true;
+	private static WorldManager cw;
 	
 	public WorldManager(CentralManager w, boolean isServer){
 		this.centralManager = w;
-		cw = this;
 		this.isServer = isServer;
+		if(isServer)
+			cw = this;
 		initGL();
 		init();
 		scheduleSaving();
@@ -376,9 +377,11 @@ public class WorldManager {
 		Iterator<Entry<Vector2i, TagCompound>> it = regions.entrySet().iterator();
 	    while (it.hasNext()) {
 	    	Entry<Vector2i, TagCompound> next = it.next();
-	    	NbtOutputStream s = new NbtOutputStream(new FileOutputStream(new File(f,"r"+next.getKey().toString().replace("[","").replace("]","").replace(',', '.')+".nbt")));
+	    	FileOutputStream fos = new FileOutputStream(new File(f,"r"+next.getKey().toString().replace("[","").replace("]","").replace(',', '.')+".nbt"));
+	    	NbtOutputStream s = new NbtOutputStream(fos);
 	    	s.write(next.getValue());
 	    	s.close();
+	    	fos.close();
 	    }
 	}
 	
@@ -386,7 +389,8 @@ public class WorldManager {
 		File regionsFile = new File(Constants.GLCRAFTDIR+"saves/"+s.name+"/region");
 		String[] files = regionsFile.list();
 		for(String file : files){
-			NbtInputStream in = new NbtInputStream(new FileInputStream(new File(regionsFile,file)));
+			FileInputStream fis = new FileInputStream(new File(regionsFile,file));
+			NbtInputStream in = new NbtInputStream(fis);
 			TagCompound t = (TagCompound) in.readTag();
 			Map<String, ITag> tags = t.getTags();
 			Iterator<Entry<String, ITag>> i = tags.entrySet().iterator();
@@ -399,7 +403,8 @@ public class WorldManager {
 					activeChunks.get(pos).load(chunkTag);
 				}
 			}
-			
+			in.close();
+			fis.close();
 		}
 		
 		Iterator<Chunk> i = this.activeChunks.values().iterator();
@@ -495,12 +500,15 @@ public class WorldManager {
 	public void setTileAtPos(int x, int y, int z, byte tile, BreakSource source, boolean rebuild, byte meta){
 		Chunk c = getChunk(x,y,z);
 		c.setTileAtPos(x-(int)c.getPos().x, y-(int)c.getPos().y, z-(int)c.getPos().z, tile, meta, source, true);
-		blockUpdate(x+1,y,z);
-		blockUpdate(x-1,y,z);
-		blockUpdate(x,y+1,z);
-		blockUpdate(x,y-1,z);
-		blockUpdate(x,y,z+1);
-		blockUpdate(x,y,z-1);
+		if(this.isServer){
+			blockUpdate(x,y,z);
+			blockUpdate(x+1,y,z);
+			blockUpdate(x-1,y,z);
+			blockUpdate(x,y+1,z);
+			blockUpdate(x,y-1,z);
+			blockUpdate(x,y,z+1);
+			blockUpdate(x,y,z-1);
+		}
 		if(sendBlockPackets && source.sendPacket)
 			this.sendPacket(new PacketBlockChange(x,y,z,tile,meta,source));
 		return;
@@ -534,7 +542,7 @@ public class WorldManager {
 	public void setMetaAtPos(int x, int y, int z, byte meta, boolean rebuild, boolean sendPacket, boolean blockUpdate, boolean updateSelf){
 		Chunk c = getChunk(x,y,z);
 		c.setMetaAtPos(x-(int)c.getPos().x, y-(int)c.getPos().y, z-(int)c.getPos().z,meta, rebuild);
-		if(blockUpdate){
+		if(this.isServer && blockUpdate){
 			if(updateSelf) blockUpdate(x,y,z);
 			blockUpdate(x+1,y,z);
 			blockUpdate(x-1,y,z);
@@ -550,8 +558,9 @@ public class WorldManager {
 	
 	public void blockUpdate(int x, int y, int z){
 		Chunk c = getChunk(x,y,z);
-		if(c != null)
-		c.blockUpdate(x, y, z);
+		if(c != null){
+			c.blockUpdate(x, y, z);
+		}
 	}
 	
 	public Chunk getChunk(int x, int y, int z){
@@ -630,10 +639,12 @@ public class WorldManager {
 	}
 
 	public static boolean saveWorld(boolean quit) {
-		if(!cw.isSaving() && cw.doneGenerating)
-			return SaveManager.saveWorld(cw, cw.currentSave, quit);
-		else if(quit)
-			System.exit(0);
+		if(cw != null){
+			if(!cw.isSaving() && cw.doneGenerating)
+				return SaveManager.saveWorld(cw, cw.currentSave, quit);
+			else if(quit)
+				System.exit(0);
+		}
 		return true;
 	}
 
@@ -786,6 +797,7 @@ public class WorldManager {
 			for(Chunk c : lightRebuildQueue){
 				c.rebuild();
 			}
+			lightRebuildQueue.clear();
 		}else{
 			this.sunlightQueue.clear();
 			this.sunlightRemovalQueue.clear();

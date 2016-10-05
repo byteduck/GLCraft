@@ -32,6 +32,7 @@ public class LoadedPlugin {
 			loader = new URLClassLoader(new URL[]{new URL("jar:file:"+path+"!/")}, ClassLoader.getSystemClassLoader());
 			InputStream jsonInputStream = loader.getResourceAsStream("plugin.json");
 			byte[] data = readFully(jsonInputStream);
+			jsonInputStream.close();
 			String jsonString = new String(data,StandardCharsets.UTF_8);
 			JSONObject json = new JSONObject(jsonString);
 			this.name = json.getString("pluginName");

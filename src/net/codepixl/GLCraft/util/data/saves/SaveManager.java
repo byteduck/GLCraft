@@ -200,6 +200,8 @@ public class SaveManager {
 					//System.err.println("WARNING: ENTITY IN SAVE WAS NULL.");
 				}
 			}
+			nbtInputStream.close();
+			inputStream.close();
 			return true;
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -236,9 +238,12 @@ public class SaveManager {
 					TagByteArray meta = new TagByteArray("meta", buf);
 					tag.setTag(meta);
 					nbtInputStream.close();
-					NbtOutputStream out = new NbtOutputStream(new FileOutputStream(new File(s.getFolder(),"chunks/chunk"+chunk+".nbt")));
+					FileOutputStream fos = new FileOutputStream(new File(s.getFolder(),"chunks/chunk"+chunk+".nbt"));
+					NbtOutputStream out = new NbtOutputStream(fos);
 					out.write(tag);
 					out.close();
+					fos.close();
+					inputStream.close();
 				}
 				s.format = formatV2;
 			}else if(s.format.equals(formatV2)){
@@ -260,15 +265,18 @@ public class SaveManager {
 						regions.put(reg, new TagCompound(reg.toString()));
 					tag.setName("chunk"+pos.toString().replace("Vector3f", ""));
 					regions.get(reg).setTag(tag);
+					inputStream.close();
 				}
 				Iterator<Entry<Vector2i, TagCompound>> i = regions.entrySet().iterator();
 				new File(s.getFolder(),"region/").mkdirs();
 				while(i.hasNext()){
 					GLCraft.getGLCraft().getCentralManager(false).renderSplashText("Upgrading world...", "V2 to V3 (saving regions)");
 					Entry<Vector2i, TagCompound> next = i.next();
-					NbtOutputStream out = new NbtOutputStream(new FileOutputStream(new File(s.getFolder(),"region/r"+next.getKey().toString().replace("[","").replace("]","").replace(',', '.')+".nbt")));
+					FileOutputStream fos = new FileOutputStream(new File(s.getFolder(),"region/r"+next.getKey().toString().replace("[","").replace("]","").replace(',', '.')+".nbt"));
+					NbtOutputStream out = new NbtOutputStream(fos);
 					out.write(next.getValue());
 					out.close();
+					fos.close();
 				}
 			    FileUtil.deleteDirectory(new File(Constants.GLCRAFTDIR+"saves/"+s.name+"/chunks"));
 				s.format = formatV3;
@@ -297,6 +305,7 @@ public class SaveManager {
 		t.setTag(worldTimeTag);
 		nbtOutputStream.write(t);
 		nbtOutputStream.close();
+		outputStream.close();
 	}
 	
 	public static Save getSave(String name) throws IOException{
@@ -314,6 +323,7 @@ public class SaveManager {
 				}catch(TagNotFoundException | NullPointerException e){
 					
 				}
+				inputStream.close();
 				return new Save(name,tag.getString("name"),tag.getString("version"),tag.getString("format"),timestamp,worldTime);
 			}catch(TagNotFoundException | NullPointerException e){
 				System.err.println("WARNING: world "+name+" is corrupted!");

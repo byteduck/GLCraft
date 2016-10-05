@@ -26,7 +26,11 @@ public class PacketAddEntity extends Packet{
 			this.entityData = ops.toByteArray();
 			ops.close();
 		} catch (IOException e1) {
-			// TODO Auto-generated catch block
+			try {
+				o.close();
+			} catch (IOException e2) {
+				e2.printStackTrace();
+			}
 			e1.printStackTrace();
 		}
 		this.entityID = e.getID();
@@ -37,6 +41,7 @@ public class PacketAddEntity extends Packet{
 		NbtInputStream in = new NbtInputStream(bis);
 		Entity e = NBTUtil.readEntity((TagCompound)in.readTag(), w);
 		e.setId(entityID);
+		in.close();
 		return e;
 	}
 }

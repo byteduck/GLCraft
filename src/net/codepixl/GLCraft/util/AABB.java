@@ -24,6 +24,7 @@ public class AABB {
 	public double pos[];
 	public double vel[];
 	public double r[];
+	private Vector3f sizeVec = new Vector3f();
 
 	public AABB(final float width, final float height, final float length) {
 		center = new double[3];
@@ -75,7 +76,10 @@ public class AABB {
 	}
 
 	public Vector3f getSize() {
-		return new Vector3f((float)r[0] * 2, (float)r[1] * 2, (float)r[2] * 2);
+		sizeVec.x = (float)r[0] * 2;
+		sizeVec.y = (float)r[1] * 2;
+		sizeVec.z = (float)r[2] * 2;
+		return sizeVec;
 	}
 
 	public void render() {

@@ -14,6 +14,8 @@ public class Raytracer {
 	private Raytracer() {
 	}
 	
+	private static Vector3f nearVec = new Vector3f(), farVec = new Vector3f();
+	
 	public static Ray getScreenCenterRay() {
 		float winX = Display.getWidth() / 2, winY = Display.getHeight() / 2;
 		
@@ -29,8 +31,8 @@ public class Raytracer {
 		GLU.gluUnProject(winX, winY, 0, modelview, projection, viewport, positionNear);
 		GLU.gluUnProject(winX, winY, 1, modelview, projection, viewport, positionFar);
 		
-		Vector3f nearVec = new Vector3f(positionNear.get(0), positionNear.get(1), positionNear.get(2));
-		Vector3f farVec = new Vector3f(positionFar.get(0), positionFar.get(1), positionFar.get(2));
+		nearVec.set(positionNear.get(0), positionNear.get(1), positionNear.get(2));
+		farVec.set(positionFar.get(0), positionFar.get(1), positionFar.get(2));
 		return new Ray(nearVec, Vector3f.sub(farVec, nearVec, null).normalise(null), 0.01f);
 	}
 	

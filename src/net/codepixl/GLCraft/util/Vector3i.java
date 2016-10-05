@@ -6,6 +6,7 @@ import org.lwjgl.util.vector.Vector3f;
 
 public class Vector3i implements Serializable{
 	public int x,y,z;
+	private Vector3f v3f = new Vector3f();
 	public Vector3i(int x, int y, int z){
 		this.x = x;
 		this.y = y;
@@ -47,7 +48,8 @@ public class Vector3i implements Serializable{
 	}
 
 	public Vector3f toVector3f() {
-		return new Vector3f(x,y,z);
+		v3f.set(x,y,z);
+		return v3f;
 	}
    
 }

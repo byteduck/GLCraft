@@ -94,9 +94,9 @@ public class Server{
 			}else if(op instanceof PacketPlayerPos){
 				PacketPlayerPos p = (PacketPlayerPos)op;
 				sendToAllClientsExcept(new PacketPlayerPos(p),c);
-				c.player.setPos(new Vector3f(p.pos[0],p.pos[1],p.pos[2]));
-				c.player.setRot(new Vector3f(p.rot[0],p.rot[1],p.rot[2]));
-				c.player.setVel(new Vector3f(p.vel[0],p.vel[1],p.vel[2]));
+				c.player.getPos().set(p.pos[0], p.pos[1], p.pos[2]);
+				c.player.getRot().set(p.rot[0], p.rot[1], p.rot[2]);
+				c.player.getVel().set(p.vel[0], p.vel[1], p.vel[2]);
 			}else if(op instanceof PacketSetBufferSize){
 				PacketSetBufferSize p = (PacketSetBufferSize)op;
 				if(p.bufferSize <= 1000000){ //Make sure the size is <= 1M (to prevent attacks)
