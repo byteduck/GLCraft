@@ -162,9 +162,9 @@ public class CentralManager extends Screen{
 		
 		try{
 			if(isServer)
-				server = new Server(worldManager, Server.DEFAULT_SERVER_PORT);
+				server = new Server(worldManager);
 			else{
-				client = new Client(worldManager, Client.DEFAULT_CLIENT_PORT);
+				client = new Client(worldManager);
 			}
 		}catch(IOException e){
 			e.printStackTrace();

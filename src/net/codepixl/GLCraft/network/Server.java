@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
+import java.net.SocketException;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -44,13 +45,31 @@ public class Server{
 	public WorldManager worldManager;
 	
 	public Server(WorldManager w, int port) throws IOException{
+		if(!commonInit(w,port)){throw new IOException("Error binding to port");}
+	}
+	
+	public Server(WorldManager w) throws IOException{
+		int i = 0;
+		while(!commonInit(w,Constants.randInt(5400, 6000)) && i < 50){i++;}
+		if(i >= 50)
+			throw new IOException("Error binding to all tried ports");
+	}
+	
+	private boolean commonInit(WorldManager w, int port){
 		clients = new HashMap<InetAddress, ServerClient>();
-		socket = new DatagramSocket(port);
+		try{
+			socket = new DatagramSocket(port);
+		}catch(SocketException e){
+			e.printStackTrace();
+			return false;
+		}
 		this.worldManager = w;
 		GLCraft.getGLCraft().setServer(this);
 		connectionRunnable = new ConnectionRunnable(this);
 		connectionThread = new Thread(connectionRunnable);
 		connectionThread.start();
+		System.out.println("[SERVER] Running on port "+port);
+		return true;
 	}
 	
 	public class ServerClient{

@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
+import java.net.SocketException;
 
 import org.lwjgl.util.vector.Vector3f;
 
@@ -23,6 +24,7 @@ import net.codepixl.GLCraft.network.packet.PacketSetInventory;
 import net.codepixl.GLCraft.network.packet.PacketUpdateEntity;
 import net.codepixl.GLCraft.network.packet.PacketUtil;
 import net.codepixl.GLCraft.network.packet.PacketWorldTime;
+import net.codepixl.GLCraft.util.Constants;
 import net.codepixl.GLCraft.world.WorldManager;
 import net.codepixl.GLCraft.world.entity.Entity;
 import net.codepixl.GLCraft.world.entity.mob.EntityPlayerMP;
@@ -40,13 +42,31 @@ public class Client{
 	public volatile ServerConnectionState connectionState;
 	
 	public Client(WorldManager w, int port) throws IOException{
-		socket = new DatagramSocket(port);
+		if(!commonInit(w,port)){throw new IOException("Error binding to port");}
+	}
+	
+	public Client(WorldManager w) throws IOException{
+		int i = 0;
+		while(!commonInit(w,Constants.randInt(5400, 6000)) && i < 50){i++;}
+		if(i >= 50)
+			throw new IOException("Error binding to all tried ports");
+	}
+	
+	private boolean commonInit(WorldManager w, int port){
+		try{
+			socket = new DatagramSocket(port);
+		}catch(SocketException e){
+			e.printStackTrace();
+			return false;
+		}
 		this.worldManager = w;
 		GLCraft.getGLCraft().setClient(this);
 		this.connectionState = new ServerConnectionState();
 		connectionRunnable = new ConnectionRunnable(this);
 		connectionThread = new Thread(connectionRunnable);
 		connectionThread.start();
+		System.out.println("[CLIENT] Running on port "+port);
+		return true;
 	}
 	
 	public void handlePacket(DatagramPacket dgp, Packet op){
