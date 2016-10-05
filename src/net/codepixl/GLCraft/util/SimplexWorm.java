@@ -2,6 +2,8 @@ package net.codepixl.GLCraft.util;
 
 import org.lwjgl.util.vector.Vector3f;
 
+import net.codepixl.GLCraft.util.logging.GLogger;
+
 public class SimplexWorm {
 	private OpenSimplexNoise n = new OpenSimplexNoise();
 	public Vector3f pos;
@@ -11,7 +13,7 @@ public class SimplexWorm {
 		rot.x = Math.round(rot.x);
 		rot.y = Math.round(rot.y);
 		rot.z = Math.round(rot.z);
-		System.out.println(x+","+rot); 
+		GLogger.log(x+","+rot, LogSource.GLCRAFT); 
 		this.pos = Vector3f.add(pos,rot,null);
 		return Vector3f.add(pos,rot,null);
 	}

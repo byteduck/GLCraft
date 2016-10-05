@@ -32,7 +32,7 @@ public class WorldLoadJobList{
 		}
 	}
 	public boolean contains(Vector3f next) {
-		//System.out.println("CONTAINS "+next+" IS "+jobs.contains(next));
+		//Logger.log("CONTAINS "+next+" IS "+jobs.contains(next));
 		return jobs.contains(next);
 	}
 }

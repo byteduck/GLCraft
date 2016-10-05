@@ -25,6 +25,8 @@ import net.codepixl.GLCraft.network.packet.PacketUpdateEntity;
 import net.codepixl.GLCraft.network.packet.PacketUtil;
 import net.codepixl.GLCraft.network.packet.PacketWorldTime;
 import net.codepixl.GLCraft.util.Constants;
+import net.codepixl.GLCraft.util.LogSource;
+import net.codepixl.GLCraft.util.logging.GLogger;
 import net.codepixl.GLCraft.world.WorldManager;
 import net.codepixl.GLCraft.world.entity.Entity;
 import net.codepixl.GLCraft.world.entity.mob.EntityPlayerMP;
@@ -65,7 +67,7 @@ public class Client{
 		connectionRunnable = new ConnectionRunnable(this);
 		connectionThread = new Thread(connectionRunnable);
 		connectionThread.start();
-		System.out.println("[CLIENT] Running on port "+port);
+		GLogger.log("Running on port "+port, LogSource.CLIENT);
 		return true;
 	}
 	

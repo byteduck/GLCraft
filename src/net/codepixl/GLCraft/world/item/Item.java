@@ -5,6 +5,8 @@ import java.util.HashMap;
 import com.nishu.utils.Color4f;
 
 import net.codepixl.GLCraft.render.TextureManager;
+import net.codepixl.GLCraft.util.LogSource;
+import net.codepixl.GLCraft.util.logging.GLogger;
 import net.codepixl.GLCraft.world.entity.mob.EntityPlayer;
 import net.codepixl.GLCraft.world.item.tool.ItemDiamondAxe;
 import net.codepixl.GLCraft.world.item.tool.ItemDiamondPickaxe;
@@ -60,7 +62,7 @@ public class Item {
 	}
 	
 	public void registerItem() {
-		System.out.println("Registering Item "+getName()+" ("+getId()+")");
+		GLogger.log("Registering Item "+getName()+" ("+getId()+")", LogSource.GLCRAFT);
 		Item.itemMap.put(getId(), this);
 		TextureManager.addTexture("items."+this.getTextureName(), TextureManager.ITEMS+this.getTextureName()+".png");
 	}

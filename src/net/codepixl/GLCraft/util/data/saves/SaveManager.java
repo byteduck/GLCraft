@@ -21,21 +21,18 @@ import com.evilco.mc.nbt.stream.NbtInputStream;
 import com.evilco.mc.nbt.stream.NbtOutputStream;
 import com.evilco.mc.nbt.tag.TagByteArray;
 import com.evilco.mc.nbt.tag.TagCompound;
-import com.evilco.mc.nbt.tag.TagFloat;
-import com.evilco.mc.nbt.tag.TagInteger;
-import com.evilco.mc.nbt.tag.TagList;
 import com.evilco.mc.nbt.tag.TagLong;
 import com.evilco.mc.nbt.tag.TagString;
 
 import net.codepixl.GLCraft.GLCraft;
 import net.codepixl.GLCraft.util.Constants;
 import net.codepixl.GLCraft.util.FileUtil;
+import net.codepixl.GLCraft.util.LogSource;
 import net.codepixl.GLCraft.util.Vector2i;
+import net.codepixl.GLCraft.util.logging.GLogger;
 import net.codepixl.GLCraft.world.WorldManager;
 import net.codepixl.GLCraft.world.entity.Entity;
 import net.codepixl.GLCraft.world.entity.NBTUtil;
-import net.codepixl.GLCraft.world.entity.mob.EntityPlayer;
-import net.codepixl.GLCraft.world.item.ItemStack;
 
 public class SaveManager {
 	
@@ -48,7 +45,7 @@ public class SaveManager {
 	public static boolean saveWorld(WorldManager tworldManager, Save tsave, boolean tquit){
 		if(!tworldManager.isServer) //Only servers should save worlds
 			return false;
-    	System.out.println("Saving world "+tsave+"...");
+    	GLogger.log("Saving world "+tsave+"...", LogSource.SERVER);
     	
 		tsave.name = tsave.name.replaceAll("[^ a-zA-Z0-9.-]", "_");
 		

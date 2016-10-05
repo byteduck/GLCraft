@@ -398,7 +398,7 @@ public class EntityPlayer extends Mob {
 							continue;
 						}
 					}
-					// System.out.println(worldManager.getTileAtPos((int)r.pos.x,
+					// Logger.log(worldManager.getTileAtPos((int)r.pos.x,
 					// (int)r.pos.y, (int)r.pos.z));
 					GL11.glDisable(GL11.GL_TEXTURE_2D);
 					GL11.glPolygonMode(GL11.GL_FRONT_AND_BACK, GL11.GL_LINE);

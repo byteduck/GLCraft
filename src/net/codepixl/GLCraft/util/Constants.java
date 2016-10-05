@@ -7,6 +7,8 @@ import java.util.Random;
 import org.lwjgl.util.vector.Vector3f;
 import org.newdawn.slick.TrueTypeFont;
 
+import net.codepixl.GLCraft.util.logging.GLogger;
+
 public class Constants {
 	public static Random rand = new Random();
 	public static int renderDistance = 10;
@@ -44,14 +46,13 @@ public class Constants {
 	public static Vector3f[] stars;
 
 	public static void gatherSystemInfo() {
-
 		Arrays.sort(SystemPropertyName);
-		System.out.println("Gathering System Info...\n");
+		GLogger.log("Gathering System Info...\n", LogSource.SILENT);
 		for (int i = 0; i < SystemPropertyName.length; i++) {
 			SystemProperty[i] = System.getProperty(SystemPropertyName[i]);
-			System.out.println("	" + SystemPropertyName[i] + " = " + SystemProperty[i]);
+			GLogger.log("	" + SystemPropertyName[i] + " = " + SystemProperty[i], LogSource.SILENT);
 		}
-		System.out.println("\n");
+		GLogger.log("\n", LogSource.SILENT);
 	}
 
 	public static String getGamePath() {

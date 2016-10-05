@@ -9,7 +9,9 @@ import org.lwjgl.util.vector.Vector3f;
 
 import com.nishu.utils.Color4f;
 
-import net.codepixl.GLCraft.util.Spritesheet;;
+import net.codepixl.GLCraft.util.LogSource;
+import net.codepixl.GLCraft.util.Spritesheet;
+import net.codepixl.GLCraft.util.logging.GLogger;;
 
 public class Shape {
 	
@@ -165,7 +167,7 @@ public class Shape {
 				glVertex3f(x, y + sizeY, z + sizeZ);
 			}
 			}catch(NullPointerException e){
-				System.out.println("Error rendering rect: Texcoords null");
+				GLogger.logerr("Error rendering rect: Texcoords null", LogSource.GLCRAFT);
 				e.printStackTrace();
 				System.exit(0);
 			}
@@ -313,11 +315,11 @@ public class Shape {
 			glVertex3f(x, y + sizeY, z + sizeZ);
 		}
 		}catch(NullPointerException e){
-			System.out.println("Error rendering rect: Texcoords null");
+			GLogger.logerr("Error rendering rect: Texcoords null", LogSource.GLCRAFT);
 			e.printStackTrace();
 			System.exit(0);
 		}catch(ArrayIndexOutOfBoundsException e){
-			System.out.println("Error rendering rect: texcoords/colors wrong size");
+			GLogger.logerr("Error rendering rect: texcoords/colors wrong size", LogSource.GLCRAFT);
 			e.printStackTrace();
 			System.exit(0);
 		}

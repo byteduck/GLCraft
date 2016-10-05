@@ -17,7 +17,7 @@ public class PluginItem extends Item{
 	
 	@Override
 	public void registerItem(){
-		//System.out.println("Attempted to register a plugin item the wrong way!");
+		//Logger.log("Attempted to register a plugin item the wrong way!");
 	}
 	
 	public PluginItem(Plugin p){

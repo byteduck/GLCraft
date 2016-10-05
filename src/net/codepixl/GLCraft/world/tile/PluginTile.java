@@ -15,7 +15,7 @@ public class PluginTile extends Tile{
 	
 	@Override
 	public void registerTile(){
-		//System.out.println("Attempted to register a plugin tile the wrong way!");
+		//Logger.log("Attempted to register a plugin tile the wrong way!");
 	}
 	
 	public PluginTile(Plugin p){

@@ -29,6 +29,8 @@ import net.codepixl.GLCraft.network.packet.PacketUpdateEntity;
 import net.codepixl.GLCraft.network.packet.PacketUtil;
 import net.codepixl.GLCraft.network.packet.PacketWorldTime;
 import net.codepixl.GLCraft.util.Constants;
+import net.codepixl.GLCraft.util.LogSource;
+import net.codepixl.GLCraft.util.logging.GLogger;
 import net.codepixl.GLCraft.world.WorldManager;
 import net.codepixl.GLCraft.world.entity.Entity;
 import net.codepixl.GLCraft.world.entity.mob.EntityPlayerMP;
@@ -68,7 +70,7 @@ public class Server{
 		connectionRunnable = new ConnectionRunnable(this);
 		connectionThread = new Thread(connectionRunnable);
 		connectionThread.start();
-		System.out.println("[SERVER] Running on port "+port);
+		GLogger.log("Running on port "+port, LogSource.SERVER);
 		return true;
 	}
 	
@@ -102,7 +104,7 @@ public class Server{
 				c.writePacket(new PacketWorldTime(worldManager.getWorldTime()));
 				sendToAllClients(new PacketPlayerAdd(mp.getID(), p.name, mp.getPos()));
 				this.sendChunkPackets();
-				System.out.println("[SERVER] New player logged in: "+p.name);
+				GLogger.log("New player logged in: "+p.name, LogSource.SERVER);
 			}else if(op instanceof PacketBlockChange){
 				PacketBlockChange p = (PacketBlockChange)op;
 				sendToAllClients(p);

@@ -42,6 +42,7 @@ import net.codepixl.GLCraft.util.Constants;
 import net.codepixl.GLCraft.util.DebugTimer;
 import net.codepixl.GLCraft.util.Frustum;
 import net.codepixl.GLCraft.util.GameTime;
+import net.codepixl.GLCraft.util.LogSource;
 import net.codepixl.GLCraft.util.MathUtils;
 import net.codepixl.GLCraft.util.OpenSimplexNoise;
 import net.codepixl.GLCraft.util.Spritesheet;
@@ -49,6 +50,7 @@ import net.codepixl.GLCraft.util.Vector2i;
 import net.codepixl.GLCraft.util.Vector3i;
 import net.codepixl.GLCraft.util.data.saves.Save;
 import net.codepixl.GLCraft.util.data.saves.SaveManager;
+import net.codepixl.GLCraft.util.logging.GLogger;
 import net.codepixl.GLCraft.world.entity.Entity;
 import net.codepixl.GLCraft.world.entity.EntityManager;
 import net.codepixl.GLCraft.world.entity.EntitySolid;
@@ -127,7 +129,7 @@ public class WorldManager {
 	
 	public void createWorld(String name){
 		this.sendBlockPackets = false;
-		System.out.println("Creating Chunks...");
+		GLogger.log("Creating Chunks...", LogSource.SERVER);
 		elevationNoise = new OpenSimplexNoise(Constants.rand.nextLong());
 		roughnessNoise = new OpenSimplexNoise(Constants.rand.nextLong());
 		detailNoise = new OpenSimplexNoise(Constants.rand.nextLong());
@@ -145,7 +147,7 @@ public class WorldManager {
 			}
 		}
 		Iterator<Chunk> i = activeChunks.values().iterator();
-		System.out.println("Populating World...");
+		GLogger.log("Populating World...", LogSource.SERVER);
 		this.currentChunk = 0;
 		while(i.hasNext()){
 			this.currentChunk++;
@@ -175,7 +177,7 @@ public class WorldManager {
 			c.rebuildTickTiles();
 		}
 		centralManager.renderSplashText("Hold on...", "Beaming you down");
-		System.out.println("Done!");
+		GLogger.log("Done!", LogSource.SERVER);
 		if(!isServer) entityManager.getPlayer().respawn();
 		doneGenerating = true;
 		String saveName = name.replaceAll("[^ a-zA-Z0-9.-]", "_");

@@ -85,7 +85,9 @@ import net.codepixl.GLCraft.render.TextureManager;
 import net.codepixl.GLCraft.render.texturepack.TexturePackManager;
 import net.codepixl.GLCraft.util.Constants;
 import net.codepixl.GLCraft.util.DebugTimer;
+import net.codepixl.GLCraft.util.LogSource;
 import net.codepixl.GLCraft.util.logging.CrashHandler;
+import net.codepixl.GLCraft.util.logging.GLogger;
 import net.codepixl.GLCraft.util.logging.TeeOutputStream;
 import net.codepixl.GLCraft.world.CentralManager;
 import net.codepixl.GLCraft.world.WorldManager;
@@ -123,6 +125,24 @@ public class GLCraft extends Screen{
 	
 	private void commonInitializer() throws IOException, LWJGLException{
 		
+		Thread.setDefaultUncaughtExceptionHandler(new CrashHandler());
+		try{
+			Files.deleteIfExists(new File(System.getProperty("user.home"),"GLCraft"+File.separator+"GLCraft.log").toPath());
+		}catch(FileSystemException e){
+			e.printStackTrace();
+			//JOptionPane.showMessageDialog(null, "You can only run one GLCraft instance at a time.", "GLCraft", JOptionPane.ERROR_MESSAGE);
+			//System.exit(0);
+		}
+		Files.createDirectories(new File(System.getProperty("user.home")+"/GLCraft").toPath());
+		FileOutputStream lfos = new FileOutputStream(System.getProperty("user.home")+File.separator+"GLCraft"+File.separator+"GLCraft.log");
+		TeeOutputStream otos = new TeeOutputStream(System.out,lfos);
+		TeeOutputStream etos = new TeeOutputStream(System.err,lfos);
+		System.setErr(new PrintStream(etos));
+		System.setOut(new PrintStream(otos));
+		
+		GLogger.init(lfos);
+		GLogger.rout.setSuppressWarnings(true);
+		
 		glcraft = this;
 		Display.setIcon(new ByteBuffer[] {
 		        loadIcon(GLCraft.class.getResource("/textures/icons/icon16.png")),
@@ -135,7 +155,10 @@ public class GLCraft extends Screen{
 		Display.create(new PixelFormat(8,8,8));
 		
 		initGL();
+		
 		init();
+		
+		GLogger.rout.setSuppressWarnings(false);
 		long ltime = Time.getTime();
 		double secondCounter = 0;
 		while(!Display.isCloseRequested()){
@@ -179,7 +202,7 @@ public class GLCraft extends Screen{
 		
 		/**To initialize Tiles and items because they are static*/
 		Tile.tileMap.toString();
-		System.out.println("---------------");
+		GLogger.log("---------------", LogSource.NONE);
 		Item.itemMap.toString();
 		
 		initCamera();
@@ -292,23 +315,7 @@ public class GLCraft extends Screen{
 	
 	
 	public static void main(String[] args) throws IOException, LWJGLException{
-		Thread.setDefaultUncaughtExceptionHandler(new CrashHandler());
-		try{
-			Files.deleteIfExists(new File(System.getProperty("user.home")+"/GLCraft/GLCraft.log").toPath());
-		}catch(FileSystemException e){
-			e.printStackTrace();
-			//JOptionPane.showMessageDialog(null, "You can only run one GLCraft instance at a time.", "GLCraft", JOptionPane.ERROR_MESSAGE);
-			//System.exit(0);
-		}
-		Files.createDirectories(new File(System.getProperty("user.home")+"/GLCraft").toPath());
-		FileOutputStream lfos = new FileOutputStream(System.getProperty("user.home")+"/GLCraft/GLCraft.log");
-		TeeOutputStream otos = new TeeOutputStream(System.out,lfos);
-		TeeOutputStream etos = new TeeOutputStream(System.err,lfos);
-		System.setErr(new PrintStream(etos));
-		System.setOut(new PrintStream(otos));
-		
 		glcraft = new GLCraft();
-		
 	}
 	
 	public static void devEnvironment(Plugin p, boolean loadExtPlugins) throws LWJGLException{

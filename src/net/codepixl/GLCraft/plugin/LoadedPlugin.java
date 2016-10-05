@@ -15,6 +15,8 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import net.codepixl.GLCraft.GLCraft;
+import net.codepixl.GLCraft.util.LogSource;
+import net.codepixl.GLCraft.util.logging.GLogger;
 import net.codepixl.GLCraft.world.crafting.Recipe.InvalidRecipeException;
 
 public class LoadedPlugin {
@@ -48,7 +50,7 @@ public class LoadedPlugin {
 				plugin = (Plugin) loader.loadClass(mainClass).newInstance();
 				plugin.init();
 			}
-			System.out.println("Loaded \""+name+"\" version \""+version+"\" with description \""+description+"\"");
+			GLogger.log("Loaded \""+name+"\" version \""+version+"\" with description \""+description+"\"", LogSource.CLIENT);
 		}catch(JSONException e){
 			e.printStackTrace();
 			JOptionPane.showMessageDialog(null, "The Plugin "+this.name+" could not be loaded because it is missing 1 or more JSON properties.", "Error", JOptionPane.ERROR_MESSAGE);
@@ -82,7 +84,7 @@ public class LoadedPlugin {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		System.out.println("---Loaded dev plugin---");
+		GLogger.log("---Loaded dev plugin---", LogSource.GLCRAFT);
 	}
 	
 	public void update(){

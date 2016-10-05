@@ -15,8 +15,10 @@ import net.codepixl.GLCraft.GLCraft;
 import net.codepixl.GLCraft.plugin.LoadedPlugin;
 import net.codepixl.GLCraft.plugin.Plugin;
 import net.codepixl.GLCraft.util.Constants;
+import net.codepixl.GLCraft.util.LogSource;
 import net.codepixl.GLCraft.util.Spritesheet;
 import net.codepixl.GLCraft.util.Texture;
+import net.codepixl.GLCraft.util.logging.GLogger;
 import net.codepixl.GLCraft.world.item.Item;
 import net.codepixl.GLCraft.world.item.ItemStack;
 import net.codepixl.GLCraft.world.tile.Tile;
@@ -66,7 +68,7 @@ public class TextureManager {
 	}
 	public static void generateAtlas(boolean regen){
 		if(!madeAtlas || regen){
-			System.out.println("Generating atlas with texture pack: "+currentTexturepack);
+			GLogger.log("Generating atlas with texture pack: "+currentTexturepack, LogSource.GLCRAFT);
 			madeAtlas = true;
 			int total = 0;
 			for (String list : textures.values()) {
@@ -99,7 +101,7 @@ public class TextureManager {
 					}
 					g.drawImage(image, x*16, y*16, null);
 					atlasCoords.put(next.getKey(), new float[]{(float)x*(1f/(float)maxWidth),(float)y*(1f/(float)maxWidth)});
-					//System.out.println("Added "+next.getKey()+" at "+x+","+y+" to texture atlas");
+					//Logger.log("Added "+next.getKey()+" at "+x+","+y+" to texture atlas");
 				} catch (Exception e) {
 					System.err.println("Error adding "+next.getKey()+" to texture atlas: Could not find file "+next.getValue()+". Replacing with \"NO IMG\"");
 					e.printStackTrace();

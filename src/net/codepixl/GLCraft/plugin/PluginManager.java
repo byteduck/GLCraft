@@ -8,6 +8,8 @@ import java.util.HashMap;
 import java.util.Iterator;
 
 import net.codepixl.GLCraft.GLCraft;
+import net.codepixl.GLCraft.util.LogSource;
+import net.codepixl.GLCraft.util.logging.GLogger;
 import net.codepixl.GLCraft.world.item.Item;
 import net.codepixl.GLCraft.world.item.PluginItem;
 import net.codepixl.GLCraft.world.tile.PluginTile;
@@ -36,14 +38,14 @@ public class PluginManager {
 	public void addTile(PluginTile t){
 		t.assignedID = currentTile;
 		Tile.tileMap.put(currentTile, t);
-		System.out.println("Registered plugin tile "+t.getName()+" with ID "+currentTile);
+		GLogger.log("Registered plugin tile "+t.getName()+" with ID "+currentTile, LogSource.GLCRAFT);
 		currentTile++;
 	}
 	
 	public void addItem(PluginItem i){
 		i.assignedID = currentItem;
 		Item.itemMap.put(currentItem, i);
-		System.out.println("Registered item "+i.getName()+" with ID "+currentItem);
+		GLogger.log("Registered item "+i.getName()+" with ID "+currentItem, LogSource.GLCRAFT);
 		currentItem++;
 	}
 	

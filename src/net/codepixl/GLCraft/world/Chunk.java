@@ -119,7 +119,7 @@ public class Chunk {
 					float detail = (float) worldManager.detailNoise.eval((double)posX/75d, (double)posZ/75d);
 					for(int y = 0; y < sizeY; y++){
 						int posY = (int)pos.y+y;
-						//System.out.println(posX+","+posZ);
+						//Logger.log(posX+","+posZ);
 						float noise = (elevation + (roughness*detail))*60f+64f;
 						if(posY < noise){
 							if(posY == 0){
@@ -475,10 +475,10 @@ public class Chunk {
 									new Color4f(t.getColor().r*light[5],t.getColor().g*light[5],t.getColor().b*light[5],t.getColor().a),
 							};
 							/**if(tiles[x][y][z] != Tile.TallGrass.getId()){
-								//System.out.println(Tile.getTile(tiles[x][y][z]).getName());
-								//System.out.println(pos);
+								//Logger.log(Tile.getTile(tiles[x][y][z]).getName());
+								//Logger.log(pos);
 								Shape.createCube(pos.x+x, pos.y+y, pos.z+z, Tile.getTile(tiles[x][y][z]).getColor(), Tile.getTile(tiles[x][y][z]).getTexCoords(), 1);
-								//System.out.println("Creating "+Tile.getTile(tiles[x][y][z]).getName()+" at "+pos.x+x+","+pos.y+y+","+pos.z+z);
+								//Logger.log("Creating "+Tile.getTile(tiles[x][y][z]).getName()+" at "+pos.x+x+","+pos.y+y+","+pos.z+z);
 							}else{
 								Shape.createCross(pos.x+x, pos.y+y, pos.z+z, Tile.getTile(tiles[x][y][z]).getColor(), Tile.getTile(tiles[x][y][z]).getTexCoords(), 1);
 							}**/
@@ -526,7 +526,7 @@ public class Chunk {
 							int posY = (int)pos.y+y;
 							int posZ = (int)pos.z+z;
 							
-							System.out.println("AIR "+posX+","+posY+","+posZ);**/
+							Logger.log("AIR "+posX+","+posY+","+posZ);**/
 						}
 					}
 				}

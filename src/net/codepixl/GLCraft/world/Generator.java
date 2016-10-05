@@ -3,7 +3,9 @@ package net.codepixl.GLCraft.world;
 import java.util.ArrayList;
 
 import net.codepixl.GLCraft.util.Constants;
+import net.codepixl.GLCraft.util.LogSource;
 import net.codepixl.GLCraft.util.PerlinNoise;
+import net.codepixl.GLCraft.util.logging.GLogger;
 
 public class Generator implements Runnable{
 	
@@ -27,7 +29,7 @@ public class Generator implements Runnable{
 			}
 		}
 		done = true;
-		System.out.println("Chunks generated.");
+		GLogger.log("Chunks generated.", LogSource.SERVER);
 	}
 
 	public boolean isDone(){

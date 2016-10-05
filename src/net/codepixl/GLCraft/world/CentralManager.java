@@ -91,9 +91,11 @@ import net.codepixl.GLCraft.render.TextureManager;
 import net.codepixl.GLCraft.sound.SoundManager;
 import net.codepixl.GLCraft.util.Constants;
 import net.codepixl.GLCraft.util.DebugTimer;
+import net.codepixl.GLCraft.util.LogSource;
 import net.codepixl.GLCraft.util.Spritesheet;
 import net.codepixl.GLCraft.util.Vector3i;
 import net.codepixl.GLCraft.util.logging.CrashHandler;
+import net.codepixl.GLCraft.util.logging.GLogger;
 import net.codepixl.GLCraft.world.crafting.CraftingManager;
 import net.codepixl.GLCraft.world.crafting.Recipe.InvalidRecipeException;
 import net.codepixl.GLCraft.world.entity.EntityManager;
@@ -254,7 +256,7 @@ public class CentralManager extends Screen{
 					}
 					if(Keyboard.isKeyDown(Keyboard.KEY_L)){
 						Chunk c = worldManager.getChunk(pos);
-						System.out.println(worldManager.getLight((int)pos.x, (int)pos.y, (int)pos.z));
+						GLogger.log(worldManager.getLight((int)pos.x, (int)pos.y, (int)pos.z), LogSource.CLIENT);
 					}
 					/*if(Keyboard.isKeyDown(Keyboard.KEY_G)){
 						try {
@@ -262,7 +264,7 @@ public class CentralManager extends Screen{
 							worldManager.isServer = false;
 							Client c = new Client(worldManager, Client.DEFAULT_CLIENT_PORT);
 							Client.ServerConnectionState cs = c.connectToServer(InetAddress.getLocalHost(), s.getPort());
-							System.out.println("Connection was a success: "+cs.success);
+							Logger.log("Connection was a success: "+cs.success);
 						} catch (IOException e) {
 							// TODO Auto-generated catch block
 							e.printStackTrace();
@@ -283,7 +285,7 @@ public class CentralManager extends Screen{
 						worldManager.setTileAtPos(pos, Tile.BluestoneOre.getId(), true);
 					}
 					if(Keyboard.isKeyDown(Keyboard.KEY_M)){
-						System.out.println(worldManager.getMetaAtPos((int)pos.x, (int)pos.y, (int)pos.z));
+						Logger.log(worldManager.getMetaAtPos((int)pos.x, (int)pos.y, (int)pos.z));
 					}
 					if(Keyboard.isKeyDown(Keyboard.KEY_T)){
 						worldManager.setTileAtPos(pos, Tile.Tnt.getId(), true);

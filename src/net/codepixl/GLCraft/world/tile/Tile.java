@@ -12,6 +12,8 @@ import net.codepixl.GLCraft.util.AABB;
 import net.codepixl.GLCraft.util.BreakSource;
 import net.codepixl.GLCraft.util.Constants;
 import net.codepixl.GLCraft.util.EnumFacing;
+import net.codepixl.GLCraft.util.LogSource;
+import net.codepixl.GLCraft.util.logging.GLogger;
 import net.codepixl.GLCraft.world.Chunk;
 import net.codepixl.GLCraft.world.WorldManager;
 import net.codepixl.GLCraft.world.entity.Entity;
@@ -208,7 +210,7 @@ public class Tile {
 	}
 	
 	public void registerTile() {
-		System.out.println("Registering Tile "+getName()+" ("+getId()+")");
+		GLogger.log("Registering Tile "+getName()+" ("+getId()+")", LogSource.GLCRAFT);
 		Tile.tileMap.put(getId(), this);
 	}
 	
