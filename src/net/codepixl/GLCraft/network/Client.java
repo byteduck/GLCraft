@@ -5,10 +5,13 @@ import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
 import java.net.SocketException;
+import java.net.SocketTimeoutException;
 
 import org.lwjgl.util.vector.Vector3f;
 
 import net.codepixl.GLCraft.GLCraft;
+import net.codepixl.GLCraft.GUI.GUIManager;
+import net.codepixl.GLCraft.GUI.GUIServerError;
 import net.codepixl.GLCraft.network.packet.Packet;
 import net.codepixl.GLCraft.network.packet.PacketAddEntity;
 import net.codepixl.GLCraft.network.packet.PacketBlockChange;
@@ -19,6 +22,7 @@ import net.codepixl.GLCraft.network.packet.PacketPlayerPos;
 import net.codepixl.GLCraft.network.packet.PacketRemoveEntity;
 import net.codepixl.GLCraft.network.packet.PacketRespawn;
 import net.codepixl.GLCraft.network.packet.PacketSendChunk;
+import net.codepixl.GLCraft.network.packet.PacketServerClose;
 import net.codepixl.GLCraft.network.packet.PacketSetBufferSize;
 import net.codepixl.GLCraft.network.packet.PacketSetInventory;
 import net.codepixl.GLCraft.network.packet.PacketUpdateEntity;
@@ -66,22 +70,13 @@ public class Client{
 		this.connectionState = new ServerConnectionState();
 		connectionRunnable = new ConnectionRunnable(this);
 		connectionThread = new Thread(connectionRunnable);
-		connectionThread.start();
 		GLogger.log("Running on port "+port, LogSource.CLIENT);
 		return true;
 	}
 	
 	public void handlePacket(DatagramPacket dgp, Packet op){
 		try{
-			if(op instanceof PacketPlayerLoginResponse){
-				PacketPlayerLoginResponse p = (PacketPlayerLoginResponse)op;
-				if(p.accept){
-					this.connectionState = new ServerConnectionState(p.entityID);
-					this.worldManager.getEntityManager().getPlayer().setId(p.entityID);
-				}else{
-					this.connectionState = new ServerConnectionState(p.message);
-				}
-			}else if(op instanceof PacketSendChunk){
+			if(op instanceof PacketSendChunk){
 				PacketSendChunk p = (PacketSendChunk)op;
 				if(!p.failed){
 					if(p.type == PacketSendChunk.TYPE_CHUNK){
@@ -154,6 +149,10 @@ public class Client{
 				if(this.worldManager.getEntityManager().getPlayer().getID() == p.entityID){
 					p.setInventory(worldManager);
 				}
+			}else if(op instanceof PacketServerClose){
+				PacketServerClose p = (PacketServerClose)op;
+				worldManager.closeWorld();
+				GUIManager.getMainManager().showGUI(new GUIServerError("Server closed: ",p.message));
 			}else{
 				System.err.println("[CLIENT] Received unhandled packet: "+op.getClass());
 				//throw new IOException("Invalid Packet "+op.getClass());
@@ -163,16 +162,41 @@ public class Client{
 		}
 	}
 	
+	public void close() {
+		socket.close();
+		connectionThread.interrupt();
+	}
+
 	public ServerConnectionState connectToServer(InetAddress addr, int port) throws IOException{
-		
-		//Send PacketPlayerLogin
 		PacketPlayerLogin ppl = new PacketPlayerLogin(worldManager.getEntityManager().getPlayer().getName());
 		byte[] b = ppl.getBytes();
 		DatagramPacket dgp = new DatagramPacket(b,b.length,addr,port);
 		socket.send(dgp);
 		
-		while(!connectionState.connected);
-		this.connectedServer = new ClientServer(this, addr, port);
+		socket.setSoTimeout(5000);
+		
+		try{
+			DatagramPacket rec = new DatagramPacket(connectionRunnable.buf,connectionRunnable.buf.length);
+			socket.receive(rec);
+			Packet op = PacketUtil.getPacket(rec.getData());
+			if(op instanceof PacketPlayerLoginResponse){
+				PacketPlayerLoginResponse p = (PacketPlayerLoginResponse)op;
+				if(p.accept){
+					this.connectionState = new ServerConnectionState(p.entityID);
+					this.worldManager.getEntityManager().getPlayer().setId(p.entityID);
+					this.connectedServer = new ClientServer(this, addr, port);
+					connectionThread.start();
+				}else{
+					this.connectionState = new ServerConnectionState(p.message);
+				}
+			}else{
+				this.connectionState = new ServerConnectionState("Server sent malformed packet: "+op.getClass());
+			}
+		}catch(SocketTimeoutException e){
+			this.connectionState = new ServerConnectionState(e.getMessage());
+		}
+		
+		socket.setSoTimeout(0);
 		
 		return connectionState;
 	}
@@ -192,14 +216,15 @@ public class Client{
 		
 		@Override
 		public void run() {
-			while(true){
-				try {
+			while(!Thread.interrupted()){
+				try{
 					DatagramPacket rec = new DatagramPacket(buf,buf.length);
 					client.socket.receive(rec);
 					Packet p = PacketUtil.getPacket(rec.getData());
 					client.handlePacket(rec, p);
-				} catch (IOException e) {
-					e.printStackTrace();
+				}catch (IOException e){
+					if(!client.socket.isClosed())
+						e.printStackTrace();
 				}
 			}
 		}
@@ -231,19 +256,32 @@ public class Client{
 		public boolean connected = true;
 		public ServerConnectionState(String rejectMessage){
 			success = false;
+			connected = false;
 			message = rejectMessage;
 		}
 		public ServerConnectionState(int entityID){
 			success = true;
+			connected = true;
 			this.entityID = entityID;
 		}
 		public ServerConnectionState(){
 			this.connected = false;
+			success = false;
 		}
 	}
 	
 	public void destroy(){
 		this.connectionThread.interrupt();
 		this.socket.close();
+	}
+
+	public void reinit() {
+		try {
+			socket = new DatagramSocket(port);
+			connectionThread = new Thread(connectionRunnable);
+			connectionThread.start();
+		} catch (SocketException e) {
+			e.printStackTrace();
+		}
 	}
 }

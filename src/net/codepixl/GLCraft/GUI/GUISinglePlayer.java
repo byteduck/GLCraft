@@ -12,6 +12,7 @@ import net.codepixl.GLCraft.GLCraft;
 import net.codepixl.GLCraft.GUI.Elements.GUIButton;
 import net.codepixl.GLCraft.GUI.Elements.GUILabel;
 import net.codepixl.GLCraft.GUI.Elements.GUILabel.Alignment;
+import net.codepixl.GLCraft.network.Client;
 import net.codepixl.GLCraft.GUI.Elements.GUIScrollBox;
 import net.codepixl.GLCraft.GUI.Elements.GUITextBox;
 import net.codepixl.GLCraft.util.Constants;
@@ -49,7 +50,12 @@ public class GUISinglePlayer extends GUIScreen{
 					GLCraft.getGLCraft().getWorldManager(false).createBlankWorld();
 					GLCraft.getGLCraft().prepareLocalServer();
 					GLCraft.getGLCraft().getWorldManager(true).createWorld(name);
-					GLCraft.getGLCraft().connectLocalServer();
+					Client.ServerConnectionState cs = GLCraft.getGLCraft().getCentralManager(false).connectToLocalServer();
+					if(!cs.success){
+						GLCraft.getGLCraft().closeLocalServer();
+						GUIManager.getMainManager().showGUI(new GUIServerError("Error connecting to server: ",cs.message));
+						return null;
+					}
 					glDisable(GL_TEXTURE_2D);
 					GUIManager.getMainManager().closeGUI(false);
 				}
@@ -65,7 +71,12 @@ public class GUISinglePlayer extends GUIScreen{
 				if(!GLCraft.getGLCraft().getWorldManager(true).loadWorld(selectedSave.save)){
 					return null;
 				}
-				GLCraft.getGLCraft().connectLocalServer();
+				Client.ServerConnectionState cs = GLCraft.getGLCraft().getCentralManager(false).connectToLocalServer();
+				if(!cs.success){
+					GLCraft.getGLCraft().closeLocalServer();
+					GUIManager.getMainManager().showGUI(new GUIServerError("Error connecting to server: ",cs.message));
+					return null;
+				}
 				Constants.setState(Constants.GAME);
 				glDisable(GL_TEXTURE_2D);
 				GUIManager.getMainManager().closeGUI(false);

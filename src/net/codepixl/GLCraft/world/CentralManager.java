@@ -135,7 +135,7 @@ public class CentralManager extends Screen{
 	}
 	
 	@Override
-	public void dispose() {
+	public void dispose(){
 		Display.destroy();
 		System.exit(0);
 	}
@@ -679,7 +679,7 @@ public class CentralManager extends Screen{
 	}
 
 	public Client.ServerConnectionState connectToLocalServer() throws UnknownHostException, IOException{
-		return this.client.connectToServer(InetAddress.getLocalHost(), Server.DEFAULT_SERVER_PORT);
+		return this.client.connectToServer(InetAddress.getLocalHost(), GLCraft.getGLCraft().getServer().getPort());
 	}
 	
 	public Server getServer(){
@@ -699,5 +699,17 @@ public class CentralManager extends Screen{
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+	}
+	
+	public void close(){
+		if(this.isServer){
+			try{
+				this.getServer().close();
+			}catch(IOException e){
+				GLogger.logerr("Error closing server! ", LogSource.SERVER);
+				e.printStackTrace();
+			}
+		}
+		this.worldManager.closeWorld();
 	}
 }

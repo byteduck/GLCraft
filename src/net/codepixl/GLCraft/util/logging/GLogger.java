@@ -75,10 +75,8 @@ public class GLogger {
 		public void write(int arg0) {
 			try {
 				out.write(arg0);
-				if(!suppressWarnings){
+				if(!suppressWarnings)
 					err.write(warningString.getBytes());
-					new Throwable().printStackTrace();
-				}
 			} catch (IOException e) {
 				e.printStackTrace();
 			}

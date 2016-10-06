@@ -60,6 +60,7 @@ import java.io.InputStream;
 import java.io.PrintStream;
 import java.net.InetAddress;
 import java.net.URL;
+import java.net.UnknownHostException;
 import java.nio.ByteBuffer;
 import java.nio.file.FileSystemException;
 import java.nio.file.Files;
@@ -390,17 +391,17 @@ public class GLCraft extends Screen{
 		this.client = client;
 	}
 
-	public void prepareLocalServer() {
-		this.serverCentralManager = new CentralManager(true);
-		this.serverWorldManager = this.serverCentralManager.getWorldManager();
-	}
-	
-	public void connectLocalServer() {
-		try{
-			this.clientCentralManager.getClient().connectToServer(InetAddress.getLocalHost(), this.serverCentralManager.getServer().getPort());
-		}catch (IOException e){
-			e.printStackTrace();
+	public void prepareLocalServer(){
+		if(this.serverCentralManager == null){
+			this.serverCentralManager = new CentralManager(true);
+			this.serverWorldManager = this.serverCentralManager.getWorldManager();
+		}else{
+			this.serverCentralManager.getServer().reinit();
 		}
+	}
+
+	public void closeLocalServer() {
+		this.serverCentralManager.close();
 	}
 
 }

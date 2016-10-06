@@ -23,6 +23,7 @@ import net.codepixl.GLCraft.network.packet.PacketPlayerLoginResponse;
 import net.codepixl.GLCraft.network.packet.PacketPlayerPos;
 import net.codepixl.GLCraft.network.packet.PacketRespawn;
 import net.codepixl.GLCraft.network.packet.PacketSendChunk;
+import net.codepixl.GLCraft.network.packet.PacketServerClose;
 import net.codepixl.GLCraft.network.packet.PacketSetBufferSize;
 import net.codepixl.GLCraft.network.packet.PacketSetInventory;
 import net.codepixl.GLCraft.network.packet.PacketUpdateEntity;
@@ -45,6 +46,7 @@ public class Server{
 	public ConnectionRunnable connectionRunnable;
 	public Thread connectionThread;
 	public WorldManager worldManager;
+	private int port;
 	
 	public Server(WorldManager w, int port) throws IOException{
 		if(!commonInit(w,port)){throw new IOException("Error binding to port");}
@@ -65,6 +67,7 @@ public class Server{
 			e.printStackTrace();
 			return false;
 		}
+		this.port = port;
 		this.worldManager = w;
 		GLCraft.getGLCraft().setServer(this);
 		connectionRunnable = new ConnectionRunnable(this);
@@ -101,6 +104,11 @@ public class Server{
 				clients.put(c.addr, c);
 				this.worldManager.entityManager.add(mp);
 				c.writePacket(new PacketPlayerLoginResponse(mp.getID(),mp.getPos()));
+				try{
+					Thread.sleep(100); //Make sure the packetplayerloginresponse gets there first
+				}catch (InterruptedException e){
+					e.printStackTrace();
+				}
 				c.writePacket(new PacketWorldTime(worldManager.getWorldTime()));
 				sendToAllClients(new PacketPlayerAdd(mp.getID(), p.name, mp.getPos()));
 				this.sendChunkPackets();
@@ -178,15 +186,15 @@ public class Server{
 		
 		@Override
 		public void run() {
-			while(true){
+			while(!Thread.interrupted()){
 				try {
 					DatagramPacket rec = new DatagramPacket(buf,buf.length);
 					server.socket.receive(rec);
 					Packet p = PacketUtil.getPacket(rec.getData());
 					server.handlePacket(rec, p);
-				} catch (IOException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
+				}catch (IOException e){
+					if(!server.socket.isClosed())
+						e.printStackTrace();
 				}
 			}
 		}
@@ -199,8 +207,19 @@ public class Server{
 		this.clients.clear();
 	}
 	
+	public void reinit(){
+		clients.clear();
+		this.connectionThread = new Thread(connectionRunnable);
+		try {
+			this.socket = new DatagramSocket(this.getPort());
+			connectionThread.start();
+		} catch (SocketException e) {
+			e.printStackTrace();
+		}
+	}
+	
 	public int getPort(){
-		return socket.getLocalPort();
+		return port;
 	}
 
 	public void sendChunkPackets() throws IOException{
@@ -215,5 +234,11 @@ public class Server{
 		}
 		sendToAllClients(new PacketRespawn());
 		sendToAllClients(new PacketSetBufferSize(10000));
+	}
+
+	public void close() throws IOException{
+		sendToAllClients(new PacketServerClose("Server closing"));
+		socket.close();
+		connectionThread.interrupt();
 	}
 }

@@ -968,5 +968,16 @@ public class WorldManager {
 	public void setWorldTime(long worldTime) {
 		this.worldTime = worldTime;
 	}
+
+	public void closeWorld() {
+		if(!isServer){
+			centralManager.getClient().close();
+			this.doneGenerating = false;
+			Constants.GAME_STATE = Constants.START_SCREEN;
+			centralManager.getClient().reinit();
+		}
+		this.activeChunks.clear();
+		System.gc();
+	}
 	
 }
