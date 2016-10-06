@@ -18,7 +18,6 @@ import java.util.Timer;
 import java.util.TimerTask;
 import java.util.concurrent.Callable;
 
-import org.lwjgl.opengl.GL11;
 import org.lwjgl.util.vector.Vector3f;
 
 import com.evilco.mc.nbt.stream.NbtInputStream;
@@ -182,7 +181,7 @@ public class WorldManager {
 		doneGenerating = true;
 		String saveName = name.replaceAll("[^ a-zA-Z0-9.-]", "_");
 		this.currentSave = new Save(saveName, name, GLCraft.version, SaveManager.currentFormat);
-		if(!SaveManager.saveWorld(this, currentSave, false)){
+		if(!SaveManager.saveWorld(this, currentSave, false, false)){
 			doneGenerating = false;
 			centralManager.renderSplashText("ERROR", "There was an error saving.");
 			while(true){}
@@ -640,10 +639,10 @@ public class WorldManager {
 		}
 	}
 
-	public static boolean saveWorld(boolean quit) {
+	public static boolean saveWorld(boolean quit, boolean exitToMenu) {
 		if(cw != null){
 			if(!cw.isSaving() && cw.doneGenerating)
-				return SaveManager.saveWorld(cw, cw.currentSave, quit);
+				return SaveManager.saveWorld(cw, cw.currentSave, quit, exitToMenu);
 			else if(quit)
 				System.exit(0);
 		}
@@ -668,7 +667,7 @@ public class WorldManager {
 		timer.schedule(new TimerTask() {
 		    @Override
 		    public void run(){
-		    	saveWorld(false);
+		    	saveWorld(false,false);
 		    }
 		 }, 0, 1000 * 60 * MINUTES);
 	}
@@ -938,6 +937,10 @@ public class WorldManager {
 	public void sendPacket(Packet p){
 		centralManager.sendPacket(p);
 	}
+	
+	public void sendPacket(Packet p, EntityPlayerMP mp){
+		centralManager.sendPacket(p,mp);
+	}
 
 	public List<PacketSendChunk> getChunkPackets(EntityPlayerMP player){
 		ArrayList<PacketSendChunk> send = new ArrayList<PacketSendChunk>();
@@ -969,7 +972,17 @@ public class WorldManager {
 		this.worldTime = worldTime;
 	}
 
-	public void closeWorld() {
+	public void closeWorld(){
+		this.actionQueue.add(new Callable<Void>(){
+			@Override
+			public Void call() throws Exception {
+				closeWorldMain();
+				return null;
+			}
+		});
+	}
+	
+	private void closeWorldMain(){
 		if(!isServer){
 			centralManager.getClient().close();
 			this.doneGenerating = false;

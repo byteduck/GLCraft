@@ -6,8 +6,10 @@ import net.codepixl.GLCraft.util.Constants;
 public class GUIServerError extends GUIScreen{
 	
 	GUILabel lbl;
+	String message;
 	
 	public GUIServerError(String prefix, String message){
+		this.message = message;
 		if(message == null)
 			message = "Unknown error";
 		this.setDrawStoneBackground(true);
@@ -15,6 +17,14 @@ public class GUIServerError extends GUIScreen{
 		lbl.alignment = GUILabel.Alignment.CENTER;
 		lbl.size = 1.5f;
 		addElement(lbl);
+	}
+	
+	@Override
+	public void update(){
+		if(message.equals("")){
+			GUIManager.getMainManager().closeGUI(true);
+			return;
+		}
 	}
 	
 	@Override

@@ -13,6 +13,8 @@ public class GLogger {
 	public static RedirOut rout;
 
 	public static void log(Object log, LogSource l) {
+		if(log == null)
+			log = "null";
 		if(l != LogSource.SILENT)
 			out.println(l.toString() + log);
 		else
@@ -23,7 +25,9 @@ public class GLogger {
 			}
 	}
 
-	public static void logerr(Object log, LogSource l) {
+	public static void logerr(Object log, LogSource l){
+		if(log == null)
+			log = "null";
 		if(l != LogSource.SILENT)
 			err.println(l.toString() + log);
 		else

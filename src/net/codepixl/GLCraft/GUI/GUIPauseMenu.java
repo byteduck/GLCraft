@@ -23,7 +23,7 @@ public class GUIPauseMenu extends GUIScreen{
 	private static final int FPSSY = (int) (Constants.HEIGHT*0.9)+Constants.FONT.getHeight()+10;
 	private static final int MIDDLE = Constants.WIDTH/2;
 	
-	private GUIButton backButton,quitButton,saveButton;
+	private GUIButton backButton,quitButton,exitButton;
 	private GUITexture savingIcon;
 	private GUISlider fpsSlider;
 	
@@ -41,16 +41,16 @@ public class GUIPauseMenu extends GUIScreen{
 
 			@Override
 			public Void call() throws Exception {
-				WorldManager.saveWorld(true);
+				WorldManager.saveWorld(true,false);
 				return null;
 			}
 		});
 		
-		saveButton = new GUIButton("Save", MIDDLE, SAVEY, new Callable<Void>(){
+		exitButton = new GUIButton("Save and exit to main menu", MIDDLE, SAVEY, new Callable<Void>(){
 
 			@Override
 			public Void call() throws Exception {
-				WorldManager.saveWorld(false);
+				WorldManager.saveWorld(false,true);
 				return null;
 			}
 		});
@@ -74,7 +74,7 @@ public class GUIPauseMenu extends GUIScreen{
 		
 		this.addElement(backButton);
 		this.addElement(quitButton);
-		this.addElement(saveButton);
+		this.addElement(exitButton);
 		this.addElement(savingIcon);
 		this.addElement(fpsSlider);
 	}

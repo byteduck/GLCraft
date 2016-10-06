@@ -18,6 +18,7 @@ import net.codepixl.GLCraft.network.packet.PacketBlockChange;
 import net.codepixl.GLCraft.network.packet.PacketOnPlace;
 import net.codepixl.GLCraft.network.packet.PacketPlayerAction;
 import net.codepixl.GLCraft.network.packet.PacketPlayerAdd;
+import net.codepixl.GLCraft.network.packet.PacketPlayerDead;
 import net.codepixl.GLCraft.network.packet.PacketPlayerLogin;
 import net.codepixl.GLCraft.network.packet.PacketPlayerLoginResponse;
 import net.codepixl.GLCraft.network.packet.PacketPlayerPos;
@@ -34,6 +35,7 @@ import net.codepixl.GLCraft.util.LogSource;
 import net.codepixl.GLCraft.util.logging.GLogger;
 import net.codepixl.GLCraft.world.WorldManager;
 import net.codepixl.GLCraft.world.entity.Entity;
+import net.codepixl.GLCraft.world.entity.mob.EntityPlayer;
 import net.codepixl.GLCraft.world.entity.mob.EntityPlayerMP;
 import net.codepixl.GLCraft.world.tile.Tile;
 
@@ -71,7 +73,7 @@ public class Server{
 		this.worldManager = w;
 		GLCraft.getGLCraft().setServer(this);
 		connectionRunnable = new ConnectionRunnable(this);
-		connectionThread = new Thread(connectionRunnable);
+		connectionThread = new Thread(connectionRunnable, "Server Thread");
 		connectionThread.start();
 		GLogger.log("Running on port "+port, LogSource.SERVER);
 		return true;
@@ -150,8 +152,13 @@ public class Server{
 				case DROPOTHERITEM:
 					break;
 				}
+			}else if(op instanceof PacketPlayerDead){
+				PacketPlayerDead p = (PacketPlayerDead)op;
+				Entity e = worldManager.getEntityManager().getEntity(p.entityID);
+				if(e != null && e instanceof EntityPlayer)
+					e.setDead(true);
 			}else{
-				System.err.println("Unhandled Packet: "+op.getClass());
+				GLogger.logerr("Unhandled Packet: "+op.getClass(), LogSource.SERVER);
 			}
 		}catch(IOException e){
 			e.printStackTrace();
@@ -185,7 +192,7 @@ public class Server{
 		}
 		
 		@Override
-		public void run() {
+		public void run(){
 			while(!Thread.interrupted()){
 				try {
 					DatagramPacket rec = new DatagramPacket(buf,buf.length);
@@ -209,7 +216,7 @@ public class Server{
 	
 	public void reinit(){
 		clients.clear();
-		this.connectionThread = new Thread(connectionRunnable);
+		this.connectionThread = new Thread(connectionRunnable, "Server Thread");
 		try {
 			this.socket = new DatagramSocket(this.getPort());
 			connectionThread.start();
@@ -236,9 +243,21 @@ public class Server{
 		sendToAllClients(new PacketSetBufferSize(10000));
 	}
 
-	public void close() throws IOException{
-		sendToAllClients(new PacketServerClose("Server closing"));
+	public void close(String reason) throws IOException{
+		sendToAllClients(new PacketServerClose(reason));
 		socket.close();
 		connectionThread.interrupt();
+	}
+	
+	public void close() throws IOException{
+		close("Server Closing");
+	}
+
+	public void sendToClient(Packet p, EntityPlayerMP mp) throws IOException{
+		for(Entry<InetAddress, ServerClient> sc : clients.entrySet()){
+			ServerClient c = sc.getValue();
+			if(c.player == mp)
+				c.writePacket(p);
+		}
 	}
 }

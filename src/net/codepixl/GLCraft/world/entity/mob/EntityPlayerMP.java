@@ -4,6 +4,7 @@ import java.util.Iterator;
 
 import org.lwjgl.util.vector.Vector3f;
 
+import net.codepixl.GLCraft.network.packet.PacketRespawn;
 import net.codepixl.GLCraft.network.packet.PacketSetInventory;
 import net.codepixl.GLCraft.util.MathUtils;
 import net.codepixl.GLCraft.world.WorldManager;
@@ -39,10 +40,18 @@ public class EntityPlayerMP extends EntityPlayer{
 			worldManager.sendPacket(new PacketSetInventory(this));
 			this.needsInventoryUpdate = false;
 		}
+		if(this.isDead()){
+			this.respawn();
+		}
 	}
 	
 	@Override
 	public void updateMouse(){}
+	
+	@Override
+	public void respawn(){
+		worldManager.sendPacket(new PacketRespawn(),this);
+	}
 	
 	@Override
 	public void updateKeyboard(float a, float b){}

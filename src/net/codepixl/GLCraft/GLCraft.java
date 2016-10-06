@@ -184,7 +184,7 @@ public class GLCraft extends Screen{
 			Time.setDelta((Time.getTime()-ltime)/(double)Time.SECOND);
 		}
 		
-		WorldManager.saveWorld(true);
+		WorldManager.saveWorld(true,false);
 		
 	}
 	
@@ -401,7 +401,7 @@ public class GLCraft extends Screen{
 	}
 
 	public void closeLocalServer() {
-		this.serverCentralManager.close();
+		this.serverCentralManager.close("Server closing");
 	}
 
 }

@@ -69,7 +69,7 @@ public class Client{
 		GLCraft.getGLCraft().setClient(this);
 		this.connectionState = new ServerConnectionState();
 		connectionRunnable = new ConnectionRunnable(this);
-		connectionThread = new Thread(connectionRunnable);
+		connectionThread = new Thread(connectionRunnable, "Client Thread");
 		GLogger.log("Running on port "+port, LogSource.CLIENT);
 		return true;
 	}
@@ -198,6 +198,9 @@ public class Client{
 		
 		socket.setSoTimeout(0);
 		
+		if(!connectionState.success)
+			GLogger.logerr("Could not connect: "+connectionState.message, LogSource.CLIENT);
+		
 		return connectionState;
 	}
 	
@@ -278,8 +281,7 @@ public class Client{
 	public void reinit() {
 		try {
 			socket = new DatagramSocket(port);
-			connectionThread = new Thread(connectionRunnable);
-			connectionThread.start();
+			connectionThread = new Thread(connectionRunnable, "Client Thread");
 		} catch (SocketException e) {
 			e.printStackTrace();
 		}
