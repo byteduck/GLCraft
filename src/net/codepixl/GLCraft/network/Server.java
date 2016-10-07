@@ -45,7 +45,7 @@ public class Server{
 	public static int DEFAULT_SERVER_PORT = 54567;
 	
 	public DatagramSocket socket;
-	public HashMap<InetAddress, ServerClient> clients;
+	public HashMap<InetAddressAndPort, ServerClient> clients;
 	public ConnectionRunnable connectionRunnable;
 	public Thread connectionThread;
 	public WorldManager worldManager;
@@ -63,7 +63,7 @@ public class Server{
 	}
 	
 	private boolean commonInit(WorldManager w, int port){
-		clients = new HashMap<InetAddress, ServerClient>();
+		clients = new HashMap<InetAddressAndPort, ServerClient>();
 		try{
 			socket = new DatagramSocket(port);
 		}catch(SocketException e){
@@ -101,12 +101,13 @@ public class Server{
 
 	public void handlePacket(DatagramPacket dgp, Packet op){
 		try{
-			ServerClient c = clients.get(dgp.getAddress());
+			ServerClient c = clients.get(new InetAddressAndPort(dgp.getAddress(), dgp.getPort()));
 			if(op instanceof PacketPlayerLogin){
 				PacketPlayerLogin p = (PacketPlayerLogin)op;
 				EntityPlayerMP mp = new EntityPlayerMP(new Vector3f(), worldManager);
+				mp.setName(p.name);
 				c = new ServerClient(dgp.getAddress(), dgp.getPort(), this.socket, mp);
-				clients.put(c.addr, c);
+				clients.put(new InetAddressAndPort(c.addr, c.port), c);
 				this.worldManager.entityManager.add(mp);
 				c.writePacket(new PacketPlayerLoginResponse(mp.getID(),mp.getPos()));
 				try{
@@ -115,7 +116,10 @@ public class Server{
 					e.printStackTrace();
 				}
 				c.writePacket(new PacketWorldTime(worldManager.getWorldTime()));
-				sendToAllClients(new PacketPlayerAdd(mp.getID(), p.name, mp.getPos()));
+				for(Entry<InetAddressAndPort, ServerClient> entry : clients.entrySet()){
+					ServerClient c2 = entry.getValue();
+					sendToAllClients(new PacketPlayerAdd(c2.player.getID(), c2.player.getName(), c2.player.getPos()));
+				}
 				worldManager.sendChunkPackets(c.player);
 				GLogger.log("New player logged in: "+p.name, LogSource.SERVER);
 			}else if(op instanceof PacketBlockChange){
@@ -145,21 +149,16 @@ public class Server{
 				p.setInventory(worldManager);
 			}else if(op instanceof PacketPlayerAction){
 				PacketPlayerAction p = (PacketPlayerAction)op;
-				Entity e;
+				EntityPlayerMP player = c.player;
 				switch(p.type){
 				case DROPHELDITEM:
-					e = worldManager.getEntityManager().getEntity(p.entityID);
-					if(e != null && e instanceof EntityPlayerMP)
-						((EntityPlayerMP)e).dropHeldItem(p.all);
+					player.dropHeldItem(p.all);
 					break;
 				case DROPOTHERITEM:
 					break;
 				}
 			}else if(op instanceof PacketPlayerDead){
-				PacketPlayerDead p = (PacketPlayerDead)op;
-				Entity e = worldManager.getEntityManager().getEntity(p.entityID);
-				if(e != null && e instanceof EntityPlayer)
-					e.setDead(true);
+				c.player.setDead(true);
 			}else if(op instanceof PacketReady){
 				c.player.shouldUpdate = true;
 			}else{
@@ -171,7 +170,7 @@ public class Server{
 	}
 	
 	public void sendToAllClients(Packet p) throws IOException{
-		Iterator<Entry<InetAddress, ServerClient>> i = clients.entrySet().iterator();
+		Iterator<Entry<InetAddressAndPort, ServerClient>> i = clients.entrySet().iterator();
 		while(i.hasNext()){
 			ServerClient next = i.next().getValue();
 			next.writePacket(p);
@@ -179,7 +178,7 @@ public class Server{
 	}
 	
 	public void sendToAllClientsExcept(Packet p, ServerClient c) throws IOException{
-		Iterator<Entry<InetAddress, ServerClient>> i = clients.entrySet().iterator();
+		Iterator<Entry<InetAddressAndPort, ServerClient>> i = clients.entrySet().iterator();
 		while(i.hasNext()){
 			ServerClient next = i.next().getValue();
 			if(next != c)
@@ -245,10 +244,33 @@ public class Server{
 	}
 
 	public void sendToClient(Packet p, EntityPlayerMP mp) throws IOException{
-		for(Entry<InetAddress, ServerClient> sc : clients.entrySet()){
+		for(Entry<InetAddressAndPort, ServerClient> sc : clients.entrySet()){
 			ServerClient c = sc.getValue();
 			if(c.player == mp)
 				c.writePacket(p);
+		}
+	}
+	
+	public class InetAddressAndPort{
+		public InetAddress addr;
+		public int port;
+
+		public InetAddressAndPort(InetAddress addr, int port){
+			this.addr = addr;
+			this.port = port;
+		}
+		
+		@Override
+		public boolean equals(Object equ){
+			if(equ instanceof InetAddressAndPort)
+				return ((InetAddressAndPort) equ).addr.equals(addr) && ((InetAddressAndPort) equ).port == port;
+			else
+				return false;
+		}
+		
+		@Override
+		public int hashCode(){
+			return addr.hashCode()*port;
 		}
 	}
 }

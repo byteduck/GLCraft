@@ -49,11 +49,11 @@ public class GUIStartScreen extends GUIScreen{
 		multiplayerButton = new GUIButton("Multiplayer", MIDDLE, MIDDLEY-GUIButton.BTNHEIGHT-10, new Callable<Void>() {
 			@Override
 			public Void call() throws Exception {
+				GUIManager.getMainManager().showGUI("multiplayer");
 				return null;
 			}
 		});
 		multiplayerButton.width = BUTTONWIDTH;
-		multiplayerButton.enabled = false;
 		
 		pluginManagerButton = new GUIButton("Plugin Manager", MIDDLE, MIDDLEY, new Callable<Void>() {
 			@Override

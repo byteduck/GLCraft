@@ -114,7 +114,7 @@ public class EntityPlayer extends Mob {
 		this.rot.x = MathUtils.towardsZero(this.rot.x, (float) (Time.getDelta()*30f));
 		if(this.isDead()){
 			this.setDead(false);
-			worldManager.sendPacket(new PacketPlayerDead(this));
+			worldManager.sendPacket(new PacketPlayerDead());
 			/*worldManager.showMessage(5.0, DeathMessage.getMessage("Player", getLastDamageSource()));
 			this.setDead(false);
 			this.dropAllItems();

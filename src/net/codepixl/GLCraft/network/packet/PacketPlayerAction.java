@@ -9,7 +9,6 @@ public class PacketPlayerAction extends Packet {
 		DROPHELDITEM, DROPOTHERITEM;
 	}
 	
-	public int entityID;
 	public Type type;
 	public byte id;
 	public byte meta;
@@ -18,7 +17,6 @@ public class PacketPlayerAction extends Packet {
 	public boolean all;
 	
 	private PacketPlayerAction(EntityPlayer p, Type type){
-		this.entityID = p.getID();
 		this.type = type;
 	}
 	

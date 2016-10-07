@@ -75,6 +75,7 @@ import com.nishu.utils.Time;
 import net.codepixl.GLCraft.GLCraft;
 import net.codepixl.GLCraft.GUI.GUIGame;
 import net.codepixl.GLCraft.GUI.GUIManager;
+import net.codepixl.GLCraft.GUI.GUIMultiplayer;
 import net.codepixl.GLCraft.GUI.GUIPauseMenu;
 import net.codepixl.GLCraft.GUI.GUIScreen;
 import net.codepixl.GLCraft.GUI.GUIServer;
@@ -191,6 +192,7 @@ public class CentralManager extends Screen{
 		guiManager.addGUI(new GUIServer(), "server");
 		guiManager.addGUI(new GUIPauseMenu(), "pauseMenu");
 		guiManager.addGUI(new GUISinglePlayer(), "singleplayer");
+		guiManager.addGUI(new GUIMultiplayer(), "multiplayer");
 	}
 
 	@Override
@@ -712,5 +714,9 @@ public class CentralManager extends Screen{
 		}catch(IOException e){
 			e.printStackTrace();
 		}
+	}
+
+	public Client.ServerConnectionState connectToServer(InetAddress addr, int port) throws UnknownHostException, IOException{
+		return client.connectToServer(addr, port);
 	}
 }

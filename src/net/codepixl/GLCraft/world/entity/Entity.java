@@ -193,11 +193,11 @@ public class Entity implements GameObj{
 		posPacketTimer += Time.getDelta();
 		if(posPacketTimer > 0.05){
 			boolean update = false;
-			if(!MathUtils.equals(pos, lpos, 0.05f))
+			if(!MathUtils.equals(pos, lpos, 0.005f))
 				update = true;
-			if(!update && !MathUtils.equals(rot, lrot, 0.05f))
+			if(!update && !MathUtils.equals(rot, lrot, 0.005f))
 				update = true;
-			if(!update && !MathUtils.equals(vel, lvel, 0.05f))
+			if(!update && !MathUtils.equals(vel, lvel, 0.005f))
 				update = true;
 			if(update){
 				if(!(this instanceof EntityPlayer))

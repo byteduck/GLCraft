@@ -168,7 +168,7 @@ public class GUIManager {
 	}
 
 	public boolean mouseShouldBeGrabbed(){
-		if(GUIOpen){
+		if(currentGUI != null && GUIOpen){
 			return currentGUI.mouseGrabbed;
 		}else{
 			return true;

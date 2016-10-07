@@ -98,8 +98,11 @@ public class Client{
 				this.worldManager.setWorldTime(((PacketWorldTime)op).worldTime);
 			}else if(op instanceof PacketPlayerAdd){
 				PacketPlayerAdd p = ((PacketPlayerAdd) op);
-				if(p.entityID != this.worldManager.getEntityManager().getPlayer().getID())
-					this.worldManager.spawnEntity(new EntityPlayerMP(new Vector3f(p.x, p.y, p.z), this.worldManager));
+				if(p.entityID != this.worldManager.getEntityManager().getPlayer().getID()){
+					EntityPlayerMP player = new EntityPlayerMP(new Vector3f(p.x, p.y, p.z), this.worldManager);
+					player.setId(p.entityID);
+					this.worldManager.spawnEntity(player);
+				}
 			}else if(op instanceof PacketPlayerPos){
 				PacketPlayerPos p = (PacketPlayerPos)op;
 				Entity e = this.worldManager.entityManager.getEntity(p.entityID);

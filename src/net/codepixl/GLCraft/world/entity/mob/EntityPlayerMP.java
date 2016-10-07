@@ -2,10 +2,14 @@ package net.codepixl.GLCraft.world.entity.mob;
 
 import java.util.Iterator;
 
+import org.lwjgl.opengl.GL11;
 import org.lwjgl.util.vector.Vector3f;
+
+import com.nishu.utils.Color4f;
 
 import net.codepixl.GLCraft.network.packet.PacketRespawn;
 import net.codepixl.GLCraft.network.packet.PacketSetInventory;
+import net.codepixl.GLCraft.render.Shape;
 import net.codepixl.GLCraft.util.LogSource;
 import net.codepixl.GLCraft.util.MathUtils;
 import net.codepixl.GLCraft.util.logging.GLogger;
@@ -13,6 +17,7 @@ import net.codepixl.GLCraft.world.WorldManager;
 import net.codepixl.GLCraft.world.entity.Entity;
 import net.codepixl.GLCraft.world.entity.EntityItem;
 import net.codepixl.GLCraft.world.item.ItemStack;
+import net.codepixl.GLCraft.world.tile.Tile;
 
 public class EntityPlayerMP extends EntityPlayer{
 
@@ -23,7 +28,11 @@ public class EntityPlayerMP extends EntityPlayer{
 	}
 	
 	@Override
-	public void render(){}
+	public void render(){
+		GL11.glBegin(GL11.GL_QUADS);
+		Shape.createRect(this.pos.x-0.5f, this.pos.y, this.pos.z-0.5f, Color4f.WHITE, Tile.Bedrock.getTexCoords(), 1, 1, 1);
+		GL11.glEnd();
+	}
 	
 	@Override
 	public void update(){
@@ -47,6 +56,11 @@ public class EntityPlayerMP extends EntityPlayer{
 		if(this.isDead()){
 			this.respawn();
 		}
+	}
+	
+	@Override
+	public void clientUpdate(){
+		
 	}
 	
 	@Override
