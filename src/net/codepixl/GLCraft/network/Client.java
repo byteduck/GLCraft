@@ -46,6 +46,7 @@ public class Client{
 	public ClientServer connectedServer;
 	public int port;
 	public volatile ServerConnectionState connectionState;
+	private volatile boolean isClosed = false;
 	
 	public Client(WorldManager w, int port) throws IOException{
 		if(!commonInit(w,port)){throw new IOException("Error binding to port");}
@@ -151,7 +152,7 @@ public class Client{
 				}
 			}else if(op instanceof PacketServerClose){
 				PacketServerClose p = (PacketServerClose)op;
-				worldManager.closeWorld();
+				worldManager.closeWorld("");
 				GUIManager.getMainManager().showGUI(new GUIServerError("Server closed: ",p.message));
 			}else{
 				System.err.println("[CLIENT] Received unhandled packet: "+op.getClass());
@@ -163,6 +164,7 @@ public class Client{
 	}
 	
 	public void close() {
+		this.isClosed = true;
 		socket.close();
 		connectionThread.interrupt();
 	}
@@ -225,9 +227,12 @@ public class Client{
 					client.socket.receive(rec);
 					Packet p = PacketUtil.getPacket(rec.getData());
 					client.handlePacket(rec, p);
-				}catch (IOException e){
-					if(!client.socket.isClosed())
+				}catch(SocketException e){
+					if(!e.getMessage().contains("socket closed")){
 						e.printStackTrace();
+					}
+				}catch (IOException e){
+					e.printStackTrace();
 				}
 			}
 		}
@@ -272,15 +277,11 @@ public class Client{
 			success = false;
 		}
 	}
-	
-	public void destroy(){
-		this.connectionThread.interrupt();
-		this.socket.close();
-	}
 
 	public void reinit() {
 		try {
 			socket = new DatagramSocket(port);
+			this.isClosed = false;
 			connectionThread = new Thread(connectionRunnable, "Client Thread");
 		} catch (SocketException e) {
 			e.printStackTrace();

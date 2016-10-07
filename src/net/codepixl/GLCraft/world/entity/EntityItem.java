@@ -140,8 +140,8 @@ public class EntityItem extends EntitySolid{
 				this.itemstack.count+=e.itemstack.count;
 			}
 		}
-		while(!Tile.getTile((byte)worldManager.getTileAtPos(this.getPos())).canPassThrough()){
-			this.setY((float) (this.getY()+0.1f));
+		if(!Tile.getTile((byte)worldManager.getTileAtPos(this.getPos())).canPassThrough()){
+			this.setY((float) (this.getY()+0.5f));
 		}
 	}
 	

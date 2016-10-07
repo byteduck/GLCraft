@@ -22,6 +22,7 @@ import net.codepixl.GLCraft.network.packet.PacketPlayerDead;
 import net.codepixl.GLCraft.network.packet.PacketPlayerLogin;
 import net.codepixl.GLCraft.network.packet.PacketPlayerLoginResponse;
 import net.codepixl.GLCraft.network.packet.PacketPlayerPos;
+import net.codepixl.GLCraft.network.packet.PacketReady;
 import net.codepixl.GLCraft.network.packet.PacketRespawn;
 import net.codepixl.GLCraft.network.packet.PacketSendChunk;
 import net.codepixl.GLCraft.network.packet.PacketServerClose;
@@ -91,8 +92,10 @@ public class Server{
 			this.player = player;
 		}
 		public void writePacket(Packet p) throws IOException{
-			byte[] bytes = p.getBytes();
-			server.send(new DatagramPacket(bytes, bytes.length, addr, port));
+			if(!server.isClosed()){
+				byte[] bytes = p.getBytes();
+				server.send(new DatagramPacket(bytes, bytes.length, addr, port));
+			}
 		}
 	}
 
@@ -113,7 +116,7 @@ public class Server{
 				}
 				c.writePacket(new PacketWorldTime(worldManager.getWorldTime()));
 				sendToAllClients(new PacketPlayerAdd(mp.getID(), p.name, mp.getPos()));
-				this.sendChunkPackets();
+				worldManager.sendChunkPackets(c.player);
 				GLogger.log("New player logged in: "+p.name, LogSource.SERVER);
 			}else if(op instanceof PacketBlockChange){
 				PacketBlockChange p = (PacketBlockChange)op;
@@ -157,6 +160,8 @@ public class Server{
 				Entity e = worldManager.getEntityManager().getEntity(p.entityID);
 				if(e != null && e instanceof EntityPlayer)
 					e.setDead(true);
+			}else if(op instanceof PacketReady){
+				c.player.shouldUpdate = true;
 			}else{
 				GLogger.logerr("Unhandled Packet: "+op.getClass(), LogSource.SERVER);
 			}
@@ -227,20 +232,6 @@ public class Server{
 	
 	public int getPort(){
 		return port;
-	}
-
-	public void sendChunkPackets() throws IOException{
-		sendToAllClients(new PacketSetBufferSize(1000000));
-		sendToAllClients(new PacketSendChunk(Constants.worldLengthChunks*Constants.worldLengthChunks*Constants.worldLengthChunks));
-		for(Entry<InetAddress,ServerClient> e : clients.entrySet()){
-			ServerClient c = e.getValue();
-			List<PacketSendChunk> chunks = worldManager.getChunkPackets(c.player);
-			for(PacketSendChunk ch : chunks){
-				c.writePacket(ch);
-			}
-		}
-		sendToAllClients(new PacketRespawn());
-		sendToAllClients(new PacketSetBufferSize(10000));
 	}
 
 	public void close(String reason) throws IOException{

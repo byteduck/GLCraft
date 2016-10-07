@@ -34,7 +34,10 @@ import net.codepixl.GLCraft.GUI.Inventory.GUICrafting;
 import net.codepixl.GLCraft.GUI.Inventory.GUICraftingAdvanced;
 import net.codepixl.GLCraft.network.packet.Packet;
 import net.codepixl.GLCraft.network.packet.PacketBlockChange;
+import net.codepixl.GLCraft.network.packet.PacketReady;
+import net.codepixl.GLCraft.network.packet.PacketRespawn;
 import net.codepixl.GLCraft.network.packet.PacketSendChunk;
+import net.codepixl.GLCraft.network.packet.PacketSetBufferSize;
 import net.codepixl.GLCraft.util.AABB;
 import net.codepixl.GLCraft.util.BreakSource;
 import net.codepixl.GLCraft.util.Constants;
@@ -942,13 +945,34 @@ public class WorldManager {
 		centralManager.sendPacket(p,mp);
 	}
 
-	public List<PacketSendChunk> getChunkPackets(EntityPlayerMP player){
+	public void sendChunkPackets(final EntityPlayerMP player){
+		actionQueue.add(new Callable<Void>(){
+			@Override
+			public Void call() throws Exception {
+				sendChunkPacketsMain(player);
+				return null;
+			}
+		});
+	}
+	
+	private void sendChunkPacketsMain(EntityPlayerMP player){
+		sendPacket(new PacketSetBufferSize(1000000), player);
+		sendPacket(new PacketSendChunk(Constants.worldLengthChunks*Constants.worldLengthChunks*Constants.worldLengthChunks), player);
 		ArrayList<PacketSendChunk> send = new ArrayList<PacketSendChunk>();
 		for(Entry<Vector3i, Chunk> e : this.activeChunks.entrySet()){
 			Chunk c = e.getValue();
-			send.add(new PacketSendChunk(c, player));
+			sendPacket(new PacketSendChunk(c, player), player);
 		}
-		return send;
+		sendPacket(new PacketRespawn(), player);
+		sendPacket(new PacketSetBufferSize(10000), player);
+	}
+	
+	public EntityPlayer getPlayer() {
+		return getEntityManager().getPlayer();
+	}
+	
+	public Entity getEntity(int id){
+		return getEntityManager().getEntity(id);
 	}
 
 	public void updateChunk(PacketSendChunk p, boolean initial) {
@@ -960,7 +984,10 @@ public class WorldManager {
 				this.actionQueue .add(new Callable<Void>(){
 					@Override
 					public Void call() throws Exception{
+						GLogger.log("Done recieving chunks", LogSource.CLIENT);
 						reSunlight();
+						sendPacket(new PacketReady());
+						getPlayer().shouldUpdate = true;
 						return null;
 					}
 				});
@@ -972,18 +999,26 @@ public class WorldManager {
 		this.worldTime = worldTime;
 	}
 
-	public void closeWorld(){
+	public void closeWorld(final String reason){
 		this.actionQueue.add(new Callable<Void>(){
 			@Override
 			public Void call() throws Exception {
-				closeWorldMain();
+				closeWorldMain(reason);
 				return null;
 			}
 		});
 	}
 	
-	private void closeWorldMain(){
+	private void closeWorldMain(String reason){
+		if(this.isServer)
+			try {
+				this.centralManager.getServer().close(reason);
+			} catch (IOException e) {
+				GLogger.logerr("Error closing server!", LogSource.SERVER);
+				e.printStackTrace();
+			}
 		if(!isServer){
+			getPlayer().shouldUpdate = false;
 			centralManager.getClient().close();
 			this.doneGenerating = false;
 			Constants.GAME_STATE = Constants.START_SCREEN;

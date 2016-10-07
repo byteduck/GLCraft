@@ -6,7 +6,9 @@ import org.lwjgl.util.vector.Vector3f;
 
 import net.codepixl.GLCraft.network.packet.PacketRespawn;
 import net.codepixl.GLCraft.network.packet.PacketSetInventory;
+import net.codepixl.GLCraft.util.LogSource;
 import net.codepixl.GLCraft.util.MathUtils;
+import net.codepixl.GLCraft.util.logging.GLogger;
 import net.codepixl.GLCraft.world.WorldManager;
 import net.codepixl.GLCraft.world.entity.Entity;
 import net.codepixl.GLCraft.world.entity.EntityItem;
@@ -25,6 +27,8 @@ public class EntityPlayerMP extends EntityPlayer{
 	
 	@Override
 	public void update(){
+		if(!shouldUpdate)
+			return;
 		Iterator<Entity> i = (Iterator<Entity>) worldManager.getEntityManager().getEntitiesInRadiusOfEntityOfType(this, EntityItem.class, 1f).iterator();
 		while(i.hasNext()){
 			needsInventoryUpdate = true;

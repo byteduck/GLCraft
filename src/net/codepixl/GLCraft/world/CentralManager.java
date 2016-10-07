@@ -702,15 +702,7 @@ public class CentralManager extends Screen{
 	}
 	
 	public void close(String reason){
-		if(this.isServer){
-			try{
-				this.getServer().close(reason);
-			}catch(IOException e){
-				GLogger.logerr("Error closing server! ", LogSource.SERVER);
-				e.printStackTrace();
-			}
-		}
-		this.worldManager.closeWorld();
+		this.worldManager.closeWorld(reason);
 	}
 
 	public void sendPacket(Packet p, EntityPlayerMP mp){

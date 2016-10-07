@@ -35,9 +35,11 @@ import net.codepixl.GLCraft.sound.SoundManager;
 import net.codepixl.GLCraft.util.AABB;
 import net.codepixl.GLCraft.util.BreakSource;
 import net.codepixl.GLCraft.util.Constants;
+import net.codepixl.GLCraft.util.LogSource;
 import net.codepixl.GLCraft.util.MathUtils;
 import net.codepixl.GLCraft.util.Ray;
 import net.codepixl.GLCraft.util.Raytracer;
+import net.codepixl.GLCraft.util.logging.GLogger;
 import net.codepixl.GLCraft.world.WorldManager;
 import net.codepixl.GLCraft.world.entity.Entity;
 import net.codepixl.GLCraft.world.entity.EntityItem;
@@ -62,6 +64,7 @@ public class EntityPlayer extends Mob {
 	public GUISlot hoverSlot;
 	private String name;
 	private boolean updatedInventory;
+	public boolean shouldUpdate = false;
 	
 	public EntityPlayer(Vector3f pos, WorldManager w) {
 		super(pos, w);
@@ -94,7 +97,18 @@ public class EntityPlayer extends Mob {
 		return 36;
 	}
 	
-	public void update() {
+	@Override
+	public void setDead(boolean dead){
+		super.setDead(dead);
+		if(!this.worldManager.isServer){
+			GLogger.log("DEADDD", LogSource.GLCRAFT);
+			new Throwable().printStackTrace();
+		}
+	}
+	
+	public void update(){
+		if(!shouldUpdate)
+			return;
 		super.update();
 		SoundManager.getMainManager().setPosAndRot(pos, rot);
 		this.rot.x = MathUtils.towardsZero(this.rot.x, (float) (Time.getDelta()*30f));
