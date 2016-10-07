@@ -4,27 +4,29 @@ import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
+import java.net.MulticastSocket;
 import java.net.SocketException;
 import java.util.HashMap;
 import java.util.Iterator;
-import java.util.List;
 import java.util.Map.Entry;
 
 import org.lwjgl.util.vector.Vector3f;
 
 import net.codepixl.GLCraft.GLCraft;
+import net.codepixl.GLCraft.GUI.GUIManager;
+import net.codepixl.GLCraft.GUI.GUIPauseMenu;
 import net.codepixl.GLCraft.network.packet.Packet;
 import net.codepixl.GLCraft.network.packet.PacketBlockChange;
+import net.codepixl.GLCraft.network.packet.PacketLANBroadcast;
 import net.codepixl.GLCraft.network.packet.PacketOnPlace;
 import net.codepixl.GLCraft.network.packet.PacketPlayerAction;
 import net.codepixl.GLCraft.network.packet.PacketPlayerAdd;
 import net.codepixl.GLCraft.network.packet.PacketPlayerDead;
+import net.codepixl.GLCraft.network.packet.PacketPlayerLeave;
 import net.codepixl.GLCraft.network.packet.PacketPlayerLogin;
 import net.codepixl.GLCraft.network.packet.PacketPlayerLoginResponse;
 import net.codepixl.GLCraft.network.packet.PacketPlayerPos;
 import net.codepixl.GLCraft.network.packet.PacketReady;
-import net.codepixl.GLCraft.network.packet.PacketRespawn;
-import net.codepixl.GLCraft.network.packet.PacketSendChunk;
 import net.codepixl.GLCraft.network.packet.PacketServerClose;
 import net.codepixl.GLCraft.network.packet.PacketSetBufferSize;
 import net.codepixl.GLCraft.network.packet.PacketSetInventory;
@@ -35,8 +37,6 @@ import net.codepixl.GLCraft.util.Constants;
 import net.codepixl.GLCraft.util.LogSource;
 import net.codepixl.GLCraft.util.logging.GLogger;
 import net.codepixl.GLCraft.world.WorldManager;
-import net.codepixl.GLCraft.world.entity.Entity;
-import net.codepixl.GLCraft.world.entity.mob.EntityPlayer;
 import net.codepixl.GLCraft.world.entity.mob.EntityPlayerMP;
 import net.codepixl.GLCraft.world.tile.Tile;
 
@@ -50,6 +50,11 @@ public class Server{
 	public Thread connectionThread;
 	public WorldManager worldManager;
 	private int port;
+	public boolean lanWorld;
+	public ServerClient host;
+	public boolean broadcast = true;
+	private Thread broadcastThread;
+	private BroadcastRunnable broadcastRunnable;
 	
 	public Server(WorldManager w, int port) throws IOException{
 		if(!commonInit(w,port)){throw new IOException("Error binding to port");}
@@ -77,7 +82,26 @@ public class Server{
 		connectionThread = new Thread(connectionRunnable, "Server Thread");
 		connectionThread.start();
 		GLogger.log("Running on port "+port, LogSource.SERVER);
+		try{
+			broadcastRunnable = new BroadcastRunnable(this, "", port);
+		}catch (IOException e){
+			e.printStackTrace();
+		}
+		if(!GLCraft.getGLCraft().isServer()){
+			((GUIPauseMenu)GUIManager.getMainManager().getGUI("pauseMenu")).setHost(true);
+		}
 		return true;
+	}
+	
+	public void setBroadcast(String name){
+		PacketLANBroadcast plb = new PacketLANBroadcast(name,port);
+		try {
+			broadcastRunnable.packet = new DatagramPacket(plb.getBytes(), plb.getBytes().length, broadcastRunnable.group, 5656);
+			broadcastThread = new Thread(broadcastRunnable, "Broadcast Thread");
+			broadcastThread.start();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 	
 	public class ServerClient{
@@ -107,6 +131,8 @@ public class Server{
 				EntityPlayerMP mp = new EntityPlayerMP(new Vector3f(), worldManager);
 				mp.setName(p.name);
 				c = new ServerClient(dgp.getAddress(), dgp.getPort(), this.socket, mp);
+				if(lanWorld && host == null)
+					host = c;
 				clients.put(new InetAddressAndPort(c.addr, c.port), c);
 				this.worldManager.entityManager.add(mp);
 				c.writePacket(new PacketPlayerLoginResponse(mp.getID(),mp.getPos()));
@@ -118,8 +144,9 @@ public class Server{
 				c.writePacket(new PacketWorldTime(worldManager.getWorldTime()));
 				for(Entry<InetAddressAndPort, ServerClient> entry : clients.entrySet()){
 					ServerClient c2 = entry.getValue();
-					sendToAllClients(new PacketPlayerAdd(c2.player.getID(), c2.player.getName(), c2.player.getPos()));
+					c.writePacket(new PacketPlayerAdd(c2.player.getID(), c2.player.getName(), c2.player.getPos()));
 				}
+				sendToAllClientsExcept(new PacketPlayerAdd(c.player.getID(), c.player.getName(), c.player.getPos()), c);
 				worldManager.sendChunkPackets(c.player);
 				GLogger.log("New player logged in: "+p.name, LogSource.SERVER);
 			}else if(op instanceof PacketBlockChange){
@@ -161,6 +188,11 @@ public class Server{
 				c.player.setDead(true);
 			}else if(op instanceof PacketReady){
 				c.player.shouldUpdate = true;
+			}else if(op instanceof PacketPlayerLeave){
+				clients.remove(new InetAddressAndPort(c.addr,c.port));
+				GLogger.log("Player Logged out: "+c.player.getName(), LogSource.SERVER);
+				worldManager.getEntityManager().remove(c.player);
+				sendToAllClients(new PacketPlayerLeave(c.player.getID()));
 			}else{
 				GLogger.logerr("Unhandled Packet: "+op.getClass(), LogSource.SERVER);
 			}
@@ -212,10 +244,49 @@ public class Server{
 		
 	}
 	
+	private class BroadcastRunnable implements Runnable{
+		
+		public InetAddress group;
+		private DatagramPacket packet;
+		private Server server;
+		private MulticastSocket socket;
+		
+		public BroadcastRunnable(Server s, String msg, int port) throws IOException{
+			PacketLANBroadcast plb = new PacketLANBroadcast(msg,port);
+			this.server = s;
+			socket = new MulticastSocket(5656);
+			group = InetAddress.getByName("238.245.233.230");
+			socket.joinGroup(group);
+			byte[] pckt = plb.getBytes();
+			packet = new DatagramPacket(pckt, pckt.length, group, 5656);
+		}
+		
+		@Override
+		public void run(){
+			while(!Thread.interrupted()){
+				try{
+					Thread.sleep(1000);
+					if(server.broadcast){
+						socket.send(packet);
+					}
+				}catch (InterruptedException e){
+					//e.printStackTrace();
+				}catch(IOException e){
+					if(!server.socket.isClosed())
+						e.printStackTrace();
+				}
+			}
+		}
+	}
+	
 	public void destroy(){
-		this.connectionThread.interrupt();
 		this.socket.close();
 		this.clients.clear();
+		this.connectionThread.interrupt();
+		broadcastThread.interrupt();
+		if(!GLCraft.getGLCraft().isServer()){
+			((GUIPauseMenu)GUIManager.getMainManager().getGUI("pauseMenu")).setHost(false);
+		}
 	}
 	
 	public void reinit(){
@@ -224,6 +295,9 @@ public class Server{
 		try {
 			this.socket = new DatagramSocket(this.getPort());
 			connectionThread.start();
+			if(!GLCraft.getGLCraft().isServer()){
+				((GUIPauseMenu)GUIManager.getMainManager().getGUI("pauseMenu")).setHost(true);
+			}
 		} catch (SocketException e) {
 			e.printStackTrace();
 		}
@@ -237,6 +311,10 @@ public class Server{
 		sendToAllClients(new PacketServerClose(reason));
 		socket.close();
 		connectionThread.interrupt();
+		broadcastThread.interrupt();
+		if(!GLCraft.getGLCraft().isServer()){
+			((GUIPauseMenu)GUIManager.getMainManager().getGUI("pauseMenu")).setHost(false);
+		}
 	}
 	
 	public void close() throws IOException{

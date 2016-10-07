@@ -1,49 +1,49 @@
 package net.codepixl.GLCraft.GUI;
 
-import static org.lwjgl.opengl.GL11.GL_QUADS;
-import static org.lwjgl.opengl.GL11.GL_TEXTURE_2D;
-import static org.lwjgl.opengl.GL11.glBegin;
-import static org.lwjgl.opengl.GL11.glEnable;
-import static org.lwjgl.opengl.GL11.glEnd;
-import static org.lwjgl.opengl.GL11.glTexCoord2f;
-import static org.lwjgl.opengl.GL11.glVertex2f;
+import java.net.InetAddress;
 
-import org.newdawn.slick.opengl.TextureImpl;
+import org.lwjgl.opengl.GL11;
 
+import net.codepixl.GLCraft.GUI.Elements.GUILabel;
 import net.codepixl.GLCraft.util.Constants;
-import net.codepixl.GLCraft.util.Spritesheet;
 
 public class GUIServer extends GUIScreen{
 	
-	@Override
-	public void render() {
-		// TODO Auto-generated method stub
-		glEnable(GL_TEXTURE_2D);
-		drawBG();
-		//glClearColor(0.3f,0.1f,0.3f,1.0f);
-		Constants.FONT.drawString(Constants.WIDTH/2-Constants.FONT.getWidth("Running Server...")/2, Constants.HEIGHT/2-Constants.FONT.getHeight("Running Server...")/2, "Running Server...");
-		//String ip = "Connected IP: "+Constants.ConnIP;
-		//Constants.FONT.drawString(Constants.WIDTH/2-Constants.FONT.getWidth(ip)/2, (Constants.HEIGHT/2-Constants.FONT.getHeight(ip)/2) + 50, ip);
-		TextureImpl.unbind();
+	GUILabel name;
+	GUILabel addr;
+	GUIMultiplayer pgui;
+	public boolean selected;
+	
+	public GUIServer(GUIMultiplayer pgui, String msg, InetAddress addr, int port){
+		this.width = 100;
+		this.height = 100;
+		this.pgui = pgui;
+		this.name = new GUILabel(10, 0, msg);
+		this.addr = new GUILabel(10, (int) (100-(Constants.FONT.getHeight()+10)), addr+":"+port);
+		this.addr.size = 1f;
+		
+		addElement(this.name);
+		addElement(this.addr);
 	}
 	
 	@Override
 	public void drawBG(){
-		Spritesheet.atlas.bind();
-		glBegin(GL_QUADS);
-			glTexCoord2f(Spritesheet.atlas.uniformSize()*2, Spritesheet.atlas.uniformSize());
-			glVertex2f(0,0);
-			glTexCoord2f(Spritesheet.atlas.uniformSize()*3, Spritesheet.atlas.uniformSize());
-			glVertex2f(0,Constants.HEIGHT);
-			glTexCoord2f(Spritesheet.atlas.uniformSize()*3, 0);
-			glVertex2f(Constants.WIDTH,Constants.HEIGHT);
-			glTexCoord2f(Spritesheet.atlas.uniformSize()*2, 0);
-			glVertex2f(Constants.WIDTH,0);
-		glEnd();
-	}
-	
-	@Override
-	public void onClose(){
-		GUIManager.getMainManager().showGUI("startScreen");
+		GL11.glDisable(GL11.GL_TEXTURE_2D);
+		GL11.glPushMatrix();
+		GL11.glPushAttrib(GL11.GL_LINE_WIDTH);
+		if(selected)
+			GL11.glColor3f(0f, 0f, 0f);
+		else
+			GL11.glColor3f(1f, 1f, 1f);
+		GL11.glLineWidth(2f);
+		GL11.glBegin(GL11.GL_LINE_LOOP);
+		GL11.glVertex2f(0, 0);
+		GL11.glVertex2f(0, height);
+		GL11.glVertex2f(width, height);
+		GL11.glVertex2f(width, 0);
+		GL11.glEnd();
+		GL11.glPopAttrib();
+		GL11.glPopMatrix();
+		GL11.glEnable(GL11.GL_TEXTURE_2D);
 	}
 }

@@ -27,6 +27,8 @@ public class GUIPauseMenu extends GUIScreen{
 	private GUITexture savingIcon;
 	private GUISlider fpsSlider;
 	
+	private boolean isHost = false;
+	
 	public GUIPauseMenu(){
 		backButton = new GUIButton("Back to game", MIDDLE, BACKY, new Callable<Void>(){
 			@Override
@@ -37,20 +39,24 @@ public class GUIPauseMenu extends GUIScreen{
 			}
 		});
 		
-		quitButton = new GUIButton("Save and Quit", MIDDLE, QUITY, new Callable<Void>(){
-
+		quitButton = new GUIButton("YOU SHOULD NOT SEE THIS", MIDDLE, QUITY, new Callable<Void>(){
 			@Override
 			public Void call() throws Exception {
-				WorldManager.saveWorld(true,false);
+				if(isHost)
+					WorldManager.saveWorld(true,false);
+				else
+					GLCraft.getGLCraft().disconnectFromServer(true);
 				return null;
 			}
 		});
 		
-		exitButton = new GUIButton("Save and exit to main menu", MIDDLE, SAVEY, new Callable<Void>(){
-
+		exitButton = new GUIButton("YOU SHOULD NOT SEE THIS", MIDDLE, SAVEY, new Callable<Void>(){
 			@Override
 			public Void call() throws Exception {
-				WorldManager.saveWorld(false,true);
+				if(isHost)
+					WorldManager.saveWorld(false,true);
+				else
+					GLCraft.getGLCraft().disconnectFromServer(false);
 				return null;
 			}
 		});
@@ -77,6 +83,17 @@ public class GUIPauseMenu extends GUIScreen{
 		this.addElement(exitButton);
 		this.addElement(savingIcon);
 		this.addElement(fpsSlider);
+	}
+	
+	public void setHost(boolean host){
+		this.isHost = host;
+		if(host){
+			quitButton.setText("Save and Quit");
+			exitButton.setText("Save and Exit");
+		}else{
+			quitButton.setText("Disconnect and Quit");
+			exitButton.setText("Disconnect and Exit");
+		}
 	}
 	
 	@Override

@@ -74,7 +74,7 @@ public class WorldManager {
 	public float tick = 0f;
 	public int currentChunk = 0;
 	private boolean saving = false;
-	private Save currentSave;
+	public Save currentSave;
 	private long worldTime;
 	private GameTime gameTime = new GameTime(0);
 	public Queue<Light> lightQueue = new LinkedList<Light>();
@@ -192,6 +192,7 @@ public class WorldManager {
 		this.worldTime = Constants.dayLengthMS/2;
 		this.gameTime = new GameTime(this.worldTime);
 		this.sendBlockPackets = true;
+		this.centralManager.getServer().setBroadcast(saveName);
 	}
 	
 	public void showMessage(double seconds, String message){
@@ -636,6 +637,7 @@ public class WorldManager {
 		this.sendBlockPackets = true;
 		if(success){
 			this.doneGenerating = true;
+			this.centralManager.getServer().setBroadcast(s.dispName);
 			return true;
 		}else{
 			return false;

@@ -16,6 +16,7 @@ import net.codepixl.GLCraft.network.packet.Packet;
 import net.codepixl.GLCraft.network.packet.PacketAddEntity;
 import net.codepixl.GLCraft.network.packet.PacketBlockChange;
 import net.codepixl.GLCraft.network.packet.PacketPlayerAdd;
+import net.codepixl.GLCraft.network.packet.PacketPlayerLeave;
 import net.codepixl.GLCraft.network.packet.PacketPlayerLogin;
 import net.codepixl.GLCraft.network.packet.PacketPlayerLoginResponse;
 import net.codepixl.GLCraft.network.packet.PacketPlayerPos;
@@ -101,6 +102,7 @@ public class Client{
 				if(p.entityID != this.worldManager.getEntityManager().getPlayer().getID()){
 					EntityPlayerMP player = new EntityPlayerMP(new Vector3f(p.x, p.y, p.z), this.worldManager);
 					player.setId(p.entityID);
+					player.setName(p.name);
 					this.worldManager.spawnEntity(player);
 				}
 			}else if(op instanceof PacketPlayerPos){
@@ -157,6 +159,8 @@ public class Client{
 				PacketServerClose p = (PacketServerClose)op;
 				worldManager.closeWorld("");
 				GUIManager.getMainManager().showGUI(new GUIServerError("Server closed: ",p.message));
+			}else if(op instanceof PacketPlayerLeave){
+				worldManager.getEntityManager().removeNow(((PacketPlayerLeave) op).entityID);
 			}else{
 				System.err.println("[CLIENT] Received unhandled packet: "+op.getClass());
 				//throw new IOException("Invalid Packet "+op.getClass());
@@ -166,7 +170,12 @@ public class Client{
 		}
 	}
 	
-	public void close() {
+	public void close(){
+		try{
+			sendToServer(new PacketPlayerLeave());
+		}catch (IOException e){
+			e.printStackTrace();
+		}
 		this.isClosed = true;
 		socket.close();
 		connectionThread.interrupt();

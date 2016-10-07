@@ -13,6 +13,8 @@ import org.lwjgl.opengl.GL11;
 import net.codepixl.GLCraft.GUI.GUIScreen;
 import net.codepixl.GLCraft.render.util.Tesselator;
 import net.codepixl.GLCraft.util.Constants;
+import net.codepixl.GLCraft.util.LogSource;
+import net.codepixl.GLCraft.util.logging.GLogger;
 
 public class GUIScrollBox extends GUIScreen{
 	public int spacing;
@@ -32,6 +34,16 @@ public class GUIScrollBox extends GUIScreen{
 		currentY+=i.height+spacing;
 	}
 	
+	@Override
+	public void addElement(GUIScreen s){
+		GLogger.logerr("Use addItem instead!", LogSource.GLCRAFT);
+	}
+	
+	@Override
+	public void addElements(GUIScreen... s){
+		GLogger.logerr("Use addItem instead!", LogSource.GLCRAFT);
+	}
+	
 	public boolean removeItem(GUIScreen i){
 		boolean ret = items.remove(i);
 		if(ret)
@@ -42,6 +54,7 @@ public class GUIScrollBox extends GUIScreen{
 	public void clearItems(){
 		items.clear();
 		currentY = spacing;
+		scrollY = 0;
 	}
 	
 	public boolean removeItem(int i){

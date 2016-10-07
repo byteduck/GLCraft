@@ -404,4 +404,8 @@ public class GLCraft extends Screen{
 		this.serverCentralManager.close("Server closing");
 	}
 
+	public void disconnectFromServer(boolean quit) {
+		clientCentralManager.close("Quit");
+	}
+
 }

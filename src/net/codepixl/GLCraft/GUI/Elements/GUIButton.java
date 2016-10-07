@@ -187,4 +187,9 @@ public class GUIButton extends GUIScreen{
 		}
 	}
 	
+	public void setText(String text){
+		this.text = text;
+		this.width = Constants.FONT.getWidth(text)+padding*2;
+	}
+	
 }
