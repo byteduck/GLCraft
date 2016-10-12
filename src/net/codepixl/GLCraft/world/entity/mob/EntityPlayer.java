@@ -39,6 +39,7 @@ import net.codepixl.GLCraft.util.LogSource;
 import net.codepixl.GLCraft.util.MathUtils;
 import net.codepixl.GLCraft.util.Ray;
 import net.codepixl.GLCraft.util.Raytracer;
+import net.codepixl.GLCraft.util.command.CommandExecutor;
 import net.codepixl.GLCraft.util.logging.GLogger;
 import net.codepixl.GLCraft.world.WorldManager;
 import net.codepixl.GLCraft.world.entity.Entity;
@@ -49,7 +50,7 @@ import net.codepixl.GLCraft.world.item.tool.Tool;
 import net.codepixl.GLCraft.world.tile.Tile;
 import net.codepixl.GLCraft.world.tile.material.Material;
 
-public class EntityPlayer extends Mob {
+public class EntityPlayer extends Mob implements CommandExecutor{
 	
 	private float breakCooldown, buildCooldown, breakProgress, walkAccel;
 	public byte currentTile;
@@ -556,6 +557,11 @@ public class EntityPlayer extends Mob {
 
 	public String getName() {
 		return this.name;
+	}
+
+	@Override
+	public int getType() {
+		return CommandExecutor.PLAYER;
 	}
 	
 }
