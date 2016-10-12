@@ -157,7 +157,9 @@ public class Client{
 				}
 			}else if(op instanceof PacketServerClose){
 				PacketServerClose p = (PacketServerClose)op;
-				worldManager.closeWorld("");
+				GLogger.log("Server closed: "+p.message,LogSource.CLIENT);
+				worldManager.closeWorld("",false);
+				Constants.GAME_STATE = Constants.START_SCREEN;
 				GUIManager.getMainManager().showGUI(new GUIServerError("Server closed: ",p.message));
 			}else if(op instanceof PacketPlayerLeave){
 				worldManager.getEntityManager().removeNow(((PacketPlayerLeave) op).entityID);

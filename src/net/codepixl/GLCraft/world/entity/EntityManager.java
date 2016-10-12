@@ -107,7 +107,8 @@ public class EntityManager implements GameObj{
 		NbtOutputStream nbtOutputStream = new NbtOutputStream(outputStream);
 		TagCompound root = new TagCompound("");
 		TagList list = new TagList("Entities");
-		Iterator<Entry<Integer,Entity>> i = this.entities.entrySet().iterator();
+		@SuppressWarnings("unchecked")
+		Iterator<Entry<Integer,Entity>> i = ((HashMap<Integer, Entity>) this.entities.clone()).entrySet().iterator();
 		while(i.hasNext()){
 			final Entity e = i.next().getValue();
 			if(!(e instanceof EntityPlayer)){

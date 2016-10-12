@@ -465,11 +465,11 @@ public class GLCraft extends Screen{
 	}
 
 	public void closeLocalServer() {
-		this.serverCentralManager.close("Server closing");
+		this.serverCentralManager.close("Server closing", false);
 	}
 
 	public void disconnectFromServer(boolean quit) {
-		clientCentralManager.close("Quit");
+		clientCentralManager.close("Quit", quit);
 	}
 
 }

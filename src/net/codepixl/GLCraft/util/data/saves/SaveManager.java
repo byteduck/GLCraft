@@ -43,18 +43,15 @@ public class SaveManager {
 	public static String formatV3 = "GLCWorldv3";
 	public static String currentFormat = formatV3;
 	
-	public static boolean saveWorld(WorldManager tworldManager, Save tsave, boolean tquit, final boolean exitToMenu){
-		if(!tworldManager.isServer) //Only servers should save worlds
+	public static boolean saveWorld(final WorldManager worldManager, final Save save, final boolean quit, final boolean exitToMenu){
+		if(!worldManager.isServer) //Only servers should save worlds
 			return false;
-    	GLogger.log("Saving world "+tsave+"...", LogSource.SERVER);
+    	GLogger.log("Saving world "+save+"...", LogSource.SERVER);
     	
-		tsave.name = tsave.name.replaceAll("[^ a-zA-Z0-9.-]", "_");
+		save.name = save.name.replaceAll("[^ a-zA-Z0-9.-]", "_");
 		
-		tsave.worldTime = tworldManager.getWorldTime();
+		save.worldTime = worldManager.getWorldTime();
 		
-		final WorldManager worldManager = tworldManager;
-		final Save save = tsave;
-		final boolean quit = tquit;
 		worldManager.setSaving(true);
 		Runnable r = new Runnable(){
 			@Override
@@ -118,7 +115,7 @@ public class SaveManager {
 				if(quit)
 					System.exit(0);
 				if(exitToMenu)
-					worldManager.centralManager.close("");
+					worldManager.centralManager.close("",false);
 			}
 		};
 		

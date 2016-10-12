@@ -370,7 +370,9 @@ public class WorldManager {
 	}
 	
 	public void saveChunks(Save save) throws IOException{
-		Iterator<Chunk> i = this.activeChunks.values().iterator();
+		@SuppressWarnings("unchecked")
+		ArrayList<Chunk> activeChunks = (ArrayList<Chunk>) new ArrayList<Chunk>(this.activeChunks.values()).clone();
+		Iterator<Chunk> i = activeChunks.iterator();
 		int index = 0;
 		File f = new File(save.getDirectory(), "region");
 		f.mkdirs();
@@ -653,9 +655,15 @@ public class WorldManager {
 
 	public static boolean saveWorld(boolean quit, boolean exitToMenu) {
 		if(cw != null){
-			if(!cw.isSaving() && cw.doneGenerating)
-				return SaveManager.saveWorld(cw, cw.currentSave, quit, exitToMenu);
-			else if(quit)
+			if(!cw.isSaving() && cw.doneGenerating){
+				boolean b = SaveManager.saveWorld(cw, cw.currentSave, quit, exitToMenu);
+
+				if(b && (quit || exitToMenu)){
+					cw.centralManager.close("Closing", quit);
+				}
+				
+				return b;
+			}else if(quit)
 				System.exit(0);
 		}
 		return true;
@@ -991,25 +999,27 @@ public class WorldManager {
 		this.worldTime = worldTime;
 	}
 
-	public void closeWorld(final String reason){
+	public void closeWorld(final String reason, boolean quit){
 		this.actionQueue.add(new Callable<Void>(){
 			@Override
 			public Void call() throws Exception {
 				closeWorldMain(reason);
+				if(quit)
+					System.exit(0);
 				return null;
 			}
 		});
 	}
 	
 	private void closeWorldMain(String reason){
-		if(this.isServer)
+		if(this.isServer){
 			try {
 				this.centralManager.getServer().close(reason);
 			} catch (IOException e) {
 				GLogger.logerr("Error closing server!", LogSource.SERVER);
 				e.printStackTrace();
 			}
-		if(!isServer){
+		}else{
 			getPlayer().shouldUpdate = false;
 			centralManager.getClient().close();
 			this.doneGenerating = false;

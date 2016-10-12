@@ -721,8 +721,8 @@ public class CentralManager extends Screen{
 		}
 	}
 	
-	public void close(String reason){
-		this.worldManager.closeWorld(reason);
+	public void close(String reason, boolean quit){
+		this.worldManager.closeWorld(reason, quit);
 	}
 
 	public void sendPacket(Packet p, EntityPlayerMP mp){

@@ -57,6 +57,7 @@ public class EntityPlayerMP extends EntityPlayer{
 		GL11.glFrontFace(GL11.GL_CCW);
 		GL11.glEnable(GL11.GL_DEPTH_TEST);
 		GL11.glPopMatrix();
+		Spritesheet.atlas.bind();
 	}
 	
 	@Override
