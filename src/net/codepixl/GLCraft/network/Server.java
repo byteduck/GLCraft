@@ -27,15 +27,18 @@ import net.codepixl.GLCraft.network.packet.PacketPlayerLogin;
 import net.codepixl.GLCraft.network.packet.PacketPlayerLoginResponse;
 import net.codepixl.GLCraft.network.packet.PacketPlayerPos;
 import net.codepixl.GLCraft.network.packet.PacketReady;
+import net.codepixl.GLCraft.network.packet.PacketRequestChunk;
+import net.codepixl.GLCraft.network.packet.PacketSendChunk;
 import net.codepixl.GLCraft.network.packet.PacketServerClose;
-import net.codepixl.GLCraft.network.packet.PacketSetBufferSize;
 import net.codepixl.GLCraft.network.packet.PacketSetInventory;
 import net.codepixl.GLCraft.network.packet.PacketUpdateEntity;
 import net.codepixl.GLCraft.network.packet.PacketUtil;
 import net.codepixl.GLCraft.network.packet.PacketWorldTime;
 import net.codepixl.GLCraft.util.Constants;
 import net.codepixl.GLCraft.util.LogSource;
+import net.codepixl.GLCraft.util.Vector3i;
 import net.codepixl.GLCraft.util.logging.GLogger;
+import net.codepixl.GLCraft.world.Chunk;
 import net.codepixl.GLCraft.world.WorldManager;
 import net.codepixl.GLCraft.world.entity.mob.EntityPlayerMP;
 import net.codepixl.GLCraft.world.tile.Tile;
@@ -147,7 +150,7 @@ public class Server{
 					c.writePacket(new PacketPlayerAdd(c2.player.getID(), c2.player.getName(), c2.player.getPos()));
 				}
 				sendToAllClientsExcept(new PacketPlayerAdd(c.player.getID(), c.player.getName(), c.player.getPos()), c);
-				worldManager.sendChunkPackets(c.player);
+				c.writePacket(new PacketSendChunk(worldManager.getActiveChunks().size()));
 				GLogger.log("New player logged in: "+p.name, LogSource.SERVER);
 			}else if(op instanceof PacketBlockChange){
 				PacketBlockChange p = (PacketBlockChange)op;
@@ -162,11 +165,6 @@ public class Server{
 				c.player.getPos().set(p.pos[0], p.pos[1], p.pos[2]);
 				c.player.getRot().set(p.rot[0], p.rot[1], p.rot[2]);
 				c.player.getVel().set(p.vel[0], p.vel[1], p.vel[2]);
-			}else if(op instanceof PacketSetBufferSize){
-				PacketSetBufferSize p = (PacketSetBufferSize)op;
-				if(p.bufferSize <= 1000000){ //Make sure the size is <= 1M (to prevent attacks)
-					this.socket.setReceiveBufferSize(p.bufferSize);
-				}
 			}else if(op instanceof PacketOnPlace){
 				PacketOnPlace p = (PacketOnPlace)op;
 				Tile.getTile(p.tile).onPlace(p.x, p.y, p.z, p.meta, p.facing, worldManager);
@@ -193,6 +191,10 @@ public class Server{
 				GLogger.log("Player Logged out: "+c.player.getName(), LogSource.SERVER);
 				worldManager.getEntityManager().remove(c.player);
 				sendToAllClients(new PacketPlayerLeave(c.player.getID()));
+			}else if(op instanceof PacketRequestChunk){
+				Vector3i pos = ((PacketRequestChunk) op).pos;
+				Chunk ch = worldManager.getChunk(pos);
+				c.writePacket(new PacketSendChunk(ch, c.player));
 			}else{
 				GLogger.logerr("Unhandled Packet: "+op.getClass(), LogSource.SERVER);
 			}

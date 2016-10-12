@@ -93,6 +93,7 @@ public class EntityPlayerMP extends EntityPlayer{
 	
 	@Override
 	public void respawn(){
+		this.setDead(false);
 		worldManager.sendPacket(new PacketRespawn(),this);
 	}
 	

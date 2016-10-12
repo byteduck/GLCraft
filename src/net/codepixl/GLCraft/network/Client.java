@@ -6,6 +6,7 @@ import java.net.DatagramSocket;
 import java.net.InetAddress;
 import java.net.SocketException;
 import java.net.SocketTimeoutException;
+import java.util.ArrayList;
 
 import org.lwjgl.util.vector.Vector3f;
 
@@ -21,10 +22,10 @@ import net.codepixl.GLCraft.network.packet.PacketPlayerLogin;
 import net.codepixl.GLCraft.network.packet.PacketPlayerLoginResponse;
 import net.codepixl.GLCraft.network.packet.PacketPlayerPos;
 import net.codepixl.GLCraft.network.packet.PacketRemoveEntity;
+import net.codepixl.GLCraft.network.packet.PacketRequestChunk;
 import net.codepixl.GLCraft.network.packet.PacketRespawn;
 import net.codepixl.GLCraft.network.packet.PacketSendChunk;
 import net.codepixl.GLCraft.network.packet.PacketServerClose;
-import net.codepixl.GLCraft.network.packet.PacketSetBufferSize;
 import net.codepixl.GLCraft.network.packet.PacketSetInventory;
 import net.codepixl.GLCraft.network.packet.PacketUpdateEntity;
 import net.codepixl.GLCraft.network.packet.PacketUtil;
@@ -32,6 +33,7 @@ import net.codepixl.GLCraft.network.packet.PacketWorldTime;
 import net.codepixl.GLCraft.util.Constants;
 import net.codepixl.GLCraft.util.LogSource;
 import net.codepixl.GLCraft.util.logging.GLogger;
+import net.codepixl.GLCraft.world.Chunk;
 import net.codepixl.GLCraft.world.WorldManager;
 import net.codepixl.GLCraft.world.entity.Entity;
 import net.codepixl.GLCraft.world.entity.mob.EntityPlayerMP;
@@ -48,6 +50,8 @@ public class Client{
 	public int port;
 	public volatile ServerConnectionState connectionState;
 	private volatile boolean isClosed = false;
+	private int currentRequest = 0;
+	private boolean requestingChunks = true;
 	
 	public Client(WorldManager w, int port) throws IOException{
 		if(!commonInit(w,port)){throw new IOException("Error binding to port");}
@@ -88,11 +92,7 @@ public class Client{
 						worldManager.chunksLeftToDownload = p.numChunks;
 					}
 				}
-			}else if(op instanceof PacketSetBufferSize){
-				PacketSetBufferSize p = (PacketSetBufferSize)op;
-				if(p.bufferSize <= 1000000){ //Make sure the size is <= 1M (to prevent attacks)
-					this.socket.setReceiveBufferSize(p.bufferSize);
-				}
+				requestNextChunk();
 			}else if(op instanceof PacketRespawn){
 				this.worldManager.getEntityManager().getPlayer().respawn();
 			}else if(op instanceof PacketWorldTime){
@@ -200,6 +200,7 @@ public class Client{
 					this.worldManager.getEntityManager().getPlayer().setId(p.entityID);
 					this.connectedServer = new ClientServer(this, addr, port);
 					connectionThread.start();
+					this.requestNextChunk();
 				}else{
 					this.connectionState = new ServerConnectionState(p.message);
 				}
@@ -218,6 +219,21 @@ public class Client{
 		return connectionState;
 	}
 	
+	private void requestNextChunk(){
+		if(requestingChunks){
+			worldManager.getActiveChunks();
+			Chunk req = (new ArrayList<Chunk>(worldManager.getActiveChunks().values())).get(currentRequest);
+			currentRequest++;
+			if(currentRequest >= worldManager.getActiveChunks().size())
+				requestingChunks = false;
+			try {
+				sendToServer(new PacketRequestChunk(req));
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
+	}
+
 	public void sendToServer(Packet p) throws IOException{
 		this.connectedServer.sendPacket(p);
 	}
@@ -292,6 +308,8 @@ public class Client{
 
 	public void reinit() {
 		try {
+			this.requestingChunks = true;
+			this.currentRequest = 0;
 			socket = new DatagramSocket(port);
 			this.isClosed = false;
 			connectionThread = new Thread(connectionRunnable, "Client Thread");

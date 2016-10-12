@@ -37,7 +37,6 @@ import net.codepixl.GLCraft.network.packet.PacketBlockChange;
 import net.codepixl.GLCraft.network.packet.PacketReady;
 import net.codepixl.GLCraft.network.packet.PacketRespawn;
 import net.codepixl.GLCraft.network.packet.PacketSendChunk;
-import net.codepixl.GLCraft.network.packet.PacketSetBufferSize;
 import net.codepixl.GLCraft.util.AABB;
 import net.codepixl.GLCraft.util.BreakSource;
 import net.codepixl.GLCraft.util.Constants;
@@ -215,7 +214,7 @@ public class WorldManager {
 	}
 	
 	public void update(){
-		if(!actionQueue.isEmpty())
+		while(!actionQueue.isEmpty())
 			try {
 				actionQueue.poll().call();
 			} catch (Exception e) {
@@ -504,18 +503,20 @@ public class WorldManager {
 	
 	public void setTileAtPos(int x, int y, int z, byte tile, BreakSource source, boolean rebuild, byte meta){
 		Chunk c = getChunk(x,y,z);
-		c.setTileAtPos(x-(int)c.getPos().x, y-(int)c.getPos().y, z-(int)c.getPos().z, tile, meta, source, true);
-		if(this.isServer){
-			blockUpdate(x,y,z);
-			blockUpdate(x+1,y,z);
-			blockUpdate(x-1,y,z);
-			blockUpdate(x,y+1,z);
-			blockUpdate(x,y-1,z);
-			blockUpdate(x,y,z+1);
-			blockUpdate(x,y,z-1);
+		if(c != null){
+			c.setTileAtPos(x-(int)c.getPos().x, y-(int)c.getPos().y, z-(int)c.getPos().z, tile, meta, source, true);
+			if(this.isServer){
+				blockUpdate(x,y,z);
+				blockUpdate(x+1,y,z);
+				blockUpdate(x-1,y,z);
+				blockUpdate(x,y+1,z);
+				blockUpdate(x,y-1,z);
+				blockUpdate(x,y,z+1);
+				blockUpdate(x,y,z-1);
+			}
+			if(sendBlockPackets && source.sendPacket)
+				this.sendPacket(new PacketBlockChange(x,y,z,tile,meta,source));
 		}
-		if(sendBlockPackets && source.sendPacket)
-			this.sendPacket(new PacketBlockChange(x,y,z,tile,meta,source));
 		return;
 	}
 	
@@ -939,34 +940,16 @@ public class WorldManager {
 		}
 	}
 	
+	public HashMap<Vector3i, Chunk> getActiveChunks(){
+		return this.activeChunks;
+	}
+	
 	public void sendPacket(Packet p){
 		centralManager.sendPacket(p);
 	}
 	
 	public void sendPacket(Packet p, EntityPlayerMP mp){
 		centralManager.sendPacket(p,mp);
-	}
-
-	public void sendChunkPackets(final EntityPlayerMP player){
-		actionQueue.add(new Callable<Void>(){
-			@Override
-			public Void call() throws Exception {
-				sendChunkPacketsMain(player);
-				return null;
-			}
-		});
-	}
-	
-	private void sendChunkPacketsMain(EntityPlayerMP player){
-		sendPacket(new PacketSetBufferSize(1000000), player);
-		sendPacket(new PacketSendChunk(Constants.worldLengthChunks*Constants.worldLengthChunks*Constants.worldLengthChunks), player);
-		ArrayList<PacketSendChunk> send = new ArrayList<PacketSendChunk>();
-		for(Entry<Vector3i, Chunk> e : this.activeChunks.entrySet()){
-			Chunk c = e.getValue();
-			sendPacket(new PacketSendChunk(c, player), player);
-		}
-		sendPacket(new PacketRespawn(), player);
-		sendPacket(new PacketSetBufferSize(10000), player);
 	}
 	
 	public EntityPlayer getPlayer() {
@@ -977,19 +960,20 @@ public class WorldManager {
 		return getEntityManager().getEntity(id);
 	}
 
-	public void updateChunk(PacketSendChunk p, boolean initial) {
+	public void updateChunk(PacketSendChunk p, boolean initial){
 		getChunk(p.pos).updateTiles(p);
 		if(initial){
 			chunksLeftToDownload--;
 			if(chunksLeftToDownload <= 0){
 				this.doneGenerating = true;
-				this.actionQueue .add(new Callable<Void>(){
+				this.actionQueue.add(new Callable<Void>(){
 					@Override
 					public Void call() throws Exception{
-						GLogger.log("Done recieving chunks", LogSource.CLIENT);
+						GLogger.log("Done Receiving Chunks", LogSource.CLIENT);
 						reSunlight();
-						sendPacket(new PacketReady());
 						getPlayer().shouldUpdate = true;
+						sendPacket(new PacketReady());
+						entityManager.getPlayer().respawn();
 						return null;
 					}
 				});

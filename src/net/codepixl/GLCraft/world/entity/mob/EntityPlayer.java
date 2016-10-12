@@ -97,15 +97,6 @@ public class EntityPlayer extends Mob {
 		return 36;
 	}
 	
-	@Override
-	public void setDead(boolean dead){
-		super.setDead(dead);
-		if(!this.worldManager.isServer){
-			GLogger.log("DEADDD", LogSource.GLCRAFT);
-			new Throwable().printStackTrace();
-		}
-	}
-	
 	public void update(){
 		if(!shouldUpdate)
 			return;

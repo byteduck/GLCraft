@@ -116,13 +116,15 @@ public class Chunk {
 				for(int z = 0; z < sizeZ; z++){
 					int posZ = (int)pos.z+z;
 					int posX = (int)pos.x+x;
-					float elevation = (float) worldManager.elevationNoise.eval((double)posX/300d, (double)posZ/300d);
-					float roughness = (float) worldManager.roughnessNoise.eval((double)posX/300d, (double)posZ/300d);
-					float detail = (float) worldManager.detailNoise.eval((double)posX/75d, (double)posZ/75d);
+					float noise = ((float) worldManager.elevationNoise.eval((double)posX/50d, (double)posZ/50d) + 1f)*(float)Constants.CHUNKSIZE+50;
+					//float elevation = (float) worldManager.elevationNoise.eval((double)posX/400d, (double)posZ/400d);
+					//float roughness = (float) worldManager.roughnessNoise.eval((double)posX/300d, (double)posZ/300d);
+					//float detail = (float) worldManager.detailNoise.eval((double)posX/75d, (double)posZ/75d);
 					for(int y = 0; y < sizeY; y++){
 						int posY = (int)pos.y+y;
 						//Logger.log(posX+","+posZ);
-						float noise = (elevation + (roughness*detail))*60f+64f;
+						//float noise = (elevation + (roughness*detail))*60f+70f;
+						//float noise = 
 						if(posY < noise){
 							if(posY == 0){
 								tiles[x][y][z] = Tile.Bedrock.getId();

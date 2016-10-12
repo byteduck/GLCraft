@@ -20,15 +20,19 @@ public class PacketSendChunk extends Packet{
 	public int type;
 	
 	public PacketSendChunk(Chunk c, EntityPlayerMP sendTo){
-		this.tiles = c.getTiles();
-		this.meta = c.getMeta();
-		this.sendTo = sendTo;
-		this.pos = new Vector3i(c.getPos());
-		this.type = TYPE_CHUNK;
+		if(c != null){
+			this.tiles = c.getTiles();
+			this.meta = c.getMeta();
+			this.sendTo = sendTo;
+			this.pos = new Vector3i(c.getPos());
+			this.type = TYPE_CHUNK;
+		}else{
+			this.failed = true;
+		}
 	}
 	
 	public PacketSendChunk(){
-		failed = true;
+		this.failed = true;
 	}
 	
 	public PacketSendChunk(int num){
