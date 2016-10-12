@@ -1,16 +1,27 @@
 package net.codepixl.GLCraft.GUI;
 
+import static org.lwjgl.opengl.GL11.GL_TEXTURE_2D;
+import static org.lwjgl.opengl.GL11.glDisable;
+
 import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.InetAddress;
 import java.net.MulticastSocket;
+import java.net.UnknownHostException;
 import java.util.ArrayList;
+import java.util.concurrent.Callable;
 
+import net.codepixl.GLCraft.GLCraft;
+import net.codepixl.GLCraft.GUI.Elements.GUIButton;
 import net.codepixl.GLCraft.GUI.Elements.GUIScrollBox;
+import net.codepixl.GLCraft.GUI.Elements.GUITextBox;
+import net.codepixl.GLCraft.network.Client;
 import net.codepixl.GLCraft.network.packet.Packet;
 import net.codepixl.GLCraft.network.packet.PacketLANBroadcast;
 import net.codepixl.GLCraft.network.packet.PacketUtil;
 import net.codepixl.GLCraft.util.Constants;
+import net.codepixl.GLCraft.util.LogSource;
+import net.codepixl.GLCraft.util.logging.GLogger;
 
 public class GUIMultiplayer extends GUIScreen{
 	
@@ -20,6 +31,13 @@ public class GUIMultiplayer extends GUIScreen{
 	public GUIScrollBox scrollBox;
 	protected ArrayList<Server> servers = new ArrayList<Server>();
 	private GUIMultiplayer thisinst;
+	private GUITextBox textBox;
+	private GUIButton joinButton;
+	
+	private static final int JOINX = (int) (Constants.WIDTH*0.7);
+	private static final int JOINY = (int) (Constants.HEIGHT*0.925);
+	private static final int TEXTBOXY = (int) (Constants.HEIGHT*0.925);
+	private static final int TEXTBOXX = (int) (Constants.HEIGHT*0.3);
 	
 	public GUIMultiplayer(){
 		thisinst = this;
@@ -40,7 +58,44 @@ public class GUIMultiplayer extends GUIScreen{
 		
 		recvRunnable = new RecvThread(scrollBox);
 		
-		addElement(scrollBox);
+		final String tbp = "   Enter Server Address   ";
+		int tbtwidth = Constants.FONT.getWidth(tbp);
+		
+		textBox = new GUITextBox(TEXTBOXX, TEXTBOXY, tbtwidth, tbp);
+		textBox.y-=textBox.height/2;
+		
+		joinButton = new GUIButton("Connect to server", JOINX, JOINY, new Callable<Void>() {
+			@Override
+			public Void call() throws Exception {
+				try{
+					String addrs = textBox.getText();
+					int port = net.codepixl.GLCraft.network.Server.DEFAULT_SERVER_PORT;
+					if(addrs == null || addrs.trim().equals("")){}else{
+						if(addrs.contains(":")){
+							port = Integer.parseInt(addrs.substring(addrs.indexOf(":")+1));
+							addrs = addrs.substring(0, addrs.indexOf(":"));
+						}
+						InetAddress addr = InetAddress.getByName(addrs);
+						if(addr != null){
+							Constants.setState(Constants.GAME);
+							GLCraft.getGLCraft().getWorldManager(false).createBlankWorld();
+							Client.ServerConnectionState cs = GLCraft.getGLCraft().getCentralManager(false).connectToServer(addr, port);
+							if(!cs.success){
+								Constants.setState(Constants.START_SCREEN);
+								GUIManager.getMainManager().showGUI(new GUIServerError("Error connecting to server: ",cs.message));
+								return null;
+							}
+							glDisable(GL_TEXTURE_2D);
+							((GUIPauseMenu)GUIManager.getMainManager().getGUI("pauseMenu")).setHost(false);
+							GUIManager.getMainManager().closeGUI(false);
+						}
+					}
+				}catch(UnknownHostException | IndexOutOfBoundsException | NumberFormatException e){}
+				return null;
+			}
+		});
+		
+		addElements(scrollBox, textBox, joinButton);
 	}
 	
 	@Override

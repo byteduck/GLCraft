@@ -114,77 +114,113 @@ public class GLCraft extends Screen{
 		return glcraft;
 	}
 	
-	public GLCraft() throws IOException, LWJGLException{
-		commonInitializer();
+	public GLCraft(boolean dedicatedServer) throws IOException, LWJGLException{
+		commonInitializer(dedicatedServer);
 	}
 	
 	private GLCraft(Plugin p) throws IOException, LWJGLException{
 		devPlugin = p;
-		commonInitializer();
+		commonInitializer(false);
 		
 	}
 	
-	private void commonInitializer() throws IOException, LWJGLException{
-		
-		Thread.setDefaultUncaughtExceptionHandler(new CrashHandler());
-		try{
-			Files.deleteIfExists(new File(System.getProperty("user.home"),"GLCraft"+File.separator+"GLCraft.log").toPath());
-		}catch(FileSystemException e){
-			e.printStackTrace();
-			//JOptionPane.showMessageDialog(null, "You can only run one GLCraft instance at a time.", "GLCraft", JOptionPane.ERROR_MESSAGE);
-			//System.exit(0);
-		}
-		Files.createDirectories(new File(System.getProperty("user.home")+"/GLCraft").toPath());
-		FileOutputStream lfos = new FileOutputStream(System.getProperty("user.home")+File.separator+"GLCraft"+File.separator+"GLCraft.log");
-		TeeOutputStream otos = new TeeOutputStream(System.out,lfos);
-		TeeOutputStream etos = new TeeOutputStream(System.err,lfos);
-		System.setErr(new PrintStream(etos));
-		System.setOut(new PrintStream(otos));
-		
-		GLogger.init(lfos);
-		GLogger.rout.setSuppressWarnings(true);
-		
-		glcraft = this;
-		Display.setIcon(new ByteBuffer[] {
-		        loadIcon(GLCraft.class.getResource("/textures/icons/icon16.png")),
-		        loadIcon(GLCraft.class.getResource("/textures/icons/icon32.png")),
-		});
-		
-		Display.setFullscreen(false);
-		Display.setDisplayMode(new DisplayMode(1000, 700));
-		Display.setTitle("GLCraft v"+version);
-		Display.create(new PixelFormat(8,8,8));
-		
-		initGL();
-		
-		init();
-		
-		GLogger.rout.setSuppressWarnings(false);
-		long ltime = Time.getTime();
-		double secondCounter = 0;
-		while(!Display.isCloseRequested()){
-			ltime = Time.getTime();
-			update();
-			render();
-			Window.update();
-			if(Constants.maxFPS > 1)
-				Display.sync(Constants.maxFPS);
-			secondCounter+=Time.getDelta();
-			if(secondCounter > 1){
-				Constants.FPS = (int) (1d/Time.getDelta());
-				secondCounter = 0;
+	private void commonInitializer(boolean dedicatedServer) throws IOException, LWJGLException{
+		this.isServer = dedicatedServer;
+		if(!this.isServer){
+			Thread.setDefaultUncaughtExceptionHandler(new CrashHandler());
+			try{
+				Files.deleteIfExists(new File(System.getProperty("user.home"),"GLCraft"+File.separator+"GLCraft.log").toPath());
+			}catch(FileSystemException e){
+				e.printStackTrace();
+				//JOptionPane.showMessageDialog(null, "You can only run one GLCraft instance at a time.", "GLCraft", JOptionPane.ERROR_MESSAGE);
+				//System.exit(0);
 			}
-			Constants.QFPS = (int) (1d/((Time.getTime()-ltime)/(double)Time.SECOND));
-			//So basically what this piece of code does is it will spend (1000000000/(FPS))-TimeSpentUpdatingAndRendering nanoseconds rebuilding chunks every frame.
-			if(Constants.QFPS > 0 && spendRemainingTime){
-				long nsBuildingChunks = 1000000000/Constants.QFPS;
-				long targTime = ltime+nsBuildingChunks;
-				doRemainingTime(targTime);
+			Files.createDirectories(new File(System.getProperty("user.home")+"/GLCraft").toPath());
+			FileOutputStream lfos = new FileOutputStream(System.getProperty("user.home")+File.separator+"GLCraft"+File.separator+"GLCraft.log");
+			TeeOutputStream otos = new TeeOutputStream(System.out,lfos);
+			TeeOutputStream etos = new TeeOutputStream(System.err,lfos);
+			System.setErr(new PrintStream(etos));
+			System.setOut(new PrintStream(otos));
+			
+			GLogger.init(lfos);
+			GLogger.rout.setSuppressWarnings(true);
+			
+			glcraft = this;
+			Display.setIcon(new ByteBuffer[] {
+			        loadIcon(GLCraft.class.getResource("/textures/icons/icon16.png")),
+			        loadIcon(GLCraft.class.getResource("/textures/icons/icon32.png")),
+			});
+			
+			Display.setFullscreen(false);
+			Display.setDisplayMode(new DisplayMode(1000, 700));
+			Display.setTitle("GLCraft v"+version);
+			Display.create(new PixelFormat(8,8,8));
+			
+			initGL();
+			
+			init();
+			
+			GLogger.rout.setSuppressWarnings(false);
+			long ltime = Time.getTime();
+			double secondCounter = 0;
+			while(!Display.isCloseRequested()){
+				ltime = Time.getTime();
+				update();
+				render();
+				Window.update();
+				if(Constants.maxFPS > 1)
+					Display.sync(Constants.maxFPS);
+				secondCounter+=Time.getDelta();
+				if(secondCounter > 1){
+					Constants.FPS = (int) (1d/Time.getDelta());
+					secondCounter = 0;
+				}
+				Constants.QFPS = (int) (1d/((Time.getTime()-ltime)/(double)Time.SECOND));
+				//So basically what this piece of code does is it will spend (1000000000/(FPS))-TimeSpentUpdatingAndRendering nanoseconds rebuilding chunks every frame.
+				if(Constants.QFPS > 0 && spendRemainingTime){
+					long nsBuildingChunks = 1000000000/Constants.QFPS;
+					long targTime = ltime+nsBuildingChunks;
+					doRemainingTime(targTime);
+				}
+				Time.setDelta((Time.getTime()-ltime)/(double)Time.SECOND);
 			}
-			Time.setDelta((Time.getTime()-ltime)/(double)Time.SECOND);
+			
+			if(this.serverCentralManager != null && this.serverCentralManager.isOpen()){
+				WorldManager.saveWorld(true,false);
+			}
+			
+			System.exit(0);
+		}else{
+			Thread.setDefaultUncaughtExceptionHandler(new CrashHandler());
+			
+			try{
+				Files.deleteIfExists(new File("GLCraft.log").toPath());
+			}catch(FileSystemException e){
+				e.printStackTrace();
+				//JOptionPane.showMessageDialog(null, "You can only run one GLCraft instance at a time.", "GLCraft", JOptionPane.ERROR_MESSAGE);
+				//System.exit(0);
+			}
+			
+			FileOutputStream lfos = new FileOutputStream("GLCraft.log");
+			TeeOutputStream otos = new TeeOutputStream(System.out,lfos);
+			TeeOutputStream etos = new TeeOutputStream(System.err,lfos);
+			System.setErr(new PrintStream(etos));
+			System.setOut(new PrintStream(otos));
+			
+			GLogger.init(lfos);
+			GLogger.rout.setSuppressWarnings(true);
+			
+			glcraft = this;
+			
+			initServer();
+			
+			long ltime = Time.getTime();
+			while(true){
+				ltime = Time.getTime();
+				update();
+				Time.setDelta((Time.getTime()-ltime)/(double)Time.SECOND);
+			}
 		}
-		
-		WorldManager.saveWorld(true,false);
 		
 	}
 	
@@ -226,6 +262,28 @@ public class GLCraft extends Screen{
 		GUIManager.getMainManager().showGUI("startScreen");
 	}
 	
+	public void initServer(){
+		Constants.gatherSystemInfo();
+		
+		/**To initialize Tiles and items because they are static*/
+		Tile.tileMap.toString();
+		GLogger.log("---------------", LogSource.NONE);
+		Item.itemMap.toString();
+		
+		serverCentralManager = new CentralManager(true);
+		serverWorldManager = serverCentralManager.getWorldManager();
+		
+		String pluginsFolder = Constants.GLCRAFTDIR+"/plugins";
+		new File(pluginsFolder).mkdirs();
+		pluginManager = new PluginManager(pluginsFolder);
+		if(loadExtPlugins){
+			pluginManager.loadPlugins();
+		}
+		if(isDevEnvironment){
+			pluginManager.addDevPlugin(devPlugin);
+		}
+	}
+	
 	private void initCamera(){
 		
 	}
@@ -236,13 +294,13 @@ public class GLCraft extends Screen{
 
 	@Override
 	public void initGL() {
-		
 		GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
 		try {
 			ge.registerFont(Font.createFont(Font.TRUETYPE_FONT, getClass().getResourceAsStream("/font/GLCraft.ttf")));
 		} catch (FontFormatException | IOException e) {
 			e.printStackTrace();
 		}
+		Constants.initGL();
 		
 		glViewport(0,0,Display.getWidth(),Display.getHeight());
 		glMatrixMode(GL_PROJECTION);
@@ -290,11 +348,12 @@ public class GLCraft extends Screen{
 	@Override
 	public void update() {
 		DebugTimer.startTimer("loop_time");
-		clientCentralManager.update();
+		if(clientCentralManager != null)
+			clientCentralManager.update();
 		if(serverCentralManager != null)
 			serverCentralManager.update();
-		pluginManager.update();
-		// TODO Auto-generated method stub
+		if(pluginManager != null)
+			pluginManager.update();
 	}
 
 	@Override
@@ -316,7 +375,12 @@ public class GLCraft extends Screen{
 	
 	
 	public static void main(String[] args) throws IOException, LWJGLException{
-		glcraft = new GLCraft();
+		boolean dedicatedServer = false;
+		for(String arg : args){
+			if(arg.equals("dedicatedServer"))
+				dedicatedServer = true;
+		}
+		glcraft = new GLCraft(dedicatedServer);
 	}
 	
 	public static void devEnvironment(Plugin p, boolean loadExtPlugins) throws LWJGLException{

@@ -2,6 +2,7 @@ package net.codepixl.GLCraft.util.data.saves;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -102,10 +103,10 @@ public class SaveManager {
 					nbtOutputStream.close();*/
 					
 					//WORLD SAVING
-					worldManager.saveChunks(save.name);
+					worldManager.saveChunks(save);
 					
 					//ENTITY SAVING
-					worldManager.getEntityManager().save(save.name);
+					worldManager.getEntityManager().save(save);
 					
 					//METADATA SAVING
 					writeMetadata(save);
@@ -125,7 +126,7 @@ public class SaveManager {
 		return true;
 	}
 
-	public static boolean loadWorld(WorldManager worldManager, String name) {
+	public static boolean loadWorld(WorldManager worldManager, Save save) {
 		if(!worldManager.isServer) //Only servers should load worlds
 			return false;
 		try {
@@ -134,11 +135,10 @@ public class SaveManager {
 			TagCompound tag;
 			
 			//METADATA LOADING
-			Save s = getSave(name);
-			if(s != null){
-				if(!s.format.equals(currentFormat)){
-					if(!upgradeWorld(s)){
-						JOptionPane.showMessageDialog(null, "Unsupported world format: "+s.format, "Error", JOptionPane.ERROR_MESSAGE);
+			if(save != null){
+				if(!save.format.equals(currentFormat)){
+					if(!upgradeWorld(save)){
+						JOptionPane.showMessageDialog(null, "Unsupported world format: "+save.format, "Error", JOptionPane.ERROR_MESSAGE);
 						return false;
 					}
 				}
@@ -150,7 +150,7 @@ public class SaveManager {
 			//EntityPlayer p = worldManager.getEntityManager().getPlayer();
 			
 			//WORLD LOADING
-			worldManager.loadChunks(s);
+			worldManager.loadChunks(save);
 			
 			//ENTITY & PLAYER LOADING
 			worldManager.entityManager.removeAll();
@@ -179,7 +179,7 @@ public class SaveManager {
 				List<TagFloat> vel = tag.getList("Vel", TagFloat.class);
 				p.setVel(new Vector3f(vel.get(0).getValue(),vel.get(1).getValue(),vel.get(2).getValue()));
 			}*/
-			inputStream = new FileInputStream(Constants.GLCRAFTDIR+"saves/"+name+"/entities.nbt");
+			inputStream = new FileInputStream(save.getDirectory()+File.separator+"entities.nbt");
 			nbtInputStream = new NbtInputStream(inputStream);
 			tag = (TagCompound)nbtInputStream.readTag();
 			List<TagCompound> l = tag.getList("Entities", TagCompound.class);
@@ -206,10 +206,10 @@ public class SaveManager {
 			e.printStackTrace();
 		} catch (NullPointerException e){
 			e.printStackTrace();
-		} catch (SecurityException e1) {
-			e1.printStackTrace();
-		} catch (IllegalArgumentException e1) {
-			e1.printStackTrace();
+		} catch (SecurityException e) {
+			e.printStackTrace();
+		} catch (IllegalArgumentException e) {
+			e.printStackTrace();
 		}
 		JOptionPane.showMessageDialog(null, "Unknown error loading the world.", "Error", JOptionPane.ERROR_MESSAGE);
 		return false;
@@ -221,7 +221,7 @@ public class SaveManager {
 				GLCraft.getGLCraft().getCentralManager(false).initSplashText();
 				for(int chunk = 0; chunk < 1000; chunk++){
 					GLCraft.getGLCraft().getCentralManager(false).renderSplashText("Upgrading world...", "V1 to V2", (int) (((float)chunk/1000f)*100));
-					FileInputStream inputStream = new FileInputStream(new File(s.getFolder(),"chunks/chunk"+chunk+".nbt"));
+					FileInputStream inputStream = new FileInputStream(new File(s.getDirectory(),"chunks/chunk"+chunk+".nbt"));
 					NbtInputStream nbtInputStream = new NbtInputStream(inputStream);
 					TagCompound tag = (TagCompound) nbtInputStream.readTag();
 					byte[] buf = new byte[(int) Math.pow(Constants.CHUNKSIZE,3)];
@@ -237,7 +237,7 @@ public class SaveManager {
 					TagByteArray meta = new TagByteArray("meta", buf);
 					tag.setTag(meta);
 					nbtInputStream.close();
-					FileOutputStream fos = new FileOutputStream(new File(s.getFolder(),"chunks/chunk"+chunk+".nbt"));
+					FileOutputStream fos = new FileOutputStream(new File(s.getDirectory(),"chunks/chunk"+chunk+".nbt"));
 					NbtOutputStream out = new NbtOutputStream(fos);
 					out.write(tag);
 					out.close();
@@ -250,7 +250,7 @@ public class SaveManager {
 				HashMap<Vector2i, TagCompound> regions = new HashMap<Vector2i, TagCompound>();
 				for(int chunk = 0; chunk < 1000; chunk++){
 					GLCraft.getGLCraft().getCentralManager(false).renderSplashText("Upgrading world...", "V2 to V3 (reading chunks)", (int) (((float)chunk/1000f)*100));
-					FileInputStream inputStream = new FileInputStream(new File(s.getFolder(),"chunks/chunk"+chunk+".nbt"));
+					FileInputStream inputStream = new FileInputStream(new File(s.getDirectory(),"chunks/chunk"+chunk+".nbt"));
 					NbtInputStream nbtInputStream = new NbtInputStream(inputStream);
 					TagCompound tag = (TagCompound) nbtInputStream.readTag();
 					nbtInputStream.close();
@@ -267,17 +267,17 @@ public class SaveManager {
 					inputStream.close();
 				}
 				Iterator<Entry<Vector2i, TagCompound>> i = regions.entrySet().iterator();
-				new File(s.getFolder(),"region/").mkdirs();
+				new File(s.getDirectory(),"region/").mkdirs();
 				while(i.hasNext()){
 					GLCraft.getGLCraft().getCentralManager(false).renderSplashText("Upgrading world...", "V2 to V3 (saving regions)");
 					Entry<Vector2i, TagCompound> next = i.next();
-					FileOutputStream fos = new FileOutputStream(new File(s.getFolder(),"region/r"+next.getKey().toString().replace("[","").replace("]","").replace(',', '.')+".nbt"));
+					FileOutputStream fos = new FileOutputStream(new File(s.getDirectory(),"region/r"+next.getKey().toString().replace("[","").replace("]","").replace(',', '.')+".nbt"));
 					NbtOutputStream out = new NbtOutputStream(fos);
 					out.write(next.getValue());
 					out.close();
 					fos.close();
 				}
-			    FileUtil.deleteDirectory(new File(Constants.GLCRAFTDIR+"saves/"+s.name+"/chunks"));
+			    FileUtil.deleteDirectory(new File(s.getDirectory(),"chunks"));
 				s.format = formatV3;
 			}else{
 				return false;
@@ -288,7 +288,7 @@ public class SaveManager {
 	}
 
 	private static void writeMetadata(Save save) throws IOException {
-		FileOutputStream outputStream = new FileOutputStream(new File(Constants.GLCRAFTDIR+"saves/"+save.name+"/world.nbt"));
+		FileOutputStream outputStream = new FileOutputStream(new File(save.getDirectory(),"world.nbt"));
 		NbtOutputStream nbtOutputStream = new NbtOutputStream(outputStream);
 		TagCompound t = new TagCompound("level");
 		TagString nameTag = new TagString("name",save.dispName);
@@ -348,5 +348,28 @@ public class SaveManager {
 		}
 		Collections.sort(saves);
 		return (Save[]) saves.toArray(new Save[saves.size()]);
+	}
+
+	public static Save getDedicatedSave() throws IOException {
+		if(new File("world","world.nbt").exists()){
+			FileInputStream inputStream = new FileInputStream("world"+File.separator+"world.nbt");
+			NbtInputStream nbtInputStream = new NbtInputStream(inputStream);
+			TagCompound tag = (TagCompound)nbtInputStream.readTag();
+			nbtInputStream.close();
+			long timestamp = 0;
+			timestamp = tag.getLong("timestamp");
+			long worldTime = Constants.dayLengthMS/2;
+			try{
+				worldTime = tag.getLong("worldTime");
+			}catch(TagNotFoundException | NullPointerException e){
+				
+			}
+			inputStream.close();
+			return new Save("world",tag.getString("name"),tag.getString("version"),tag.getString("format"),timestamp,worldTime,true);
+		}else{
+			Save s = new Save("world","world","?",formatV0);
+			s.isDedicated = true;
+			return s;
+		}
 	}
 }

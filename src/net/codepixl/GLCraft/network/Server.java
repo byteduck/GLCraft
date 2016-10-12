@@ -353,4 +353,8 @@ public class Server{
 			return addr.hashCode()*port;
 		}
 	}
+
+	public boolean isOpen() {
+		return !socket.isClosed();
+	}
 }

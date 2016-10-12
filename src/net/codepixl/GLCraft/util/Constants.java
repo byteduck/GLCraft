@@ -17,7 +17,7 @@ public class Constants {
 	public static final int CHUNKSIZE = 16;
 	public static final float textSize = 0.5f;
 	public static boolean doneGenerating = false;
-	public static TrueTypeFont FONT = new TrueTypeFont(new Font("GLCraft", Font.PLAIN, 16), true);
+	public static TrueTypeFont FONT;
 	public static final int START_SCREEN = 0;
 	public static final int GAME = 1;
 	public static final int SERVER = 2;
@@ -113,6 +113,10 @@ public class Constants {
 		for(int i = 0; i < stars.length; i++){
 			stars[i] = MathUtils.randomSpherePoint(r, 500);
 		}
+	}
+	
+	public static void initGL(){
+		FONT = new TrueTypeFont(new Font("GLCraft", Font.PLAIN, 16), true);
 	}
 
 }

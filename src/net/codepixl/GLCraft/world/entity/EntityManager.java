@@ -30,6 +30,7 @@ import net.codepixl.GLCraft.util.DebugTimer;
 import net.codepixl.GLCraft.util.GameObj;
 import net.codepixl.GLCraft.util.MathUtils;
 import net.codepixl.GLCraft.util.Vector3i;
+import net.codepixl.GLCraft.util.data.saves.Save;
 import net.codepixl.GLCraft.world.WorldManager;
 import net.codepixl.GLCraft.world.entity.mob.EntityPlayer;
 import net.codepixl.GLCraft.world.entity.mob.EntityPlayerMP;
@@ -98,9 +99,9 @@ public class EntityManager implements GameObj{
 		mobRenderID = glGenLists(1);
 	}
 	
-	public void save(String name) throws IOException{
+	public void save(Save save) throws IOException{
 		FileOutputStream outputStream;
-		File f = new File(Constants.GLCRAFTDIR+"saves/"+name+"/");
+		File f = save.getDirectory();
 		f.mkdirs();
 		outputStream = new FileOutputStream(new File(f,"entities.nbt"));
 		NbtOutputStream nbtOutputStream = new NbtOutputStream(outputStream);

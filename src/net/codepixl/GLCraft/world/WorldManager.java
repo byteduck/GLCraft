@@ -94,7 +94,8 @@ public class WorldManager {
 		this.isServer = isServer;
 		if(isServer)
 			cw = this;
-		initGL();
+		else
+			initGL();
 		init();
 		scheduleSaving();
 		//createWorld();
@@ -129,18 +130,22 @@ public class WorldManager {
 	}
 	
 	public void createWorld(String name){
+		createWorld(name, false);
+	}
+	
+	public void createWorld(String name, boolean dedicated){
 		this.sendBlockPackets = false;
 		GLogger.log("Creating Chunks...", LogSource.SERVER);
 		elevationNoise = new OpenSimplexNoise(Constants.rand.nextLong());
 		roughnessNoise = new OpenSimplexNoise(Constants.rand.nextLong());
 		detailNoise = new OpenSimplexNoise(Constants.rand.nextLong());
-		centralManager.initSplashText();
+		//centralManager.initSplashText();
 		for(int x = 0; x < Constants.worldLengthChunks; x++){
 			for(int y = 0; y < Constants.worldLengthChunks; y++){
 				for(int z = 0; z < Constants.worldLengthChunks; z++){
 					currentChunk++;
 					int progress = (int) (((float)currentChunk/(float)Math.pow(Constants.worldLengthChunks, 3))*100f);
-					centralManager.renderSplashText("Terraforming...", progress+"%", progress);
+					//centralManager.renderSplashText("Terraforming...", progress+"%", progress);
 					Chunk c = new Chunk(shader, 1, x * Constants.CHUNKSIZE, y * Constants.CHUNKSIZE, z * Constants.CHUNKSIZE, this);
 					activeChunks.put(new Vector3i(c.getPos()), c);
 					//saveChunk(activeChunks.get(activeChunks.size() - 1));
@@ -153,7 +158,7 @@ public class WorldManager {
 		while(i.hasNext()){
 			this.currentChunk++;
 			int progress = (int) (((float)currentChunk/(float)Math.pow(Constants.worldLengthChunks, 3))*100f);
-			centralManager.renderSplashText("Planting...", progress+"%", progress);
+			//centralManager.renderSplashText("Planting...", progress+"%", progress);
 			i.next().populateChunk();
 		}
 		i = activeChunks.values().iterator();
@@ -171,21 +176,22 @@ public class WorldManager {
 		while(i.hasNext()){
 			this.currentChunk++;
 			int progress = (int) (((float)currentChunk/(float)Math.pow(Constants.worldLengthChunks, 3))*100f);
-			centralManager.renderSplashText("Decorating...", progress+"%", progress);
+			//centralManager.renderSplashText("Decorating...", progress+"%", progress);
 			Chunk c = i.next();
 			c.rebuildBase(true);
 			c.rebuildBase(false);
 			c.rebuildTickTiles();
 		}
-		centralManager.renderSplashText("Hold on...", "Beaming you down");
+		//centralManager.renderSplashText("Hold on...", "Beaming you down");
 		GLogger.log("Done!", LogSource.SERVER);
 		if(!isServer) entityManager.getPlayer().respawn();
 		doneGenerating = true;
 		String saveName = name.replaceAll("[^ a-zA-Z0-9.-]", "_");
 		this.currentSave = new Save(saveName, name, GLCraft.version, SaveManager.currentFormat);
+		this.currentSave.isDedicated = dedicated;
 		if(!SaveManager.saveWorld(this, currentSave, false, false)){
 			doneGenerating = false;
-			centralManager.renderSplashText("ERROR", "There was an error saving.");
+			//centralManager.renderSplashText("ERROR", "There was an error saving.");
 			while(true){}
 		}
 		this.worldTime = Constants.dayLengthMS/2;
@@ -363,10 +369,10 @@ public class WorldManager {
 		return ret;
 	}
 	
-	public void saveChunks(String name) throws IOException{
+	public void saveChunks(Save save) throws IOException{
 		Iterator<Chunk> i = this.activeChunks.values().iterator();
 		int index = 0;
-		File f = new File(Constants.GLCRAFTDIR+"saves/"+name+"/region");
+		File f = new File(save.getDirectory(), "region");
 		f.mkdirs();
 		HashMap<Vector2i,TagCompound> regions = new HashMap<Vector2i,TagCompound>();
 		while(i.hasNext()){
@@ -390,7 +396,7 @@ public class WorldManager {
 	}
 	
 	public void loadChunks(Save s) throws IOException{
-		File regionsFile = new File(Constants.GLCRAFTDIR+"saves/"+s.name+"/region");
+		File regionsFile = new File(s.getDirectory(),"region");
 		String[] files = regionsFile.list();
 		for(String file : files){
 			FileInputStream fis = new FileInputStream(new File(regionsFile,file));
@@ -622,7 +628,7 @@ public class WorldManager {
 	public boolean loadWorld(Save s) {
 		this.sendBlockPackets = false;
 		this.currentSave = s;
-		centralManager.initSplashText();
+		//centralManager.initSplashText();
 		centralManager.renderSplashText("Loading World...", "Hold on...");
 		for(int x = 0; x < Constants.worldLengthChunks; x++){
 			for(int y = 0; y < Constants.worldLengthChunks; y++){
@@ -634,7 +640,7 @@ public class WorldManager {
 		}
 		this.worldTime = s.worldTime;
 		this.gameTime = new GameTime(s.worldTime);
-		boolean success = SaveManager.loadWorld(this, s.name);
+		boolean success = SaveManager.loadWorld(this, s);
 		this.sendBlockPackets = true;
 		if(success){
 			this.doneGenerating = true;

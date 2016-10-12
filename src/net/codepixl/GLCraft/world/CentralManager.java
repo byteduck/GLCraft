@@ -95,6 +95,8 @@ import net.codepixl.GLCraft.util.DebugTimer;
 import net.codepixl.GLCraft.util.LogSource;
 import net.codepixl.GLCraft.util.Spritesheet;
 import net.codepixl.GLCraft.util.Vector3i;
+import net.codepixl.GLCraft.util.data.saves.Save;
+import net.codepixl.GLCraft.util.data.saves.SaveManager;
 import net.codepixl.GLCraft.util.logging.CrashHandler;
 import net.codepixl.GLCraft.util.logging.GLogger;
 import net.codepixl.GLCraft.world.crafting.CraftingManager;
@@ -156,6 +158,7 @@ public class CentralManager extends Screen{
 		}
 		
 		worldManager = new WorldManager(this, isServer);
+		
 		if(!isServer){
 			guiManager.setGameGUI(new GUIGame(worldManager));
 			GLCraft.renderSplashText("Starting Central Manager...", "Starting Sound System");
@@ -165,12 +168,28 @@ public class CentralManager extends Screen{
 		
 		try{
 			if(isServer)
-				server = new Server(worldManager);
+				if(GLCraft.getGLCraft().isServer())
+					server = new Server(worldManager, Server.DEFAULT_SERVER_PORT);
+				else
+					server = new Server(worldManager);
 			else{
 				client = new Client(worldManager);
 			}
 		}catch(IOException e){
 			e.printStackTrace();
+		}
+		
+		if(GLCraft.getGLCraft().isServer()){ //If is dedicated
+			try {
+				Save s = SaveManager.getDedicatedSave();
+				if(!s.version.equals("?")){
+					worldManager.loadWorld(s);
+				}else{
+					worldManager.createWorld("world", true);
+				}
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
 		}
 		
 		//INIT DEBUGS
@@ -717,5 +736,9 @@ public class CentralManager extends Screen{
 
 	public Client.ServerConnectionState connectToServer(InetAddress addr, int port) throws UnknownHostException, IOException{
 		return client.connectToServer(addr, port);
+	}
+
+	public boolean isOpen() {
+		return this.getServer().isOpen();
 	}
 }
