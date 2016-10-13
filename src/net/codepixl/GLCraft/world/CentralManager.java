@@ -78,15 +78,12 @@ import net.codepixl.GLCraft.GUI.GUIManager;
 import net.codepixl.GLCraft.GUI.GUIMultiplayer;
 import net.codepixl.GLCraft.GUI.GUIPauseMenu;
 import net.codepixl.GLCraft.GUI.GUIScreen;
-import net.codepixl.GLCraft.GUI.GUIServer;
 import net.codepixl.GLCraft.GUI.GUISinglePlayer;
 import net.codepixl.GLCraft.GUI.GUIStartScreen;
 import net.codepixl.GLCraft.GUI.Inventory.Elements.GUISlot;
 import net.codepixl.GLCraft.network.Client;
-import net.codepixl.GLCraft.network.Compressor;
 import net.codepixl.GLCraft.network.Server;
 import net.codepixl.GLCraft.network.packet.Packet;
-import net.codepixl.GLCraft.network.packet.PacketSendChunk;
 import net.codepixl.GLCraft.render.Shape;
 import net.codepixl.GLCraft.render.TextureManager;
 import net.codepixl.GLCraft.sound.SoundManager;
@@ -95,6 +92,7 @@ import net.codepixl.GLCraft.util.DebugTimer;
 import net.codepixl.GLCraft.util.LogSource;
 import net.codepixl.GLCraft.util.Spritesheet;
 import net.codepixl.GLCraft.util.Vector3i;
+import net.codepixl.GLCraft.util.command.CommandManager;
 import net.codepixl.GLCraft.util.data.saves.Save;
 import net.codepixl.GLCraft.util.data.saves.SaveManager;
 import net.codepixl.GLCraft.util.logging.CrashHandler;
@@ -107,8 +105,6 @@ import net.codepixl.GLCraft.world.entity.mob.EntityPlayerMP;
 import net.codepixl.GLCraft.world.entity.mob.AI.pathfinding.Pathfinder;
 import net.codepixl.GLCraft.world.entity.mob.animal.EntityTestAnimal;
 import net.codepixl.GLCraft.world.entity.mob.hostile.EntityTestHostile;
-import net.codepixl.GLCraft.world.item.Item;
-import net.codepixl.GLCraft.world.item.ItemStack;
 import net.codepixl.GLCraft.world.tile.Tile;
 
 public class CentralManager extends Screen{
@@ -127,6 +123,7 @@ public class CentralManager extends Screen{
 	public boolean isServer;
 	private Server server;
 	private Client client;
+	public CommandManager commandManager;
 	
 	public static final int AIRCHUNK = 0, MIXEDCHUNK = 1;
 
@@ -149,6 +146,8 @@ public class CentralManager extends Screen{
 			initGUIManager();
 			Constants.generateStars();
 			TextureManager.initTextures();
+		}else{
+			this.commandManager = new CommandManager(this);
 		}
 		
 		try {
@@ -624,6 +623,8 @@ public class CentralManager extends Screen{
 			input();
 			cloudMove+=Time.getDelta()*2;
 			cloudMove = cloudMove % 2000f;
+		}else{
+			commandManager.update();
 		}
 		if(Constants.GAME_STATE == Constants.GAME){
 			worldManager.update();

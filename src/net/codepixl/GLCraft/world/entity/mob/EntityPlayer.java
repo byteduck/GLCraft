@@ -564,4 +564,9 @@ public class EntityPlayer extends Mob implements CommandExecutor{
 		return CommandExecutor.PLAYER;
 	}
 	
+	@Override
+	public void sendMessage(String msg){
+		
+	}
+	
 }

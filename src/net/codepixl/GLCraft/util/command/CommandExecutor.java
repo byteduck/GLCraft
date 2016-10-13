@@ -9,4 +9,6 @@ public interface CommandExecutor{
 	
 	public int getType();
 	
+	public void sendMessage(String msg);
+	
 }

@@ -441,7 +441,6 @@ public class WorldManager {
 	public ArrayList<AABB> BlockAABBForEntity(EntitySolid entitySolid){
 		ArrayList<AABB> arraylist = new ArrayList<AABB>();
 		AABB mAABB = entitySolid.getAABB();
-		mAABB.render();
 		for(int x = (int) (entitySolid.getX()-mAABB.getSize().x*3); x < entitySolid.getX()+mAABB.getSize().x; x++){
 			for(int y = (int) (entitySolid.getY()-mAABB.getSize().y*3); y < entitySolid.getY()+mAABB.getSize().y+1; y++){
 				for(int z = (int) (entitySolid.getZ()-mAABB.getSize().z*3); z < entitySolid.getZ()+mAABB.getSize().z; z++){
@@ -1003,6 +1002,8 @@ public class WorldManager {
 		this.actionQueue.add(new Callable<Void>(){
 			@Override
 			public Void call() throws Exception {
+				if(cw != null)
+					while(cw.saving){Thread.sleep(1);}
 				closeWorldMain(reason);
 				if(quit)
 					System.exit(0);

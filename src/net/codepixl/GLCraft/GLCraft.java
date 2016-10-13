@@ -282,6 +282,8 @@ public class GLCraft extends Screen{
 		if(isDevEnvironment){
 			pluginManager.addDevPlugin(devPlugin);
 		}
+		
+		Constants.GAME_STATE = Constants.GAME;
 	}
 	
 	private void initCamera(){
