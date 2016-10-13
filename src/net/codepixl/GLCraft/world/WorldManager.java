@@ -30,6 +30,8 @@ import com.nishu.utils.Time;
 
 import net.codepixl.GLCraft.GLCraft;
 import net.codepixl.GLCraft.GUI.GUIManager;
+import net.codepixl.GLCraft.GUI.GUIPauseMenu;
+import net.codepixl.GLCraft.GUI.GUIServerError;
 import net.codepixl.GLCraft.GUI.Inventory.GUICrafting;
 import net.codepixl.GLCraft.GUI.Inventory.GUICraftingAdvanced;
 import net.codepixl.GLCraft.network.packet.Packet;
@@ -189,7 +191,7 @@ public class WorldManager {
 		String saveName = name.replaceAll("[^ a-zA-Z0-9.-]", "_");
 		this.currentSave = new Save(saveName, name, GLCraft.version, SaveManager.currentFormat);
 		this.currentSave.isDedicated = dedicated;
-		if(!SaveManager.saveWorld(this, currentSave, false, false)){
+		if(!SaveManager.saveWorld(this, currentSave)){
 			doneGenerating = false;
 			//centralManager.renderSplashText("ERROR", "There was an error saving.");
 			while(true){}
@@ -205,7 +207,6 @@ public class WorldManager {
 	}
 	
 	public void worldFromBuf(){
-		centralManager.initSplashText();
 		for(int x = 0; x < Constants.worldLengthChunks; x++){
 			for(int y = 0; y < Constants.worldLengthChunks; y++){
 				for(int z = 0; z < Constants.worldLengthChunks; z++){
@@ -630,7 +631,6 @@ public class WorldManager {
 		this.sendBlockPackets = false;
 		this.currentSave = s;
 		//centralManager.initSplashText();
-		centralManager.renderSplashText("Loading World...", "Hold on...");
 		for(int x = 0; x < Constants.worldLengthChunks; x++){
 			for(int y = 0; y < Constants.worldLengthChunks; y++){
 				for(int z = 0; z < Constants.worldLengthChunks; z++){
@@ -652,20 +652,27 @@ public class WorldManager {
 		}
 	}
 
-	public static boolean saveWorld(boolean quit, boolean exitToMenu) {
+	/**
+	 * Saves the world. THE SAVING IS DONE IN ANOTHER THREAD, SO USE saveWorldBlocking if you wish to block until the world has been saved.
+	 */
+	public static boolean saveWorld() {
 		if(cw != null){
 			if(!cw.isSaving() && cw.doneGenerating){
-				boolean b = SaveManager.saveWorld(cw, cw.currentSave, quit, exitToMenu);
-
-				if(b && (quit || exitToMenu)){
-					cw.centralManager.close("Closing", quit);
-				}
-				
-				return b;
-			}else if(quit)
-				System.exit(0);
+				return SaveManager.saveWorld(cw, cw.currentSave);
+			}
 		}
-		return true;
+		return false;
+	}
+	
+	public static boolean saveWorldBlocking(){
+		boolean b = saveWorld();
+		if(b)
+			while(cw.saving){try {
+				Thread.sleep(1);
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}}
+		return b;
 	}
 
 	public int getMetaAtPos(float x, float y, float z) {
@@ -686,7 +693,7 @@ public class WorldManager {
 		timer.schedule(new TimerTask() {
 		    @Override
 		    public void run(){
-		    	saveWorld(false,false);
+		    	saveWorld();
 		    }
 		 }, 0, 1000 * 60 * MINUTES);
 	}
@@ -977,6 +984,7 @@ public class WorldManager {
 		getChunk(p.pos).updateTiles(p);
 		if(initial){
 			chunksLeftToDownload--;
+			centralManager.setSplashText("Connecting to Server...", "Downloading Chunks...", (int)(((float)(-chunksLeftToDownload+1000)/1000f)*100));
 			if(chunksLeftToDownload <= 0){
 				this.doneGenerating = true;
 				this.actionQueue.add(new Callable<Void>(){
@@ -987,6 +995,7 @@ public class WorldManager {
 						getPlayer().shouldUpdate = true;
 						sendPacket(new PacketReady());
 						entityManager.getPlayer().respawn();
+						centralManager.finishSplashText();
 						return null;
 					}
 				});
@@ -1025,6 +1034,7 @@ public class WorldManager {
 			centralManager.getClient().close();
 			this.doneGenerating = false;
 			Constants.GAME_STATE = Constants.START_SCREEN;
+			GUIManager.getMainManager().showGUI(new GUIServerError("Server closed: ", reason));
 			centralManager.getClient().reinit();
 		}
 		this.activeChunks.clear();

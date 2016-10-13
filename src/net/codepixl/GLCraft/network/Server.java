@@ -19,6 +19,7 @@ import net.codepixl.GLCraft.network.packet.Packet;
 import net.codepixl.GLCraft.network.packet.PacketBlockChange;
 import net.codepixl.GLCraft.network.packet.PacketLANBroadcast;
 import net.codepixl.GLCraft.network.packet.PacketOnPlace;
+import net.codepixl.GLCraft.network.packet.PacketPing;
 import net.codepixl.GLCraft.network.packet.PacketPlayerAction;
 import net.codepixl.GLCraft.network.packet.PacketPlayerAdd;
 import net.codepixl.GLCraft.network.packet.PacketPlayerDead;
@@ -50,7 +51,8 @@ public class Server{
 	public DatagramSocket socket;
 	public HashMap<InetAddressAndPort, ServerClient> clients;
 	public ConnectionRunnable connectionRunnable;
-	public Thread connectionThread;
+	private PingRunnable pingRunnable;
+	public Thread connectionThread, pingThread;
 	public WorldManager worldManager;
 	private int port;
 	public boolean lanWorld;
@@ -82,8 +84,11 @@ public class Server{
 		this.worldManager = w;
 		GLCraft.getGLCraft().setServer(this);
 		connectionRunnable = new ConnectionRunnable(this);
+		pingRunnable = new PingRunnable(this);
 		connectionThread = new Thread(connectionRunnable, "Server Thread");
 		connectionThread.start();
+		pingThread = new Thread(pingRunnable, "Server Ping Thread");
+		pingThread.start();
 		GLogger.log("Running on port "+port, LogSource.SERVER);
 		try{
 			broadcastRunnable = new BroadcastRunnable(this, "", port);
@@ -112,6 +117,7 @@ public class Server{
 		public DatagramSocket server;
 		public int port;
 		public EntityPlayerMP player;
+		public long pingSentTime = 0;
 		public ServerClient(InetAddress addr, int port, DatagramSocket server, EntityPlayerMP player){
 			this.addr = addr;
 			this.server = server;
@@ -120,8 +126,26 @@ public class Server{
 		}
 		public void writePacket(Packet p) throws IOException{
 			if(!server.isClosed()){
-				byte[] bytes = p.getBytes();
-				server.send(new DatagramPacket(bytes, bytes.length, addr, port));
+				if(p instanceof PacketPing){
+					if(this.player.shouldUpdate){
+						if(pingSentTime == 0){
+							byte[] bytes = p.getBytes();
+							server.send(new DatagramPacket(bytes, bytes.length, addr, port));
+							pingSentTime = System.currentTimeMillis();
+						}else{
+							if(System.currentTimeMillis()-pingSentTime > 10000){
+								writePacket(new PacketServerClose("Kicked: Timed out"));
+								clients.remove(new InetAddressAndPort(addr, port));
+								GLogger.log("Player timed out: "+player.getName(), LogSource.SERVER);
+								worldManager.getEntityManager().remove(player);
+								sendToAllClients(new PacketPlayerLeave(player.getID()));
+							}
+						}
+					}
+				}else{
+					byte[] bytes = p.getBytes();
+					server.send(new DatagramPacket(bytes, bytes.length, addr, port));
+				}
 			}
 		}
 	}
@@ -187,6 +211,8 @@ public class Server{
 			}else if(op instanceof PacketReady){
 				c.player.shouldUpdate = true;
 			}else if(op instanceof PacketPlayerLeave){
+				if(c == null)
+					return;
 				clients.remove(new InetAddressAndPort(c.addr,c.port));
 				GLogger.log("Player Logged out: "+c.player.getName(), LogSource.SERVER);
 				worldManager.getEntityManager().remove(c.player);
@@ -195,6 +221,8 @@ public class Server{
 				Vector3i pos = ((PacketRequestChunk) op).pos;
 				Chunk ch = worldManager.getChunk(pos);
 				c.writePacket(new PacketSendChunk(ch, c.player));
+			}else if(op instanceof PacketPing){
+				c.pingSentTime = 0;
 			}else{
 				GLogger.logerr("Unhandled Packet: "+op.getClass(), LogSource.SERVER);
 			}
@@ -246,7 +274,7 @@ public class Server{
 		
 	}
 	
-	private class BroadcastRunnable implements Runnable{
+	private static class BroadcastRunnable implements Runnable{
 		
 		public InetAddress group;
 		private DatagramPacket packet;
@@ -272,7 +300,7 @@ public class Server{
 						socket.send(packet);
 					}
 				}catch (InterruptedException e){
-					//e.printStackTrace();
+					return;
 				}catch(IOException e){
 					if(!server.socket.isClosed())
 						e.printStackTrace();
@@ -281,22 +309,39 @@ public class Server{
 		}
 	}
 	
-	public void destroy(){
-		this.socket.close();
-		this.clients.clear();
-		this.connectionThread.interrupt();
-		broadcastThread.interrupt();
-		if(!GLCraft.getGLCraft().isServer()){
-			((GUIPauseMenu)GUIManager.getMainManager().getGUI("pauseMenu")).setHost(false);
+	private static class PingRunnable implements Runnable{
+		
+		private Server server;
+		PacketPing ping;
+		
+		public PingRunnable(Server s){
+			this.server = s;
+			ping = new PacketPing(false);
+		}
+		
+		@Override
+		public void run() {
+			while(!Thread.interrupted()){
+				try {
+					server.sendToAllClients(ping);
+					Thread.sleep(500);
+				} catch (IOException e) {
+					e.printStackTrace();
+				} catch(InterruptedException e) {
+					return;
+				}
+			}
 		}
 	}
 	
 	public void reinit(){
 		clients.clear();
 		this.connectionThread = new Thread(connectionRunnable, "Server Thread");
+		this.pingThread = new Thread(pingRunnable, "Server Ping Thread");
 		try {
 			this.socket = new DatagramSocket(this.getPort());
 			connectionThread.start();
+			pingThread.start();
 			if(!GLCraft.getGLCraft().isServer()){
 				((GUIPauseMenu)GUIManager.getMainManager().getGUI("pauseMenu")).setHost(true);
 			}
@@ -310,10 +355,12 @@ public class Server{
 	}
 
 	public void close(String reason) throws IOException{
+		GLogger.log("Closing server: "+reason, LogSource.SERVER);
+		broadcastThread.interrupt();
+		pingThread.interrupt();
 		sendToAllClients(new PacketServerClose(reason));
 		socket.close();
 		connectionThread.interrupt();
-		broadcastThread.interrupt();
 		if(!GLCraft.getGLCraft().isServer()){
 			((GUIPauseMenu)GUIManager.getMainManager().getGUI("pauseMenu")).setHost(false);
 		}

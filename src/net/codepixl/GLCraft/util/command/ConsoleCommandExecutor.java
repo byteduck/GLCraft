@@ -12,7 +12,7 @@ public class ConsoleCommandExecutor implements CommandExecutor {
 
 	@Override
 	public void sendMessage(String msg) {
-		GLogger.log(msg, LogSource.SERVER);
+		GLogger.log(msg, LogSource.NONE);
 	}
 
 }

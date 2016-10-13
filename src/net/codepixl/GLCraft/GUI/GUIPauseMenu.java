@@ -42,9 +42,10 @@ public class GUIPauseMenu extends GUIScreen{
 		quitButton = new GUIButton("YOU SHOULD NOT SEE THIS", MIDDLE, QUITY, new Callable<Void>(){
 			@Override
 			public Void call() throws Exception {
-				if(isHost)
-					WorldManager.saveWorld(true,false);
-				else
+				if(isHost){
+					WorldManager.saveWorldBlocking();
+					GLCraft.getGLCraft().getWorldManager(true).closeWorld("Closing", true);
+				}else
 					GLCraft.getGLCraft().disconnectFromServer(true);
 				return null;
 			}
@@ -53,9 +54,10 @@ public class GUIPauseMenu extends GUIScreen{
 		exitButton = new GUIButton("YOU SHOULD NOT SEE THIS", MIDDLE, SAVEY, new Callable<Void>(){
 			@Override
 			public Void call() throws Exception {
-				if(isHost)
-					WorldManager.saveWorld(false,true);
-				else
+				if(isHost){
+					WorldManager.saveWorldBlocking();
+					GLCraft.getGLCraft().getWorldManager(true).closeWorld("Closing", false);
+				}else
 					GLCraft.getGLCraft().disconnectFromServer(false);
 				return null;
 			}

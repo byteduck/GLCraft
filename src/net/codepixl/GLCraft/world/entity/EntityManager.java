@@ -162,10 +162,10 @@ public class EntityManager implements GameObj{
 		Iterator<Entity> i = toAdd.iterator();
 		while(i.hasNext()){
 			Entity e = i.next();
+			i.remove();
 			entities.put(e.getID(),e);
 			if(!(e instanceof EntityPlayer) && isServer)
 				w.sendPacket(new PacketAddEntity(e));
-			i.remove();
 		}
 		Iterator<Entry<Integer,Entity>> it = this.entities.entrySet().iterator();
 	    iterating = true;

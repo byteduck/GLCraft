@@ -3,7 +3,9 @@ package net.codepixl.GLCraft.util.command;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.Collection;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map.Entry;
 
 import net.codepixl.GLCraft.GLCraft;
@@ -32,6 +34,7 @@ public class CommandManager {
 	
 	private void addCommands(){
 		addCommand(new CommandStop());
+		addCommand(new CommandHelp());
 	}
 	
 	public void addCommand(Command c){
@@ -39,6 +42,10 @@ public class CommandManager {
 			this.commands.put(c.getName().toLowerCase(), c);
 		else
 			throw new DuplicateCommandException(c);
+	}
+	
+	public Collection<Command> getCommands(){
+		return commands.values();
 	}
 	
 	public static class DuplicateCommandException extends RuntimeException{

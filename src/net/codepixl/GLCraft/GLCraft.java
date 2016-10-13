@@ -186,7 +186,8 @@ public class GLCraft extends Screen{
 			}
 			
 			if(this.serverCentralManager != null && this.serverCentralManager.isOpen()){
-				WorldManager.saveWorld(true,false);
+				WorldManager.saveWorldBlocking();
+				this.serverCentralManager.close("Closing", true);
 			}
 			
 			System.exit(0);
@@ -471,7 +472,7 @@ public class GLCraft extends Screen{
 	}
 
 	public void disconnectFromServer(boolean quit) {
-		clientCentralManager.close("Quit", quit);
+		clientCentralManager.close("", quit);
 	}
 
 }

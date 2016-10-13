@@ -16,6 +16,7 @@ import net.codepixl.GLCraft.GUI.GUIServerError;
 import net.codepixl.GLCraft.network.packet.Packet;
 import net.codepixl.GLCraft.network.packet.PacketAddEntity;
 import net.codepixl.GLCraft.network.packet.PacketBlockChange;
+import net.codepixl.GLCraft.network.packet.PacketPing;
 import net.codepixl.GLCraft.network.packet.PacketPlayerAdd;
 import net.codepixl.GLCraft.network.packet.PacketPlayerLeave;
 import net.codepixl.GLCraft.network.packet.PacketPlayerLogin;
@@ -158,11 +159,11 @@ public class Client{
 			}else if(op instanceof PacketServerClose){
 				PacketServerClose p = (PacketServerClose)op;
 				GLogger.log("Server closed: "+p.message,LogSource.CLIENT);
-				worldManager.closeWorld("",false);
-				Constants.GAME_STATE = Constants.START_SCREEN;
-				GUIManager.getMainManager().showGUI(new GUIServerError("Server closed: ",p.message));
+				worldManager.closeWorld(p.message,false);
 			}else if(op instanceof PacketPlayerLeave){
 				worldManager.getEntityManager().removeNow(((PacketPlayerLeave) op).entityID);
+			}else if(op instanceof PacketPing){
+				sendToServer(new PacketPing(true));
 			}else{
 				System.err.println("[CLIENT] Received unhandled packet: "+op.getClass());
 				//throw new IOException("Invalid Packet "+op.getClass());
@@ -181,6 +182,8 @@ public class Client{
 		this.isClosed = true;
 		socket.close();
 		connectionThread.interrupt();
+		this.connectedServer = null;
+		this.connectionState = new ServerConnectionState();
 	}
 
 	public ServerConnectionState connectToServer(InetAddress addr, int port) throws IOException{
@@ -240,7 +243,7 @@ public class Client{
 		this.connectedServer.sendPacket(p);
 	}
 	
-	public class ConnectionRunnable implements Runnable{
+	public static class ConnectionRunnable implements Runnable{
 		
 		private Client client;
 		private byte[] buf = new byte[10000];
@@ -258,7 +261,7 @@ public class Client{
 					Packet p = PacketUtil.getPacket(rec.getData());
 					client.handlePacket(rec, p);
 				}catch(SocketException e){
-					if(!e.getMessage().contains("socket closed")){
+					if(!client.isClosed){
 						e.printStackTrace();
 					}
 				}catch (IOException e){

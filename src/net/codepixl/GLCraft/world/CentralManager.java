@@ -125,6 +125,16 @@ public class CentralManager extends Screen{
 	private Client client;
 	public CommandManager commandManager;
 	
+	private Pathfinder pathfinder;
+	private Vector3i pathfindPos = new Vector3i(0,0,0);
+
+	private boolean renderingSplashText;
+	private String splashLine1;
+	private int splashPercent;
+	private String splashLine2;
+
+	private boolean renderSplashPercent;
+	
 	public static final int AIRCHUNK = 0, MIXEDCHUNK = 1;
 
 	public CentralManager(boolean server){
@@ -219,9 +229,6 @@ public class CentralManager extends Screen{
 		glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
 		glEnable(GL_CULL_FACE);
 	}
-	
-	private Pathfinder pathfinder;
-	private Vector3i pathfindPos = new Vector3i(0,0,0);
 
 	private void input(){
 		if(!isServer){
@@ -332,7 +339,7 @@ public class CentralManager extends Screen{
 	public void render() {
 		if(!isServer){
 			DebugTimer.getTimer("total_render").start();
-			if(Constants.GAME_STATE == Constants.GAME){
+			if(Constants.GAME_STATE == Constants.GAME && !renderingSplashText){
 				glLoadIdentity();
 				render3D();
 				worldManager.render();
@@ -347,6 +354,12 @@ public class CentralManager extends Screen{
 			guiManager.render();
 			if(Constants.GAME_STATE == Constants.GAME)
 				renderText();
+			if(renderingSplashText){
+				if(renderSplashPercent)
+					this.renderSplashText(splashLine1, splashLine2, splashPercent);
+				else
+					this.renderSplashText(splashLine1, splashLine2);
+			}
 			glDisable(GL_TEXTURE_2D);
 			DebugTimer.getTimer("total_render").end();
 		}
@@ -647,11 +660,11 @@ public class CentralManager extends Screen{
 		return worldManager;
 	}
 	
-	public void initSplashText(){
-		render2D();
+	public void finishSplashText(){
+		this.renderingSplashText = false;
 	}
 	
-	public void renderSplashText(String line1, String line2){
+	private void renderSplashText(String line1, String line2){
 		if(!isServer){
 			int CENTER = Constants.WIDTH/2;
 			int HCENTER = Constants.HEIGHT/2;
@@ -666,7 +679,22 @@ public class CentralManager extends Screen{
 		}
 	}
 	
-	public void renderSplashText(String line1, String line2, int percent){
+	public void setSplashText(String line1, String line2, int percent){
+		this.splashLine1 = line1;
+		this.splashLine2 = line2;
+		this.splashPercent = percent;
+		this.renderSplashPercent = true;
+		this.renderingSplashText = true;
+	}
+	
+	public void setSplashText(String line1, String line2){
+		this.splashLine1 = line1;
+		this.splashLine2 = line2;
+		this.renderSplashPercent = false;
+		this.renderingSplashText = true;
+	}
+	
+	private void renderSplashText(String line1, String line2, int percent){
 		if(!isServer){
 			int CENTER = Constants.WIDTH/2;
 			int HCENTER = Constants.HEIGHT/2;
