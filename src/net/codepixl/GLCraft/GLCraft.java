@@ -58,6 +58,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.PrintStream;
+import java.lang.Thread.UncaughtExceptionHandler;
 import java.net.InetAddress;
 import java.net.URL;
 import java.net.UnknownHostException;
@@ -88,6 +89,7 @@ import net.codepixl.GLCraft.util.Constants;
 import net.codepixl.GLCraft.util.DebugTimer;
 import net.codepixl.GLCraft.util.LogSource;
 import net.codepixl.GLCraft.util.logging.CrashHandler;
+import net.codepixl.GLCraft.util.logging.CrashHandlerWindow;
 import net.codepixl.GLCraft.util.logging.GLogger;
 import net.codepixl.GLCraft.util.logging.TeeOutputStream;
 import net.codepixl.GLCraft.world.CentralManager;
@@ -125,6 +127,20 @@ public class GLCraft extends Screen{
 	}
 	
 	private void commonInitializer(boolean dedicatedServer) throws IOException, LWJGLException{
+		if(new File("res/natives").exists())
+			System.setProperty("org.lwjgl.librarypath", new File("res/natives").getAbsolutePath());
+		else
+			System.setProperty("org.lwjgl.librarypath", new File(".").getAbsolutePath());
+		UncaughtExceptionHandler ueh = new UncaughtExceptionHandler(){
+			@Override
+			public void uncaughtException(Thread t, Throwable thr){
+				System.err.println("Uncaught exception thrown in thread "+t.getName());
+				thr.printStackTrace();
+				new CrashHandlerWindow(t, thr);
+			}
+		};
+		Thread.currentThread().setUncaughtExceptionHandler(ueh);
+		Thread.setDefaultUncaughtExceptionHandler(ueh);
 		this.isServer = dedicatedServer;
 		if(!this.isServer){
 			Thread.setDefaultUncaughtExceptionHandler(new CrashHandler());

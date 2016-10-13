@@ -36,7 +36,7 @@ public class CrashHandlerWindow extends JFrame{
 		textArea.setText("Well, this is no fun. :(\n\n"+
 				"GLCraft has crashed in thread: "+
 				t+
-				"\n\n"+
+				"\n\nNOTE: If you are launching this without the launcher from your desktop on Linux, it will not work. Use any other folder.\n\n"+
 				stackTrace+
 				"\nAdditional diagnostic information:\n"+
 				"Max Memory Available to JVM: "+Runtime.getRuntime().maxMemory()/1000000+"MB\n"+
