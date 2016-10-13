@@ -527,7 +527,7 @@ public class CentralManager extends Screen{
 	private void renderText(){
 		render2D();
 		glColor3f(1f,1f,1f);
-		Constants.FONT.drawString(10, 10, "GLCraft Beta "+GLCraft.version);
+		Constants.FONT.drawString(10, 10, "GLCraft Beta "+GLCraft.version+" "+GLCraft.versionTag);
 		if(messageTime > 0){
 			messageTime -= Time.getDelta();
 			if(messageTime < 0)

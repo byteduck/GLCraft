@@ -105,7 +105,8 @@ public class GLCraft extends Screen{
 	private static GLCraft glcraft;
 	public static boolean isDevEnvironment = false;
 	public static boolean loadExtPlugins = true;
-	public static String version = "0.1 Pre-release 1";
+	public static final String version = "0.1";
+	public static final String versionTag = "Beta Pre-Release 1";
 	private Plugin devPlugin;
 	public boolean spendRemainingTime = true;
 	private Server server;
@@ -162,15 +163,16 @@ public class GLCraft extends Screen{
 			GLogger.rout.setSuppressWarnings(true);
 			
 			glcraft = this;
+			
+			Display.setFullscreen(false);
+			Display.setDisplayMode(new DisplayMode(1000, 700));
+			Display.setTitle("GLCraft "+version+" "+versionTag);
+			Display.create(new PixelFormat(8,8,8));
+			
 			Display.setIcon(new ByteBuffer[] {
 			        loadIcon(GLCraft.class.getResource("/textures/icons/icon16.png")),
 			        loadIcon(GLCraft.class.getResource("/textures/icons/icon32.png")),
 			});
-			
-			Display.setFullscreen(false);
-			Display.setDisplayMode(new DisplayMode(1000, 700));
-			Display.setTitle("GLCraft v"+version);
-			Display.create(new PixelFormat(8,8,8));
 			
 			initGL();
 			
@@ -290,7 +292,7 @@ public class GLCraft extends Screen{
 		serverCentralManager = new CentralManager(true);
 		serverWorldManager = serverCentralManager.getWorldManager();
 		
-		String pluginsFolder = Constants.GLCRAFTDIR+"/plugins";
+		String pluginsFolder = "plugins";
 		new File(pluginsFolder).mkdirs();
 		pluginManager = new PluginManager(pluginsFolder);
 		if(loadExtPlugins){
@@ -355,13 +357,15 @@ public class GLCraft extends Screen{
 	}
 	
 	public static void renderSplashText(String line1, String line2){
-		GL11.glClear(GL11.GL_COLOR_BUFFER_BIT);
-		String ltext = "GLCraft is loading...";
-		Constants.FONT.drawString(Constants.WIDTH/2-Constants.FONT.getWidth(ltext)/2,30, ltext);
-		Constants.FONT.drawString(Constants.WIDTH/2-Constants.FONT.getWidth(line1)/2,Constants.HEIGHT/2-Constants.FONT.getHeight(line1), line1);
-		Constants.FONT.drawString(Constants.WIDTH/2-Constants.FONT.getWidth(line2)/2,Constants.HEIGHT/2+Constants.FONT.getHeight(line2), line2);
-		TextureImpl.unbind();
-		Display.update();
+		if(!getGLCraft().isServer){
+			GL11.glClear(GL11.GL_COLOR_BUFFER_BIT);
+			String ltext = "GLCraft is loading...";
+			Constants.FONT.drawString(Constants.WIDTH/2-Constants.FONT.getWidth(ltext)/2,30, ltext);
+			Constants.FONT.drawString(Constants.WIDTH/2-Constants.FONT.getWidth(line1)/2,Constants.HEIGHT/2-Constants.FONT.getHeight(line1), line1);
+			Constants.FONT.drawString(Constants.WIDTH/2-Constants.FONT.getWidth(line2)/2,Constants.HEIGHT/2+Constants.FONT.getHeight(line2), line2);
+			TextureImpl.unbind();
+			Display.update();
+		}
 	}
 
 	@Override
