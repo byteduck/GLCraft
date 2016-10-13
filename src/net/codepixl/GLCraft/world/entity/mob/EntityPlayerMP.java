@@ -26,8 +26,6 @@ import net.codepixl.GLCraft.world.tile.Tile;
 
 public class EntityPlayerMP extends EntityPlayer{
 
-	public boolean needsInventoryUpdate = false;
-
 	public EntityPlayerMP(Vector3f pos, WorldManager w) {
 		super(pos, w);
 	}
@@ -64,9 +62,10 @@ public class EntityPlayerMP extends EntityPlayer{
 	public void update(){
 		if(!shouldUpdate)
 			return;
+		super.update();
 		Iterator<Entity> i = (Iterator<Entity>) worldManager.getEntityManager().getEntitiesInRadiusOfEntityOfType(this, EntityItem.class, 1f).iterator();
 		while(i.hasNext()){
-			needsInventoryUpdate = true;
+			updatedInventory = true;
 			EntityItem e = (EntityItem) i.next();
 			if(e.getCount() > 0) {
 				e.setCount(this.addToInventory(e.getItemStack()));
@@ -75,11 +74,12 @@ public class EntityPlayerMP extends EntityPlayer{
 				}
 			}
 		}
-		if(needsInventoryUpdate){
+		if(updatedInventory){
 			worldManager.sendPacket(new PacketSetInventory(this));
-			this.needsInventoryUpdate = false;
+			this.updatedInventory = false;
 		}
 		if(this.isDead()){
+			this.health = 20f;
 			this.respawn();
 		}
 	}
@@ -118,7 +118,7 @@ public class EntityPlayerMP extends EntityPlayer{
 			if(this.getSelectedItemStack().count <= 0)
 				this.setSelectedItemStack(new ItemStack());
 		}
-		this.needsInventoryUpdate = true;
+		this.updatedInventory = true;
 	}
 
 }

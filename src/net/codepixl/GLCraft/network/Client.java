@@ -11,11 +11,10 @@ import java.util.ArrayList;
 import org.lwjgl.util.vector.Vector3f;
 
 import net.codepixl.GLCraft.GLCraft;
-import net.codepixl.GLCraft.GUI.GUIManager;
-import net.codepixl.GLCraft.GUI.GUIServerError;
 import net.codepixl.GLCraft.network.packet.Packet;
 import net.codepixl.GLCraft.network.packet.PacketAddEntity;
 import net.codepixl.GLCraft.network.packet.PacketBlockChange;
+import net.codepixl.GLCraft.network.packet.PacketHealth;
 import net.codepixl.GLCraft.network.packet.PacketPing;
 import net.codepixl.GLCraft.network.packet.PacketPlayerAdd;
 import net.codepixl.GLCraft.network.packet.PacketPlayerLeave;
@@ -38,6 +37,7 @@ import net.codepixl.GLCraft.world.Chunk;
 import net.codepixl.GLCraft.world.WorldManager;
 import net.codepixl.GLCraft.world.entity.Entity;
 import net.codepixl.GLCraft.world.entity.mob.EntityPlayerMP;
+import net.codepixl.GLCraft.world.entity.mob.Mob;
 
 public class Client{
 	
@@ -164,6 +164,11 @@ public class Client{
 				worldManager.getEntityManager().removeNow(((PacketPlayerLeave) op).entityID);
 			}else if(op instanceof PacketPing){
 				sendToServer(new PacketPing(true));
+			}else if(op instanceof PacketHealth){
+				PacketHealth p = (PacketHealth)op;
+				Mob m = (Mob)worldManager.getEntity(p.entityID);
+				m.health = p.health;
+				m.airLevel = p.airLevel;
 			}else{
 				System.err.println("[CLIENT] Received unhandled packet: "+op.getClass());
 				//throw new IOException("Invalid Packet "+op.getClass());

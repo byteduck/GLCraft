@@ -94,12 +94,12 @@ public class WorldManager {
 	public WorldManager(CentralManager w, boolean isServer){
 		this.centralManager = w;
 		this.isServer = isServer;
-		if(isServer)
+		if(isServer){
 			cw = this;
-		else
+			scheduleSaving();
+		}else
 			initGL();
 		init();
-		scheduleSaving();
 		//createWorld();
 	}
 	
@@ -994,7 +994,6 @@ public class WorldManager {
 						reSunlight();
 						getPlayer().shouldUpdate = true;
 						sendPacket(new PacketReady());
-						entityManager.getPlayer().respawn();
 						centralManager.finishSplashText();
 						return null;
 					}
@@ -1031,6 +1030,7 @@ public class WorldManager {
 			}
 		}else{
 			getPlayer().shouldUpdate = false;
+			entityManager.removeAll();
 			centralManager.getClient().close();
 			this.doneGenerating = false;
 			Constants.GAME_STATE = Constants.START_SCREEN;

@@ -154,7 +154,7 @@ public class EntityManager implements GameObj{
 			iterating = true;
 		    while (it.hasNext()) {
 		        Entity e = it.next().getValue();
-		        if(e instanceof EntityPlayer){}else{it.remove();}
+		        if(e instanceof EntityPlayer && !(e instanceof EntityPlayerMP)){}else{it.remove();}
 		    }
 		    iterating = false;
 		    shouldRemoveAll = false;
@@ -319,6 +319,18 @@ public class EntityManager implements GameObj{
 
 	public boolean removeNow(int entityID) {
 		return this.entities.remove(entityID) != null;
+	}
+
+	public List<Entity> getEntities(Class type) {
+		Iterator<Entry<Integer,Entity>> it = this.entities.entrySet().iterator();
+		ArrayList<Entity> ret = new ArrayList<Entity>();
+		while(it.hasNext()){
+			Entity e = it.next().getValue();
+			if(type.isInstance(e)){
+				ret.add(e);
+			}
+		}
+		return ret;
 	}
 
 }

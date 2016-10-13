@@ -134,6 +134,10 @@ public class EntitySolid extends Entity{
 		/*while(testHitHead(new Vector3f(this.getX(),this.getY()+this.aabb.getSize().y+0.01f,this.getZ()))){
 			this.getVel().y = 0f;
 		}*/
+		if(worldManager.isServer && this instanceof EntityPlayer){
+			onGround = testOnGround(new Vector3f(this.getX(),this.getY()-0.01f,this.getZ()));
+			return;
+		}
 		this.move((this.getVelocity().x * (float)Time.getDelta() * 10),(this.getVelocity().y * (float)Time.getDelta() * 10),(this.getVelocity().z * (float)Time.getDelta() * 10));
 		if(this.isInWater()){
 			this.getVelocity().y = MathUtils.towardsValue(this.getVelocity().y, (float)Time.getDelta()*3, -0.2f);

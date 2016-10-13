@@ -11,9 +11,12 @@ import com.evilco.mc.nbt.tag.TagCompound;
 import com.evilco.mc.nbt.tag.TagFloat;
 import com.nishu.utils.Time;
 
+import net.codepixl.GLCraft.network.packet.PacketHealth;
 import net.codepixl.GLCraft.util.AABB;
 import net.codepixl.GLCraft.util.DebugTimer;
 import net.codepixl.GLCraft.util.GameObj;
+import net.codepixl.GLCraft.util.LogSource;
+import net.codepixl.GLCraft.util.logging.GLogger;
 import net.codepixl.GLCraft.world.WorldManager;
 import net.codepixl.GLCraft.world.entity.Entity;
 import net.codepixl.GLCraft.world.entity.EntityItem;
@@ -25,7 +28,7 @@ import net.codepixl.GLCraft.world.tile.Tile;
 public class Mob extends EntitySolid implements GameObj{
 	
 	private ItemStack[] inventory;
-	public float health, hurtTimer, eyeLevel, airLevel;
+	public float health, hurtTimer, eyeLevel, airLevel, lHealth, lAirLevel;
 	private float voidHurt = 0f;
 	protected float fallDistance = 0f;
 	protected float prevY = 0f;
@@ -136,47 +139,59 @@ public class Mob extends EntitySolid implements GameObj{
 	@Override
 	public void update(){
 		super.update();
-		if(this.onFire > 0f){
-			this.hurt(0.5f,1,DamageSource.FIRE);
-		}
-		if(this.isInWater()){
-			this.fallDistance = 0;
-		}
-		if(this.health<=0f){
-			this.setDead(true);
-		}
-		if(this.hurtTimer>0){
-			this.hurtTimer-=Time.getDelta();
-		}else{
-			this.hurtTimer = 0;
-		}
-		if(this.onGround){
-			if(this.fallDistance > 0f){
-				float damage = (fallDistance - 3f)*2;
-				if(damage > 0f){
-					this.hurt(damage,DamageSource.FALL);
-				}
+		if(this.worldManager.isServer){ //This is so EntityPlayers won't calculate damage client-side
+			if(this.onFire > 0f){
+				this.hurt(0.5f,1,DamageSource.FIRE);
 			}
-			this.fallDistance = 0f;
-		}else{
-			this.fallDistance+=this.prevY-this.getY();
+			if(this.isInWater()){
+				this.fallDistance = 0;
+			}
+			if(this.health<=0f){
+				this.setDead(true);
+			}
+			if(this.hurtTimer>0){
+				this.hurtTimer-=Time.getDelta();
+			}else{
+				this.hurtTimer = 0;
+			}
+			if(this.onGround){
+				if(this.fallDistance > 0f){
+					float damage = (fallDistance - 3f)*2;
+					if(damage > 0f){
+						this.hurt(damage,DamageSource.FALL);
+					}
+				}
+				this.fallDistance = 0f;
+			}else{
+				this.fallDistance+=this.prevY-this.getY();
+			}
+			this.prevY = this.getY();
+			if(!this.canBreathe())
+				this.airLevel -= Time.getDelta();
+			else
+				this.airLevel = 10f;
+			
+			if(this.airLevel < 0){
+				this.airLevel = 0;
+				hurt(2f,1,DamageSource.DROWNING);
+			}
+			push();
+			//getCamera().updateKeyboard(32, 2);
+			//getCamera().updateMouse();
+			DebugTimer.startTimer("ai_time");
+			handleAI();
+			DebugTimer.pauseTimer("ai_time");
+
+			if(!this.tileAtEye().canPassThrough()){
+				this.hurt(2.0f, 1.0f, DamageSource.ENVIRONMENT);
+			}
+			
+			if(this.health != this.lHealth || this.airLevel != this.lAirLevel){
+				worldManager.sendPacket(new PacketHealth(this));
+				this.lAirLevel = airLevel;
+				this.lHealth = health;
+			}
 		}
-		this.prevY = this.getY();
-		if(!this.canBreathe())
-			this.airLevel -= Time.getDelta();
-		else
-			this.airLevel = 10f;
-		
-		if(this.airLevel < 0){
-			this.airLevel = 0;
-			hurt(2f,1,DamageSource.DROWNING);
-		}
-		push();
-		//getCamera().updateKeyboard(32, 2);
-		//getCamera().updateMouse();
-		DebugTimer.startTimer("ai_time");
-		handleAI();
-		DebugTimer.pauseTimer("ai_time");
 	}
 	
 	public void push(){
@@ -283,6 +298,7 @@ public class Mob extends EntitySolid implements GameObj{
 			getInventory()[blankSlots.get(0)] = new ItemStack(s);
 			return 0;
 		}
+		this.needsDataUpdate();
 		return c;
 	}
 	
@@ -306,6 +322,10 @@ public class Mob extends EntitySolid implements GameObj{
 
 	public void setLastDamageSource(DamageSource lastDamageSource) {
 		this.lastDamageSource = lastDamageSource;
+	}
+	
+	public Tile tileAtEye(){
+		return Tile.getTile((byte)worldManager.getTileAtPos(this.pos.x,this.pos.y+this.eyeLevel,this.pos.z));
 	}
 
 }

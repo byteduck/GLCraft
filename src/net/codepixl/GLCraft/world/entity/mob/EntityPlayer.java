@@ -64,7 +64,7 @@ public class EntityPlayer extends Mob implements CommandExecutor{
 	private byte metaToPlace;
 	public GUISlot hoverSlot;
 	private String name;
-	private boolean updatedInventory;
+	public boolean updatedInventory;
 	public boolean shouldUpdate = false;
 	
 	public EntityPlayer(Vector3f pos, WorldManager w) {
@@ -98,46 +98,44 @@ public class EntityPlayer extends Mob implements CommandExecutor{
 		return 36;
 	}
 	
+	/**
+	 * This is also run on CLIENT, even though it is not clientUpdate. This is because EntityPlayers are special.
+	 * However, EntityPlayerMPs update like all other Mobs.
+	 */
 	public void update(){
 		if(!shouldUpdate)
 			return;
 		super.update();
-		SoundManager.getMainManager().setPosAndRot(pos, rot);
-		this.rot.x = MathUtils.towardsZero(this.rot.x, (float) (Time.getDelta()*30f));
-		if(this.isDead()){
-			this.setDead(false);
-			worldManager.sendPacket(new PacketPlayerDead());
-			/*worldManager.showMessage(5.0, DeathMessage.getMessage("Player", getLastDamageSource()));
-			this.setDead(false);
-			this.dropAllItems();
-			this.respawn();*/
-		}
-		if(GUIManager.getMainManager().sendPlayerInput()){
-			updateMouse();
-			updateKeyboard(32, 0.25f);
-		}
-		updateBreakCooldown();
-		updateBuildCooldown();
-		
-		if(!wasBreaking) {
-			this.breakProgress = 0;
-			this.prevSelect.x = -1f;
-			this.prevSelect.y = -1f;
-			this.prevSelect.z = -1f;
-		}else{
-			float multiplier = 1;
-			if(this.getSelectedItemStack().isItem()){
-				Item selItem = this.getSelectedItemStack().getItem();
-				if(selItem instanceof Tool){
-					multiplier = ((Tool)selItem).getStrengthForMaterial(Tile.getTile(currentTile).getMaterial());
-				}
+		if(!worldManager.isServer){
+			SoundManager.getMainManager().setPosAndRot(pos, rot);
+			this.rot.x = MathUtils.towardsZero(this.rot.x, (float) (Time.getDelta()*30f));
+			if(GUIManager.getMainManager().sendPlayerInput()){
+				updateMouse();
+				updateKeyboard(32, 0.25f);
 			}
-			this.breakProgress += Time.getDelta() * multiplier;
-		}
-		
-		if(this.updatedInventory){
-			this.updatedInventory = false;
-			worldManager.sendPacket(new PacketSetInventory(this));
+			updateBreakCooldown();
+			updateBuildCooldown();
+			
+			if(!wasBreaking) {
+				this.breakProgress = 0;
+				this.prevSelect.x = -1f;
+				this.prevSelect.y = -1f;
+				this.prevSelect.z = -1f;
+			}else{
+				float multiplier = 1;
+				if(this.getSelectedItemStack().isItem()){
+					Item selItem = this.getSelectedItemStack().getItem();
+					if(selItem instanceof Tool){
+						multiplier = ((Tool)selItem).getStrengthForMaterial(Tile.getTile(currentTile).getMaterial());
+					}
+				}
+				this.breakProgress += Time.getDelta() * multiplier;
+			}
+			
+			if(this.updatedInventory){
+				this.updatedInventory = false;
+				worldManager.sendPacket(new PacketSetInventory(this));
+			}
 		}
 	}
 	
@@ -528,10 +526,6 @@ public class EntityPlayer extends Mob implements CommandExecutor{
 		this.currentTile = (byte)tile;
 		wasRightClick = Mouse.isButtonDown(1);
 		return tile;
-	}
-	
-	public Tile tileAtEye(){
-		return Tile.getTile((byte)worldManager.getTileAtPos(this.pos.x,this.pos.y+1.52f,this.pos.z));
 	}
 	
 	private static float[] breakingTexCoords(float percent) {

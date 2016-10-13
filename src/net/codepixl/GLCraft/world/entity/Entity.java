@@ -16,7 +16,9 @@ import net.codepixl.GLCraft.network.packet.PacketPlayerPos;
 import net.codepixl.GLCraft.network.packet.PacketUpdateEntity;
 import net.codepixl.GLCraft.util.EnumFacing;
 import net.codepixl.GLCraft.util.GameObj;
+import net.codepixl.GLCraft.util.LogSource;
 import net.codepixl.GLCraft.util.MathUtils;
+import net.codepixl.GLCraft.util.logging.GLogger;
 import net.codepixl.GLCraft.world.WorldManager;
 import net.codepixl.GLCraft.world.entity.mob.EntityPlayer;
 import net.codepixl.GLCraft.world.tile.Tile;
@@ -34,7 +36,7 @@ public class Entity implements GameObj{
 	public long timeAlive = 0;
 	public float onFire = 0;
 	public float light = 0f;
-	private boolean needsDataUpdate = false;
+	public boolean needsDataUpdate = false;
 	private float posPacketTimer = 0;
 	
 	public Entity(float x, float y, float z, WorldManager worldManager){
@@ -298,4 +300,10 @@ public class Entity implements GameObj{
 	public void needsDataUpdate(){
 		this.needsDataUpdate  = true;
 	}
+	
+	@Override
+	public boolean equals(Object obj){
+		return obj instanceof Entity && ((Entity)obj).getID() == getID();
+	}
+	
 }
