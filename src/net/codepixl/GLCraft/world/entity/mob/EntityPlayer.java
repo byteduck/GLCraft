@@ -145,7 +145,7 @@ public class EntityPlayer extends Mob implements CommandExecutor{
 		int z = (int) (Constants.CHUNKSIZE*(Constants.worldLengthChunks/2f));
 		int y = Constants.CHUNKSIZE*Constants.worldLengthChunks+1;
 		while(Tile.getTile((byte) worldManager.getTileAtPos(x, y-1, z)).canPassThrough() || Tile.getTile((byte) worldManager.getTileAtPos(x, y-1, z)) == Tile.Void){y--;}
-		this.setPos(new Vector3f(x,y,z));
+		this.setPos(new Vector3f(x,y+0.2f,z));
 		this.health = 20f;
 		this.fallDistance = 0;
 		this.onFire = 0;

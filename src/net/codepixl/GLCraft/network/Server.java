@@ -376,6 +376,7 @@ public class Server{
 		sendToAllClients(new PacketServerClose(reason));
 		socket.close();
 		connectionThread.interrupt();
+		clients.clear();
 		if(!GLCraft.getGLCraft().isServer()){
 			((GUIPauseMenu)GUIManager.getMainManager().getGUI("pauseMenu")).setHost(false);
 		}

@@ -1022,6 +1022,7 @@ public class WorldManager {
 	}
 	
 	private void closeWorldMain(String reason){
+		entityManager.removeAll();
 		if(this.isServer){
 			try {
 				this.centralManager.getServer().close(reason);
@@ -1031,7 +1032,6 @@ public class WorldManager {
 			}
 		}else{
 			getPlayer().shouldUpdate = false;
-			entityManager.removeAll();
 			centralManager.getClient().close();
 			this.doneGenerating = false;
 			Constants.GAME_STATE = Constants.START_SCREEN;
