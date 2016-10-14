@@ -214,6 +214,7 @@ public class Client{
 				if(p.accept){
 					this.connectionState = new ServerConnectionState(p.entityID);
 					this.worldManager.getEntityManager().getPlayer().setId(p.entityID);
+					this.worldManager.getEntityManager().getPlayer().setPos(new Vector3f(p.x, p.y, p.z));
 					this.connectedServer = new ClientServer(this, addr, port);
 					connectionThread.start();
 					this.requestNextChunk();

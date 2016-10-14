@@ -91,6 +91,7 @@ public class WorldManager {
 	public boolean sendBlockPackets = true;
 	public boolean kicked = false;
 	private static WorldManager cw;
+	public boolean isHost = false; //Set if this worldManager is a client and is hosting a LAN world
 	
 	public WorldManager(CentralManager w, boolean isServer){
 		this.centralManager = w;
@@ -181,13 +182,10 @@ public class WorldManager {
 			int progress = (int) (((float)currentChunk/(float)Math.pow(Constants.worldLengthChunks, 3))*100f);
 			//centralManager.renderSplashText("Decorating...", progress+"%", progress);
 			Chunk c = i.next();
-			c.rebuildBase(true);
-			c.rebuildBase(false);
 			c.rebuildTickTiles();
 		}
 		//centralManager.renderSplashText("Hold on...", "Beaming you down");
 		GLogger.log("Done!", LogSource.SERVER);
-		if(!isServer) entityManager.getPlayer().respawn();
 		doneGenerating = true;
 		String saveName = name.replaceAll("[^ a-zA-Z0-9.-]", "_");
 		this.currentSave = new Save(saveName, name, GLCraft.version, SaveManager.currentFormat);
@@ -201,6 +199,11 @@ public class WorldManager {
 		this.gameTime = new GameTime(this.worldTime);
 		this.sendBlockPackets = true;
 		this.centralManager.getServer().setBroadcast(saveName);
+		int x = (int) (Constants.CHUNKSIZE*(Constants.worldLengthChunks/2f));
+		int z = (int) (Constants.CHUNKSIZE*(Constants.worldLengthChunks/2f));
+		int y = Constants.CHUNKSIZE*Constants.worldLengthChunks+1;
+		while(Tile.getTile((byte) getTileAtPos(x, y-1, z)).canPassThrough() || Tile.getTile((byte) getTileAtPos(x, y-1, z)) == Tile.Void){y--;}
+		centralManager.getServer().spawnPos = new Vector3f(x,y,z);
 	}
 	
 	public void showMessage(double seconds, String message){
@@ -219,6 +222,10 @@ public class WorldManager {
 			}
 		}
 		doneGenerating = true;
+	}
+	
+	public void queueAction(Callable<Void> action){
+		actionQueue.add(action);
 	}
 	
 	public void update(){
@@ -645,6 +652,11 @@ public class WorldManager {
 		boolean success = SaveManager.loadWorld(this, s);
 		this.sendBlockPackets = true;
 		if(success){
+			int x = (int) (Constants.CHUNKSIZE*(Constants.worldLengthChunks/2f));
+			int z = (int) (Constants.CHUNKSIZE*(Constants.worldLengthChunks/2f));
+			int y = Constants.CHUNKSIZE*Constants.worldLengthChunks+1;
+			while(Tile.getTile((byte) getTileAtPos(x, y-1, z)).canPassThrough() || Tile.getTile((byte)getTileAtPos(x, y-1, z)) == Tile.Void){y--;}
+			centralManager.getServer().spawnPos = new Vector3f(x,y,z);
 			this.doneGenerating = true;
 			this.centralManager.getServer().setBroadcast(s.dispName);
 			return true;
@@ -1035,10 +1047,13 @@ public class WorldManager {
 			centralManager.getClient().close();
 			this.doneGenerating = false;
 			Constants.GAME_STATE = Constants.START_SCREEN;
-			if(kicked)
-				GUIManager.getMainManager().showGUI(new GUIServerError("Kicked from server:\n", reason));
-			else
-				GUIManager.getMainManager().showGUI(new GUIServerError("Server closed:\n", reason));
+			if(!isHost){
+				if(kicked)
+					GUIManager.getMainManager().showGUI(new GUIServerError("Kicked from server:\n", reason));
+				else
+					GUIManager.getMainManager().showGUI(new GUIServerError("Server closed:\n", reason));
+			}else
+				GUIManager.getMainManager().showGUI("startScreen");
 			kicked = false;
 			centralManager.getClient().reinit();
 		}

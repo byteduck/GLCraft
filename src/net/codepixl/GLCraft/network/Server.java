@@ -64,6 +64,7 @@ public class Server{
 	public boolean broadcast = true;
 	private Thread broadcastThread;
 	private BroadcastRunnable broadcastRunnable;
+	public Vector3f spawnPos;
 	
 	public Server(WorldManager w, int port) throws IOException{
 		if(!commonInit(w,port)){throw new IOException("Error binding to port");}
@@ -101,6 +102,7 @@ public class Server{
 		}
 		if(!GLCraft.getGLCraft().isServer()){
 			((GUIPauseMenu)GUIManager.getMainManager().getGUI("pauseMenu")).setHost(true);
+			GLCraft.getGLCraft().getWorldManager(false).isHost = true;
 		}
 		return true;
 	}
@@ -160,7 +162,7 @@ public class Server{
 			ServerClient c = clients.get(new InetAddressAndPort(dgp.getAddress(), dgp.getPort()));
 			if(op instanceof PacketPlayerLogin){
 				PacketPlayerLogin p = (PacketPlayerLogin)op;
-				EntityPlayerMP mp = new EntityPlayerMP(new Vector3f(), worldManager);
+				EntityPlayerMP mp = new EntityPlayerMP(new Vector3f(spawnPos), worldManager);
 				mp.setName(p.name);
 				c = new ServerClient(dgp.getAddress(), dgp.getPort(), this.socket, mp);
 				GLogger.log("New player logged in: "+p.name, LogSource.SERVER);
@@ -359,6 +361,7 @@ public class Server{
 			pingThread.start();
 			if(!GLCraft.getGLCraft().isServer()){
 				((GUIPauseMenu)GUIManager.getMainManager().getGUI("pauseMenu")).setHost(true);
+				GLCraft.getGLCraft().getWorldManager(false).isHost = true;
 			}
 		} catch (SocketException e) {
 			e.printStackTrace();
@@ -379,6 +382,7 @@ public class Server{
 		clients.clear();
 		if(!GLCraft.getGLCraft().isServer()){
 			((GUIPauseMenu)GUIManager.getMainManager().getGUI("pauseMenu")).setHost(false);
+			GLCraft.getGLCraft().getWorldManager(false).isHost = true;
 		}
 	}
 	

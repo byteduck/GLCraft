@@ -87,6 +87,7 @@ public class GUIMultiplayer extends GUIScreen{
 							}
 							glDisable(GL_TEXTURE_2D);
 							((GUIPauseMenu)GUIManager.getMainManager().getGUI("pauseMenu")).setHost(false);
+							GLCraft.getGLCraft().getWorldManager(false).isHost = false;
 							GUIManager.getMainManager().clearGUIStack();
 							GUIManager.getMainManager().closeGUI(false);
 						}
