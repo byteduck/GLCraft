@@ -29,6 +29,14 @@ public class GUITextBox extends GUIScreen{
 	private boolean blinkdir = true;
 	private Callable<Void> callable;
 	private String filter = "";
+	public boolean drawOutline = true;
+	public Color4f bgColor = Color4f.BLACK;
+	public Color4f outlineColor = Color4f.WHITE;
+	public Color4f textColor = Color4f.WHITE;
+	public Color4f placeholderTextColor = Color4f.GRAY;
+	public boolean closeOnUnfocus = false;
+	private Callable<Void> enterCallback;
+	public int characterLimit = -1;
 	
 	/**
 	 * Something to note is that the length is just the length in pixels of the INSIDE of the text box, the padding is 10px on either side.
@@ -51,22 +59,24 @@ public class GUITextBox extends GUIScreen{
 		GL11.glDisable(GL11.GL_TEXTURE_2D);
 		
 		GL11.glBegin(GL11.GL_QUADS);
-		Shape.createTexturelessRect2D(0, 0, width, height, Color4f.BLACK);
+		Shape.createTexturelessRect2D(0, 0, width, height, bgColor);
 		GL11.glEnd();
 		
-		GL11.glBegin(GL11.GL_LINE_LOOP);
-		Shape.createTexturelessRect2D(0, 0, width, height, Color4f.WHITE);
-		GL11.glEnd();
+		if(drawOutline){
+			GL11.glBegin(GL11.GL_LINE_LOOP);
+			Shape.createTexturelessRect2D(0, 0, width, height, outlineColor);
+			GL11.glEnd();
+		}
 		
 		GL11.glEnable(GL11.GL_TEXTURE_2D);
 		
 		if(!focused && text.equals("")){
-			Constants.FONT.drawString(10, 5, placeholder, new Color(0.5f,0.5f,0.5f));
+			Constants.FONT.drawString(10, 5, placeholder, new Color(placeholderTextColor.r, placeholderTextColor.g, placeholderTextColor.b));
 		}else{
 			GL11.glTranslatef(-trans, 0, 0);
-			Constants.FONT.drawString(10, 5, text, new Color(1.0f, 1.0f, 1.0f));
+			Tesselator.drawTextWithShadow(10, 5, text, new Color(textColor.r, textColor.g, textColor.b), Color.darkGray);
 			if(cblink > 0.5f && focused)
-				Constants.FONT.drawString(10+Constants.FONT.getWidth(text.substring(0, index)), 7, "_");
+				Tesselator.drawTextWithShadow(10+Constants.FONT.getWidth(text.substring(0, index)), 7, "_");
 		}
 		TextureImpl.unbind();
 		
@@ -159,7 +169,15 @@ public class GUITextBox extends GUIScreen{
 		}else if(k == Keyboard.KEY_RIGHT){
 			if(index < text.length())
 				index++;
-		}else if(c >= 32){
+		}else if(k == Keyboard.KEY_RETURN){
+			if(this.enterCallback != null)
+				try {
+					this.enterCallback.call();
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			return;
+		}else if(c >= 32 && (characterLimit == -1 || text.length() <= characterLimit)){
 			if(Character.toString(c).matches(filter))
 				return;
 			text = text.substring(0, index) + c + text.substring(index, text.length());
@@ -180,5 +198,9 @@ public class GUITextBox extends GUIScreen{
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
+	}
+
+	public void setOnEnterCallback(Callable<Void> callback) {
+		this.enterCallback = callback;
 	}
 }

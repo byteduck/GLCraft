@@ -17,6 +17,7 @@ import net.codepixl.GLCraft.GUI.GUIManager;
 import net.codepixl.GLCraft.GUI.GUIPauseMenu;
 import net.codepixl.GLCraft.network.packet.Packet;
 import net.codepixl.GLCraft.network.packet.PacketBlockChange;
+import net.codepixl.GLCraft.network.packet.PacketChat;
 import net.codepixl.GLCraft.network.packet.PacketKick;
 import net.codepixl.GLCraft.network.packet.PacketLANBroadcast;
 import net.codepixl.GLCraft.network.packet.PacketOnPlace;
@@ -39,12 +40,12 @@ import net.codepixl.GLCraft.network.packet.PacketWorldTime;
 import net.codepixl.GLCraft.util.Constants;
 import net.codepixl.GLCraft.util.LogSource;
 import net.codepixl.GLCraft.util.Vector3i;
+import net.codepixl.GLCraft.util.command.Command.Permission;
 import net.codepixl.GLCraft.util.data.saves.SaveManager;
 import net.codepixl.GLCraft.util.logging.GLogger;
 import net.codepixl.GLCraft.world.Chunk;
 import net.codepixl.GLCraft.world.WorldManager;
 import net.codepixl.GLCraft.world.entity.Entity;
-import net.codepixl.GLCraft.world.entity.mob.DamageSource;
 import net.codepixl.GLCraft.world.entity.mob.EntityPlayerMP;
 import net.codepixl.GLCraft.world.tile.Tile;
 
@@ -220,12 +221,17 @@ public class Server{
 					break;
 				case DROPOTHERITEM:
 					break;
+				case SELECTSLOT:
+					player.setSelectedSlot(p.count);
+					break;
 				}
 			}else if(op instanceof PacketPlayerDead){
 				c.player.setDead(true);
 			}else if(op instanceof PacketReady){
 				c.player.shouldUpdate = true;
 				SaveManager.loadPlayer(worldManager, c.player);
+				if(GLCraft.getGLCraft().getWorldManager(false) != null && GLCraft.getGLCraft().getWorldManager(false).getPlayer().equals(c.player))
+					c.player.setPermission(Permission.OP);
 			}else if(op instanceof PacketPlayerLeave){
 				if(c == null)
 					return;
@@ -240,6 +246,12 @@ public class Server{
 				c.writePacket(new PacketSendChunk(ch, c.player));
 			}else if(op instanceof PacketPing){
 				c.pingSentTime = 0;
+			}else if(op instanceof PacketChat){
+				String msg = ((PacketChat) op).msg;
+				if(msg.startsWith("/"))
+					worldManager.centralManager.commandManager.addCommandToQueue(msg.substring(1), c.player);
+				else
+					sendToAllClients(new PacketChat("<"+c.player.getName()+"> "+((PacketChat) op).msg));
 			}else{
 				GLogger.logerr("Unhandled Packet: "+op.getClass(), LogSource.SERVER);
 			}

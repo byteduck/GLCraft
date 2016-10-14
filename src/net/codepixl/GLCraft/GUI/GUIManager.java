@@ -55,6 +55,10 @@ public class GUIManager {
 		this.gameGUI = gui;
 	}
 	
+	public GUIGame getGameGUI(){
+		return this.gameGUI;
+	}
+	
 	public static void setMainManager(GUIManager manager){
 		mainManager = manager;
 	}
@@ -160,8 +164,10 @@ public class GUIManager {
 				if(Keyboard.getEventKeyState()){
 					char c = Keyboard.getEventCharacter();
 					int k = Keyboard.getEventKey();
-					if(k == Keyboard.KEY_ESCAPE || k == Keyboard.KEY_RETURN){
+					if(k == Keyboard.KEY_ESCAPE){
 						this.focusedTextBox.setFocused(false);
+						if(this.focusedTextBox.closeOnUnfocus)
+							closeGUI(true);
 						this.focusedTextBox = null;
 					}else{
 						this.focusedTextBox.textInput(k,c);
@@ -201,8 +207,11 @@ public class GUIManager {
 	}
 	
 	public void unfocusTextBox(){
-		if(this.focusedTextBox != null)
+		if(this.focusedTextBox != null){
 			this.focusedTextBox.setFocused(false);
+			if(this.focusedTextBox.closeOnUnfocus)
+				closeGUI(true);
+		}
 		this.focusedTextBox = null;
 	}
 }

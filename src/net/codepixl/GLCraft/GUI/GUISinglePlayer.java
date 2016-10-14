@@ -52,7 +52,7 @@ public class GUISinglePlayer extends GUIScreen{
 					GLCraft.getGLCraft().getWorldManager(true).createWorld(name);
 					Client.ServerConnectionState cs = GLCraft.getGLCraft().getCentralManager(false).connectToLocalServer();
 					if(!cs.success){
-						GLCraft.getGLCraft().closeLocalServer();
+						GLCraft.getGLCraft().closeLocalServer("Error opening world");
 						GUIManager.getMainManager().showGUI(new GUIServerError("Error connecting to server:\n",cs.message));
 						return null;
 					}
@@ -74,7 +74,7 @@ public class GUISinglePlayer extends GUIScreen{
 				}
 				Client.ServerConnectionState cs = GLCraft.getGLCraft().getCentralManager(false).connectToLocalServer();
 				if(!cs.success){
-					GLCraft.getGLCraft().closeLocalServer();
+					GLCraft.getGLCraft().closeLocalServer("Error opening world");
 					GUIManager.getMainManager().showGUI(new GUIServerError("Error connecting to server:\n",cs.message));
 					return null;
 				}

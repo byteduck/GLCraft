@@ -1,5 +1,6 @@
 package net.codepixl.GLCraft.util.command;
 
+import net.codepixl.GLCraft.util.command.Command.Permission;
 import net.codepixl.GLCraft.world.entity.mob.EntityPlayer;
 
 public interface CommandExecutor{
@@ -10,5 +11,7 @@ public interface CommandExecutor{
 	public int getType();
 	
 	public void sendMessage(String msg);
+	
+	public Permission getPermission();
 	
 }

@@ -18,13 +18,13 @@ public class CommandStop implements Command{
 		for(int i = 1; i < args.length; i++)
 			reason+=(i == 1 ? "" : " ")+args[i];
 		WorldManager.saveWorldBlocking();
-		centralManager.close(reason, true);
+		centralManager.getWorldManager().closeWorld(reason, true);
 		return true;
 	}
 
 	@Override
-	public boolean requiresOp() {
-		return true;
+	public Permission getPermission(){
+		return Permission.SERVER;
 	}
 
 	@Override

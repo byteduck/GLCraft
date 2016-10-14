@@ -206,7 +206,7 @@ public class GLCraft extends Screen{
 			
 			if(this.serverCentralManager != null && this.serverCentralManager.isOpen()){
 				WorldManager.saveWorldBlocking();
-				this.serverCentralManager.close("Closing", true);
+				this.serverWorldManager.closeWorld("Closing", true);
 			}
 			
 			System.exit(0);
@@ -496,12 +496,16 @@ public class GLCraft extends Screen{
 		}
 	}
 
-	public void closeLocalServer() {
-		this.serverCentralManager.close("Server closing", false);
+	public void closeLocalServer(String reason) {
+		this.serverWorldManager.closeWorld(reason, false);
 	}
 
 	public void disconnectFromServer(boolean quit) {
-		clientCentralManager.close("", quit);
+		clientWorldManager.closeWorld("", quit);
+	}
+
+	public void closeLocalServerNow(String reason) {
+		this.serverWorldManager.closeWorldNow(reason);
 	}
 
 }

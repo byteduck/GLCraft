@@ -76,8 +76,12 @@ public class CommandManager {
 		for(Entry<String,CommandExecutor> cmd : commandQueue.entrySet()){
 			String[] args = cmd.getKey().split(" ");
 			if(this.commands.containsKey(args[0].toLowerCase())){
-				if(this.commands.get(args[0].toLowerCase()).execute(centralManager, cmd.getValue(), args)); else
-					cmd.getValue().sendMessage(this.commands.get(args[0].toLowerCase()).getUsage());
+				Command c = this.commands.get(args[0].toLowerCase());
+				if(c.getPermission().val <= cmd.getValue().getPermission().val){
+					if(c.execute(centralManager, cmd.getValue(), args)); else
+						cmd.getValue().sendMessage(this.commands.get(args[0].toLowerCase()).getUsage());
+				}else
+					cmd.getValue().sendMessage("You do not have permission to do that!");
 			}else{
 				cmd.getValue().sendMessage("Unknown command "+args[0]+"!");
 			}

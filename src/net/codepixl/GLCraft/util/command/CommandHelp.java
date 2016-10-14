@@ -1,5 +1,6 @@
 package net.codepixl.GLCraft.util.command;
 
+import net.codepixl.GLCraft.util.command.Command.Permission;
 import net.codepixl.GLCraft.world.CentralManager;
 
 public class CommandHelp implements Command{
@@ -11,16 +12,16 @@ public class CommandHelp implements Command{
 
 	@Override
 	public boolean execute(CentralManager centralManager, CommandExecutor e, String... args) {
-		e.sendMessage("COMMANDS:\n[O] - requires OP. [N] - Doesn't require OP.");
+		e.sendMessage("COMMANDS:\nPermissions- [N]one [O]p [S]erver");
 		for(Command c : centralManager.commandManager.getCommands()){
-			e.sendMessage(c.getUsage()+(c.requiresOp() ? " [O]" : " [N]"));
+			e.sendMessage(c.getUsage()+" "+c.getPermission().getLabel());
 		}
 		return true;
 	}
 
 	@Override
-	public boolean requiresOp() {
-		return false;
+	public Permission getPermission(){
+		return Permission.NONE;
 	}
 
 	@Override

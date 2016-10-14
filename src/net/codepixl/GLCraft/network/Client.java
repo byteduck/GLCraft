@@ -11,9 +11,11 @@ import java.util.ArrayList;
 import org.lwjgl.util.vector.Vector3f;
 
 import net.codepixl.GLCraft.GLCraft;
+import net.codepixl.GLCraft.GUI.GUIManager;
 import net.codepixl.GLCraft.network.packet.Packet;
 import net.codepixl.GLCraft.network.packet.PacketAddEntity;
 import net.codepixl.GLCraft.network.packet.PacketBlockChange;
+import net.codepixl.GLCraft.network.packet.PacketChat;
 import net.codepixl.GLCraft.network.packet.PacketHealth;
 import net.codepixl.GLCraft.network.packet.PacketKick;
 import net.codepixl.GLCraft.network.packet.PacketPing;
@@ -175,6 +177,9 @@ public class Client{
 				Mob m = (Mob)worldManager.getEntity(p.entityID);
 				m.health = p.health;
 				m.airLevel = p.airLevel;
+			}else if(op instanceof PacketChat){
+				String msg = ((PacketChat) op).msg;
+				GUIManager.getMainManager().getGameGUI().addChatMessage(msg);
 			}else{
 				System.err.println("[CLIENT] Received unhandled packet: "+op.getClass());
 				//throw new IOException("Invalid Packet "+op.getClass());
