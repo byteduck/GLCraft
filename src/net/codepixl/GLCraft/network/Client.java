@@ -15,6 +15,7 @@ import net.codepixl.GLCraft.network.packet.Packet;
 import net.codepixl.GLCraft.network.packet.PacketAddEntity;
 import net.codepixl.GLCraft.network.packet.PacketBlockChange;
 import net.codepixl.GLCraft.network.packet.PacketHealth;
+import net.codepixl.GLCraft.network.packet.PacketKick;
 import net.codepixl.GLCraft.network.packet.PacketPing;
 import net.codepixl.GLCraft.network.packet.PacketPlayerAdd;
 import net.codepixl.GLCraft.network.packet.PacketPlayerLeave;
@@ -159,6 +160,11 @@ public class Client{
 			}else if(op instanceof PacketServerClose){
 				PacketServerClose p = (PacketServerClose)op;
 				GLogger.log("Server closed: "+p.message,LogSource.CLIENT);
+				worldManager.closeWorld(p.message,false);
+			}else if(op instanceof PacketKick){
+				PacketKick p = (PacketKick)op;
+				GLogger.log("Kicked: "+p.message,LogSource.CLIENT);
+				worldManager.kicked = true;
 				worldManager.closeWorld(p.message,false);
 			}else if(op instanceof PacketPlayerLeave){
 				worldManager.getEntityManager().removeNow(((PacketPlayerLeave) op).entityID);

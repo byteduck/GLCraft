@@ -78,8 +78,11 @@ import net.codepixl.GLCraft.GUI.GUIManager;
 import net.codepixl.GLCraft.GUI.GUIMultiplayer;
 import net.codepixl.GLCraft.GUI.GUIPauseMenu;
 import net.codepixl.GLCraft.GUI.GUIScreen;
+import net.codepixl.GLCraft.GUI.GUISettings;
 import net.codepixl.GLCraft.GUI.GUISinglePlayer;
 import net.codepixl.GLCraft.GUI.GUIStartScreen;
+import net.codepixl.GLCraft.GUI.Inventory.GUICrafting;
+import net.codepixl.GLCraft.GUI.Inventory.GUICraftingAdvanced;
 import net.codepixl.GLCraft.GUI.Inventory.Elements.GUISlot;
 import net.codepixl.GLCraft.network.Client;
 import net.codepixl.GLCraft.network.Server;
@@ -225,6 +228,7 @@ public class CentralManager extends Screen{
 		guiManager.addGUI(new GUIPauseMenu(), "pauseMenu");
 		guiManager.addGUI(new GUISinglePlayer(), "singleplayer");
 		guiManager.addGUI(new GUIMultiplayer(), "multiplayer");
+		guiManager.addGUI(new GUISettings(), "settings");
 	}
 
 	@Override
@@ -256,12 +260,12 @@ public class CentralManager extends Screen{
 						if(guiManager.isGUIOpen() && g.canBeExited()){
 							guiManager.closeGUI(true);
 							Mouse.setGrabbed(true);
-						}else if(guiManager.getCurrentGUIName().equals("nogui")){
+						}else if(!guiManager.isGUIOpen()){
 							guiManager.showGUI("pauseMenu");
 						}
 					}
 					if(Keyboard.isKeyDown(Keyboard.KEY_E)){
-						if(guiManager.getCurrentGUIName() == "crafting" || guiManager.getCurrentGUIName() == "adv_crafting"){
+						if(guiManager.getCurrentGUI() instanceof GUICrafting || guiManager.getCurrentGUI() instanceof GUICraftingAdvanced){
 							guiManager.closeGUI(true);
 							Mouse.setGrabbed(true);
 						}else{
@@ -539,7 +543,7 @@ public class CentralManager extends Screen{
 				messageTime = 0;
 			Constants.FONT.drawString(10, Constants.FONT.getHeight()+20, this.message);
 		}
-		if(currentBlock != -1){
+		if(!guiManager.isGUIOpen() && currentBlock != -1){
 			String toolTip = "Block: "+Tile.getTile((byte)currentBlock).getName();
 			Constants.FONT.drawString(Constants.WIDTH/2-Constants.FONT.getWidth(toolTip)/2, 10, toolTip);
 		}

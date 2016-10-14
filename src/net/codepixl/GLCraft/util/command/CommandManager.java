@@ -35,6 +35,7 @@ public class CommandManager {
 	private void addCommands(){
 		addCommand(new CommandStop());
 		addCommand(new CommandHelp());
+		addCommand(new CommandKick());
 	}
 	
 	public void addCommand(Command c){

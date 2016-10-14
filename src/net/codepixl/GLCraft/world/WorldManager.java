@@ -89,6 +89,7 @@ public class WorldManager {
 	public int chunksLeftToDownload = 0;
 	private Queue<Callable<Void>> actionQueue = new LinkedList<Callable<Void>>();
 	public boolean sendBlockPackets = true;
+	public boolean kicked = false;
 	private static WorldManager cw;
 	
 	public WorldManager(CentralManager w, boolean isServer){
@@ -1034,11 +1035,22 @@ public class WorldManager {
 			centralManager.getClient().close();
 			this.doneGenerating = false;
 			Constants.GAME_STATE = Constants.START_SCREEN;
-			GUIManager.getMainManager().showGUI(new GUIServerError("Server closed: ", reason));
+			if(kicked)
+				GUIManager.getMainManager().showGUI(new GUIServerError("Kicked from server:\n", reason));
+			else
+				GUIManager.getMainManager().showGUI(new GUIServerError("Server closed:\n", reason));
+			kicked = false;
 			centralManager.getClient().reinit();
 		}
 		this.activeChunks.clear();
 		System.gc();
+	}
+
+	public EntityPlayerMP getPlayer(String name) {
+		for(Entity e : getEntityManager().getEntities(EntityPlayerMP.class))
+			if(((EntityPlayerMP)e).getName().equalsIgnoreCase(name))
+				return (EntityPlayerMP)e;
+		return null;
 	}
 	
 }

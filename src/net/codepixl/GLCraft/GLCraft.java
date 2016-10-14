@@ -256,7 +256,7 @@ public class GLCraft extends Screen{
 		
 		SettingsManager.init();
 		
-		Constants.init();
+		Constants.init(false);
 		
 		Constants.gatherSystemInfo();
 
@@ -289,7 +289,7 @@ public class GLCraft extends Screen{
 	
 	public void initServer(){
 		
-		Constants.init();
+		Constants.init(true);
 		
 		Constants.gatherSystemInfo();
 		

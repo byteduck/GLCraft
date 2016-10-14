@@ -120,8 +120,9 @@ public class Constants {
 		FONT = new TrueTypeFont(new Font("GLCraft", Font.PLAIN, 16), true);
 	}
 	
-	public static void init(){
-		maxFPS = Integer.parseInt(SettingsManager.getSetting("max_fps"));
+	public static void init(boolean dedicatedServer){
+		if(!dedicatedServer)
+			maxFPS = Integer.parseInt(SettingsManager.getSetting("max_fps"));
 	}
 
 }

@@ -17,6 +17,7 @@ import net.codepixl.GLCraft.GUI.GUIManager;
 import net.codepixl.GLCraft.GUI.GUIPauseMenu;
 import net.codepixl.GLCraft.network.packet.Packet;
 import net.codepixl.GLCraft.network.packet.PacketBlockChange;
+import net.codepixl.GLCraft.network.packet.PacketKick;
 import net.codepixl.GLCraft.network.packet.PacketLANBroadcast;
 import net.codepixl.GLCraft.network.packet.PacketOnPlace;
 import net.codepixl.GLCraft.network.packet.PacketPing;
@@ -137,7 +138,7 @@ public class Server{
 							pingSentTime = System.currentTimeMillis();
 						}else{
 							if(System.currentTimeMillis()-pingSentTime > 10000){
-								writePacket(new PacketServerClose("Kicked: Timed out"));
+								writePacket(new PacketKick("Timed out"));
 								SaveManager.savePlayer(worldManager, player);
 								clients.remove(new InetAddressAndPort(addr, port));
 								GLogger.log("Player timed out: "+player.getName(), LogSource.SERVER);

@@ -31,6 +31,7 @@ import net.codepixl.GLCraft.network.packet.PacketSetInventory;
 import net.codepixl.GLCraft.render.RenderType;
 import net.codepixl.GLCraft.render.Shape;
 import net.codepixl.GLCraft.render.TextureManager;
+import net.codepixl.GLCraft.render.util.SettingsManager;
 import net.codepixl.GLCraft.sound.SoundManager;
 import net.codepixl.GLCraft.util.AABB;
 import net.codepixl.GLCraft.util.BreakSource;
@@ -81,7 +82,7 @@ public class EntityPlayer extends Mob implements CommandExecutor{
 		qPressed = false;
 		prevSelect = new Vector3f(-1, -1, -1);
 		eyeLevel = 1.6f;
-		this.name = "Player"+Constants.randInt(0, 10000);
+		this.name = SettingsManager.getSetting("name");
 	}
 	
 	public void setName(String name){
