@@ -177,7 +177,6 @@ public class Server{
 					c.writePacket(new PacketPlayerAdd(c2.player.getID(), c2.player.getName(), c2.player.getPos()));
 				}
 				sendToAllClientsExcept(new PacketPlayerAdd(c.player.getID(), c.player.getName(), c.player.getPos()), c);
-				SaveManager.loadPlayer(worldManager, c.player);
 				c.writePacket(new PacketSendChunk(worldManager.getActiveChunks().size()));
 				GLogger.log("New player logged in: "+p.name, LogSource.SERVER);
 			}else if(op instanceof PacketBlockChange){
@@ -217,6 +216,7 @@ public class Server{
 				c.player.setDead(true);
 			}else if(op instanceof PacketReady){
 				c.player.shouldUpdate = true;
+				SaveManager.loadPlayer(worldManager, c.player);
 			}else if(op instanceof PacketPlayerLeave){
 				if(c == null)
 					return;

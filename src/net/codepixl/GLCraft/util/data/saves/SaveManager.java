@@ -233,7 +233,7 @@ public class SaveManager {
 
 			if(!playerFile.exists()){
 				p.updatedInventory = true;
-				p.respawn();
+				p.respawnServerSide();
 				return;
 			}
 			FileInputStream inputStream = new FileInputStream(playerFile);

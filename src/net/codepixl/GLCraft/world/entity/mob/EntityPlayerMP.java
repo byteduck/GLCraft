@@ -98,6 +98,17 @@ public class EntityPlayerMP extends EntityPlayer{
 		worldManager.sendPacket(new PacketRespawn(),this);
 	}
 	
+	public void respawnServerSide(){
+		int x = (int) (Constants.CHUNKSIZE*(Constants.worldLengthChunks/2f));
+		int z = (int) (Constants.CHUNKSIZE*(Constants.worldLengthChunks/2f));
+		int y = Constants.CHUNKSIZE*Constants.worldLengthChunks+1;
+		while(Tile.getTile((byte) worldManager.getTileAtPos(x, y-1, z)).canPassThrough() || Tile.getTile((byte) worldManager.getTileAtPos(x, y-1, z)) == Tile.Void){y--;}
+		this.setPos(new Vector3f(x,y,z));
+		this.health = 20f;
+		this.fallDistance = 0;
+		this.onFire = 0;
+	}
+	
 	@Override
 	public void updateKeyboard(float a, float b){}
 

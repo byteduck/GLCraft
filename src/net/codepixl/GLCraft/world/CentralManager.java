@@ -178,7 +178,12 @@ public class CentralManager extends Screen{
 		try{
 			if(isServer)
 				if(GLCraft.getGLCraft().isServer())
-					server = new Server(worldManager, Server.DEFAULT_SERVER_PORT);
+					try{
+						server = new Server(worldManager, Server.DEFAULT_SERVER_PORT);
+					}catch(IOException e){
+						e.printStackTrace();
+						System.exit(0);
+					}
 				else
 					server = new Server(worldManager);
 			else{
