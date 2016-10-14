@@ -13,9 +13,9 @@ public class GUIServerError extends GUIScreen{
 		if(message == null)
 			message = "Unknown error";
 		this.setDrawStoneBackground(true);
-		lbl = new GUILabel(Constants.WIDTH/2, Constants.HEIGHT/2, prefix+message);
+		lbl = new GUILabel(Constants.WIDTH/2, Constants.HEIGHT/2-Constants.FONT.getHeight(), prefix+message);
 		lbl.alignment = GUILabel.Alignment.CENTER;
-		lbl.size = 1.5f;
+		lbl.size = 2f;
 		addElement(lbl);
 	}
 	

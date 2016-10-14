@@ -11,21 +11,20 @@ import net.codepixl.GLCraft.GLCraft;
 import net.codepixl.GLCraft.GUI.Elements.GUIButton;
 import net.codepixl.GLCraft.GUI.Elements.GUILabel;
 import net.codepixl.GLCraft.GUI.Elements.GUISlider;
+import net.codepixl.GLCraft.render.util.SettingsManager;
 import net.codepixl.GLCraft.util.Constants;
 import net.codepixl.GLCraft.world.WorldManager;
 
 public class GUIPauseMenu extends GUIScreen{
 	
-	private static final int BACKY = (int) (Constants.HEIGHT*0.3);
-	private static final int SAVEY = (int) (Constants.HEIGHT*0.5);
-	private static final int QUITY = (int) (Constants.HEIGHT*0.7);
-	private static final int FPSY = (int) (Constants.HEIGHT*0.9);
-	private static final int FPSSY = (int) (Constants.HEIGHT*0.9)+Constants.FONT.getHeight()+10;
+	private static final int BACKY = (int) (Constants.HEIGHT*0.2);
+	private static final int SAVEY = (int) (Constants.HEIGHT*0.4);
+	private static final int QUITY = (int) (Constants.HEIGHT*0.6);
+	private static final int SETTINGSY = (int) (Constants.HEIGHT*0.8);
 	private static final int MIDDLE = Constants.WIDTH/2;
 	
-	private GUIButton backButton,quitButton,exitButton;
+	private GUIButton backButton,quitButton,exitButton,settingsButton;
 	private GUITexture savingIcon;
-	private GUISlider fpsSlider;
 	
 	private boolean isHost = false;
 	
@@ -59,6 +58,15 @@ public class GUIPauseMenu extends GUIScreen{
 					GLCraft.getGLCraft().getWorldManager(true).closeWorld("Closing", false);
 				}else
 					GLCraft.getGLCraft().disconnectFromServer(false);
+				GUIManager.getMainManager().clearGUIStack();
+				return null;
+			}
+		});
+		
+		settingsButton = new GUIButton("Settings", MIDDLE, SETTINGSY, new Callable<Void>(){
+			@Override
+			public Void call() throws Exception {
+				GUIManager.getMainManager().showGUI("settings");
 				return null;
 			}
 		});
@@ -66,25 +74,13 @@ public class GUIPauseMenu extends GUIScreen{
 		savingIcon = new GUITexture("misc.floppy", Constants.WIDTH-42, 10, 32);
 		savingIcon.visible = false;
 		
-		fpsSlider = new GUISlider("Max FPS",MIDDLE-(300/2), FPSSY, 300, 10, 121, new Callable<Void>(){
-			public Void call(){
-				int rate = fpsSlider.getVal();
-				if(rate > 120){
-					Constants.maxFPS = -1;
-				}else{
-					Constants.maxFPS = fpsSlider.getVal();
-				}
-				return null;
-			}
-		});
-		fpsSlider.setVal(Constants.maxFPS);
-		fpsSlider.maxlbl = "No limit";
+		
 		
 		this.addElement(backButton);
 		this.addElement(quitButton);
 		this.addElement(exitButton);
 		this.addElement(savingIcon);
-		this.addElement(fpsSlider);
+		this.addElement(settingsButton);
 	}
 	
 	public void setHost(boolean host){

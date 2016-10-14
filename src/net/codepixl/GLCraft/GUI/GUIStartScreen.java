@@ -64,10 +64,10 @@ public class GUIStartScreen extends GUIScreen{
 		});
 		pluginManagerButton.width = BUTTONWIDTH;
 		
-		texturepackButton = new GUIButton("Texturepacks", MIDDLE, MIDDLEY+GUIButton.BTNHEIGHT+10, new Callable<Void>() {
+		texturepackButton = new GUIButton("Settings", MIDDLE, MIDDLEY+GUIButton.BTNHEIGHT+10, new Callable<Void>() {
 			@Override
 			public Void call() throws Exception {
-				new TexturePackManagerWindow();
+				GUIManager.getMainManager().showGUI("settings");
 				return null;
 			}
 		});

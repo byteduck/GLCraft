@@ -5,10 +5,10 @@ import static org.lwjgl.opengl.GL11.GL_TEXTURE_2D;
 import static org.lwjgl.opengl.GL11.glBegin;
 import static org.lwjgl.opengl.GL11.glColor3f;
 import static org.lwjgl.opengl.GL11.glColor4f;
-import static org.lwjgl.opengl.GL11.glDisable;
 import static org.lwjgl.opengl.GL11.glEnable;
 import static org.lwjgl.opengl.GL11.glEnd;
 import static org.lwjgl.opengl.GL11.glVertex2f;
+import static org.lwjgl.opengl.GL11.GL_LINE_LOOP;
 
 import java.util.concurrent.Callable;
 
@@ -19,6 +19,7 @@ import org.newdawn.slick.opengl.TextureImpl;
 import com.nishu.utils.Color4f;
 
 import net.codepixl.GLCraft.GUI.GUIScreen;
+import net.codepixl.GLCraft.render.util.Tesselator;
 import net.codepixl.GLCraft.sound.SoundManager;
 import net.codepixl.GLCraft.util.Constants;
 
@@ -119,6 +120,8 @@ public class GUIButton extends GUIScreen{
 			glVertex2f(x+width/2,y+height/2);
 			glVertex2f(x+width/2,y-height/2);
 		glEnd();
+		glColor3f(0.75f, 0.75f, 0.75f);
+		Tesselator.drawOutline(x-width/2, y-height/2, width, height, 1.5f);
 		glEnable(GL_TEXTURE_2D);
 		glColor4f(textColor.r,textColor.g,textColor.b,textColor.a);
 		Constants.FONT.drawString(x-Constants.FONT.getWidth(text)/2, y-Constants.FONT.getHeight(text)/2, text);

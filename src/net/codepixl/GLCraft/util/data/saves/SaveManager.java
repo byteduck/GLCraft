@@ -225,7 +225,7 @@ public class SaveManager {
 			if(GLCraft.getGLCraft().getWorldManager(false) != null && GLCraft.getGLCraft().getWorldManager(false).getPlayer().equals(p))
 				playerFile = new File(w.currentSave.getDirectory(),"player.nbt");
 			else
-				playerFile = new File(w.currentSave.getDirectory(),"players"+File.separator+p.getName()+".nbt");
+				playerFile = new File(w.currentSave.getDirectory(),"players"+File.separator+p.getName().toLowerCase()+".nbt");
 			p.setInventory(new ItemStack[p.getInventorySize()]);
 			for(int i = 0; i < p.getInventorySize(); i++){
 				p.setInventory(i, new ItemStack());
@@ -270,7 +270,7 @@ public class SaveManager {
 			if(GLCraft.getGLCraft().getWorldManager(false) != null && GLCraft.getGLCraft().getWorldManager(false).getPlayer().equals(p))
 				playerFile = new File(w.currentSave.getDirectory(),"player.nbt");
 			else
-				playerFile = new File(w.currentSave.getDirectory(),"players"+File.separator+p.getName()+".nbt");
+				playerFile = new File(w.currentSave.getDirectory(),"players"+File.separator+p.getName().toLowerCase()+".nbt");
 			TagCompound compound = new TagCompound("Player");
 			TagList posList = new TagList("Pos");
 			posList.addTag(new TagFloat("",p.getPos().x));

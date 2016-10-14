@@ -53,10 +53,11 @@ public class GUISinglePlayer extends GUIScreen{
 					Client.ServerConnectionState cs = GLCraft.getGLCraft().getCentralManager(false).connectToLocalServer();
 					if(!cs.success){
 						GLCraft.getGLCraft().closeLocalServer();
-						GUIManager.getMainManager().showGUI(new GUIServerError("Error connecting to server: ",cs.message));
+						GUIManager.getMainManager().showGUI(new GUIServerError("Error connecting to server:\n",cs.message));
 						return null;
 					}
 					glDisable(GL_TEXTURE_2D);
+					GUIManager.getMainManager().clearGUIStack();
 					GUIManager.getMainManager().closeGUI(false);
 				}
 				return null;
@@ -74,11 +75,12 @@ public class GUISinglePlayer extends GUIScreen{
 				Client.ServerConnectionState cs = GLCraft.getGLCraft().getCentralManager(false).connectToLocalServer();
 				if(!cs.success){
 					GLCraft.getGLCraft().closeLocalServer();
-					GUIManager.getMainManager().showGUI(new GUIServerError("Error connecting to server: ",cs.message));
+					GUIManager.getMainManager().showGUI(new GUIServerError("Error connecting to server:\n",cs.message));
 					return null;
 				}
 				Constants.setState(Constants.GAME);
 				glDisable(GL_TEXTURE_2D);
+				GUIManager.getMainManager().clearGUIStack();
 				GUIManager.getMainManager().closeGUI(false);
 				return null;
 			}
@@ -122,6 +124,7 @@ public class GUISinglePlayer extends GUIScreen{
 	@Override
 	public void drawBG(){
 		super.drawBG();
+		GL11.glLineWidth(2f);
 		GL11.glColor3f(1f, 1f, 1f);
 		GL11.glDisable(GL11.GL_TEXTURE_2D);
 		GL11.glBegin(GL11.GL_LINES);

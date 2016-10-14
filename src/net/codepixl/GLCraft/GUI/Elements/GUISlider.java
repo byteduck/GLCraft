@@ -11,9 +11,12 @@ import com.nishu.utils.Color4f;
 
 import net.codepixl.GLCraft.GUI.GUIScreen;
 import net.codepixl.GLCraft.render.Shape;
+import net.codepixl.GLCraft.render.util.Tesselator;
 import net.codepixl.GLCraft.util.Constants;
 
 public class GUISlider extends GUIScreen{
+	
+	public static int HEIGHT = 20;
 	
 	private float val;
 	private int max;
@@ -26,7 +29,7 @@ public class GUISlider extends GUIScreen{
 	public GUISlider(String lbl, int x, int y, int length, int min, int max, Callable<Void> callback){
 		this.x = x;
 		this.y = y;
-		this.height = 20;
+		this.height = HEIGHT;
 		this.width = length;
 		this.min = min;
 		this.max = max;
@@ -50,6 +53,9 @@ public class GUISlider extends GUIScreen{
 		GL11.glBegin(GL11.GL_QUADS);
 		Shape.createTexturelessRect2D(((float)(val-min)/(float)(max-min))*(width-10), 0, 10f, height, Color4f.WHITE);
 		GL11.glEnd();
+		
+		GL11.glColor3f(0.75f, 0.75f, 0.75f);
+		Tesselator.drawOutline(0, 0, width, height, 1.5f);
 		
 		GL11.glEnable(GL11.GL_TEXTURE_2D);
 		

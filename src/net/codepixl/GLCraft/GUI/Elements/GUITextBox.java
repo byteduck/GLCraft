@@ -1,5 +1,7 @@
 package net.codepixl.GLCraft.GUI.Elements;
 
+import java.util.concurrent.Callable;
+
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.GL11;
@@ -25,6 +27,8 @@ public class GUITextBox extends GUIScreen{
 	private int trans = 0;
 	private float cblink = 0;
 	private boolean blinkdir = true;
+	private Callable<Void> callable;
+	private String filter = "";
 	
 	/**
 	 * Something to note is that the length is just the length in pixels of the INSIDE of the text box, the padding is 10px on either side.
@@ -95,12 +99,20 @@ public class GUITextBox extends GUIScreen{
 		}
 	}
 	
+	public void setCallback(Callable<Void> callable){
+		this.callable = callable;
+	}
+	
 	public void setPlaceholder(String placeholder){
 		this.placeholder = placeholder;
 	}
 	
 	public String getPlaceholder(){
 		return this.placeholder;
+	}
+	
+	public void setFilter(String regex){
+		this.filter  = regex;
 	}
 
 	public String getText() {
@@ -109,6 +121,7 @@ public class GUITextBox extends GUIScreen{
 
 	public void setText(String text) {
 		this.text = text;
+		this.index = text.length();
 	}
 
 	public int getLength() {
@@ -147,6 +160,8 @@ public class GUITextBox extends GUIScreen{
 			if(index < text.length())
 				index++;
 		}else if(c >= 32){
+			if(Character.toString(c).matches(filter))
+				return;
 			text = text.substring(0, index) + c + text.substring(index, text.length());
 			index++;
 		}
@@ -158,5 +173,12 @@ public class GUITextBox extends GUIScreen{
 		}else{
 			trans = 0;
 		}
+		
+		if(this.callable != null)
+			try {
+				this.callable.call();
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
 	}
 }

@@ -1,5 +1,9 @@
 package net.codepixl.GLCraft.render.util;
 
+import static org.lwjgl.opengl.GL11.GL_LINE_LOOP;
+import static org.lwjgl.opengl.GL11.glBegin;
+import static org.lwjgl.opengl.GL11.glColor3f;
+import static org.lwjgl.opengl.GL11.glEnd;
 import static org.lwjgl.opengl.GL11.glVertex2f;
 
 import org.lwjgl.opengl.GL11;
@@ -33,6 +37,18 @@ public class Tesselator{
         GL11.glDepthMask(true);
         GL11.glStencilMask(0x00);
         GL11.glStencilFunc(GL11.GL_EQUAL, 1, 0xFF);
+	}
+	
+	public static void drawOutline(int x, int y, int width, int height, float lineWidth){
+		Tesselator.stencilArea(x, y, width, height);
+		GL11.glLineWidth(lineWidth);
+		glBegin(GL_LINE_LOOP);
+			glVertex2f(x,y);
+			glVertex2f(x,y+height);
+			glVertex2f(x+width,y+height);
+			glVertex2f(x+width,y);
+		glEnd();
+		Tesselator.stencilFinish();
 	}
 	
 	/**

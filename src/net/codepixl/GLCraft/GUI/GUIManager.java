@@ -5,6 +5,7 @@ import static org.lwjgl.opengl.GL11.glBegin;
 import static org.lwjgl.opengl.GL11.glEnd;
 
 import java.util.HashMap;
+import java.util.Stack;
 
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
@@ -20,6 +21,8 @@ import net.codepixl.GLCraft.render.Shape;
 import net.codepixl.GLCraft.render.TextureManager;
 import net.codepixl.GLCraft.render.util.Tesselator;
 import net.codepixl.GLCraft.util.Constants;
+import net.codepixl.GLCraft.util.LogSource;
+import net.codepixl.GLCraft.util.logging.GLogger;
 import net.codepixl.GLCraft.world.entity.mob.EntityPlayer;
 
 public class GUIManager {
@@ -28,9 +31,9 @@ public class GUIManager {
 	private boolean GUIOpen = false, showGame = false;
 	private HashMap<String,GUIScreen> staticGUIs = new HashMap<String,GUIScreen>();
 	private static GUIManager mainManager;
-	private String currentGUIName = "nogui";
 	private GUITextBox focusedTextBox;
 	private GUIGame gameGUI;
+	private Stack<GUIScreen> guiStack = new Stack<GUIScreen>();
 
 	public GUIManager(){
 		initTextures();
@@ -60,19 +63,21 @@ public class GUIManager {
 		return mainManager;
 	}
 
-	public void showGUI(GUIScreen gui) {
+	public void showGUI(GUIScreen gui){
+		if(currentGUI != null)
+			guiStack.add(currentGUI);
 		currentGUI = gui;
 		gui.onOpen();
 		GUIOpen = true;
-		currentGUIName = "othergui";
 	}
 	
 	public boolean showGUI(String guiName){
 		if(staticGUIs.containsKey(guiName)){
+			if(currentGUI != null)
+				guiStack.add(currentGUI);
 			currentGUI = staticGUIs.get(guiName);
 			staticGUIs.get(guiName).onOpen();
 			GUIOpen = true;
-			currentGUIName = guiName;
 			return true;
 		}
 		return false;
@@ -96,12 +101,19 @@ public class GUIManager {
 
 	public void closeGUI(boolean onClose){
 		GUIScreen tmp = currentGUI;
-		GUIOpen = false;
-		currentGUI = null;
-		currentGUIName = "nogui";
+		if(!guiStack.isEmpty())
+			currentGUI = guiStack.pop();
+		else{
+			GUIOpen = false;
+			currentGUI = null;
+		}
 		focusedTextBox = null;
 		if(tmp != null && onClose)
 			tmp.onClose();
+	}
+	
+	public void clearGUIStack(){
+		guiStack.clear();
 	}
 	
 	public GUIScreen getCurrentGUI(){
@@ -181,10 +193,6 @@ public class GUIManager {
 		}else{
 			return true;
 		}
-	}
-
-	public String getCurrentGUIName(){
-		return currentGUIName;
 	}
 
 	public void setFocusedTextBox(GUITextBox textBox){

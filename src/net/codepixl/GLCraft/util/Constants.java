@@ -7,6 +7,7 @@ import java.util.Random;
 import org.lwjgl.util.vector.Vector3f;
 import org.newdawn.slick.TrueTypeFont;
 
+import net.codepixl.GLCraft.render.util.SettingsManager;
 import net.codepixl.GLCraft.util.logging.GLogger;
 
 public class Constants {
@@ -22,7 +23,7 @@ public class Constants {
 	public static final int GAME = 1;
 	public static final int SERVER = 2;
 	public static final String GLCRAFTDIR = getGamePath();
-	public static int maxFPS = 121;
+	public static int maxFPS;
 	public static int GAME_STATE = START_SCREEN;
 	public static int worldLength = CHUNKSIZE * worldLengthChunks;
 	public static int WIDTH = 1000;
@@ -117,6 +118,10 @@ public class Constants {
 	
 	public static void initGL(){
 		FONT = new TrueTypeFont(new Font("GLCraft", Font.PLAIN, 16), true);
+	}
+	
+	public static void init(){
+		maxFPS = Integer.parseInt(SettingsManager.getSetting("max_fps"));
 	}
 
 }

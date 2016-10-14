@@ -50,18 +50,20 @@ public class GUILabel extends GUIScreen{
 	public void render(){
 		GL11.glPushMatrix();
 		GL11.glScalef(size, size, 0);
-		int width = Constants.FONT.getWidth(text);
-		int height = Constants.FONT.getHeight(text);
 		glColor4f(textColor.r,textColor.g,textColor.b,textColor.a);
+		int y = -Constants.FONT.getHeight();
 		switch(alignment){
 		case LEFT:
-			Constants.FONT.drawString(0, 0, text);
+			for (String line : text.split("\n"))
+		        Constants.FONT.drawString(0, y += Constants.FONT.getHeight(), line);
 			break;
 		case CENTER:
-			Constants.FONT.drawString(-width/2, 0, text);
+			for (String line : text.split("\n"))
+		        Constants.FONT.drawString(-Constants.FONT.getWidth(line)/2, y += Constants.FONT.getHeight(), line);
 			break;
 		case RIGHT:
-			Constants.FONT.drawString(-width, 0, text);
+			for (String line : text.split("\n"))
+		        Constants.FONT.drawString(-Constants.FONT.getWidth(line), y += Constants.FONT.getHeight(), line);
 			break;
 		}
 		TextureImpl.unbind();

@@ -42,6 +42,7 @@ import net.codepixl.GLCraft.util.data.saves.SaveManager;
 import net.codepixl.GLCraft.util.logging.GLogger;
 import net.codepixl.GLCraft.world.Chunk;
 import net.codepixl.GLCraft.world.WorldManager;
+import net.codepixl.GLCraft.world.entity.Entity;
 import net.codepixl.GLCraft.world.entity.mob.DamageSource;
 import net.codepixl.GLCraft.world.entity.mob.EntityPlayerMP;
 import net.codepixl.GLCraft.world.tile.Tile;
@@ -161,6 +162,12 @@ public class Server{
 				EntityPlayerMP mp = new EntityPlayerMP(new Vector3f(), worldManager);
 				mp.setName(p.name);
 				c = new ServerClient(dgp.getAddress(), dgp.getPort(), this.socket, mp);
+				GLogger.log("New player logged in: "+p.name, LogSource.SERVER);
+				for(Entity e : worldManager.getEntityManager().getEntities(EntityPlayerMP.class))
+					if(((EntityPlayerMP)e).getName().equalsIgnoreCase(p.name)){
+						c.writePacket(new PacketPlayerLoginResponse("There's already a player with that name!"));
+						return;
+					}
 				if(lanWorld && host == null)
 					host = c;
 				clients.put(new InetAddressAndPort(c.addr, c.port), c);
@@ -178,7 +185,6 @@ public class Server{
 				}
 				sendToAllClientsExcept(new PacketPlayerAdd(c.player.getID(), c.player.getName(), c.player.getPos()), c);
 				c.writePacket(new PacketSendChunk(worldManager.getActiveChunks().size()));
-				GLogger.log("New player logged in: "+p.name, LogSource.SERVER);
 			}else if(op instanceof PacketBlockChange){
 				PacketBlockChange p = (PacketBlockChange)op;
 				sendToAllClients(p);

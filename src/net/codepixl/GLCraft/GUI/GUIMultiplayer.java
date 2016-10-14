@@ -82,11 +82,12 @@ public class GUIMultiplayer extends GUIScreen{
 							Client.ServerConnectionState cs = GLCraft.getGLCraft().getCentralManager(false).connectToServer(addr, port);
 							if(!cs.success){
 								Constants.setState(Constants.START_SCREEN);
-								GUIManager.getMainManager().showGUI(new GUIServerError("Error connecting to server: ",cs.message));
+								GUIManager.getMainManager().showGUI(new GUIServerError("Error connecting to server:\n",cs.message));
 								return null;
 							}
 							glDisable(GL_TEXTURE_2D);
 							((GUIPauseMenu)GUIManager.getMainManager().getGUI("pauseMenu")).setHost(false);
+							GUIManager.getMainManager().clearGUIStack();
 							GUIManager.getMainManager().closeGUI(false);
 						}
 					}
