@@ -1048,6 +1048,7 @@ public class WorldManager {
 			}
 		}else{
 			getPlayer().shouldUpdate = false;
+			getPlayer().setSelectedSlot(0);
 			centralManager.getClient().close();
 			this.doneGenerating = false;
 			Constants.GAME_STATE = Constants.START_SCREEN;

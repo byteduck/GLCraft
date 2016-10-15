@@ -10,6 +10,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.ConcurrentModificationException;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -23,14 +24,17 @@ import com.evilco.mc.nbt.stream.NbtOutputStream;
 import com.evilco.mc.nbt.tag.TagCompound;
 import com.evilco.mc.nbt.tag.TagList;
 
+import net.codepixl.GLCraft.GLCraft;
 import net.codepixl.GLCraft.network.packet.PacketAddEntity;
 import net.codepixl.GLCraft.network.packet.PacketRemoveEntity;
 import net.codepixl.GLCraft.util.Constants;
 import net.codepixl.GLCraft.util.DebugTimer;
 import net.codepixl.GLCraft.util.GameObj;
+import net.codepixl.GLCraft.util.LogSource;
 import net.codepixl.GLCraft.util.MathUtils;
 import net.codepixl.GLCraft.util.Vector3i;
 import net.codepixl.GLCraft.util.data.saves.Save;
+import net.codepixl.GLCraft.util.logging.GLogger;
 import net.codepixl.GLCraft.world.WorldManager;
 import net.codepixl.GLCraft.world.entity.mob.EntityPlayer;
 import net.codepixl.GLCraft.world.entity.mob.EntityPlayerMP;
@@ -140,7 +144,6 @@ public class EntityManager implements GameObj{
 	
 	@Override
 	public void update() {
-		// TODO Auto-generated method stub
 		Iterator<Entity> itt = toRemove.iterator();
 		while(itt.hasNext()){
 			Entity e = itt.next();

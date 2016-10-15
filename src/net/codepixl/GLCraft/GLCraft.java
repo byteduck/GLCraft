@@ -238,6 +238,11 @@ public class GLCraft extends Screen{
 			while(true){
 				ltime = Time.getTime();
 				update();
+				try {
+					Thread.sleep(1);
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				}
 				Time.setDelta((Time.getTime()-ltime)/(double)Time.SECOND);
 			}
 		}
