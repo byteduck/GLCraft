@@ -8,23 +8,22 @@ import org.lwjgl.util.vector.Vector3f;
 
 import com.evilco.mc.nbt.error.TagNotFoundException;
 import com.evilco.mc.nbt.error.UnexpectedTagTypeException;
-import com.evilco.mc.nbt.tag.TagByte;
 import com.evilco.mc.nbt.tag.TagCompound;
 import com.evilco.mc.nbt.tag.TagInteger;
 import com.evilco.mc.nbt.tag.TagList;
 
+import net.codepixl.GLCraft.network.packet.PacketContainer;
 import net.codepixl.GLCraft.util.Constants;
 import net.codepixl.GLCraft.world.WorldManager;
 import net.codepixl.GLCraft.world.entity.Entity;
 import net.codepixl.GLCraft.world.entity.EntityItem;
 import net.codepixl.GLCraft.world.entity.NBTUtil;
-import net.codepixl.GLCraft.world.item.Item;
 import net.codepixl.GLCraft.world.item.ItemStack;
-import net.codepixl.GLCraft.world.tile.Tile;
 
 public class TileEntityContainer extends TileEntity{
 	
 	private ItemStack[] inventory;
+	public boolean updatedInventory = false;
 	
 	public TileEntityContainer(int x, int y, int z, int size, WorldManager worldManager) {
 		super(x, y, z, worldManager);
@@ -39,7 +38,7 @@ public class TileEntityContainer extends TileEntity{
 		this.setInventory(inventory);
 	}
 	
-	public ItemStack getSlot(int slot){
+	public ItemStack getInventory(int slot){
 		return getInventory()[slot];
 	}
 	
@@ -72,6 +71,24 @@ public class TileEntityContainer extends TileEntity{
 			return 0;
 		}
 		return c;
+	}
+	
+	@Override
+	public void update(){
+		super.update();
+		if(this.updatedInventory){
+			worldManager.sendPacket(new PacketContainer(this));
+			this.updatedInventory = false;
+		}
+	}
+	
+	@Override
+	public void clientUpdate(){
+		super.clientUpdate();
+		if(this.updatedInventory){
+			worldManager.sendPacket(new PacketContainer(this));
+			this.updatedInventory = false;
+		}
 	}
 	
 	public void dropAllItems(){
@@ -121,6 +138,16 @@ public class TileEntityContainer extends TileEntity{
 
 	public void setInventory(ItemStack[] inventory) {
 		this.inventory = inventory;
+		this.updatedInventory = true;
+	}
+	
+	public void setInventory(int i, ItemStack itemStack){
+		this.inventory[i] = itemStack;
+		this.updatedInventory = true;
+	}
+
+	public void setInventoryNoUpdate(int i, ItemStack itemStack) {
+		this.inventory[i] = itemStack;
 	}
 
 }

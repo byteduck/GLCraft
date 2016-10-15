@@ -8,6 +8,9 @@ import com.evilco.mc.nbt.tag.TagFloat;
 import com.nishu.utils.Time;
 
 import net.codepixl.GLCraft.GUI.tileentity.GUIFurnace;
+import net.codepixl.GLCraft.network.packet.PacketFurnace;
+import net.codepixl.GLCraft.util.LogSource;
+import net.codepixl.GLCraft.util.logging.GLogger;
 import net.codepixl.GLCraft.world.WorldManager;
 import net.codepixl.GLCraft.world.crafting.CraftingManager;
 import net.codepixl.GLCraft.world.crafting.FurnaceFuel;
@@ -22,6 +25,7 @@ public class TileEntityFurnace extends TileEntityContainer{
 	private boolean cooking = false;
 	private FurnaceRecipe currentRecipe;
 	private FurnaceFuel currentFuel;
+	private int progressPercent = 0, fuelPercent = 0;
 
 	public TileEntityFurnace(int x, int y, int z, WorldManager worldManager) {
 		super(x, y, z, 3, worldManager);
@@ -29,15 +33,19 @@ public class TileEntityFurnace extends TileEntityContainer{
 	
 	@Override
 	public void update(){
+		super.update();
+		float bProgress = progress, bFuelTime = fuelTime;
+		boolean bCooking = cooking;
 		if(currentRecipe != null && progress >= currentRecipe.getCookTime()){
 			cooking = false;
 			progress = 0;
 			if(getInventory()[1].isNull())
-				getInventory()[1] = new ItemStack(currentRecipe.getOut());
+				setInventory(1,new ItemStack(currentRecipe.getOut()));
 			else
 				getInventory()[1].addToStack(currentRecipe.getOut().count);
 			if(getInventory()[0].subFromStack(1) == 1)
-				getInventory()[0] = new ItemStack();
+				setInventory(0,new ItemStack());
+			this.updatedInventory = true;
 		}
 		
 		if(currentRecipe != null && fuelTime == 0 && CraftingManager.checkFuel(getInventory()[2]) != null){
@@ -45,6 +53,7 @@ public class TileEntityFurnace extends TileEntityContainer{
 			fuelTime = currentFuel.cookTime;
 			if(getInventory()[2].subFromStack(1) == 1)
 				getInventory()[2] = new ItemStack();
+			this.updatedInventory = true;
 		}
 		
 		if(!cooking){
@@ -53,6 +62,7 @@ public class TileEntityFurnace extends TileEntityContainer{
 				if(getInventory()[1].isNull() || getInventory()[1].addToStack(currentRecipe.getOut().count) == 0){
 					getInventory()[1].subFromStack(currentRecipe.getOut().count);
 					cooking = true;
+					this.updatedInventory = true;
 				}
 			}
 		}
@@ -77,6 +87,9 @@ public class TileEntityFurnace extends TileEntityContainer{
 		if(fuelTime < 0){
 			fuelTime = 0;
 		}
+		
+		if(bCooking != cooking || bFuelTime != fuelTime || bProgress != progress)
+			worldManager.sendPacket(new PacketFurnace(this));
 	}
 
 	public void openGUI(WorldManager w, EntityPlayer p) {
@@ -87,18 +100,26 @@ public class TileEntityFurnace extends TileEntityContainer{
 		return progress;
 	}
 	
-	public int getProgressPercent(){
+	public int getProgressPercentServer(){
 		if(progress == 0)
 			return 0;
 		else
 			return (int) ((progress/currentRecipe.getCookTime())*100);
 	}
 	
-	public int getFuelPercent(){
+	public int getProgressPercent(){
+		return progressPercent ;
+	}
+	
+	public int getFuelPercentServer(){
 		if(fuelTime == 0)
 			return 0;
 		else
 			return (int) ((fuelTime/currentFuel.cookTime)*100);
+	}
+	
+	public int getFuelPercent(){
+		return fuelPercent;
 	}
 	
 	public static Entity fromNBT(TagCompound t, WorldManager w) throws UnexpectedTagTypeException, TagNotFoundException {
@@ -137,6 +158,22 @@ public class TileEntityFurnace extends TileEntityContainer{
 		t.setTag(fuelTime);
 		t.setTag(currentRecipe);
 		t.setTag(currentFuel);
+	}
+
+	public float getFuelTime() {
+		return fuelTime;
+	}
+	
+	public boolean isCooking(){
+		return cooking;
+	}
+
+	public void update(PacketFurnace p) {
+		this.cooking = p.cooking;
+		this.fuelTime = p.fuelTime;
+		this.progress = p.progress;
+		this.progressPercent = p.progressPercent;
+		this.fuelPercent = p.fuelPercent;
 	}
 
 }

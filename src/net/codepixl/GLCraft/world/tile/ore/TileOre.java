@@ -6,6 +6,8 @@ import net.codepixl.GLCraft.util.BreakSource;
 import net.codepixl.GLCraft.util.Constants;
 import net.codepixl.GLCraft.util.Vector3i;
 import net.codepixl.GLCraft.world.WorldManager;
+import net.codepixl.GLCraft.world.entity.Entity;
+import net.codepixl.GLCraft.world.entity.mob.EntityPlayer;
 import net.codepixl.GLCraft.world.item.ItemStack;
 import net.codepixl.GLCraft.world.item.tool.Tool;
 import net.codepixl.GLCraft.world.tile.Tile;
@@ -93,8 +95,14 @@ public class TileOre extends Tile{
 	@Override
 	public ItemStack getDrop(int x, int y, int z, BreakSource b, WorldManager w){
 		if(b.type == BreakSource.Type.PLAYER){
-			if(b.player.getSelectedItemStack().isItem() && b.player.getSelectedItemStack().getItem() instanceof Tool){
-				Tool t = (Tool) b.player.getSelectedItemStack().getItem();
+			Entity e = b.getEntity(w);
+			EntityPlayer p;
+			if(e != null && e instanceof EntityPlayer)
+				p = (EntityPlayer)e;
+			else
+				return new ItemStack();
+			if(p.getSelectedItemStack().isItem() && p.getSelectedItemStack().getItem() instanceof Tool){
+				Tool t = (Tool) p.getSelectedItemStack().getItem();
 				if(t.getStrength() >= toolUsed().getStrength())
 					return new ItemStack(dropItem(),Constants.randInt(dropRange()[0],dropRange()[1]));
 			}
