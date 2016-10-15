@@ -282,6 +282,10 @@ public class ItemStack{
 	}
 	
 	public void renderIcon(int x, int y, float size){
+		renderIcon(x,y,size,true,Color4f.WHITE);
+	}
+	
+	public void renderIcon(int x, int y, float size, boolean text, Color4f color){
 		if(!this.isNull() && this.count != 0){
 			Spritesheet.atlas.bind();
 			GL11.glPushMatrix();
@@ -292,27 +296,29 @@ public class ItemStack{
 				GL11.glRotatef(45f,0.0f,1.0f,0.0f);
 				glBegin(GL_QUADS);
 				if(this.getTile().hasMetaTextures()){
-					Shape.createCube(size/2.25f,-size*1.5f,0, new Color4f(1f,1f,1f,1f), this.getTile().getTexCoords(this.getMeta()), size);
+					Shape.createCube(size/2.25f,-size*1.5f,0, color, this.getTile().getTexCoords(this.getMeta()), size);
 				}else{
-					Shape.createCube(size/2.25f,-size*1.5f,0, new Color4f(1f,1f,1f,1f), this.getTile().getTexCoords(), size);
+					Shape.createCube(size/2.25f,-size*1.5f,0, color, this.getTile().getTexCoords(), size);
 				}
 			}else{
 				glTranslatef(x,y,0);
 				glScalef(0.7f, 0.7f, 0.7f);
 				glBegin(GL_QUADS);
 				if(this.isItem())
-					Shape.createCenteredSquare(0,0, new Color4f(1f,1f,1f,1f), this.getItem().getTexCoords(), size);
+					Shape.createCenteredSquare(0,0, color, this.getItem().getTexCoords(), size);
 				else
-					Shape.createCenteredSquare(0,0, new Color4f(1f,1f,1f,1f), this.getTile().getIconCoords(), size);
+					Shape.createCenteredSquare(0,0, color, this.getTile().getIconCoords(), size);
 				
 			}
 			glEnd();
 			GL11.glPopMatrix();
-			if(this.count > 1)
-				Tesselator.drawTextWithShadow(x+size*0.4f-Constants.FONT.getWidth(Integer.toString(this.count)), y, Integer.toString(this.count));
-			else if(this.count < 1)
-				Tesselator.drawTextWithShadow(x+size*0.4f-Constants.FONT.getWidth(Integer.toString(this.count)), y, Integer.toString(this.count), Color.red, Color.darkGray);
-			TextureImpl.unbind();
+			if(text){
+				if(this.count > 1)
+					Tesselator.drawTextWithShadow(x+size*0.4f-Constants.FONT.getWidth(Integer.toString(this.count)), y, Integer.toString(this.count));
+				else if(this.count < 1)
+					Tesselator.drawTextWithShadow(x+size*0.4f-Constants.FONT.getWidth(Integer.toString(this.count)), y, Integer.toString(this.count), Color.red, Color.darkGray);
+				TextureImpl.unbind();
+			}
 		}
 		TextureImpl.unbind();
 	}

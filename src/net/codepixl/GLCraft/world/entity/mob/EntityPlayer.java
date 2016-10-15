@@ -1,15 +1,28 @@
 package net.codepixl.GLCraft.world.entity.mob;
 
+import static org.lwjgl.opengl.GL11.GL_BACK;
+import static org.lwjgl.opengl.GL11.GL_DEPTH_TEST;
+import static org.lwjgl.opengl.GL11.GL_FRONT;
+import static org.lwjgl.opengl.GL11.GL_LIGHTING;
 import static org.lwjgl.opengl.GL11.GL_MODELVIEW;
+import static org.lwjgl.opengl.GL11.GL_PROJECTION;
 import static org.lwjgl.opengl.GL11.GL_QUADS;
 import static org.lwjgl.opengl.GL11.GL_TRANSFORM_BIT;
 import static org.lwjgl.opengl.GL11.glBegin;
+import static org.lwjgl.opengl.GL11.glClearDepth;
+import static org.lwjgl.opengl.GL11.glCullFace;
+import static org.lwjgl.opengl.GL11.glDisable;
+import static org.lwjgl.opengl.GL11.glEnable;
 import static org.lwjgl.opengl.GL11.glEnd;
+import static org.lwjgl.opengl.GL11.glLoadIdentity;
 import static org.lwjgl.opengl.GL11.glMatrixMode;
+import static org.lwjgl.opengl.GL11.glOrtho;
 import static org.lwjgl.opengl.GL11.glPopAttrib;
 import static org.lwjgl.opengl.GL11.glPushAttrib;
 import static org.lwjgl.opengl.GL11.glRotatef;
 import static org.lwjgl.opengl.GL11.glTranslatef;
+import static org.lwjgl.opengl.GL11.glViewport;
+import static org.lwjgl.util.glu.GLU.gluPerspective;
 
 import java.util.Iterator;
 
@@ -43,11 +56,13 @@ import net.codepixl.GLCraft.util.Raytracer;
 import net.codepixl.GLCraft.util.command.CommandExecutor;
 import net.codepixl.GLCraft.util.command.Command.Permission;
 import net.codepixl.GLCraft.util.logging.GLogger;
+import net.codepixl.GLCraft.world.CentralManager;
 import net.codepixl.GLCraft.world.WorldManager;
 import net.codepixl.GLCraft.world.entity.Entity;
 import net.codepixl.GLCraft.world.entity.EntityItem;
 import net.codepixl.GLCraft.world.item.Item;
 import net.codepixl.GLCraft.world.item.ItemStack;
+import net.codepixl.GLCraft.world.item.ItemStick;
 import net.codepixl.GLCraft.world.item.tool.Tool;
 import net.codepixl.GLCraft.world.tile.Tile;
 import net.codepixl.GLCraft.world.tile.material.Material;
@@ -604,6 +619,26 @@ public class EntityPlayer extends Mob implements CommandExecutor{
 	
 	public void setInventoryNoUpdate(ItemStack[] inv){
 		super.setInventory(inv);
+	}
+
+	public void renderHeldItem(){
+		ItemStack sel = getSelectedItemStack();
+		if(sel.isNull())
+			return;
+		float size = Constants.WIDTH*0.5f;
+		GL11.glPushMatrix();
+		GL11.glTranslatef((int)(Constants.WIDTH-size*0.2f), (int)(Constants.HEIGHT-size*0.1f), 0);
+		if(sel.isTile())
+			GL11.glRotatef(30f, 1,1,0);
+		else{
+			GL11.glTranslatef(-size*0.05f, -size*0.1f, 0);
+			if(sel.getItem() instanceof Tool || sel.getItem() instanceof ItemStick)
+				GL11.glRotatef(-80f, 0, 0, 1);
+			//GL11.glRotatef(304f, 0,1f,0);
+			//GL11.glRotatef(-90f, 0,0,1);
+		}
+		sel.renderIcon(0,0, size, false, getColor());
+		GL11.glPopMatrix();
 	}
 	
 }

@@ -349,13 +349,14 @@ public class WorldManager {
 			
 			DebugTimer.startTimer("entity_render");
 			entityManager.render();
-			DebugTimer.endTimer("entity_render");
+			DebugTimer.pauseTimer("entity_render");
 			
 			i = toRender.iterator();
 			while(i.hasNext()){
 				i.next().render(true);
 			}
 			DebugTimer.endTimer("chunk_render");
+			
 			float intensity = (getSkyLightIntensity()-0.1f)/0.85f;
 			glClearColor(0.0f,0.749019608f*intensity,1.0f*intensity,0.0f);
 		}
@@ -1057,7 +1058,7 @@ public class WorldManager {
 					GUIManager.getMainManager().showGUI(new GUIServerError("Server closed:\n", reason));
 			}else
 				GUIManager.getMainManager().showGUI("startScreen");
-			if(isHost)
+			if(isHost && kicked)
 				GLCraft.getGLCraft().closeLocalServerNow("The host was kicked.");
 			kicked = false;
 			centralManager.getClient().reinit();

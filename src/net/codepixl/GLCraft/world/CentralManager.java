@@ -372,6 +372,10 @@ public class CentralManager extends Screen{
 				//renderInventory();
 			}
 			render2D();
+			DebugTimer.startTimer("entity_render");
+			if(Constants.GAME_STATE == Constants.GAME)
+				worldManager.entityManager.getPlayer().renderHeldItem();
+			DebugTimer.endTimer("entity_render");
 			guiManager.render();
 			if(Constants.GAME_STATE == Constants.GAME)
 				renderText();
@@ -603,7 +607,7 @@ public class CentralManager extends Screen{
 		glMatrixMode(GL_PROJECTION);
 		glLoadIdentity();
 		glViewport(0,0,Constants.WIDTH,Constants.HEIGHT);
-		glOrtho(0,Constants.WIDTH,Constants.HEIGHT,0,-200,200);
+		glOrtho(0,Constants.WIDTH,Constants.HEIGHT,0,-400,400);
 		glMatrixMode(GL_MODELVIEW);
 		glLoadIdentity();
 		glDisable(GL_DEPTH_TEST);
