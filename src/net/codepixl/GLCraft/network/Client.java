@@ -16,6 +16,8 @@ import net.codepixl.GLCraft.network.packet.Packet;
 import net.codepixl.GLCraft.network.packet.PacketAddEntity;
 import net.codepixl.GLCraft.network.packet.PacketBlockChange;
 import net.codepixl.GLCraft.network.packet.PacketChat;
+import net.codepixl.GLCraft.network.packet.PacketContainer;
+import net.codepixl.GLCraft.network.packet.PacketFurnace;
 import net.codepixl.GLCraft.network.packet.PacketHealth;
 import net.codepixl.GLCraft.network.packet.PacketKick;
 import net.codepixl.GLCraft.network.packet.PacketPing;
@@ -180,6 +182,10 @@ public class Client{
 			}else if(op instanceof PacketChat){
 				String msg = ((PacketChat) op).msg;
 				GUIManager.getMainManager().getGameGUI().addChatMessage(msg);
+			}else if(op instanceof PacketContainer){
+				((PacketContainer) op).setInventory(worldManager);
+			}else if(op instanceof PacketFurnace){
+				((PacketFurnace) op).updateFurnace(worldManager);
 			}else{
 				System.err.println("[CLIENT] Received unhandled packet: "+op.getClass());
 				//throw new IOException("Invalid Packet "+op.getClass());

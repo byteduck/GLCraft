@@ -1,14 +1,12 @@
 package net.codepixl.GLCraft.GUI.tileentity;
 
-import org.lwjgl.input.Keyboard;
-import org.lwjgl.input.Mouse;
+import java.util.concurrent.Callable;
 
 import net.codepixl.GLCraft.GUI.Inventory.GUIInventoryScreen;
 import net.codepixl.GLCraft.GUI.Inventory.Elements.GUISlot;
 import net.codepixl.GLCraft.util.Constants;
 import net.codepixl.GLCraft.world.entity.mob.EntityPlayer;
 import net.codepixl.GLCraft.world.entity.tileentity.TileEntityChest;
-import net.codepixl.GLCraft.world.item.ItemStack;
 
 public class GUIChest extends GUIInventoryScreen{
 	
@@ -22,13 +20,21 @@ public class GUIChest extends GUIInventoryScreen{
 		super(p);
 		this.chest = chest;
 		slots = new GUISlot[20];
+		Callable<Void> updateListener = new Callable<Void>(){
+			@Override
+			public Void call() throws Exception {
+				chest.updatedInventory = true;
+				return null;
+			}
+		};
 		for(int i = 0; i < slots.length; i++){
 			if(i < 10){
 				slots[i] = new GUISlot((HMIDDLE+HSIZE*10)-HSIZE*2*i-(int)GUISlot.size/2,VMIDDLE-HSIZE,p);
 			}else{
 				slots[i] = new GUISlot((HMIDDLE+HSIZE*10)-HSIZE*2*(i-10)-(int)GUISlot.size/2,VMIDDLE+HSIZE,p);
 			}
-			slots[i].itemstack = chest.getSlot(i);
+			slots[i].itemstack = chest.getInventory(i);
+			slots[i].setListener(updateListener);
 			this.addElement(slots[i]);
 		}
 	}
@@ -36,7 +42,7 @@ public class GUIChest extends GUIInventoryScreen{
 	@Override
 	public void input(int xof, int yof){
 		for(int i = 0; i < slots.length; i++){
-			slots[i].itemstack = chest.getSlot(i);
+			slots[i].itemstack = chest.getInventory(i);
 		}
 		super.input(xof, yof);
 		for(int i = 0; i < slots.length; i++){

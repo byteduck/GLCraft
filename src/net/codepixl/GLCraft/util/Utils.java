@@ -38,6 +38,8 @@ public class Utils {
 		return arr;
 	}
 	public static ItemStack getItemOrTile(String name){
+		if(name.equalsIgnoreCase("void") || name.equalsIgnoreCase("air"))
+			return new ItemStack();
 		for(Tile t : Tile.tileMap.values())
 			if(t.getName().equalsIgnoreCase(name))
 				return new ItemStack(t);

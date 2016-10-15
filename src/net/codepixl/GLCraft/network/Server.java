@@ -18,6 +18,7 @@ import net.codepixl.GLCraft.GUI.GUIPauseMenu;
 import net.codepixl.GLCraft.network.packet.Packet;
 import net.codepixl.GLCraft.network.packet.PacketBlockChange;
 import net.codepixl.GLCraft.network.packet.PacketChat;
+import net.codepixl.GLCraft.network.packet.PacketContainer;
 import net.codepixl.GLCraft.network.packet.PacketKick;
 import net.codepixl.GLCraft.network.packet.PacketLANBroadcast;
 import net.codepixl.GLCraft.network.packet.PacketOnPlace;
@@ -252,6 +253,9 @@ public class Server{
 					worldManager.centralManager.commandManager.addCommandToQueue(msg.substring(1), c.player);
 				else
 					sendToAllClients(new PacketChat("<"+c.player.getName()+"> "+((PacketChat) op).msg));
+			}else if(op instanceof PacketContainer){
+				((PacketContainer) op).setInventory(worldManager);
+				sendToAllClients(op);
 			}else{
 				GLogger.logerr("Unhandled Packet: "+op.getClass(), LogSource.SERVER);
 			}

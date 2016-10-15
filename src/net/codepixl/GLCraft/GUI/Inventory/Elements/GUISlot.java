@@ -1,5 +1,7 @@
 package net.codepixl.GLCraft.GUI.Inventory.Elements;
 
+import java.util.concurrent.Callable;
+
 import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.GL11;
 
@@ -8,7 +10,6 @@ import com.nishu.utils.Color4f;
 import net.codepixl.GLCraft.GUI.GUIScreen;
 import net.codepixl.GLCraft.render.Shape;
 import net.codepixl.GLCraft.render.TextureManager;
-import net.codepixl.GLCraft.render.util.Tesselator;
 import net.codepixl.GLCraft.util.Constants;
 import net.codepixl.GLCraft.util.Spritesheet;
 import net.codepixl.GLCraft.world.entity.mob.EntityPlayer;
@@ -23,6 +24,7 @@ public class GUISlot extends GUIScreen{
 	public boolean canPickup = true, canPlace = true;
 	public EntityPlayer player;
 	public boolean justTook = false, justPlaced = false, showLabel = true;
+	private Callable<Void> callable;
 	
 	public GUISlot(int x, int y, EntityPlayer player){
 		this.itemstack = new ItemStack();
@@ -116,6 +118,12 @@ public class GUISlot extends GUIScreen{
 		}else{
 			this.hover = false;
 		}
+		if((this.justTook || this.justPlaced) && this.callable != null)
+			try {
+				callable.call();
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
 	}
 	
 	@Override
@@ -133,6 +141,10 @@ public class GUISlot extends GUIScreen{
 	
 	public boolean isEmpty(){
 		return this.itemstack.count == 0 || this.itemstack == null || this.itemstack.equals(new ItemStack());
+	}
+	
+	public void setListener(Callable<Void> callable){
+		this.callable = callable;
 	}
 
 }

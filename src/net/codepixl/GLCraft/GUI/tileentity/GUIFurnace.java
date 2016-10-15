@@ -1,5 +1,7 @@
 package net.codepixl.GLCraft.GUI.tileentity;
 
+import java.util.concurrent.Callable;
+
 import com.nishu.utils.Color4f;
 
 import net.codepixl.GLCraft.GUI.Elements.GUIProgressBar;
@@ -24,6 +26,13 @@ public class GUIFurnace extends GUIInventoryScreen{
 	
 	public GUIFurnace(TileEntityFurnace furnace, EntityPlayer player) {
 		super(player);
+		Callable<Void> updateListener = new Callable<Void>(){
+			@Override
+			public Void call() throws Exception {
+				furnace.updatedInventory = true;
+				return null;
+			}
+		};
 		this.furnace = furnace;
 		in = new GUISlot(HMIDDLE-HSIZE-PBSIZE/2-10,VMIDDLE,player);
 		out = new GUISlot(HMIDDLE+HSIZE+PBSIZE/2+10,VMIDDLE,player);
@@ -31,6 +40,10 @@ public class GUIFurnace extends GUIInventoryScreen{
 		progressBar = new GUIProgressBar(HMIDDLE-PBSIZE/2, VMIDDLE-GUIProgressBar.PB_HEIGHT/2, PBSIZE);
 		fuelBar = new GUIProgressBar(HMIDDLE-5, VMIDDLE+PBSIZE/2+10, PBSIZE/2, true, new Color4f(0.8f, 0.1f, 0.1f, 1f), new Color4f(0.2f, 0f, 0f, 1f));
 		fuel = new GUISlot(HMIDDLE, VMIDDLE+PBSIZE/2+HSIZE+20, player);
+		
+		in.setListener(updateListener);
+		out.setListener(updateListener);
+		fuel.setListener(updateListener);
 		
 		addElements(in, out, progressBar, fuelBar, fuel);
 	}
@@ -43,9 +56,9 @@ public class GUIFurnace extends GUIInventoryScreen{
 	
 	@Override
 	public void input(int xof, int yof){
-		in.itemstack = furnace.getSlot(0);
-		out.itemstack = furnace.getSlot(1);
-		fuel.itemstack = furnace.getSlot(2);
+		in.itemstack = furnace.getInventory(0);
+		out.itemstack = furnace.getInventory(1);
+		fuel.itemstack = furnace.getInventory(2);
 		super.input(xof, yof);
 		furnace.getInventory()[0] = in.itemstack;
 		furnace.getInventory()[1] = out.itemstack;
