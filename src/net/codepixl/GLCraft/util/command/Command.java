@@ -13,7 +13,7 @@ public interface Command{
 		public final int val;
 
 		public String getLabel() {
-			return "["+this.toString().charAt(0)+"]";
+			return "("+this.toString().charAt(0)+")";
 		}
 		
 		private Permission(int val){

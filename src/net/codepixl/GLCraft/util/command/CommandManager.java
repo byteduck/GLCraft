@@ -36,6 +36,7 @@ public class CommandManager {
 		addCommand(new CommandStop());
 		addCommand(new CommandHelp());
 		addCommand(new CommandKick());
+		addCommand(new CommandGive());
 	}
 	
 	public void addCommand(Command c){
@@ -86,5 +87,9 @@ public class CommandManager {
 				cmd.getValue().sendMessage("Unknown command "+args[0]+"!");
 			}
 		}
+	}
+
+	public Command getCommand(String cmd) {
+		return commands.get(cmd.toLowerCase());
 	}
 }

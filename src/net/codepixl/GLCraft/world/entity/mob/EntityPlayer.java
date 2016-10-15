@@ -41,6 +41,7 @@ import net.codepixl.GLCraft.util.MathUtils;
 import net.codepixl.GLCraft.util.Ray;
 import net.codepixl.GLCraft.util.Raytracer;
 import net.codepixl.GLCraft.util.command.CommandExecutor;
+import net.codepixl.GLCraft.util.command.Command.Permission;
 import net.codepixl.GLCraft.util.logging.GLogger;
 import net.codepixl.GLCraft.world.WorldManager;
 import net.codepixl.GLCraft.world.entity.Entity;
@@ -67,6 +68,7 @@ public class EntityPlayer extends Mob implements CommandExecutor{
 	private String name;
 	public boolean updatedInventory;
 	public boolean shouldUpdate = false;
+	private Permission permission = Permission.NONE;
 	
 	public EntityPlayer(Vector3f pos, WorldManager w) {
 		super(pos, w);
@@ -161,6 +163,7 @@ public class EntityPlayer extends Mob implements CommandExecutor{
 	}
 	
 	public void updateMouse() {
+		int bss = this.selectedSlot;
 		if(Mouse.isGrabbed()) {
 			float dx = Mouse.getDX() * speed * 0.16f;
 			float dy = Mouse.getDY() * speed * 0.16f;
@@ -196,6 +199,9 @@ public class EntityPlayer extends Mob implements CommandExecutor{
 				setRotZ(maxU);
 			}
 		}
+		
+		if(bss != this.selectedSlot)
+			worldManager.sendPacket(PacketPlayerAction.selectSlot(this));
 		
 	}
 	public void dropItem(ItemStack item){
@@ -247,7 +253,7 @@ public class EntityPlayer extends Mob implements CommandExecutor{
 		if(space) {
 			this.jump();
 		}
-		
+		int bss = this.selectedSlot;
 		if(Keyboard.isKeyDown(Keyboard.KEY_1)) {
 			this.selectedSlot = 0;
 		}
@@ -275,6 +281,8 @@ public class EntityPlayer extends Mob implements CommandExecutor{
 		if(Keyboard.isKeyDown(Keyboard.KEY_9)) {
 			this.selectedSlot = 8;
 		}
+		if(bss != this.selectedSlot)
+			worldManager.sendPacket(PacketPlayerAction.selectSlot(this));
 	}
 	
 	public void Pmove(float x, float y, float z){
@@ -560,8 +568,42 @@ public class EntityPlayer extends Mob implements CommandExecutor{
 	}
 	
 	@Override
-	public void sendMessage(String msg){
-		
+	public void sendMessage(String msg){}
+	
+	@Override
+	public Permission getPermission(){
+		return this.permission;
+	}
+	
+	public void setPermission(Permission perm) {
+		this.permission = perm;
+	}
+	
+	@Override
+	public int addToInventory(ItemStack s){
+		int i = super.addToInventory(s);
+		this.updatedInventory = true;
+		return i;
+	}
+	
+	@Override
+	public void setInventory(ItemStack[] inventory) {
+		super.setInventory(inventory);
+		this.updatedInventory = true;
+	}
+	
+	@Override
+	public void setInventory(int i, ItemStack it){
+		super.setInventory(i, it);
+		this.updatedInventory = true;
+	}
+
+	public void setInventoryNoUpdate(int i, ItemStack itemStack) {
+		super.setInventory(i, itemStack);
+	}
+	
+	public void setInventoryNoUpdate(ItemStack[] inv){
+		super.setInventory(inv);
 	}
 	
 }

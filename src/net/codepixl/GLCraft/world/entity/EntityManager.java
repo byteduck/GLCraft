@@ -333,4 +333,15 @@ public class EntityManager implements GameObj{
 		return ret;
 	}
 
+	public void removeAllNow() {
+		Iterator<Entry<Integer,Entity>> it = this.entities.entrySet().iterator();
+		iterating = true;
+	    while (it.hasNext()) {
+	        Entity e = it.next().getValue();
+	        if(e instanceof EntityPlayer && !(e instanceof EntityPlayerMP)){}else{it.remove();}
+	    }
+	    iterating = false;
+	    shouldRemoveAll = false;
+	}
+
 }

@@ -2,6 +2,10 @@ package net.codepixl.GLCraft.util;
 
 import java.util.Arrays;
 
+import net.codepixl.GLCraft.world.item.Item;
+import net.codepixl.GLCraft.world.item.ItemStack;
+import net.codepixl.GLCraft.world.tile.Tile;
+
 public class Utils {
 	public static Object[] rotateArray(Object[] array, int amt) {
 		Object[] arr = Arrays.copyOf(array, array.length);
@@ -32,5 +36,14 @@ public class Utils {
 			}
 		}
 		return arr;
+	}
+	public static ItemStack getItemOrTile(String name){
+		for(Tile t : Tile.tileMap.values())
+			if(t.getName().equalsIgnoreCase(name))
+				return new ItemStack(t);
+		for(Item i : Item.itemMap.values())
+			if(i.getName().equalsIgnoreCase(name))
+				return new ItemStack(i);
+		return new ItemStack();
 	}
 }

@@ -1034,7 +1034,7 @@ public class WorldManager {
 	}
 	
 	private void closeWorldMain(String reason){
-		entityManager.removeAll();
+		entityManager.removeAllNow();
 		if(this.isServer){
 			try {
 				this.centralManager.getServer().close(reason);
@@ -1047,13 +1047,15 @@ public class WorldManager {
 			centralManager.getClient().close();
 			this.doneGenerating = false;
 			Constants.GAME_STATE = Constants.START_SCREEN;
-			if(!isHost){
+			if(!isHost || kicked){
 				if(kicked)
 					GUIManager.getMainManager().showGUI(new GUIServerError("Kicked from server:\n", reason));
 				else
 					GUIManager.getMainManager().showGUI(new GUIServerError("Server closed:\n", reason));
 			}else
 				GUIManager.getMainManager().showGUI("startScreen");
+			if(isHost)
+				GLCraft.getGLCraft().closeLocalServerNow("The host was kicked.");
 			kicked = false;
 			centralManager.getClient().reinit();
 		}
@@ -1066,6 +1068,16 @@ public class WorldManager {
 			if(((EntityPlayerMP)e).getName().equalsIgnoreCase(name))
 				return (EntityPlayerMP)e;
 		return null;
+	}
+
+	public void closeWorldNow(String reason) {
+		if(cw != null)
+			while(cw.saving){try {
+				Thread.sleep(1);
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}}
+		closeWorldMain(reason);
 	}
 	
 }

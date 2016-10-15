@@ -9,6 +9,7 @@ import org.newdawn.slick.opengl.TextureImpl;
 
 import com.nishu.utils.Color4f;
 
+import net.codepixl.GLCraft.network.packet.PacketChat;
 import net.codepixl.GLCraft.network.packet.PacketRespawn;
 import net.codepixl.GLCraft.network.packet.PacketSetInventory;
 import net.codepixl.GLCraft.render.Shape;
@@ -17,6 +18,7 @@ import net.codepixl.GLCraft.util.Constants;
 import net.codepixl.GLCraft.util.LogSource;
 import net.codepixl.GLCraft.util.MathUtils;
 import net.codepixl.GLCraft.util.Spritesheet;
+import net.codepixl.GLCraft.util.command.Command.Permission;
 import net.codepixl.GLCraft.util.logging.GLogger;
 import net.codepixl.GLCraft.world.WorldManager;
 import net.codepixl.GLCraft.world.entity.Entity;
@@ -81,6 +83,8 @@ public class EntityPlayerMP extends EntityPlayer{
 		if(this.isDead()){
 			this.health = 20f;
 			this.respawn();
+			this.dropAllItems();
+			this.updatedInventory = true;
 		}
 	}
 	
@@ -130,6 +134,11 @@ public class EntityPlayerMP extends EntityPlayer{
 				this.setSelectedItemStack(new ItemStack());
 		}
 		this.updatedInventory = true;
+	}
+	
+	@Override
+	public void sendMessage(String msg){
+		worldManager.sendPacket(new PacketChat(msg), this);
 	}
 
 }

@@ -119,7 +119,7 @@ public class EntityItem extends EntitySolid{
 				}
 			}else if(!itemstack.isNull()){
 				Item item = itemstack.getItem();
-				Shape.createPlane(0+((float)i*0.05f), yPos+((float)i*0.05f), 0+((float)i*0.05f), item.getColor(), item.getTexCoords(), size);
+				Shape.createPlane(0+((float)i*0.05f), yPos+((float)i*0.05f), 0+((float)i*0.05f),this.getColor(), item.getTexCoords(), size);
 			}
 			GL11.glEnd();
 			GL11.glPopMatrix();

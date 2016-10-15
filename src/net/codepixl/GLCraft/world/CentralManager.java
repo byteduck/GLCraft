@@ -73,6 +73,7 @@ import com.nishu.utils.Screen;
 import com.nishu.utils.Time;
 
 import net.codepixl.GLCraft.GLCraft;
+import net.codepixl.GLCraft.GUI.GUIChat;
 import net.codepixl.GLCraft.GUI.GUIGame;
 import net.codepixl.GLCraft.GUI.GUIManager;
 import net.codepixl.GLCraft.GUI.GUIMultiplayer;
@@ -270,6 +271,17 @@ public class CentralManager extends Screen{
 							Mouse.setGrabbed(true);
 						}else{
 							guiManager.showGUI("crafting");
+						}
+					}
+					if(Keyboard.isKeyDown(Keyboard.KEY_T)){
+						if(!guiManager.isGUIOpen())
+							guiManager.showGUI(new GUIChat(worldManager));
+					}
+					if(Keyboard.isKeyDown(Keyboard.KEY_SLASH)){
+						if(!guiManager.isGUIOpen()){
+							GUIChat g = new GUIChat(worldManager);
+							g.input.setText("/");
+							guiManager.showGUI(g);
 						}
 					}
 					if(Keyboard.isKeyDown(Keyboard.KEY_F2)){
@@ -757,10 +769,6 @@ public class CentralManager extends Screen{
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-	}
-	
-	public void close(String reason, boolean quit){
-		this.worldManager.closeWorld(reason, quit);
 	}
 
 	public void sendPacket(Packet p, EntityPlayerMP mp){

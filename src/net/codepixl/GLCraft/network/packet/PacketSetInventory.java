@@ -1,5 +1,7 @@
 package net.codepixl.GLCraft.network.packet;
 
+import net.codepixl.GLCraft.util.LogSource;
+import net.codepixl.GLCraft.util.logging.GLogger;
 import net.codepixl.GLCraft.world.WorldManager;
 import net.codepixl.GLCraft.world.entity.Entity;
 import net.codepixl.GLCraft.world.entity.mob.EntityPlayer;
@@ -39,11 +41,11 @@ public class PacketSetInventory extends Packet{
 			for(int i = 0; i < invid.length; i++){
 				if(!invisNull[i])
 					if(invisTile[i])
-						((EntityPlayer) e).setInventory(i, new ItemStack(Tile.getTile(invid[i]), invcount[i], invmeta[i]));
+						((EntityPlayer) e).setInventoryNoUpdate(i, new ItemStack(Tile.getTile(invid[i]), invcount[i], invmeta[i]));
 					else
-						((EntityPlayer) e).setInventory(i, new ItemStack(Item.getItem(invid[i]), invcount[i], invmeta[i]));
+						((EntityPlayer) e).setInventoryNoUpdate(i, new ItemStack(Item.getItem(invid[i]), invcount[i], invmeta[i]));
 				else
-					((EntityPlayer) e).setInventory(i, new ItemStack());
+					((EntityPlayer) e).setInventoryNoUpdate(i, new ItemStack());
 			}
 		}
 	}

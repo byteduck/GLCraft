@@ -114,6 +114,7 @@ public class GUIGame extends GUIScreen{
 			if(ind < 10)
 				renderChatMessage(chatMessages.get(i),ind);
 		}
+		TextureImpl.unbind();
 	}
 	
 	@Override
@@ -135,7 +136,7 @@ public class GUIGame extends GUIScreen{
 		Shape.createTexturelessRect2D(GUIChat.CHATX, y, GUIChat.CHATWIDTH+20, Constants.FONT.getHeight()+4, new Color4f(0,0,0,c.opacity*0.5f));
 		GL11.glEnd();
 		GL11.glEnable(GL11.GL_TEXTURE_2D);
-		Tesselator.drawTextWithShadow(GUIChat.CHATX+2, y+2, c.msg, new Color(1,1,1,c.opacity), new Color(0.2f,0.2f,0.2f,c.opacity));
+		Tesselator.drawTextWithShadow(GUIChat.CHATX+2, y+2, c.msg, new Color(1,1,1,c.opacity), new Color(0.3f,0.3f,0.3f,c.opacity));
 	}
 
 	public void addChatMessage(String msg){
