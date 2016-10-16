@@ -145,7 +145,6 @@ public class GLCraft extends Screen{
 		Thread.setDefaultUncaughtExceptionHandler(ueh);
 		this.isServer = dedicatedServer;
 		if(!this.isServer){
-			Thread.setDefaultUncaughtExceptionHandler(new CrashHandler());
 			try{
 				Files.deleteIfExists(new File(System.getProperty("user.home"),"GLCraft"+File.separator+"GLCraft.log").toPath());
 			}catch(FileSystemException e){
@@ -211,8 +210,6 @@ public class GLCraft extends Screen{
 			
 			System.exit(0);
 		}else{
-			Thread.setDefaultUncaughtExceptionHandler(new CrashHandler());
-			
 			try{
 				Files.deleteIfExists(new File("GLCraft.log").toPath());
 			}catch(FileSystemException e){
@@ -238,11 +235,6 @@ public class GLCraft extends Screen{
 			while(true){
 				ltime = Time.getTime();
 				update();
-				try {
-					Thread.sleep(1);
-				} catch (InterruptedException e) {
-					e.printStackTrace();
-				}
 				Time.setDelta((Time.getTime()-ltime)/(double)Time.SECOND);
 			}
 		}

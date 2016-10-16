@@ -144,11 +144,10 @@ public class EntityManager implements GameObj{
 	
 	@Override
 	public void update() {
-		Iterator<Entity> itt = toRemove.iterator();
-		while(itt.hasNext()){
-			Entity e = itt.next();
+		while(!toRemove.isEmpty()){
+			Entity e = toRemove.get(0);
+			toRemove.remove(0);
 			entities.remove(e.getID());
-			itt.remove();
 			if(isServer)
 				w.sendPacket(new PacketRemoveEntity(e.getID()));
 		}
@@ -162,10 +161,9 @@ public class EntityManager implements GameObj{
 		    iterating = false;
 		    shouldRemoveAll = false;
 		}
-		Iterator<Entity> i = toAdd.iterator();
-		while(i.hasNext()){
-			Entity e = i.next();
-			i.remove();
+		while(!toAdd.isEmpty()){
+			Entity e = toAdd.get(0);
+			toAdd.remove(0);
 			entities.put(e.getID(),e);
 			if(!(e instanceof EntityPlayer) && isServer)
 				w.sendPacket(new PacketAddEntity(e));
