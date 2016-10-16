@@ -6,6 +6,7 @@ import java.net.DatagramSocket;
 import java.net.InetAddress;
 import java.net.MulticastSocket;
 import java.net.SocketException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map.Entry;
@@ -16,11 +17,13 @@ import net.codepixl.GLCraft.GLCraft;
 import net.codepixl.GLCraft.GUI.GUIManager;
 import net.codepixl.GLCraft.GUI.GUIPauseMenu;
 import net.codepixl.GLCraft.network.packet.Packet;
+import net.codepixl.GLCraft.network.packet.PacketAddEntity;
 import net.codepixl.GLCraft.network.packet.PacketBlockChange;
 import net.codepixl.GLCraft.network.packet.PacketChat;
 import net.codepixl.GLCraft.network.packet.PacketContainer;
 import net.codepixl.GLCraft.network.packet.PacketKick;
 import net.codepixl.GLCraft.network.packet.PacketLANBroadcast;
+import net.codepixl.GLCraft.network.packet.PacketMultiPacket;
 import net.codepixl.GLCraft.network.packet.PacketOnPlace;
 import net.codepixl.GLCraft.network.packet.PacketPing;
 import net.codepixl.GLCraft.network.packet.PacketPlayerAction;
@@ -47,6 +50,7 @@ import net.codepixl.GLCraft.util.logging.GLogger;
 import net.codepixl.GLCraft.world.Chunk;
 import net.codepixl.GLCraft.world.WorldManager;
 import net.codepixl.GLCraft.world.entity.Entity;
+import net.codepixl.GLCraft.world.entity.mob.EntityPlayer;
 import net.codepixl.GLCraft.world.entity.mob.EntityPlayerMP;
 import net.codepixl.GLCraft.world.tile.Tile;
 
@@ -188,6 +192,12 @@ public class Server{
 					ServerClient c2 = entry.getValue();
 					c.writePacket(new PacketPlayerAdd(c2.player.getID(), c2.player.getName(), c2.player.getPos()));
 				}
+				ArrayList<Packet> entityPackets = new ArrayList<Packet>();
+				for(Entity e : worldManager.entityManager.getEntities(Entity.class)){
+					if(!(e instanceof EntityPlayer)) entityPackets.add(new PacketAddEntity(e));
+				}
+				Packet ps[] = new Packet[entityPackets.size()];
+				c.writePacket(new PacketMultiPacket(entityPackets.toArray(ps)));
 				sendToAllClientsExcept(new PacketPlayerAdd(c.player.getID(), c.player.getName(), c.player.getPos()), c);
 				c.writePacket(new PacketSendChunk(worldManager.getActiveChunks().size()));
 			}else if(op instanceof PacketBlockChange){
@@ -256,6 +266,10 @@ public class Server{
 			}else if(op instanceof PacketContainer){
 				((PacketContainer) op).setInventory(worldManager);
 				sendToAllClients(op);
+			}else if(op instanceof PacketMultiPacket){
+				Packet[] ps = ((PacketMultiPacket) op).packets;
+				for(Packet p : ps)
+					handlePacket(dgp, p);
 			}else{
 				GLogger.logerr("Unhandled Packet: "+op.getClass(), LogSource.SERVER);
 			}

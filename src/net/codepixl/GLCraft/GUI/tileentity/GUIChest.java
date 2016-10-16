@@ -16,7 +16,7 @@ public class GUIChest extends GUIInventoryScreen{
 	private static final int VMIDDLE = (int) (Constants.HEIGHT/2-GUISlot.size*2);
 	private static final int HSIZE = (int) (GUISlot.size/2f);
 	
-	public GUIChest(TileEntityChest chest, EntityPlayer p) {
+	public GUIChest(final TileEntityChest chest, EntityPlayer p) {
 		super(p);
 		this.chest = chest;
 		slots = new GUISlot[20];

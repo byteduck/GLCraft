@@ -24,7 +24,7 @@ public class GUIFurnace extends GUIInventoryScreen{
 	private static final int PBSIZE = 100;
 	
 	
-	public GUIFurnace(TileEntityFurnace furnace, EntityPlayer player) {
+	public GUIFurnace(final TileEntityFurnace furnace, EntityPlayer player) {
 		super(player);
 		Callable<Void> updateListener = new Callable<Void>(){
 			@Override

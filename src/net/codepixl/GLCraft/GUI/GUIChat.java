@@ -20,7 +20,7 @@ public class GUIChat extends GUIScreen{
 	public static int CHATX = 20;
 	public static int CHATWIDTH = (int)(Constants.WIDTH*0.8);
 	
-	public GUIChat(WorldManager worldManager){
+	public GUIChat(final WorldManager worldManager){
 		input = new GUITextBox(CHATX,CHATY,CHATWIDTH,"");
 		input.drawOutline = false;
 		input.bgColor = new Color4f(0,0,0,0.5f);

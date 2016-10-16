@@ -696,7 +696,6 @@ public class CentralManager extends Screen{
 			Constants.FONT.drawString(CENTER-Constants.FONT.getWidth(line1)/2,HCENTER-Constants.FONT.getHeight(line1), line1);
 			Constants.FONT.drawString(CENTER-Constants.FONT.getWidth(line2)/2,HCENTER+Constants.FONT.getHeight(line2), line2);
 			TextureImpl.unbind();
-			Display.update();
 		}
 	}
 	
@@ -744,7 +743,6 @@ public class CentralManager extends Screen{
 			glVertex2f(CENTER+(percent*2-100),HCENTER+100);
 			glEnd();
 			glEnable(GL_TEXTURE_2D);
-			Display.update();
 		}
 	}
 

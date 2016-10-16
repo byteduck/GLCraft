@@ -39,6 +39,7 @@ import net.codepixl.GLCraft.network.packet.PacketBlockChange;
 import net.codepixl.GLCraft.network.packet.PacketReady;
 import net.codepixl.GLCraft.network.packet.PacketRespawn;
 import net.codepixl.GLCraft.network.packet.PacketSendChunk;
+import net.codepixl.GLCraft.network.packet.PacketWorldTime;
 import net.codepixl.GLCraft.util.AABB;
 import net.codepixl.GLCraft.util.BreakSource;
 import net.codepixl.GLCraft.util.Constants;
@@ -1017,9 +1018,11 @@ public class WorldManager {
 
 	public void setWorldTime(long worldTime) {
 		this.worldTime = worldTime;
+		if(this.isServer)
+			sendPacket(new PacketWorldTime(worldTime));
 	}
 
-	public void closeWorld(final String reason, boolean quit){
+	public void closeWorld(final String reason, final boolean quit){
 		this.actionQueue.add(new Callable<Void>(){
 			@Override
 			public Void call() throws Exception {
