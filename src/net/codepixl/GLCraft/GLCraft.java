@@ -108,6 +108,7 @@ public class GLCraft extends Screen{
 	public static boolean loadExtPlugins = true;
 	public static final String version = "0.1";
 	public static final String versionTag = "Beta Pre-Release 1";
+	public static final String fullVersion = version + " " + versionTag 
 	private Plugin devPlugin;
 	public boolean spendRemainingTime = true;
 	private Server server;
@@ -128,6 +129,9 @@ public class GLCraft extends Screen{
 		
 	}
 	
+	/**
+	 * Main code for the display.
+	 */
 	private void commonInitializer(boolean dedicatedServer) throws IOException, LWJGLException{
 		if(new File("res/natives").exists())
 			System.setProperty("org.lwjgl.librarypath", new File("res/natives").getAbsolutePath());
@@ -166,7 +170,7 @@ public class GLCraft extends Screen{
 			
 			Display.setFullscreen(false);
 			Display.setDisplayMode(new DisplayMode(1000, 700));
-			Display.setTitle("GLCraft "+version+" "+versionTag);
+			Display.setTitle("GLCraft "+fullVersion);
 			Display.create(new PixelFormat(8,8,8));
 			
 			Display.setIcon(new ByteBuffer[] {
