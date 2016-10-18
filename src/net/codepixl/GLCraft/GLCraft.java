@@ -108,7 +108,7 @@ public class GLCraft extends Screen{
 	public static boolean loadExtPlugins = true;
 	public static final String version = "0.1";
 	public static final String versionTag = "Beta Pre-Release 1";
-	public static final String fullVersion = version + " " + versionTag 
+	public static final String fullVersion = version + " " + versionTag; 
 	private Plugin devPlugin;
 	public boolean spendRemainingTime = true;
 	private Server server;

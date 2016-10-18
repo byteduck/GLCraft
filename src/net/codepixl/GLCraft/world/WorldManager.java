@@ -38,7 +38,7 @@ import net.codepixl.GLCraft.network.packet.Packet;
 import net.codepixl.GLCraft.network.packet.PacketBlockChange;
 import net.codepixl.GLCraft.network.packet.PacketReady;
 import net.codepixl.GLCraft.network.packet.PacketRespawn;
-import net.codepixl.GLCraft.network.packet.PacketSendChunk;
+import net.codepixl.GLCraft.network.packet.PacketSendChunks;
 import net.codepixl.GLCraft.network.packet.PacketWorldTime;
 import net.codepixl.GLCraft.util.AABB;
 import net.codepixl.GLCraft.util.BreakSource;
@@ -995,10 +995,14 @@ public class WorldManager {
 		return getEntityManager().getEntity(id);
 	}
 
-	public void updateChunk(PacketSendChunk p, boolean initial){
-		getChunk(p.pos).updateTiles(p);
+	public void updateChunks(PacketSendChunks p, boolean initial){
+		for(int i = 0; i < p.pos.length; i++){
+			Chunk c = getChunk(p.pos[i]);
+			c.updateTiles(p,i);
+			if(initial)
+				chunksLeftToDownload--;
+		}
 		if(initial){
-			chunksLeftToDownload--;
 			centralManager.setSplashText("Connecting to Server...", "Downloading Chunks...", (int)(((float)(-chunksLeftToDownload+1000)/1000f)*100));
 			if(chunksLeftToDownload <= 0){
 				this.doneGenerating = true;

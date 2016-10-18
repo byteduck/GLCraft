@@ -1,8 +1,8 @@
 package net.codepixl.GLCraft.util;
 
-import org.lwjgl.util.vector.Vector3f;
+import java.io.Serializable;
 
-public class Vector2i {
+public class Vector2i implements Serializable{
 	public int x,y;
 	public Vector2i(int x, int y){
 		this.x = x;
@@ -28,5 +28,9 @@ public class Vector2i {
 	@Override
 	public boolean equals(Object o){
 		return (o instanceof Vector2i) && (((Vector2i)o).x == x) && (((Vector2i)o).y == y);
+	}
+
+	public Vector2i mult(int m) {
+		return new Vector2i(this.x*m, this.y*m);
 	}
 }

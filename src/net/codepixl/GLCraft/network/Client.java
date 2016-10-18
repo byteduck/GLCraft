@@ -6,7 +6,6 @@ import java.net.DatagramSocket;
 import java.net.InetAddress;
 import java.net.SocketException;
 import java.net.SocketTimeoutException;
-import java.util.ArrayList;
 
 import org.lwjgl.util.vector.Vector3f;
 
@@ -28,9 +27,9 @@ import net.codepixl.GLCraft.network.packet.PacketPlayerLogin;
 import net.codepixl.GLCraft.network.packet.PacketPlayerLoginResponse;
 import net.codepixl.GLCraft.network.packet.PacketPlayerPos;
 import net.codepixl.GLCraft.network.packet.PacketRemoveEntity;
-import net.codepixl.GLCraft.network.packet.PacketRequestChunk;
+import net.codepixl.GLCraft.network.packet.PacketRequestChunks;
 import net.codepixl.GLCraft.network.packet.PacketRespawn;
-import net.codepixl.GLCraft.network.packet.PacketSendChunk;
+import net.codepixl.GLCraft.network.packet.PacketSendChunks;
 import net.codepixl.GLCraft.network.packet.PacketServerClose;
 import net.codepixl.GLCraft.network.packet.PacketSetInventory;
 import net.codepixl.GLCraft.network.packet.PacketUpdateEntity;
@@ -38,8 +37,8 @@ import net.codepixl.GLCraft.network.packet.PacketUtil;
 import net.codepixl.GLCraft.network.packet.PacketWorldTime;
 import net.codepixl.GLCraft.util.Constants;
 import net.codepixl.GLCraft.util.LogSource;
+import net.codepixl.GLCraft.util.Vector2i;
 import net.codepixl.GLCraft.util.logging.GLogger;
-import net.codepixl.GLCraft.world.Chunk;
 import net.codepixl.GLCraft.world.WorldManager;
 import net.codepixl.GLCraft.world.entity.Entity;
 import net.codepixl.GLCraft.world.entity.mob.EntityPlayerMP;
@@ -57,7 +56,7 @@ public class Client{
 	public int port;
 	public volatile ServerConnectionState connectionState;
 	private volatile boolean isClosed = false;
-	private int currentRequest = 0;
+	private Vector2i currentRequest = new Vector2i(0,0);
 	private boolean requestingChunks = true;
 	
 	public Client(WorldManager w, int port) throws IOException{
@@ -89,17 +88,17 @@ public class Client{
 	
 	public void handlePacket(DatagramPacket dgp, Packet op){
 		try{
-			if(op instanceof PacketSendChunk){
-				PacketSendChunk p = (PacketSendChunk)op;
-				if(!p.failed){
-					if(p.type == PacketSendChunk.TYPE_CHUNK){
-						worldManager.updateChunk(p, true);
-					}else{
-						worldManager.doneGenerating = false;
-						worldManager.chunksLeftToDownload = p.numChunks;
+			if(op instanceof PacketSendChunks){
+				PacketSendChunks p = (PacketSendChunks)op;
+				if(p.numChunks != 0){
+					worldManager.doneGenerating = false;
+					worldManager.chunksLeftToDownload = p.numChunks;
+				}else{
+					if(!p.failed){
+						worldManager.updateChunks(p,true);
 					}
 				}
-				requestNextChunk();
+				requestNextChunks();
 			}else if(op instanceof PacketRespawn){
 				this.worldManager.getEntityManager().getPlayer().respawn();
 			}else if(op instanceof PacketWorldTime){
@@ -174,6 +173,7 @@ public class Client{
 			}else if(op instanceof PacketPlayerLeave){
 				worldManager.getEntityManager().removeNow(((PacketPlayerLeave) op).entityID);
 			}else if(op instanceof PacketPing){
+				Thread.sleep(10);
 				sendToServer(new PacketPing(true));
 			}else if(op instanceof PacketHealth){
 				PacketHealth p = (PacketHealth)op;
@@ -233,7 +233,7 @@ public class Client{
 					this.worldManager.getEntityManager().getPlayer().setPos(new Vector3f(p.x, p.y, p.z));
 					this.connectedServer = new ClientServer(this, addr, port);
 					connectionThread.start();
-					this.requestNextChunk();
+					this.requestNextChunks();
 				}else{
 					this.connectionState = new ServerConnectionState(p.message);
 				}
@@ -252,17 +252,21 @@ public class Client{
 		return connectionState;
 	}
 	
-	private void requestNextChunk(){
+	private void requestNextChunks(){
 		if(requestingChunks){
-			worldManager.getActiveChunks();
-			Chunk req = (new ArrayList<Chunk>(worldManager.getActiveChunks().values())).get(currentRequest);
-			currentRequest++;
-			if(currentRequest >= worldManager.getActiveChunks().size())
+			if(currentRequest.y >= Constants.worldLengthChunks)
 				requestingChunks = false;
-			try {
-				sendToServer(new PacketRequestChunk(req));
-			} catch (IOException e) {
-				e.printStackTrace();
+			else{
+				try {
+					sendToServer(new PacketRequestChunks(currentRequest));
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			}
+			currentRequest.x++;
+			if(currentRequest.x >= Constants.worldLengthChunks){
+				currentRequest.x = 0;
+				currentRequest.y++;
 			}
 		}
 	}
@@ -342,7 +346,7 @@ public class Client{
 	public void reinit() {
 		try {
 			this.requestingChunks = true;
-			this.currentRequest = 0;
+			this.currentRequest = new Vector2i(0,0);
 			socket = new DatagramSocket(port);
 			this.isClosed = false;
 			connectionThread = new Thread(connectionRunnable, "Client Thread");

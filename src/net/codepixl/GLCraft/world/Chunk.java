@@ -27,7 +27,7 @@ import com.evilco.mc.nbt.tag.TagFloat;
 import com.nishu.utils.Color4f;
 import com.nishu.utils.ShaderProgram;
 
-import net.codepixl.GLCraft.network.packet.PacketSendChunk;
+import net.codepixl.GLCraft.network.packet.PacketSendChunks;
 import net.codepixl.GLCraft.render.RenderType;
 import net.codepixl.GLCraft.render.Shape;
 import net.codepixl.GLCraft.util.BreakSource;
@@ -804,9 +804,9 @@ public class Chunk {
 		return meta;
 	}
 
-	public void updateTiles(PacketSendChunk c) {
-		this.tiles = Arrays.copyOf(c.tiles, c.tiles.length);
-		this.meta = Arrays.copyOf(c.meta, c.meta.length);
+	public void updateTiles(PacketSendChunks c, int i) {
+		this.tiles = Arrays.copyOf(c.tiles[i], c.tiles[i].length);
+		this.meta = Arrays.copyOf(c.meta[i], c.meta[i].length);
 		this.rebuild();
 	}
 

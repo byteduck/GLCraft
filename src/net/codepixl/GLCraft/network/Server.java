@@ -11,6 +11,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map.Entry;
 
+import org.apache.commons.lang3.SerializationUtils;
 import org.lwjgl.util.vector.Vector3f;
 
 import net.codepixl.GLCraft.GLCraft;
@@ -34,8 +35,8 @@ import net.codepixl.GLCraft.network.packet.PacketPlayerLogin;
 import net.codepixl.GLCraft.network.packet.PacketPlayerLoginResponse;
 import net.codepixl.GLCraft.network.packet.PacketPlayerPos;
 import net.codepixl.GLCraft.network.packet.PacketReady;
-import net.codepixl.GLCraft.network.packet.PacketRequestChunk;
-import net.codepixl.GLCraft.network.packet.PacketSendChunk;
+import net.codepixl.GLCraft.network.packet.PacketRequestChunks;
+import net.codepixl.GLCraft.network.packet.PacketSendChunks;
 import net.codepixl.GLCraft.network.packet.PacketServerClose;
 import net.codepixl.GLCraft.network.packet.PacketSetInventory;
 import net.codepixl.GLCraft.network.packet.PacketUpdateEntity;
@@ -43,6 +44,7 @@ import net.codepixl.GLCraft.network.packet.PacketUtil;
 import net.codepixl.GLCraft.network.packet.PacketWorldTime;
 import net.codepixl.GLCraft.util.Constants;
 import net.codepixl.GLCraft.util.LogSource;
+import net.codepixl.GLCraft.util.Vector2i;
 import net.codepixl.GLCraft.util.Vector3i;
 import net.codepixl.GLCraft.util.command.Command.Permission;
 import net.codepixl.GLCraft.util.data.saves.SaveManager;
@@ -144,15 +146,13 @@ public class Server{
 							byte[] bytes = p.getBytes();
 							server.send(new DatagramPacket(bytes, bytes.length, addr, port));
 							pingSentTime = System.currentTimeMillis();
-						}else{
-							if(System.currentTimeMillis()-pingSentTime > 10000){
-								writePacket(new PacketKick("Timed out"));
-								SaveManager.savePlayer(worldManager, player);
-								clients.remove(new InetAddressAndPort(addr, port));
-								GLogger.log("Player timed out: "+player.getName(), LogSource.SERVER);
-								worldManager.getEntityManager().remove(player);
-								sendToAllClients(new PacketPlayerLeave(player.getID()));
-							}
+						}else if(System.currentTimeMillis()-pingSentTime > 10000){
+							writePacket(new PacketKick("Timed out"));
+							SaveManager.savePlayer(worldManager, player);
+							clients.remove(new InetAddressAndPort(addr, port));
+							GLogger.log("Player timed out: "+player.getName(), LogSource.SERVER);
+							worldManager.getEntityManager().remove(player);
+							sendToAllClients(new PacketPlayerLeave(player.getID()));
 						}
 					}
 				}else{
@@ -199,7 +199,7 @@ public class Server{
 				Packet ps[] = new Packet[entityPackets.size()];
 				c.writePacket(new PacketMultiPacket(entityPackets.toArray(ps)));
 				sendToAllClientsExcept(new PacketPlayerAdd(c.player.getID(), c.player.getName(), c.player.getPos()), c);
-				c.writePacket(new PacketSendChunk(worldManager.getActiveChunks().size()));
+				c.writePacket(new PacketSendChunks(worldManager.getActiveChunks().size()));
 			}else if(op instanceof PacketBlockChange){
 				PacketBlockChange p = (PacketBlockChange)op;
 				sendToAllClients(p);
@@ -251,10 +251,13 @@ public class Server{
 				GLogger.log("Player Logged out: "+c.player.getName(), LogSource.SERVER);
 				worldManager.getEntityManager().remove(c.player);
 				sendToAllClients(new PacketPlayerLeave(c.player.getID()));
-			}else if(op instanceof PacketRequestChunk){
-				Vector3i pos = ((PacketRequestChunk) op).pos;
-				Chunk ch = worldManager.getChunk(pos);
-				c.writePacket(new PacketSendChunk(ch, c.player));
+			}else if(op instanceof PacketRequestChunks){
+				Vector2i pos = ((PacketRequestChunks) op).pos;
+				ArrayList<Chunk> chunks = new ArrayList<Chunk>();
+				for(int y = 0; y < Constants.worldLengthChunks; y++){
+					chunks.add(worldManager.getChunk(new Vector3i(pos.x,y*16,pos.y)));
+				}
+				c.writePacket(new PacketSendChunks(chunks));
 			}else if(op instanceof PacketPing){
 				c.pingSentTime = 0;
 			}else if(op instanceof PacketChat){
