@@ -2,7 +2,6 @@ package net.codepixl.GLCraft.render.util;
 
 import static org.lwjgl.opengl.GL11.GL_LINE_LOOP;
 import static org.lwjgl.opengl.GL11.glBegin;
-import static org.lwjgl.opengl.GL11.glColor3f;
 import static org.lwjgl.opengl.GL11.glEnd;
 import static org.lwjgl.opengl.GL11.glVertex2f;
 
@@ -10,6 +9,10 @@ import org.lwjgl.opengl.GL11;
 import org.newdawn.slick.Color;
 
 import net.codepixl.GLCraft.util.Constants;
+import net.codepixl.GLCraft.util.FormattedString;
+import net.codepixl.GLCraft.util.FormattedStringSet;
+import net.codepixl.GLCraft.util.LogSource;
+import net.codepixl.GLCraft.util.logging.GLogger;
 
 public class Tesselator{
 	/**
@@ -65,5 +68,16 @@ public class Tesselator{
 
 	public static void drawTextWithShadow(float x, float y, String text) {
 		drawTextWithShadow(x,y,text,Color.white,Color.darkGray);
+	}
+
+	public static void drawTextWithShadow(int x, int y, FormattedStringSet text, float opacity) {
+		float cx = x;
+		for(FormattedString s : text.strings){
+			Color fg = s.getColor();
+			Color bg = s.getBackgroundColor();
+			Constants.FONT.drawString(cx+2, y+2, s.string, bg.multiply(new Color(1f,1f,1f,opacity)));
+			Constants.FONT.drawString(cx, y, s.string, fg.multiply(new Color(1f,1f,1f,opacity)));
+			cx+=Constants.FONT.getWidth(s.string);
+		}
 	}
 }

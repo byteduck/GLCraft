@@ -42,6 +42,7 @@ import net.codepixl.GLCraft.network.packet.PacketSetInventory;
 import net.codepixl.GLCraft.network.packet.PacketUpdateEntity;
 import net.codepixl.GLCraft.network.packet.PacketUtil;
 import net.codepixl.GLCraft.network.packet.PacketWorldTime;
+import net.codepixl.GLCraft.util.ChatFormat;
 import net.codepixl.GLCraft.util.Constants;
 import net.codepixl.GLCraft.util.LogSource;
 import net.codepixl.GLCraft.util.Vector2i;
@@ -234,6 +235,7 @@ public class Server{
 				SaveManager.loadPlayer(worldManager, c.player);
 				if(GLCraft.getGLCraft().getWorldManager(false) != null && GLCraft.getGLCraft().getWorldManager(false).getPlayer().equals(c.player))
 					c.player.setPermission(Permission.OP);
+				sendToAllClients(new PacketChat(ChatFormat.YELLOW+c.player.getName()+" joined the game."));
 			}else if(op instanceof PacketPlayerLeave){
 				if(c == null)
 					return;
@@ -242,6 +244,7 @@ public class Server{
 				GLogger.log("Player Logged out: "+c.player.getName(), LogSource.SERVER);
 				worldManager.getEntityManager().remove(c.player);
 				sendToAllClients(new PacketPlayerLeave(c.player.getID()));
+				sendToAllClients(new PacketChat(ChatFormat.YELLOW+c.player.getName()+" left the game."));
 			}else if(op instanceof PacketRequestChunks){
 				Vector2i pos = ((PacketRequestChunks) op).pos;
 				ArrayList<Chunk> chunks = new ArrayList<Chunk>();
@@ -372,6 +375,7 @@ public class Server{
 								GLogger.log("Player timed out: "+c.player.getName(), LogSource.SERVER);
 								server.worldManager.getEntityManager().remove(c.player);
 								server.sendToAllClients(new PacketPlayerLeave(c.player.getID()));
+								server.sendToAllClients(new PacketChat(ChatFormat.YELLOW+c.player.getName()+" left the game."));
 							}
 						}
 					}

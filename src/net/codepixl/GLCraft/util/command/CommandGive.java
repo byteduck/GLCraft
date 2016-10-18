@@ -54,7 +54,7 @@ public class CommandGive implements Command{
 
 	@Override
 	public String getUsage() {
-		return "give <player> <item:meta/tile:meta> [count]";
+		return "<player> <item:meta/tile:meta> [count] - Give someone item(s).";
 	}
 
 }

@@ -37,6 +37,7 @@ public class CommandManager {
 		addCommand(new CommandHelp());
 		addCommand(new CommandKick());
 		addCommand(new CommandGive());
+		addCommand(new CommandTime());
 	}
 	
 	public void addCommand(Command c){

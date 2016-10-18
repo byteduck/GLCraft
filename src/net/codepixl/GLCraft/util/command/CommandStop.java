@@ -29,7 +29,7 @@ public class CommandStop implements Command{
 
 	@Override
 	public String getUsage() {
-		return "stop [reason] - Stops the server.";
+		return "[reason] - Stops the server.";
 	}
 
 }

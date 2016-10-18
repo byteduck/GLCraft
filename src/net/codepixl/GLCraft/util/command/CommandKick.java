@@ -1,6 +1,9 @@
 package net.codepixl.GLCraft.util.command;
 
+
+import net.codepixl.GLCraft.network.packet.PacketChat;
 import net.codepixl.GLCraft.network.packet.PacketKick;
+import net.codepixl.GLCraft.util.ChatFormat;
 import net.codepixl.GLCraft.util.command.Command.Permission;
 import net.codepixl.GLCraft.world.CentralManager;
 import net.codepixl.GLCraft.world.entity.mob.EntityPlayerMP;
@@ -26,6 +29,7 @@ public class CommandKick implements Command{
 			centralManager.sendPacket(new PacketKick(reason), p);
 		else
 			e.sendMessage("Unknown player "+args[1]+"!");
+		centralManager.sendPacket(new PacketChat(ChatFormat.YELLOW+p.getName()+" was kicked."));
 		return true;
 	}
 
@@ -35,7 +39,7 @@ public class CommandKick implements Command{
 	}
 	@Override
 	public String getUsage(){
-		return "kick <player> [reason] - Kicks the player given.";
+		return "<player> [reason] - Kicks the player given.";
 	}
 
 }
