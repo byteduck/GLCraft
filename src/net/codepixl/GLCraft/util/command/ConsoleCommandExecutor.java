@@ -13,7 +13,7 @@ public class ConsoleCommandExecutor implements CommandExecutor {
 
 	@Override
 	public void sendMessage(String msg) {
-		GLogger.log(msg, LogSource.NONE);
+		GLogger.log(msg.replaceAll("(§.)|§", ""), LogSource.NONE);
 	}
 
 	@Override
