@@ -656,6 +656,11 @@ public class CentralManager extends Screen{
 	public void update(){
 		DebugTimer.getTimer("total_update").start();
 		if(!isServer){
+			try {
+				getClient().update();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
 			guiManager.update();
 			guiManager.setShowGame(Constants.GAME_STATE == Constants.GAME);
 			input();

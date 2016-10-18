@@ -9,8 +9,12 @@ import java.net.SocketTimeoutException;
 
 import org.lwjgl.util.vector.Vector3f;
 
+import com.nishu.utils.Time;
+
 import net.codepixl.GLCraft.GLCraft;
 import net.codepixl.GLCraft.GUI.GUIManager;
+import net.codepixl.GLCraft.network.Server.InetAddressAndPort;
+import net.codepixl.GLCraft.network.Server.ServerClient;
 import net.codepixl.GLCraft.network.packet.Packet;
 import net.codepixl.GLCraft.network.packet.PacketAddEntity;
 import net.codepixl.GLCraft.network.packet.PacketBlockChange;
@@ -38,6 +42,7 @@ import net.codepixl.GLCraft.network.packet.PacketWorldTime;
 import net.codepixl.GLCraft.util.Constants;
 import net.codepixl.GLCraft.util.LogSource;
 import net.codepixl.GLCraft.util.Vector2i;
+import net.codepixl.GLCraft.util.data.saves.SaveManager;
 import net.codepixl.GLCraft.util.logging.GLogger;
 import net.codepixl.GLCraft.world.WorldManager;
 import net.codepixl.GLCraft.world.entity.Entity;
@@ -58,6 +63,7 @@ public class Client{
 	private volatile boolean isClosed = false;
 	private Vector2i currentRequest = new Vector2i(0,0);
 	private boolean requestingChunks = true;
+	public long lastPingTime = 0, pingCountdown = 500;
 	
 	public Client(WorldManager w, int port) throws IOException{
 		if(!commonInit(w,port)){throw new IOException("Error binding to port");}
@@ -173,8 +179,7 @@ public class Client{
 			}else if(op instanceof PacketPlayerLeave){
 				worldManager.getEntityManager().removeNow(((PacketPlayerLeave) op).entityID);
 			}else if(op instanceof PacketPing){
-				Thread.sleep(10);
-				sendToServer(new PacketPing(true));
+				this.lastPingTime = System.currentTimeMillis();
 			}else if(op instanceof PacketHealth){
 				PacketHealth p = (PacketHealth)op;
 				Mob m = (Mob)worldManager.getEntity(p.entityID);
@@ -197,6 +202,20 @@ public class Client{
 			}
 		}catch(Exception e){
 			e.printStackTrace();
+		}
+	}
+	
+	public void update() throws IOException{
+		this.pingCountdown-=(long)(Time.getDelta()*1000d);
+		if(this.connectionState != null && this.connectionState.connected){
+			if(pingCountdown <= 0){
+				sendToServer(new PacketPing(false));
+				this.lastPingTime = System.currentTimeMillis();
+				this.pingCountdown = 500;
+			}else if(lastPingTime != 0 && System.currentTimeMillis()-lastPingTime > 10000){
+				worldManager.kicked = true;
+				worldManager.closeWorld("Timed out", false);
+			}
 		}
 	}
 	
@@ -354,4 +373,5 @@ public class Client{
 			e.printStackTrace();
 		}
 	}
+	
 }

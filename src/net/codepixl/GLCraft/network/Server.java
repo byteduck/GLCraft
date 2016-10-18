@@ -131,7 +131,7 @@ public class Server{
 		public DatagramSocket server;
 		public int port;
 		public EntityPlayerMP player;
-		public long pingSentTime = 0;
+		private long pingSentTime = Long.MAX_VALUE;
 		public ServerClient(InetAddress addr, int port, DatagramSocket server, EntityPlayerMP player){
 			this.addr = addr;
 			this.server = server;
@@ -140,26 +140,17 @@ public class Server{
 		}
 		public void writePacket(Packet p) throws IOException{
 			if(!server.isClosed()){
-				if(p instanceof PacketPing){
-					if(this.player.shouldUpdate){
-						if(pingSentTime == 0){
-							byte[] bytes = p.getBytes();
-							server.send(new DatagramPacket(bytes, bytes.length, addr, port));
-							pingSentTime = System.currentTimeMillis();
-						}else if(System.currentTimeMillis()-pingSentTime > 10000){
-							writePacket(new PacketKick("Timed out"));
-							SaveManager.savePlayer(worldManager, player);
-							clients.remove(new InetAddressAndPort(addr, port));
-							GLogger.log("Player timed out: "+player.getName(), LogSource.SERVER);
-							worldManager.getEntityManager().remove(player);
-							sendToAllClients(new PacketPlayerLeave(player.getID()));
-						}
-					}
-				}else{
-					byte[] bytes = p.getBytes();
-					server.send(new DatagramPacket(bytes, bytes.length, addr, port));
-				}
+				byte[] bytes = p.getBytes();
+				server.send(new DatagramPacket(bytes, bytes.length, addr, port));
 			}
+		}
+		
+		public synchronized void setPingTime(long pingTime){
+			this.pingSentTime = pingTime;
+		}
+		
+		public synchronized long getPingTime(){
+			return this.pingSentTime;
 		}
 	}
 
@@ -259,7 +250,8 @@ public class Server{
 				}
 				c.writePacket(new PacketSendChunks(chunks));
 			}else if(op instanceof PacketPing){
-				c.pingSentTime = 0;
+				c.setPingTime(System.currentTimeMillis());
+				c.writePacket(new PacketPing(true));
 			}else if(op instanceof PacketChat){
 				String msg = ((PacketChat) op).msg;
 				if(msg.startsWith("/"))
@@ -362,19 +354,28 @@ public class Server{
 	private static class PingRunnable implements Runnable{
 		
 		private Server server;
-		PacketPing ping;
 		
 		public PingRunnable(Server s){
 			this.server = s;
-			ping = new PacketPing(false);
 		}
 		
 		@Override
 		public void run() {
 			while(!Thread.interrupted()){
 				try {
-					server.sendToAllClients(ping);
-					Thread.sleep(1000);
+					for(ServerClient c : server.clients.values()){
+						if(c.player.shouldUpdate){
+							if(System.currentTimeMillis()-c.getPingTime() > 10000){
+								c.writePacket(new PacketKick("Timed out"));
+								SaveManager.savePlayer(server.worldManager, c.player);
+								server.clients.remove(new InetAddressAndPort(c.addr, c.port));
+								GLogger.log("Player timed out: "+c.player.getName(), LogSource.SERVER);
+								server.worldManager.getEntityManager().remove(c.player);
+								server.sendToAllClients(new PacketPlayerLeave(c.player.getID()));
+							}
+						}
+					}
+					Thread.sleep(200);
 				} catch (IOException e) {
 					e.printStackTrace();
 				} catch(InterruptedException e) {
@@ -431,7 +432,7 @@ public class Server{
 		}
 	}
 	
-	public class InetAddressAndPort{
+	public static class InetAddressAndPort{
 		public InetAddress addr;
 		public int port;
 
