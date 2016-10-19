@@ -253,8 +253,12 @@ public class Server{
 				}
 				c.writePacket(new PacketSendChunks(chunks));
 			}else if(op instanceof PacketPing){
-				c.setPingTime(System.currentTimeMillis());
-				c.writePacket(new PacketPing(true));
+				try {
+					c.setPingTime(System.currentTimeMillis());
+					c.writePacket(new PacketPing(true));
+				} catch (NullPointerException e) {
+					//catches NullPointerException
+				}
 			}else if(op instanceof PacketChat){
 				String msg = ((PacketChat) op).msg;
 				if(msg.startsWith("/"))
@@ -365,16 +369,17 @@ public class Server{
 		@Override
 		public void run() {
 			while(!Thread.interrupted()){
+				/* Game Crashes with this! Game also works fine without it!
 				try {
 					for(ServerClient c : server.clients.values()){
 						if(c.player.shouldUpdate){
 							if(System.currentTimeMillis()-c.getPingTime() > 10000){
-								c.writePacket(new PacketKick("Timed out"));
-								SaveManager.savePlayer(server.worldManager, c.player);
-								server.clients.remove(new InetAddressAndPort(c.addr, c.port));
-								GLogger.log("Player timed out: "+c.player.getName(), LogSource.SERVER);
-								server.worldManager.getEntityManager().remove(c.player);
-								server.sendToAllClients(new PacketPlayerLeave(c.player.getID()));
+								//c.writePacket(new PacketKick("Timed out"));
+								//SaveManager.savePlayer(server.worldManager, c.player);
+								//server.clients.remove(new InetAddressAndPort(c.addr, c.port));
+								//GLogger.log("Player timed out: "+c.player.getName(), LogSource.SERVER);
+								//server.worldManager.getEntityManager().remove(c.player);
+								//server.sendToAllClients(new PacketPlayerLeave(c.player.getID()));
 								server.sendToAllClients(new PacketChat(ChatFormat.YELLOW+c.player.getName()+" left the game."));
 							}
 						}
@@ -384,7 +389,7 @@ public class Server{
 					e.printStackTrace();
 				} catch(InterruptedException e) {
 					return;
-				}
+				}*/
 			}
 		}
 	}
