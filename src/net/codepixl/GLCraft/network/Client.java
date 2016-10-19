@@ -207,7 +207,7 @@ public class Client{
 	
 	public void update() throws IOException{
 		this.pingCountdown-=(long)(Time.getDelta()*1000d);
-		if(this.connectionState != null && this.connectionState.connected){
+		if(worldManager.getPlayer().shouldUpdate && this.connectionState != null && this.connectionState.connected){
 			if(pingCountdown <= 0){
 				sendToServer(new PacketPing(false));
 				this.lastPingTime = System.currentTimeMillis();
