@@ -9,6 +9,7 @@ import static org.lwjgl.opengl.GL11.glPushMatrix;
 import java.util.ArrayList;
 import java.util.Iterator;
 
+import org.lwjgl.opengl.Display;
 import org.lwjgl.opengl.GL11;
 import org.newdawn.slick.Color;
 import org.newdawn.slick.opengl.TextureImpl;
@@ -30,21 +31,33 @@ public class GUIGame extends GUIScreen{
 	
 	private WorldManager worldManager;
 	private EntityPlayer player;
-	private float SIZE = (float)Constants.WIDTH/18f;
+	private float SIZE = (float)Constants.getWidth()/18f;
 	private float HEARTSIZE = 20;
 	private float SPACING = 0;
 	private float HEARTSPACING = 6;
 	private float BUBBLESIZE = HEARTSIZE;
 	private float BUBBLESPACING = HEARTSPACING;
-	private GUISlot slots[] = new GUISlot[9];
+	private GUISlot slots[];
 	private ArrayList<ChatMessage> chatMessages = new ArrayList<ChatMessage>();
 	
 	public GUIGame(WorldManager w){
 		this.worldManager = w;
 		player = worldManager.getEntityManager().getPlayer();
+		this.makeElements();
+	}
+	
+	public void makeElements(){
+		SIZE = GUISlot.size;
+		HEARTSIZE = SIZE*0.455f;
+		SPACING = 0;
+		HEARTSPACING = HEARTSIZE*0.3f;
+		BUBBLESIZE = HEARTSIZE;
+		BUBBLESPACING = HEARTSPACING;
+		slots = new GUISlot[9];
 		for(int j = 0; j < 9; j++){
 			float i = j;
-			slots[j] = new GUISlot((int)(Constants.WIDTH/4.5f+i*SIZE+i*SPACING+SIZE/2f)+(int)GUISlot.size/2,(int)(Constants.HEIGHT-(SIZE/2f)),player);
+			float x = (Constants.getWidth()/2)+((j-4.5f)*(SIZE+SPACING));
+			slots[j] = new GUISlot((int)x+(int)GUISlot.size/2,(int)(Constants.getHeight()-(SIZE/2f)),player);
 		}
 		addElements(slots);
 	}
@@ -81,13 +94,13 @@ public class GUIGame extends GUIScreen{
 				texCoords = p.tileAtEye().getIconCoords((byte)worldManager.getMetaAtPos(p.getPos().x,p.getPos().y+1.52f,p.getPos().z));
 			else
 				texCoords = p.tileAtEye().getIconCoords();
-			Shape.createCenteredSquare(Constants.WIDTH/2f, Constants.HEIGHT/2f, new Color4f(1f,1f,1f,1f), texCoords, Constants.WIDTH);
+			Shape.createCenteredSquare(Constants.getWidth()/2f, Constants.getHeight()/2f, new Color4f(1f,1f,1f,1f), texCoords, Constants.getWidth());
 			glEnd();
 			glPopMatrix();
 		}else if(!p.canBreathe()){
 			glPushMatrix();
 			glBegin(GL_QUADS);
-			Shape.createCenteredSquare(Constants.WIDTH/2f, Constants.HEIGHT/2f, new Color4f(1f,1f,1f,1f), Tile.Water.getIconCoords(), Constants.WIDTH);
+			Shape.createCenteredSquare(Constants.getWidth()/2f, Constants.getHeight()/2f, new Color4f(1f,1f,1f,1f), Tile.Water.getIconCoords(), Constants.getWidth());
 			glEnd();
 			glPopMatrix();
 		}
@@ -98,14 +111,16 @@ public class GUIGame extends GUIScreen{
 		if(p.airLevel < 10f){
 			glBegin(GL_QUADS);
 			for(int i = 0; i < 10; i++){
-				Shape.createCenteredSquare((int)((float)Constants.WIDTH/4.5f+i*BUBBLESIZE+i*BUBBLESPACING+BUBBLESIZE/2f+(int)GUISlot.size/2),Constants.HEIGHT-(SIZE/2f)-BUBBLESIZE*3.5f-2, new Color4f(1,1,1,1), p.getTexCoordsForAirIndex(i), BUBBLESIZE);
+				float x = (Constants.getWidth()/2)+(((float)i-4.5f)*(BUBBLESIZE+BUBBLESPACING)-SIZE*1.6f);
+				Shape.createCenteredSquare((int)x,Constants.getHeight()-(SIZE/2f)-BUBBLESIZE*3.5f-2, new Color4f(1,1,1,1), p.getTexCoordsForAirIndex(i), BUBBLESIZE);
 			}
 			glEnd();
 		}
 		
 		glBegin(GL_QUADS);
 		for(int i = 0; i < 10; i++){
-			Shape.createCenteredSquare((int)((float)Constants.WIDTH/4.5f+i*HEARTSIZE+i*HEARTSPACING+HEARTSIZE/2f+(int)GUISlot.size/2),Constants.HEIGHT-(SIZE/2f)-HEARTSIZE*2f-2, new Color4f(1,1,1,1), p.getTexCoordsForHealthIndex(i), 24);
+			float x = (Constants.getWidth()/2)+(((float)i-4.5f)*(HEARTSIZE+HEARTSPACING)-SIZE*1.6f);
+			Shape.createCenteredSquare((int)x,Constants.getHeight()-(SIZE/2f)-HEARTSIZE*2f-2, new Color4f(1,1,1,1), p.getTexCoordsForHealthIndex(i), HEARTSIZE);
 		}
 		glEnd();
 		
@@ -119,12 +134,14 @@ public class GUIGame extends GUIScreen{
 	
 	@Override
 	public void update(){
+		if(didResize)
+			GUIChat.CHATY = (int) (Constants.getHeight()-GUISlot.size*3);
 		super.update();
-		Iterator<ChatMessage> i = chatMessages.iterator();
-		while(i.hasNext()){
-			ChatMessage c = i.next();
+		Iterator<ChatMessage> it = chatMessages.iterator();
+		while(it.hasNext()){
+			ChatMessage c = it.next();
 			c.update();
-			if(c.opacity <= 0) i.remove();
+			if(c.opacity <= 0) it.remove();
 		}
 	}
 	

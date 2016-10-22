@@ -2,6 +2,7 @@ package net.codepixl.GLCraft.world.tile;
 
 import com.nishu.utils.Color4f;
 
+import net.codepixl.GLCraft.GUI.Inventory.GUICraftingAdvanced;
 import net.codepixl.GLCraft.world.WorldManager;
 import net.codepixl.GLCraft.world.entity.mob.EntityPlayer;
 import net.codepixl.GLCraft.world.tile.material.Material;
@@ -60,7 +61,7 @@ public class TileWorkbench extends Tile{
 	
 	@Override
 	public boolean onClick(int x, int y, int z, EntityPlayer p, WorldManager worldManager){
-		worldManager.centralManager.guiManager.showGUI("adv_crafting");
+		worldManager.centralManager.guiManager.showGUI(new GUICraftingAdvanced(p));
 		return true;
 	}
 	

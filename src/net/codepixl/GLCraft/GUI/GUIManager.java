@@ -9,6 +9,7 @@ import java.util.Stack;
 
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
+import org.lwjgl.opengl.Display;
 import org.lwjgl.opengl.GL11;
 import org.newdawn.slick.opengl.TextureImpl;
 
@@ -17,6 +18,7 @@ import com.nishu.utils.Color4f;
 import net.codepixl.GLCraft.GLCraft;
 import net.codepixl.GLCraft.GUI.Elements.GUITextBox;
 import net.codepixl.GLCraft.GUI.Inventory.GUIInventoryScreen;
+import net.codepixl.GLCraft.GUI.Inventory.Elements.GUISlot;
 import net.codepixl.GLCraft.render.Shape;
 import net.codepixl.GLCraft.render.TextureManager;
 import net.codepixl.GLCraft.render.util.Tesselator;
@@ -29,7 +31,6 @@ public class GUIManager {
 
 	private GUIScreen currentGUI;
 	private boolean GUIOpen = false, showGame = false;
-	private HashMap<String,GUIScreen> staticGUIs = new HashMap<String,GUIScreen>();
 	private static GUIManager mainManager;
 	private GUITextBox focusedTextBox;
 	private GUIGame gameGUI;
@@ -71,36 +72,13 @@ public class GUIManager {
 		if(currentGUI != null)
 			guiStack.add(currentGUI);
 		currentGUI = gui;
+		gui.makeElements();
 		gui.onOpen();
 		GUIOpen = true;
 	}
 	
-	public boolean showGUI(String guiName){
-		if(staticGUIs.containsKey(guiName)){
-			if(currentGUI != null)
-				guiStack.add(currentGUI);
-			currentGUI = staticGUIs.get(guiName);
-			staticGUIs.get(guiName).onOpen();
-			GUIOpen = true;
-			return true;
-		}
-		return false;
-	}
-	
 	public boolean isGUIOpen(){
 		return GUIOpen;
-	}
-	
-	public GUIScreen getGUI(String guiName){
-		return staticGUIs.get(guiName);
-	}
-	
-	public boolean hasGUI(String guiName){
-		return staticGUIs.containsKey(guiName);
-	}
-	
-	public void addGUI(GUIScreen gui, String guiName){
-		staticGUIs.put(guiName, gui);
 	}
 
 	public void closeGUI(boolean onClose){
@@ -135,14 +113,16 @@ public class GUIManager {
 			TextureImpl.unbind();
 			GL11.glDisable(GL11.GL_TEXTURE_2D);
 			GL11.glBegin(GL11.GL_QUADS);
-			Shape.createTexturelessRect2D(Mouse.getX(), -Mouse.getY()+Constants.HEIGHT-Constants.FONT.getHeight(), Constants.FONT.getWidth(p.hoverSlot.itemstack.getName())+4, Constants.FONT.getHeight()+4, new Color4f(0f, 0f, 0f, 0.5f));
+			Shape.createTexturelessRect2D(Mouse.getX(), -Mouse.getY()+Constants.getHeight()-Constants.FONT.getHeight(), Constants.FONT.getWidth(p.hoverSlot.itemstack.getName())+4, Constants.FONT.getHeight()+4, new Color4f(0f, 0f, 0f, 0.5f));
 			GL11.glEnd();
 			GL11.glEnable(GL11.GL_TEXTURE_2D);
-			Tesselator.drawTextWithShadow(Mouse.getX()+2, -Mouse.getY()+Constants.HEIGHT-Constants.FONT.getHeight()+2, p.hoverSlot.itemstack.getName());
+			Tesselator.drawTextWithShadow(Mouse.getX()+2, -Mouse.getY()+Constants.getHeight()-Constants.FONT.getHeight()+2, p.hoverSlot.itemstack.getName());
 		}
 	}
 
 	public void update(){
+		if(Display.wasResized())
+			this.resize();
 		if(showGame)
 			gameGUI.update();
 		if (GUIOpen)
@@ -181,7 +161,7 @@ public class GUIManager {
 	public void renderMouseItem(){
 		if(this.currentGUI != null && this.currentGUI.shouldRenderMouseItem()){
 			EntityPlayer player = GLCraft.getGLCraft().getEntityManager(false).getPlayer();
-			player.mouseItem.renderIcon(Mouse.getX(), -Mouse.getY()+Constants.HEIGHT, 64);
+			player.mouseItem.renderIcon(Mouse.getX(), -Mouse.getY()+Constants.getHeight(), 64);
 		}
 	}
 
@@ -213,5 +193,15 @@ public class GUIManager {
 				closeGUI(true);
 		}
 		this.focusedTextBox = null;
+	}
+
+	public void resize(){
+		if(currentGUI != null) currentGUI.didResize = true;
+		for(GUIScreen g : guiStack) g.didResize = true;
+		this.gameGUI.didResize = true;
+		if(Constants.getWidth() <= 1000)
+			GUISlot.size = Constants.getWidth()/18f;
+		else
+			GUISlot.size = Constants.getWidth()/25f;
 	}
 }

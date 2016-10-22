@@ -1,4 +1,4 @@
-package net.codepixl.GLCraft.GUI;
+package net.codepixl.GLCraft.GUI.Elements;
 
 import net.codepixl.GLCraft.util.Constants;
 import net.codepixl.GLCraft.util.data.saves.Save;
@@ -6,10 +6,10 @@ import net.codepixl.GLCraft.util.data.saves.Save;
 import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.GL11;
 
-import net.codepixl.GLCraft.GUI.Elements.GUILabel;
+import net.codepixl.GLCraft.GUI.GUISinglePlayer;
 import net.codepixl.GLCraft.sound.SoundManager;
 
-public class GUISave extends GUIScreen{
+public class GUISave extends GUIElement{
 	
 	public Save save;
 	public boolean selected = false;

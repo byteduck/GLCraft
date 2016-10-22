@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 
 import org.lwjgl.input.Mouse;
+import org.lwjgl.opengl.Display;
 import org.lwjgl.opengl.GL11;
 
 import com.nishu.utils.Color4f;
@@ -15,15 +16,17 @@ import com.nishu.utils.Color4f;
 import net.codepixl.GLCraft.render.Shape;
 import net.codepixl.GLCraft.render.TextureManager;
 import net.codepixl.GLCraft.util.Constants;
+import net.codepixl.GLCraft.util.LogSource;
 import net.codepixl.GLCraft.util.Spritesheet;
+import net.codepixl.GLCraft.util.logging.GLogger;
 import net.codepixl.GLCraft.world.tile.Tile;
 import net.codepixl.GLCraft.world.tile.ore.TileOre;
 
 public class GUIScreen{
 	public int x = 0;
 	public int y = 0;
-	public int width = Constants.WIDTH;
-	public int height = Constants.HEIGHT;
+	public int width = Constants.getWidth();
+	public int height = Constants.getHeight();
 	public boolean enabled = true;
 	private ArrayList<GUIScreen> elements = new ArrayList<GUIScreen>();
 	public boolean mouseGrabbed = false;
@@ -31,6 +34,7 @@ public class GUIScreen{
 	public boolean visible = true;
 	private float[][][] bgTexCoords;
 	private boolean drawStoneBackground = false;
+	public boolean didResize;
 
 	public void setDrawStoneBackground(boolean drawStoneBackground) {
 		this.drawStoneBackground = drawStoneBackground;
@@ -64,7 +68,7 @@ public class GUIScreen{
 	public boolean testMouse(int xof, int yof){
 		int mouseY = Mouse.getY()+yof;
 		int mouseX = Mouse.getX()-xof;
-		mouseY = -mouseY+Constants.HEIGHT;
+		mouseY = -mouseY+Constants.getHeight();
 		if(mouseY <= y+height && mouseY >= y){
 			if(mouseX <= x+width && mouseX >= x){
 				return true;
@@ -91,6 +95,15 @@ public class GUIScreen{
 		while(it.hasNext()){
 			it.next().update();
 		}
+		if(isFullScreen() && this.didResize){
+			this.height = Constants.getHeight();
+			this.width = Constants.getWidth();
+			this.clearElements();
+			this.makeElements();
+			if(drawStoneBackground)
+				generateRandomTiles();
+			this.didResize = false;
+		}
 	}
 	
 	public void input(int xOffset, int yOffset){
@@ -116,7 +129,7 @@ public class GUIScreen{
 			this.elements.add(s);
 	}
 	
-	public void drawBG() {
+	public void drawBG(){
 		if(drawStoneBackground){
 			try{
 				Spritesheet.atlas.bind();
@@ -144,9 +157,17 @@ public class GUIScreen{
 			generateRandomTiles();
 	}
 	
+	public static int getScreenWidth(){
+		return Display.getWidth();
+	}
+	
+	public static int getScreenHeight(){
+		return Display.getHeight();
+	}
+	
 	private void generateRandomTiles() {
-		int howManyWide = (Constants.WIDTH/64)+1;
-		int howManyTall = (Constants.HEIGHT/64)+1;
+		int howManyWide = (Constants.getWidth()/64)+1;
+		int howManyTall = (Constants.getHeight()/64)+1;
 		bgTexCoords = new float[howManyWide][howManyTall][2];
 		for(int x = 0; x < howManyWide; x++){
 			for(int y = 0; y < howManyTall; y++){
@@ -164,4 +185,13 @@ public class GUIScreen{
 		return false;
 	}
 	
+	public boolean isFullScreen(){
+		return true;
+	}
+	
+	public void makeElements(){}
+	
+	public void clearElements(){
+		this.elements.clear();
+	}
 }

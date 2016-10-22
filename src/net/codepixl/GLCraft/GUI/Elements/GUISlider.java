@@ -14,7 +14,7 @@ import net.codepixl.GLCraft.render.Shape;
 import net.codepixl.GLCraft.render.util.Tesselator;
 import net.codepixl.GLCraft.util.Constants;
 
-public class GUISlider extends GUIScreen{
+public class GUISlider extends GUIElement{
 	
 	public static int HEIGHT = 20;
 	
@@ -76,7 +76,7 @@ public class GUISlider extends GUIScreen{
 	private void sliderUpdate(int xof, int yof){
 		int mouseY = Mouse.getY()+yof;
 		int mouseX = Mouse.getX()-xof;
-		mouseY = -mouseY+Constants.HEIGHT;
+		mouseY = -mouseY+Constants.getHeight();
 		float barX = (((float)val-min)/((float)max-min))*(width-10);
 		if(mouseY <= height && mouseY >= 0){
 			if(mouseX <= barX+10 && mouseX >= barX){

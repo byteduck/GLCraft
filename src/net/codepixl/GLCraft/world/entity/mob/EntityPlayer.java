@@ -625,9 +625,9 @@ public class EntityPlayer extends Mob implements CommandExecutor{
 		ItemStack sel = getSelectedItemStack();
 		if(sel.isNull())
 			return;
-		float size = Constants.WIDTH*0.5f;
+		float size = Constants.getWidth()*0.5f;
 		GL11.glPushMatrix();
-		GL11.glTranslatef((int)(Constants.WIDTH-size*0.2f), (int)(Constants.HEIGHT-size*0.1f), 0);
+		GL11.glTranslatef((int)(Constants.getWidth()-size*0.2f), (int)(Constants.getHeight()-size*0.1f), 0);
 		if(sel.isTile())
 			GL11.glRotatef(30f, 1,1,0);
 		else{

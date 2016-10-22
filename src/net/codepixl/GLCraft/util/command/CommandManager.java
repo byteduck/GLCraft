@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.Map.Entry;
 
 import net.codepixl.GLCraft.GLCraft;
+import net.codepixl.GLCraft.util.ChatFormat;
 import net.codepixl.GLCraft.world.CentralManager;
 import net.codepixl.GLCraft.world.WorldManager;
 
@@ -85,7 +86,7 @@ public class CommandManager {
 				}else
 					cmd.getValue().sendMessage("You do not have permission to do that!");
 			}else{
-				cmd.getValue().sendMessage("Unknown command "+args[0]+"!");
+				cmd.getValue().sendMessage(ChatFormat.RED+"Unknown command "+args[0]+"!");
 			}
 		}
 	}

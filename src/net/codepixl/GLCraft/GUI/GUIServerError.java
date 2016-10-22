@@ -1,5 +1,7 @@
 package net.codepixl.GLCraft.GUI;
 
+import org.apache.commons.lang3.StringUtils;
+
 import net.codepixl.GLCraft.GUI.Elements.GUILabel;
 import net.codepixl.GLCraft.util.Constants;
 
@@ -13,7 +15,8 @@ public class GUIServerError extends GUIScreen{
 		if(message == null)
 			message = "Unknown error";
 		this.setDrawStoneBackground(true);
-		lbl = new GUILabel(Constants.WIDTH/2, Constants.HEIGHT/2-Constants.FONT.getHeight(), prefix+message);
+		int lines = StringUtils.countMatches(prefix+message, "\n")+1;
+		lbl = new GUILabel(Constants.getWidth()/2, Constants.getHeight()/2-(int)((float)Constants.FONT.getHeight()*(lines/2f)), prefix+message);
 		lbl.alignment = GUILabel.Alignment.CENTER;
 		lbl.size = 2f;
 		addElement(lbl);
@@ -30,7 +33,8 @@ public class GUIServerError extends GUIScreen{
 	@Override
 	public void onClose(){
 		super.onClose();
-		GUIManager.getMainManager().showGUI("startScreen");
+		GUIManager.getMainManager().clearGUIStack();
+		GUIManager.getMainManager().showGUI(new GUIStartScreen());
 	}
 
 }

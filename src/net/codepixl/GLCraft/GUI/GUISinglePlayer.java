@@ -11,6 +11,7 @@ import org.lwjgl.opengl.GL11;
 import net.codepixl.GLCraft.GLCraft;
 import net.codepixl.GLCraft.GUI.Elements.GUIButton;
 import net.codepixl.GLCraft.GUI.Elements.GUILabel;
+import net.codepixl.GLCraft.GUI.Elements.GUISave;
 import net.codepixl.GLCraft.GUI.Elements.GUILabel.Alignment;
 import net.codepixl.GLCraft.network.Client;
 import net.codepixl.GLCraft.GUI.Elements.GUIScrollBox;
@@ -21,24 +22,24 @@ import net.codepixl.GLCraft.util.data.saves.SaveManager;
 
 public class GUISinglePlayer extends GUIScreen{
 	
-	private static final int MIDDLE = Constants.WIDTH/2;
-	private static final int NEWWORLDX = (int) (Constants.WIDTH*0.7);
-	private static final int NEWWORLDY = (int) (Constants.HEIGHT*0.925);
-	private static final int LOADWORLDX = (int) (Constants.WIDTH*0.3);
-	private static final int LOADWORLDY = (int) (Constants.HEIGHT*0.8);
-	private static final int DELETEWORLDY = LOADWORLDY;
-	private static final int DELETEWORLDX = (int) (Constants.WIDTH*0.7);
-	private static final int TEXTBOXY = (int) (Constants.HEIGHT*0.925);
-	private static final int TEXTBOXX = (int) (Constants.HEIGHT*0.3);
-	private static final int LINEY = (int) (Constants.HEIGHT*0.85);
-	
 	private GUIButton newWorld, loadWorld, deleteWorld;
 	private GUILabel title;
 	private GUISave selectedSave;
 	private GUIScrollBox scrollBox;
 	private GUITextBox textBox;
+	private int LINEY = (int) (Constants.getHeight()*0.85);
 	
-	public GUISinglePlayer(){
+	public void makeElements(){
+		final int MIDDLE = Constants.getWidth()/2;
+		final int NEWWORLDX = (int) (Constants.getWidth()*0.7);
+		final int NEWWORLDY = (int) (Constants.getHeight()*0.925);
+		final int LOADWORLDX = (int) (Constants.getWidth()*0.3);
+		final int LOADWORLDY = (int) (Constants.getHeight()*0.8);
+		final int DELETEWORLDY = LOADWORLDY;
+		final int DELETEWORLDX = (int) (Constants.getWidth()*0.7);
+		final int TEXTBOXY = (int) (Constants.getHeight()*0.925);
+		final int TEXTBOXX = (int) (Constants.getHeight()*0.3);
+		LINEY = (int) (Constants.getHeight()*0.85);
 		setDrawStoneBackground(true);
 		
 		newWorld = new GUIButton("New World", NEWWORLDX, NEWWORLDY, new Callable<Void>() {
@@ -104,8 +105,8 @@ public class GUISinglePlayer extends GUIScreen{
 		scrollBox = new GUIScrollBox(10);
 		scrollBox.x = 100;
 		scrollBox.y = Constants.FONT.getHeight()*2+20;
-		scrollBox.width = Constants.WIDTH-200;
-		scrollBox.height = (int) (Constants.HEIGHT*0.75f-scrollBox.y);
+		scrollBox.width = Constants.getWidth()-200;
+		scrollBox.height = (int) (Constants.getHeight()*0.75f-scrollBox.y);
 		
 		final String tbp = "   Enter New World Name   ";
 		int tbtwidth = Constants.FONT.getWidth(tbp);
@@ -135,11 +136,6 @@ public class GUISinglePlayer extends GUIScreen{
 	}
 	
 	@Override
-	public void onClose(){
-		GUIManager.getMainManager().showGUI("startScreen");
-	}
-	
-	@Override
 	public void onOpen(){
 		super.onOpen();
 		this.selectedSave = null;
@@ -152,7 +148,7 @@ public class GUISinglePlayer extends GUIScreen{
 			for(Save save : saves){
 				GUISave s = new GUISave(save, this);
 				s.x = 10;
-				s.width = Constants.WIDTH-240;
+				s.width = Constants.getWidth()-240;
 				scrollBox.addItem(s);
 				i++;
 			}

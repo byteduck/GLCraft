@@ -32,6 +32,7 @@ import net.codepixl.GLCraft.GLCraft;
 import net.codepixl.GLCraft.GUI.GUIManager;
 import net.codepixl.GLCraft.GUI.GUIPauseMenu;
 import net.codepixl.GLCraft.GUI.GUIServerError;
+import net.codepixl.GLCraft.GUI.GUIStartScreen;
 import net.codepixl.GLCraft.GUI.Inventory.GUICrafting;
 import net.codepixl.GLCraft.GUI.Inventory.GUICraftingAdvanced;
 import net.codepixl.GLCraft.network.packet.Packet;
@@ -116,8 +117,6 @@ public class WorldManager {
 		activeChunks = new HashMap<Vector3i,Chunk>();
 		if(!isServer){
 			entityManager.initPlayer();
-			GUIManager.getMainManager().addGUI(new GUICrafting(entityManager.getPlayer()), "crafting");
-			GUIManager.getMainManager().addGUI(new GUICraftingAdvanced(entityManager.getPlayer()), "adv_crafting");
 		}
 	}
 	
@@ -1061,8 +1060,10 @@ public class WorldManager {
 					GUIManager.getMainManager().showGUI(new GUIServerError("Kicked from server:\n", reason));
 				else
 					GUIManager.getMainManager().showGUI(new GUIServerError("Server closed:\n", reason));
-			}else
-				GUIManager.getMainManager().showGUI("startScreen");
+			}else{
+				GUIManager.getMainManager().clearGUIStack();
+				GUIManager.getMainManager().showGUI(new GUIStartScreen());
+			}
 			if(isHost && kicked)
 				GLCraft.getGLCraft().closeLocalServerNow("The host was kicked.");
 			kicked = false;

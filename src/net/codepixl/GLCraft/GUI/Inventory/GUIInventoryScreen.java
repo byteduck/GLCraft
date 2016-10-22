@@ -20,11 +20,17 @@ public class GUIInventoryScreen extends GUIScreen{
 	public GUIInventoryScreen(EntityPlayer p){
 		this.player = p;
 		this.playerSlots = new GUISlot[p.getInventorySize()-9];
+	}
+	
+	@Override
+	public void makeElements(){
+		this.clearElements();
 		for(int i = 0; i < playerSlots.length; i++){
 			int row = i/9;
 			int col = i%9;
 			
-			this.playerSlots[i] = new GUISlot((int)(col*GUISlot.size+GUISlot.size/2+(Constants.WIDTH/2-4.5f*GUISlot.size)), Constants.HEIGHT - (int) (row*GUISlot.size+GUISlot.size*3), p);
+			this.playerSlots[i] = new GUISlot((int)(col*GUISlot.size+GUISlot.size/2+(Constants.getWidth()/2-4.5f*GUISlot.size)), Constants.getHeight() - (int) (row*GUISlot.size+GUISlot.size*3), player);
+			this.playerSlots[i].itemstack = this.player.getInventory(i+9);
 		}
 		addElements(this.playerSlots);
 	}

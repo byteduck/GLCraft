@@ -11,24 +11,27 @@ import net.codepixl.GLCraft.GLCraft;
 import net.codepixl.GLCraft.GUI.Elements.GUIButton;
 import net.codepixl.GLCraft.GUI.Elements.GUILabel;
 import net.codepixl.GLCraft.GUI.Elements.GUISlider;
+import net.codepixl.GLCraft.GUI.Elements.GUITexture;
 import net.codepixl.GLCraft.render.util.SettingsManager;
 import net.codepixl.GLCraft.util.Constants;
+import net.codepixl.GLCraft.util.LogSource;
+import net.codepixl.GLCraft.util.logging.GLogger;
 import net.codepixl.GLCraft.world.WorldManager;
 
 public class GUIPauseMenu extends GUIScreen{
 	
-	private static final int BACKY = (int) (Constants.HEIGHT*0.2);
-	private static final int SAVEY = (int) (Constants.HEIGHT*0.4);
-	private static final int QUITY = (int) (Constants.HEIGHT*0.6);
-	private static final int SETTINGSY = (int) (Constants.HEIGHT*0.8);
-	private static final int MIDDLE = Constants.WIDTH/2;
-	
 	private GUIButton backButton,quitButton,exitButton,settingsButton;
 	private GUITexture savingIcon;
 	
-	private boolean isHost = false;
+	public static boolean isHost = false;
 	
-	public GUIPauseMenu(){
+	@Override
+	public void makeElements(){
+		int BACKY = (int) (Constants.getHeight()*0.2);
+		int SAVEY = (int) (Constants.getHeight()*0.4);
+		int QUITY = (int) (Constants.getHeight()*0.6);
+		int SETTINGSY = (int) (Constants.getHeight()*0.8);
+		int MIDDLE = Constants.getWidth()/2;
 		backButton = new GUIButton("Back to game", MIDDLE, BACKY, new Callable<Void>(){
 			@Override
 			public Void call() throws Exception {
@@ -38,7 +41,7 @@ public class GUIPauseMenu extends GUIScreen{
 			}
 		});
 		
-		quitButton = new GUIButton("YOU SHOULD NOT SEE THIS", MIDDLE, QUITY, new Callable<Void>(){
+		quitButton = new GUIButton(isHost ? "Save and Quit" : "Disconnect and Quit", MIDDLE, QUITY, new Callable<Void>(){
 			@Override
 			public Void call() throws Exception {
 				if(isHost){
@@ -50,7 +53,7 @@ public class GUIPauseMenu extends GUIScreen{
 			}
 		});
 		
-		exitButton = new GUIButton("YOU SHOULD NOT SEE THIS", MIDDLE, SAVEY, new Callable<Void>(){
+		exitButton = new GUIButton(isHost ? "Save and Exit" : "Disconnect", MIDDLE, SAVEY, new Callable<Void>(){
 			@Override
 			public Void call() throws Exception {
 				if(isHost){
@@ -66,12 +69,12 @@ public class GUIPauseMenu extends GUIScreen{
 		settingsButton = new GUIButton("Settings", MIDDLE, SETTINGSY, new Callable<Void>(){
 			@Override
 			public Void call() throws Exception {
-				GUIManager.getMainManager().showGUI("settings");
+				GUIManager.getMainManager().showGUI(new GUISettings());
 				return null;
 			}
 		});
 		
-		savingIcon = new GUITexture("misc.floppy", Constants.WIDTH-42, 10, 32);
+		savingIcon = new GUITexture("misc.floppy", Constants.getWidth()-42, 10, 32);
 		savingIcon.visible = false;
 		
 		
@@ -83,32 +86,22 @@ public class GUIPauseMenu extends GUIScreen{
 		this.addElement(settingsButton);
 	}
 	
-	public void setHost(boolean host){
-		this.isHost = host;
-		if(host){
-			quitButton.setText("Save and Quit");
-			exitButton.setText("Save and Exit");
-		}else{
-			quitButton.setText("Disconnect and Quit");
-			exitButton.setText("Disconnect and Exit");
-		}
-	}
-	
 	@Override
 	public void drawBG(){
 		GL11.glDisable(GL11.GL_TEXTURE_2D);
 		GL11.glColor4f(0.1f,0.1f,0.1f,0.5f);
 		GL11.glBegin(GL11.GL_QUADS);
 			GL11.glVertex2f(0,0);
-			GL11.glVertex2f(0,Constants.HEIGHT);
-			GL11.glVertex2f(Constants.WIDTH,Constants.HEIGHT);
-			GL11.glVertex2f(Constants.WIDTH,0);
+			GL11.glVertex2f(0,Constants.getHeight());
+			GL11.glVertex2f(Constants.getWidth(),Constants.getHeight());
+			GL11.glVertex2f(Constants.getWidth(),0);
 		GL11.glEnd();
 		GL11.glEnable(GL11.GL_TEXTURE_2D);
 	}
 	
 	@Override
 	public void update(){
+		super.update();
 		this.savingIcon.visible = GLCraft.getGLCraft().getWorldManager(false).isSaving();
 	}
 }

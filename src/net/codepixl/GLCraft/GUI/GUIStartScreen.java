@@ -25,22 +25,21 @@ import net.codepixl.GLCraft.world.tile.Tile;
 
 public class GUIStartScreen extends GUIScreen{
 	
-	private static final int MIDDLE = Constants.WIDTH/2;
-	private static final int MIDDLEY = (int) (Constants.HEIGHT*0.7);
-	private static final int BUGY = (int) (Constants.HEIGHT * 0.8);
-	private static final int BUTTONWIDTH = Constants.WIDTH/2;
-	private static final int BBUTTONWIDTH = Constants.WIDTH/4-5;
-	
 	private GUIButton startButton, pluginManagerButton, quitButton, bugButton, texturepackButton, multiplayerButton;
 	private GUILabel title;
 
-	public GUIStartScreen() {
+	public void makeElements(){
+		int MIDDLE = Constants.getWidth()/2;
+		int MIDDLEY = (int) (Constants.getHeight()*0.7);
+		int BUGY = (int) (Constants.getHeight() * 0.8);
+		int BUTTONWIDTH = Constants.getWidth()/2;
+		int BBUTTONWIDTH = Constants.getWidth()/4-5;
 		setDrawStoneBackground(true);
 		
 		startButton = new GUIButton("Singleplayer", MIDDLE, MIDDLEY-GUIButton.BTNHEIGHT*2-20, new Callable<Void>() {
 			@Override
 			public Void call() throws Exception {
-				GUIManager.getMainManager().showGUI("singleplayer");
+				GUIManager.getMainManager().showGUI(new GUISinglePlayer());
 				return null;
 			}
 		});
@@ -49,7 +48,7 @@ public class GUIStartScreen extends GUIScreen{
 		multiplayerButton = new GUIButton("Multiplayer", MIDDLE, MIDDLEY-GUIButton.BTNHEIGHT-10, new Callable<Void>() {
 			@Override
 			public Void call() throws Exception {
-				GUIManager.getMainManager().showGUI("multiplayer");
+				GUIManager.getMainManager().showGUI(new GUIMultiplayer());
 				return null;
 			}
 		});
@@ -67,7 +66,7 @@ public class GUIStartScreen extends GUIScreen{
 		texturepackButton = new GUIButton("Settings", MIDDLE, MIDDLEY+GUIButton.BTNHEIGHT+10, new Callable<Void>() {
 			@Override
 			public Void call() throws Exception {
-				GUIManager.getMainManager().showGUI("settings");
+				GUIManager.getMainManager().showGUI(new GUISettings());
 				return null;
 			}
 		});

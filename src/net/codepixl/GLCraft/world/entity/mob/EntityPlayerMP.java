@@ -10,6 +10,7 @@ import org.newdawn.slick.opengl.TextureImpl;
 import com.nishu.utils.Color4f;
 
 import net.codepixl.GLCraft.network.packet.PacketChat;
+import net.codepixl.GLCraft.network.packet.PacketPlayerAction;
 import net.codepixl.GLCraft.network.packet.PacketRespawn;
 import net.codepixl.GLCraft.network.packet.PacketSetInventory;
 import net.codepixl.GLCraft.render.Shape;
@@ -23,6 +24,7 @@ import net.codepixl.GLCraft.util.logging.GLogger;
 import net.codepixl.GLCraft.world.WorldManager;
 import net.codepixl.GLCraft.world.entity.Entity;
 import net.codepixl.GLCraft.world.entity.EntityItem;
+import net.codepixl.GLCraft.world.item.Item;
 import net.codepixl.GLCraft.world.item.ItemStack;
 import net.codepixl.GLCraft.world.tile.Tile;
 
@@ -139,6 +141,20 @@ public class EntityPlayerMP extends EntityPlayer{
 	@Override
 	public void sendMessage(String msg){
 		worldManager.sendPacket(new PacketChat(msg), this);
+	}
+
+	public void dropItem(PacketPlayerAction p) {
+		if(p.type == PacketPlayerAction.Type.DROPOTHERITEM && !p.isNull){
+			ItemStack s;
+			if(p.isTile)
+				s = new ItemStack(Tile.getTile(p.id),p.count,p.meta);
+			else
+				s = new ItemStack(Item.getItem(p.id),p.count,p.meta);
+			
+			EntityItem e = new EntityItem(s, pos.x, pos.y+this.eyeLevel, pos.z, worldManager);
+			e.setVelocity(MathUtils.RotToVel(this.getRot(), 1f));
+			worldManager.spawnEntity(e);
+		}
 	}
 
 }

@@ -156,18 +156,14 @@ public class Mob extends EntitySolid implements GameObj{
 			}
 			if(this.onGround){
 				if(this.fallDistance > 0f){
-					float damage = (fallDistance - 3f)*2;
+					float damage = (fallDistance - 4f)*2;
 					if(damage > 0f){
 						this.hurt(damage,DamageSource.FALL);
 					}
 				}
 				this.fallDistance = 0f;
-			}else{
-				if(this.getVel().y < 0)
-					this.fallDistance+=(Time.getDelta()*-this.getVel().y*10f);
-				else
-					this.fallDistance=0;
-			}
+			}else
+				this.fallDistance+=this.prevY-this.getY(); 
 			this.prevY = this.getY();
 			if(!this.canBreathe())
 				this.airLevel -= Time.getDelta();

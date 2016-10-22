@@ -14,6 +14,8 @@ import com.evilco.mc.nbt.tag.TagList;
 
 import net.codepixl.GLCraft.network.packet.PacketContainer;
 import net.codepixl.GLCraft.util.Constants;
+import net.codepixl.GLCraft.util.LogSource;
+import net.codepixl.GLCraft.util.logging.GLogger;
 import net.codepixl.GLCraft.world.WorldManager;
 import net.codepixl.GLCraft.world.entity.Entity;
 import net.codepixl.GLCraft.world.entity.EntityItem;

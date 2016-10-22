@@ -50,6 +50,7 @@ import static org.lwjgl.opengl.GL11.glTexEnvi;
 import static org.lwjgl.opengl.GL11.glViewport;
 import static org.lwjgl.util.glu.GLU.gluPerspective;
 
+import java.awt.Desktop;
 import java.awt.Font;
 import java.awt.FontFormatException;
 import java.awt.GraphicsEnvironment;
@@ -77,6 +78,7 @@ import com.nishu.utils.Time;
 import com.nishu.utils.Window;
 
 import net.codepixl.GLCraft.GUI.GUIManager;
+import net.codepixl.GLCraft.GUI.GUIStartScreen;
 import net.codepixl.GLCraft.network.Client;
 import net.codepixl.GLCraft.network.Server;
 import net.codepixl.GLCraft.plugin.Plugin;
@@ -114,6 +116,7 @@ public class GLCraft extends Screen{
 	private Server server;
 	private Client client;
 	private boolean isServer = false;
+	private static int xSize, ySize;
 	
 	public static GLCraft getGLCraft(){
 		return glcraft;
@@ -171,12 +174,11 @@ public class GLCraft extends Screen{
 			Display.setFullscreen(false);
 			Display.setDisplayMode(new DisplayMode(1000, 700));
 			Display.setTitle("GLCraft "+fullVersion);
-			Display.create(new PixelFormat(8,8,8));
-			
 			Display.setIcon(new ByteBuffer[] {
 			        loadIcon(GLCraft.class.getResource("/textures/icons/icon16.png")),
 			        loadIcon(GLCraft.class.getResource("/textures/icons/icon32.png")),
 			});
+			Display.create(new PixelFormat(8,8,8));
 			
 			initGL();
 			
@@ -285,7 +287,7 @@ public class GLCraft extends Screen{
 			pluginManager.addDevPlugin(devPlugin);
 		}
 		TextureManager.generateAtlas(false);
-		GUIManager.getMainManager().showGUI("startScreen");
+		GUIManager.getMainManager().showGUI(new GUIStartScreen());
 	}
 	
 	public void initServer(){
@@ -336,7 +338,7 @@ public class GLCraft extends Screen{
 		glViewport(0,0,Display.getWidth(),Display.getHeight());
 		glMatrixMode(GL_PROJECTION);
 		glLoadIdentity();
-		gluPerspective(67f,Constants.WIDTH/Constants.HEIGHT,0.001f, 1000f);
+		gluPerspective(67f,Constants.getWidth()/Constants.getHeight(),0.001f, 1000f);
 		glMatrixMode(GL_MODELVIEW);
 
 		glEnable(GL_DEPTH_TEST);
@@ -353,8 +355,8 @@ public class GLCraft extends Screen{
 		glClearDepth(1);
 		glMatrixMode(GL_PROJECTION);
 		glLoadIdentity();
-		glViewport(0,0,Constants.WIDTH,Constants.HEIGHT);
-		glOrtho(0,Constants.WIDTH,Constants.HEIGHT,0,-200,200);
+		glViewport(0,0,Constants.getWidth(),Constants.getHeight());
+		glOrtho(0,Constants.getWidth(),Constants.getHeight(),0,-200,200);
 		glMatrixMode(GL_MODELVIEW);
 		glLoadIdentity();
 		glDisable(GL_DEPTH_TEST);
@@ -370,9 +372,9 @@ public class GLCraft extends Screen{
 		if(!getGLCraft().isServer){
 			GL11.glClear(GL11.GL_COLOR_BUFFER_BIT);
 			String ltext = "GLCraft is loading...";
-			Constants.FONT.drawString(Constants.WIDTH/2-Constants.FONT.getWidth(ltext)/2,30, ltext);
-			Constants.FONT.drawString(Constants.WIDTH/2-Constants.FONT.getWidth(line1)/2,Constants.HEIGHT/2-Constants.FONT.getHeight(line1), line1);
-			Constants.FONT.drawString(Constants.WIDTH/2-Constants.FONT.getWidth(line2)/2,Constants.HEIGHT/2+Constants.FONT.getHeight(line2), line2);
+			Constants.FONT.drawString(Constants.getWidth()/2-Constants.FONT.getWidth(ltext)/2,30, ltext);
+			Constants.FONT.drawString(Constants.getWidth()/2-Constants.FONT.getWidth(line1)/2,Constants.getHeight()/2-Constants.FONT.getHeight(line1), line1);
+			Constants.FONT.drawString(Constants.getWidth()/2-Constants.FONT.getWidth(line2)/2,Constants.getHeight()/2+Constants.FONT.getHeight(line2), line2);
 			TextureImpl.unbind();
 			Display.update();
 		}
@@ -381,6 +383,10 @@ public class GLCraft extends Screen{
 	@Override
 	public void update() {
 		DebugTimer.startTimer("loop_time");
+		if(!Display.isFullscreen()){
+			xSize = Display.getWidth();
+			ySize = Display.getHeight();
+		}
 		if(clientCentralManager != null)
 			clientCentralManager.update();
 		if(serverCentralManager != null)
@@ -391,10 +397,6 @@ public class GLCraft extends Screen{
 
 	@Override
 	public void render() {
-		if(Display.wasResized()){
-			Constants.WIDTH = Display.getWidth();
-			Constants.HEIGHT = Display.getHeight();
-		}
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		clientCentralManager.render();
 		DebugTimer.endTimer("loop_time");
@@ -507,6 +509,18 @@ public class GLCraft extends Screen{
 
 	public void closeLocalServerNow(String reason) {
 		this.serverWorldManager.closeWorldNow(reason);
+	}
+
+	public void toggleFullScreen(){
+		try{
+			if(Display.isFullscreen()){
+				Display.setDisplayMode(new DisplayMode(xSize, ySize));
+				Display.setFullscreen(false);
+			}else{
+				Display.setDisplayModeAndFullscreen(Display.getDesktopDisplayMode());
+			}
+			GUIManager.getMainManager().resize();
+		}catch(LWJGLException e){}
 	}
 
 }

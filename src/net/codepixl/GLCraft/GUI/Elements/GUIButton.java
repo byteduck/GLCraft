@@ -23,7 +23,7 @@ import net.codepixl.GLCraft.render.util.Tesselator;
 import net.codepixl.GLCraft.sound.SoundManager;
 import net.codepixl.GLCraft.util.Constants;
 
-public class GUIButton extends GUIScreen{
+public class GUIButton extends GUIElement{
 
 	public static final int BTNHEIGHT = 30;
 	public static final int BTNPADDING = 10;
@@ -164,7 +164,7 @@ public class GUIButton extends GUIScreen{
 	public boolean testMouse(int xof, int yof){
 		int mouseY = Mouse.getY()+xof;
 		int mouseX = Mouse.getX()+yof;
-		mouseY = -mouseY+Constants.HEIGHT;
+		mouseY = -mouseY+Constants.getHeight();
 		if(mouseY <= y+height/2 && mouseY >= y-height/2){
 			if(mouseX <= x+width/2 && mouseX >= x-width/2){
 				return true;

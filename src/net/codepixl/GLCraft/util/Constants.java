@@ -4,6 +4,7 @@ import java.awt.Font;
 import java.util.Arrays;
 import java.util.Random;
 
+import org.lwjgl.opengl.Display;
 import org.lwjgl.util.vector.Vector3f;
 import org.newdawn.slick.TrueTypeFont;
 
@@ -26,8 +27,6 @@ public class Constants {
 	public static int maxFPS;
 	public static int GAME_STATE = START_SCREEN;
 	public static int worldLength = CHUNKSIZE * worldLengthChunks;
-	public static int WIDTH = 1000;
-	public static int HEIGHT = 700;
 	public static int dayLengthMS = 1200000;
 	public static String[] SystemProperty = new String[54];
 	public static String[] SystemPropertyName = new String[] { "java.runtime.name", "sun.boot.library.path",
@@ -123,6 +122,14 @@ public class Constants {
 	public static void init(boolean dedicatedServer){
 		if(!dedicatedServer)
 			maxFPS = Integer.parseInt(SettingsManager.getSetting("max_fps"));
+	}
+
+	public static int getWidth(){
+		return Display.getWidth();
+	}
+	
+	public static int getHeight(){
+		return Display.getHeight();
 	}
 
 }

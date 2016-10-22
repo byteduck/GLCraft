@@ -18,7 +18,7 @@ import com.nishu.utils.Color4f;
 import net.codepixl.GLCraft.GUI.GUIScreen;
 import net.codepixl.GLCraft.util.Constants;
 
-public class GUILabel extends GUIScreen{
+public class GUILabel extends GUIElement{
 	public static Color4f LBLTEXTCOLOR = new Color4f(1f,1f,1f,1f);
 	public static Alignment LBLALIGNMENT = Alignment.LEFT;
 	public static float LBLSIZE = 1.5f;

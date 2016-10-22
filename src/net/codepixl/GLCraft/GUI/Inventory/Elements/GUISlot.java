@@ -3,11 +3,12 @@ package net.codepixl.GLCraft.GUI.Inventory.Elements;
 import java.util.concurrent.Callable;
 
 import org.lwjgl.input.Mouse;
+import org.lwjgl.opengl.Display;
 import org.lwjgl.opengl.GL11;
 
 import com.nishu.utils.Color4f;
 
-import net.codepixl.GLCraft.GUI.GUIScreen;
+import net.codepixl.GLCraft.GUI.Elements.GUIElement;
 import net.codepixl.GLCraft.render.Shape;
 import net.codepixl.GLCraft.render.TextureManager;
 import net.codepixl.GLCraft.util.Constants;
@@ -15,11 +16,10 @@ import net.codepixl.GLCraft.util.Spritesheet;
 import net.codepixl.GLCraft.world.entity.mob.EntityPlayer;
 import net.codepixl.GLCraft.world.item.ItemStack;
 
-public class GUISlot extends GUIScreen{
+public class GUISlot extends GUIElement{
 	
 	public ItemStack itemstack;
-	private int x,y;
-	public static final float size = (float)Constants.WIDTH/18f;
+	public static float size = 1000f/18f;
 	public boolean hover = false;
 	public boolean canPickup = true, canPlace = true;
 	public EntityPlayer player;
@@ -43,15 +43,9 @@ public class GUISlot extends GUIScreen{
 		}
 		Spritesheet.atlas.bind();
 		GL11.glBegin(GL11.GL_QUADS);
-		Shape.createCenteredSquare(x,y, color, TextureManager.texture("gui.guislot"), size);
+		Shape.createCenteredSquare(0,0, color, TextureManager.texture("gui.guislot"), size);
 		GL11.glEnd();
-		float size = Constants.WIDTH/18f;
-		itemstack.renderIcon(x, y, size);
-	}
-
-	@Override
-	public void update() {
-		
+		itemstack.renderIcon(0, 0, size);
 	}
 
 	@Override
@@ -130,7 +124,7 @@ public class GUISlot extends GUIScreen{
 	public boolean testMouse(int xof, int yof){
 		int mouseY = Mouse.getY()-yof;
 		int mouseX = Mouse.getX()-xof;
-		mouseY = -mouseY+Constants.HEIGHT;
+		mouseY = -mouseY+Constants.getHeight();
 		if(mouseY <= y+size/2 && mouseY >= y-size/2){
 			if(mouseX <= x+size/2 && mouseX >= x-size/2){
 				return true;

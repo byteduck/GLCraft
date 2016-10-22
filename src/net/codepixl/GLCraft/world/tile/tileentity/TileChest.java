@@ -74,7 +74,9 @@ public class TileChest extends TileTileEntity{
 	@Override
 	public void onBreak(int x, int y, int z, boolean drop, BreakSource source, WorldManager worldManager){
 		super.onBreak(x, y, z, drop, source, worldManager);
-		((TileEntityChest)worldManager.getTileEntityAtPos(x, y, z)).dropAllItems();
+		TileEntityChest c  = ((TileEntityChest)worldManager.getTileEntityAtPos(x, y, z));
+		if(c != null)
+			c.dropAllItems();
 	}
 	
 	@Override

@@ -18,14 +18,18 @@ public class GUIFurnace extends GUIInventoryScreen{
 	private GUIProgressBar progressBar;
 	private GUIProgressBar fuelBar;
 	
-	private static final int HMIDDLE = Constants.WIDTH/2;
-	private static final int VMIDDLE = (int) (Constants.HEIGHT/2-GUISlot.size*2);
-	private static final int HSIZE = (int) (GUISlot.size/2f);
-	private static final int PBSIZE = 100;
-	
 	
 	public GUIFurnace(final TileEntityFurnace furnace, EntityPlayer player) {
 		super(player);
+		this.furnace = furnace;
+	}
+	
+	public void makeElements(){
+		super.makeElements();
+		final int HMIDDLE = Constants.getWidth()/2;
+		final int VMIDDLE = (int) (Constants.getHeight()/2-GUISlot.size*2);
+		final int HSIZE = (int) (GUISlot.size/2f);
+		final int PBSIZE = 100;
 		Callable<Void> updateListener = new Callable<Void>(){
 			@Override
 			public Void call() throws Exception {
@@ -33,7 +37,6 @@ public class GUIFurnace extends GUIInventoryScreen{
 				return null;
 			}
 		};
-		this.furnace = furnace;
 		in = new GUISlot(HMIDDLE-HSIZE-PBSIZE/2-10,VMIDDLE,player);
 		out = new GUISlot(HMIDDLE+HSIZE+PBSIZE/2+10,VMIDDLE,player);
 		out.canPlace = false;
@@ -50,6 +53,7 @@ public class GUIFurnace extends GUIInventoryScreen{
 	
 	@Override
 	public void update(){
+		super.update();
 		progressBar.setProgress(furnace.getProgressPercent());
 		fuelBar.setProgress(furnace.getFuelPercent());
 	}

@@ -14,7 +14,7 @@ import com.nishu.utils.Color4f;
 import net.codepixl.GLCraft.GUI.GUIScreen;
 import net.codepixl.GLCraft.render.Shape;
 
-public class GUIProgressBar extends GUIScreen{
+public class GUIProgressBar extends GUIElement{
 	
 	public Color4f COLOR = new Color4f(0.3f, 0.5f, 0.3f, 1f), BGCOLOR = new Color4f(0.1f, 0.2f, 0.1f, 1f);
 	

@@ -34,12 +34,11 @@ public class GUIMultiplayer extends GUIScreen{
 	private GUITextBox textBox;
 	private GUIButton joinButton;
 	
-	private static final int JOINX = (int) (Constants.WIDTH*0.7);
-	private static final int JOINY = (int) (Constants.HEIGHT*0.925);
-	private static final int TEXTBOXY = (int) (Constants.HEIGHT*0.925);
-	private static final int TEXTBOXX = (int) (Constants.HEIGHT*0.3);
-	
-	public GUIMultiplayer(){
+	public void makeElements(){
+		int JOINX = (int) (Constants.getWidth()*0.7);
+		int JOINY = (int) (Constants.getHeight()*0.925);
+		int TEXTBOXY = (int) (Constants.getHeight()*0.925);
+		int TEXTBOXX = (int) (Constants.getHeight()*0.3);
 		thisinst = this;
 		this.setDrawStoneBackground(true);
 		try{
@@ -53,8 +52,8 @@ public class GUIMultiplayer extends GUIScreen{
 		scrollBox = new GUIScrollBox(10);
 		scrollBox.x = 100;
 		scrollBox.y = Constants.FONT.getHeight()*2+20;
-		scrollBox.width = Constants.WIDTH-200;
-		scrollBox.height = (int) (Constants.HEIGHT*0.75f-scrollBox.y);
+		scrollBox.width = Constants.getWidth()-200;
+		scrollBox.height = (int) (Constants.getHeight()*0.75f-scrollBox.y);
 		
 		recvRunnable = new RecvThread(scrollBox);
 		
@@ -86,7 +85,7 @@ public class GUIMultiplayer extends GUIScreen{
 								return null;
 							}
 							glDisable(GL_TEXTURE_2D);
-							((GUIPauseMenu)GUIManager.getMainManager().getGUI("pauseMenu")).setHost(false);
+							GUIPauseMenu.isHost = false;
 							GLCraft.getGLCraft().getWorldManager(false).isHost = false;
 							GUIManager.getMainManager().clearGUIStack();
 							GUIManager.getMainManager().closeGUI(false);
@@ -111,7 +110,7 @@ public class GUIMultiplayer extends GUIScreen{
 	
 	@Override
 	public void onClose(){
-		GUIManager.getMainManager().showGUI("startScreen");
+		super.onClose();
 		recvThread.interrupt();
 	}
 	
@@ -158,7 +157,7 @@ public class GUIMultiplayer extends GUIScreen{
 							servers.add(s);
 							GUIServer gui = new GUIServer(thisinst, msg, pckt.getAddress(), port);
 							gui.x = 10;
-							gui.width = Constants.WIDTH-240;
+							gui.width = Constants.getWidth()-240;
 							sbox.addItem(gui);
 						}
 					}

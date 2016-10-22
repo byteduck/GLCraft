@@ -59,6 +59,7 @@ import java.util.Iterator;
 import javax.imageio.ImageIO;
 
 import org.lwjgl.BufferUtils;
+import org.lwjgl.LWJGLException;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.Display;
@@ -225,11 +226,6 @@ public class CentralManager extends Screen{
 	private void initGUIManager(){
 		guiManager = new GUIManager();
 		GUIManager.setMainManager(guiManager);
-		guiManager.addGUI(new GUIStartScreen(), "startScreen");
-		guiManager.addGUI(new GUIPauseMenu(), "pauseMenu");
-		guiManager.addGUI(new GUISinglePlayer(), "singleplayer");
-		guiManager.addGUI(new GUIMultiplayer(), "multiplayer");
-		guiManager.addGUI(new GUISettings(), "settings");
 	}
 
 	@Override
@@ -253,6 +249,8 @@ public class CentralManager extends Screen{
 			}
 			while(Keyboard.next()){
 				if(Keyboard.getEventKeyState()){
+					if(Keyboard.isKeyDown(Keyboard.KEY_F11))
+						GLCraft.getGLCraft().toggleFullScreen();
 					if(Keyboard.isKeyDown(Keyboard.KEY_F3)){
 						renderDebug = !renderDebug;
 					}
@@ -262,7 +260,7 @@ public class CentralManager extends Screen{
 							guiManager.closeGUI(true);
 							Mouse.setGrabbed(true);
 						}else if(!guiManager.isGUIOpen()){
-							guiManager.showGUI("pauseMenu");
+							guiManager.showGUI(new GUIPauseMenu());
 						}
 					}
 					if(Keyboard.isKeyDown(Keyboard.KEY_E)){
@@ -270,7 +268,7 @@ public class CentralManager extends Screen{
 							guiManager.closeGUI(true);
 							Mouse.setGrabbed(true);
 						}else{
-							guiManager.showGUI("crafting");
+							guiManager.showGUI(new GUICrafting(worldManager.getPlayer()));
 						}
 					}
 					if(Keyboard.isKeyDown(Keyboard.KEY_T)){
@@ -280,7 +278,7 @@ public class CentralManager extends Screen{
 					if(Keyboard.isKeyDown(Keyboard.KEY_SLASH)){
 						if(!guiManager.isGUIOpen()){
 							GUIChat g = new GUIChat(worldManager);
-							g.input.setText("/");
+							g.initialText = "/";
 							guiManager.showGUI(g);
 						}
 					}
@@ -396,7 +394,7 @@ public class CentralManager extends Screen{
 			Spritesheet.atlas.bind();
 			GL11.glEnable(GL11.GL_TEXTURE_2D);
 			GL11.glBegin(GL11.GL_QUADS);
-			Shape.createSquare(Constants.WIDTH-42, 10, Color4f.WHITE, TextureManager.texture("misc.floppy"), 32);
+			Shape.createSquare(Constants.getWidth()-42, 10, Color4f.WHITE, TextureManager.texture("misc.floppy"), 32);
 			GL11.glEnd();
 		}
 		drawCrosshair();
@@ -467,10 +465,10 @@ public class CentralManager extends Screen{
 	private void renderInventory() {
 		glLoadIdentity();
 		render2D();
-		float SIZE = (float)Constants.WIDTH/18f;
-		float HEARTSIZE = (float)Constants.WIDTH/36f;
-		float SPACING = (float)Constants.WIDTH/36f;
-		float HEARTSPACING = (float)Constants.WIDTH/72f;
+		float SIZE = (float)Constants.getWidth()/18f;
+		float HEARTSIZE = (float)Constants.getWidth()/36f;
+		float SPACING = (float)Constants.getWidth()/36f;
+		float HEARTSPACING = (float)Constants.getWidth()/72f;
 		float BUBBLESIZE = HEARTSIZE;
 		float BUBBLESPACING = HEARTSPACING;
 		EntityPlayer p = worldManager.getEntityManager().getPlayer();
@@ -483,18 +481,18 @@ public class CentralManager extends Screen{
 				texCoords = p.tileAtEye().getIconCoords((byte)worldManager.getMetaAtPos(p.getPos().x,p.getPos().y+1.52f,p.getPos().z));
 			else
 				texCoords = p.tileAtEye().getIconCoords();
-			Shape.createCenteredSquare(Constants.WIDTH/2f, Constants.HEIGHT/2f, new Color4f(1f,1f,1f,1f), texCoords, Constants.WIDTH);
+			Shape.createCenteredSquare(Constants.getWidth()/2f, Constants.getHeight()/2f, new Color4f(1f,1f,1f,1f), texCoords, Constants.getWidth());
 			glEnd();
 			glPopMatrix();
 		}else if(!p.canBreathe()){
 			glPushMatrix();
 			glBegin(GL_QUADS);
-			Shape.createCenteredSquare(Constants.WIDTH/2f, Constants.HEIGHT/2f, new Color4f(1f,1f,1f,1f), Tile.Water.getIconCoords(), Constants.WIDTH);
+			Shape.createCenteredSquare(Constants.getWidth()/2f, Constants.getHeight()/2f, new Color4f(1f,1f,1f,1f), Tile.Water.getIconCoords(), Constants.getWidth());
 			glEnd();
 			glPopMatrix();
 		}
 		for(float i = 0; i < 9f; i++){
-			GUISlot s = new GUISlot((int)(Constants.WIDTH/9f+i*SIZE+i*SPACING+SIZE/2f),(int)(Constants.HEIGHT-(SIZE/2f)),p);
+			GUISlot s = new GUISlot((int)(Constants.getWidth()/9f+i*SIZE+i*SPACING+SIZE/2f),(int)(Constants.getHeight()-(SIZE/2f)),p);
 			s.itemstack = p.getInventory((int)i);
 			if(p.getSelectedSlot() == i)
 				s.hover = true;
@@ -506,14 +504,14 @@ public class CentralManager extends Screen{
 		if(p.airLevel < 10f){
 			glBegin(GL_QUADS);
 			for(int i = 0; i < 10; i++){
-				Shape.createCenteredSquare((float)Constants.WIDTH/9f+i*BUBBLESIZE+i*BUBBLESPACING+BUBBLESIZE/2f,Constants.HEIGHT-(SIZE/2f)-BUBBLESIZE*3.5f, new Color4f(1,1,1,1), p.getTexCoordsForAirIndex(i), BUBBLESIZE);
+				Shape.createCenteredSquare((float)Constants.getWidth()/9f+i*BUBBLESIZE+i*BUBBLESPACING+BUBBLESIZE/2f,Constants.getHeight()-(SIZE/2f)-BUBBLESIZE*3.5f, new Color4f(1,1,1,1), p.getTexCoordsForAirIndex(i), BUBBLESIZE);
 			}
 			glEnd();
 		}
 		
 		glBegin(GL_QUADS);
 		for(int i = 0; i < 10; i++){
-			Shape.createCenteredSquare((float)Constants.WIDTH/9f+i*HEARTSIZE+i*HEARTSPACING+HEARTSIZE/2f,Constants.HEIGHT-(SIZE/2f)-HEARTSIZE*2f, new Color4f(1,1,1,1), p.getTexCoordsForHealthIndex(i), HEARTSIZE);
+			Shape.createCenteredSquare((float)Constants.getWidth()/9f+i*HEARTSIZE+i*HEARTSPACING+HEARTSIZE/2f,Constants.getHeight()-(SIZE/2f)-HEARTSIZE*2f, new Color4f(1,1,1,1), p.getTexCoordsForHealthIndex(i), HEARTSIZE);
 		}
 		glEnd();
 	}
@@ -561,7 +559,7 @@ public class CentralManager extends Screen{
 		}
 		if(!guiManager.isGUIOpen() && currentBlock != -1){
 			String toolTip = "Block: "+Tile.getTile((byte)currentBlock).getName();
-			Constants.FONT.drawString(Constants.WIDTH/2-Constants.FONT.getWidth(toolTip)/2, 10, toolTip);
+			Constants.FONT.drawString(Constants.getWidth()/2-Constants.FONT.getWidth(toolTip)/2, 10, toolTip);
 		}
 		if(renderDebug){
 			EntityPlayer p = getEntityManager().getPlayer();
@@ -587,16 +585,16 @@ public class CentralManager extends Screen{
 		GL11.glLogicOp(GL11.GL_INVERT);
 		GL11.glEnable(GL11.GL_COLOR_LOGIC_OP);
 		GL11.glBegin(GL11.GL_LINES);
-		GL11.glVertex2d(Constants.WIDTH/2-5, Constants.HEIGHT/2);
-		GL11.glVertex2d(Constants.WIDTH/2+5, Constants.HEIGHT/2);
+		GL11.glVertex2d(Constants.getWidth()/2-5, Constants.getHeight()/2);
+		GL11.glVertex2d(Constants.getWidth()/2+5, Constants.getHeight()/2);
 		GL11.glEnd();
 		GL11.glBegin(GL11.GL_LINES);
-		GL11.glVertex2d(Constants.WIDTH/2, Constants.HEIGHT/2-5);
-		GL11.glVertex2d(Constants.WIDTH/2, Constants.HEIGHT/2-2);
+		GL11.glVertex2d(Constants.getWidth()/2, Constants.getHeight()/2-5);
+		GL11.glVertex2d(Constants.getWidth()/2, Constants.getHeight()/2-2);
 		GL11.glEnd();
 		GL11.glBegin(GL11.GL_LINES);
-		GL11.glVertex2d(Constants.WIDTH/2, Constants.HEIGHT/2+5);
-		GL11.glVertex2d(Constants.WIDTH/2, Constants.HEIGHT/2+2);
+		GL11.glVertex2d(Constants.getWidth()/2, Constants.getHeight()/2+5);
+		GL11.glVertex2d(Constants.getWidth()/2, Constants.getHeight()/2+2);
 		GL11.glEnd();
 		GL11.glDisable(GL11.GL_COLOR_LOGIC_OP);
 	}
@@ -606,8 +604,8 @@ public class CentralManager extends Screen{
 		glClearDepth(1);
 		glMatrixMode(GL_PROJECTION);
 		glLoadIdentity();
-		glViewport(0,0,Constants.WIDTH,Constants.HEIGHT);
-		glOrtho(0,Constants.WIDTH,Constants.HEIGHT,0,-400,400);
+		glViewport(0,0,Constants.getWidth(),Constants.getHeight());
+		glOrtho(0,Constants.getWidth(),Constants.getHeight(),0,-400,400);
 		glMatrixMode(GL_MODELVIEW);
 		glLoadIdentity();
 		glDisable(GL_DEPTH_TEST);
@@ -632,10 +630,10 @@ public class CentralManager extends Screen{
 	public void render3D(){
 		//setupLighting();
 		glCullFace(GL_FRONT);
-		glViewport(0,0,Constants.WIDTH,Constants.HEIGHT);
+		glViewport(0,0,Constants.getWidth(),Constants.getHeight());
 		glMatrixMode(GL_PROJECTION);
 		glLoadIdentity();
-		gluPerspective(67f,(float)Constants.WIDTH/(float)Constants.HEIGHT,0.1f, 1000f);
+		gluPerspective(67f,(float)Constants.getWidth()/(float)Constants.getHeight(),0.1f, 1000f);
 		glMatrixMode(GL_MODELVIEW);
 		glEnable(GL_DEPTH_TEST);
 	}
@@ -696,8 +694,8 @@ public class CentralManager extends Screen{
 	
 	private void renderSplashText(String line1, String line2){
 		if(!isServer){
-			int CENTER = Constants.WIDTH/2;
-			int HCENTER = Constants.HEIGHT/2;
+			int CENTER = Constants.getWidth()/2;
+			int HCENTER = Constants.getHeight()/2;
 			glClearColor(0,0,0,1);
 			GL11.glClear(GL11.GL_COLOR_BUFFER_BIT);
 			String ltext = "GLCraft is generating the world...";
@@ -725,8 +723,8 @@ public class CentralManager extends Screen{
 	
 	private void renderSplashText(String line1, String line2, int percent){
 		if(!isServer){
-			int CENTER = Constants.WIDTH/2;
-			int HCENTER = Constants.HEIGHT/2;
+			int CENTER = Constants.getWidth()/2;
+			int HCENTER = Constants.getHeight()/2;
 			glClearColor(0,0,0,1);
 			GL11.glClear(GL11.GL_COLOR_BUFFER_BIT);
 			String ltext = "GLCraft is loading...";

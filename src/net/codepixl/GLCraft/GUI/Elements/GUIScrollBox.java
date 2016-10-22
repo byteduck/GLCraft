@@ -16,7 +16,7 @@ import net.codepixl.GLCraft.util.Constants;
 import net.codepixl.GLCraft.util.LogSource;
 import net.codepixl.GLCraft.util.logging.GLogger;
 
-public class GUIScrollBox extends GUIScreen{
+public class GUIScrollBox extends GUIElement{
 	public int spacing;
 	private ArrayList<GUIScreen> items = new ArrayList<GUIScreen>();
 	private int currentY, scrollY;
@@ -126,7 +126,7 @@ public class GUIScrollBox extends GUIScreen{
 	private void scrollBarUpdate(int xof, int yof){
 		int mouseY = Mouse.getY()+yof;
 		int mouseX = Mouse.getX()-xof;
-		mouseY = -mouseY+Constants.HEIGHT;
+		mouseY = -mouseY+Constants.getHeight();
 		if(mouseY <= barY+40 && mouseY >= barY){
 			if(mouseX <= width && mouseX >= width-20){
 				if(Mouse.isButtonDown(0)){

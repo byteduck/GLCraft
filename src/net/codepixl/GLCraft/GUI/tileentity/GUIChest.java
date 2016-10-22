@@ -5,6 +5,7 @@ import java.util.concurrent.Callable;
 import net.codepixl.GLCraft.GUI.Inventory.GUIInventoryScreen;
 import net.codepixl.GLCraft.GUI.Inventory.Elements.GUISlot;
 import net.codepixl.GLCraft.util.Constants;
+import net.codepixl.GLCraft.util.logging.GLogger;
 import net.codepixl.GLCraft.world.entity.mob.EntityPlayer;
 import net.codepixl.GLCraft.world.entity.tileentity.TileEntityChest;
 
@@ -12,14 +13,19 @@ public class GUIChest extends GUIInventoryScreen{
 	
 	private TileEntityChest chest;
 	private GUISlot[] slots;
-	private static final int HMIDDLE = Constants.WIDTH/2;
-	private static final int VMIDDLE = (int) (Constants.HEIGHT/2-GUISlot.size*2);
-	private static final int HSIZE = (int) (GUISlot.size/2f);
 	
 	public GUIChest(final TileEntityChest chest, EntityPlayer p) {
 		super(p);
 		this.chest = chest;
 		slots = new GUISlot[20];
+	}
+	
+	@Override
+	public void makeElements(){
+		super.makeElements();
+		final int HMIDDLE = Constants.getWidth()/2;
+		final int VMIDDLE = (int) (Constants.getHeight()/2-GUISlot.size*2);
+		final int HSIZE = (int) (GUISlot.size/2f);
 		Callable<Void> updateListener = new Callable<Void>(){
 			@Override
 			public Void call() throws Exception {
@@ -29,9 +35,9 @@ public class GUIChest extends GUIInventoryScreen{
 		};
 		for(int i = 0; i < slots.length; i++){
 			if(i < 10){
-				slots[i] = new GUISlot((HMIDDLE+HSIZE*10)-HSIZE*2*i-(int)GUISlot.size/2,VMIDDLE-HSIZE,p);
+				slots[i] = new GUISlot((HMIDDLE+HSIZE*10)-HSIZE*2*i-(int)GUISlot.size/2,VMIDDLE-HSIZE,player);
 			}else{
-				slots[i] = new GUISlot((HMIDDLE+HSIZE*10)-HSIZE*2*(i-10)-(int)GUISlot.size/2,VMIDDLE+HSIZE,p);
+				slots[i] = new GUISlot((HMIDDLE+HSIZE*10)-HSIZE*2*(i-10)-(int)GUISlot.size/2,VMIDDLE+HSIZE,player);
 			}
 			slots[i].itemstack = chest.getInventory(i);
 			slots[i].setListener(updateListener);

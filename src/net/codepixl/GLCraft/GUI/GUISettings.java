@@ -12,13 +12,12 @@ import net.codepixl.GLCraft.util.Constants;
 
 public class GUISettings extends GUIScreen{
 	
-	private static int CENTERX = Constants.WIDTH/2;
-	
 	public GUIButton texturepackButton;
 	public GUISlider fpsSlider;
 	public GUITextBox nameBox;
 	
-	public GUISettings(){
+	public void makeElements(){
+		int CENTERX = Constants.getWidth()/2;
 		this.setDrawStoneBackground(true);
 		int ySoFar = 100;
 		
@@ -49,7 +48,7 @@ public class GUISettings extends GUIScreen{
 		
 		ySoFar+=GUISlider.HEIGHT+20;
 		
-		nameBox = new GUITextBox(CENTERX-(Constants.WIDTH/8)-10, ySoFar, Constants.WIDTH/4, "Name");
+		nameBox = new GUITextBox(CENTERX-(Constants.getWidth()/8)-10, ySoFar, Constants.getWidth()/4, "Name");
 		nameBox.setFilter("[^a-zA-Z0-9_\\-]");
 		nameBox.setText(SettingsManager.getSetting("name"));
 		
@@ -62,14 +61,10 @@ public class GUISettings extends GUIScreen{
 			}
 		});
 		
+		nameBox.visible = Constants.GAME_STATE != Constants.GAME;
+		
 		ySoFar+=nameBox.height+20;
 		
 		addElements(texturepackButton, fpsSlider, nameBox);
-	}
-	
-	@Override
-	public void onOpen(){
-		super.onOpen();
-		nameBox.visible = Constants.GAME_STATE != Constants.GAME;
 	}
 }

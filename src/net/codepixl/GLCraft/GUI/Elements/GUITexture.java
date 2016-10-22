@@ -1,4 +1,4 @@
-package net.codepixl.GLCraft.GUI;
+package net.codepixl.GLCraft.GUI.Elements;
 
 import org.lwjgl.opengl.GL11;
 
@@ -8,7 +8,7 @@ import net.codepixl.GLCraft.render.Shape;
 import net.codepixl.GLCraft.render.TextureManager;
 import net.codepixl.GLCraft.util.Spritesheet;
 
-public class GUITexture extends GUIScreen{
+public class GUITexture extends GUIElement{
 	private String texture;
 	private int size;
 	public GUITexture(String texture, int x, int y, int size){

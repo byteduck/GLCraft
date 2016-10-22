@@ -17,7 +17,7 @@ import net.codepixl.GLCraft.render.Shape;
 import net.codepixl.GLCraft.render.util.Tesselator;
 import net.codepixl.GLCraft.util.Constants;
 
-public class GUITextBox extends GUIScreen{
+public class GUITextBox extends GUIElement{
 	
 	private String placeholder;
 	private String text;

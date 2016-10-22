@@ -13,21 +13,26 @@ import net.codepixl.GLCraft.world.item.ItemStack;
 
 public class GUICraftingAdvanced extends GUIInventoryScreen{
 	private GUISlot slot1,slot2,slot3,slot4,slot5,slot6,slot7,slot8,slot9,result;
-	private static final int HMIDDLE = Constants.WIDTH/2;
-	private static final int VMIDDLE = (int) (Constants.HEIGHT/2-GUISlot.size*2);
-	private static final int HSIZE = (int) (GUISlot.size/2f);
 	public GUICraftingAdvanced(EntityPlayer p){
 		super(p);
-		slot1 = new GUISlot(HMIDDLE-HSIZE*2,VMIDDLE-HSIZE*2,p);
-		slot2 = new GUISlot(HMIDDLE,VMIDDLE-HSIZE*2,p);
-		slot3 = new GUISlot(HMIDDLE+HSIZE*2,VMIDDLE-HSIZE*2,p);
-		slot4 = new GUISlot(HMIDDLE-HSIZE*2,VMIDDLE,p);
-		slot5 = new GUISlot(HMIDDLE,VMIDDLE,p);
-		slot6 = new GUISlot(HMIDDLE+HSIZE*2,VMIDDLE,p);
-		slot7 = new GUISlot(HMIDDLE-HSIZE*2,VMIDDLE+HSIZE*2,p);
-		slot8 = new GUISlot(HMIDDLE,VMIDDLE+HSIZE*2,p);
-		slot9 = new GUISlot(HMIDDLE+HSIZE*2,VMIDDLE+HSIZE*2,p);
-		result = new GUISlot(HMIDDLE, VMIDDLE+HSIZE*4,p);
+	}
+	
+	@Override
+	public void makeElements(){
+		super.makeElements();
+		final int HMIDDLE = Constants.getWidth()/2;
+		final int VMIDDLE = (int) (Constants.getHeight()/2-GUISlot.size*2);
+		final int HSIZE = (int) (GUISlot.size/2f);
+		slot1 = new GUISlot(HMIDDLE-HSIZE*2,VMIDDLE-HSIZE*2,player);
+		slot2 = new GUISlot(HMIDDLE,VMIDDLE-HSIZE*2,player);
+		slot3 = new GUISlot(HMIDDLE+HSIZE*2,VMIDDLE-HSIZE*2,player);
+		slot4 = new GUISlot(HMIDDLE-HSIZE*2,VMIDDLE,player);
+		slot5 = new GUISlot(HMIDDLE,VMIDDLE,player);
+		slot6 = new GUISlot(HMIDDLE+HSIZE*2,VMIDDLE,player);
+		slot7 = new GUISlot(HMIDDLE-HSIZE*2,VMIDDLE+HSIZE*2,player);
+		slot8 = new GUISlot(HMIDDLE,VMIDDLE+HSIZE*2,player);
+		slot9 = new GUISlot(HMIDDLE+HSIZE*2,VMIDDLE+HSIZE*2,player);
+		result = new GUISlot(HMIDDLE, VMIDDLE+HSIZE*4,player);
 		result.canPlace = false;
 		this.addElement(slot1);
 		this.addElement(slot2);

@@ -112,7 +112,7 @@ public class Server{
 			e.printStackTrace();
 		}
 		if(!GLCraft.getGLCraft().isServer()){
-			((GUIPauseMenu)GUIManager.getMainManager().getGUI("pauseMenu")).setHost(true);
+			GUIPauseMenu.isHost = true;
 			GLCraft.getGLCraft().getWorldManager(false).isHost = true;
 		}
 		return true;
@@ -233,6 +233,7 @@ public class Server{
 					player.dropHeldItem(p.all);
 					break;
 				case DROPOTHERITEM:
+					player.dropItem(p);
 					break;
 				case SELECTSLOT:
 					player.setSelectedSlot(p.count);
@@ -408,7 +409,7 @@ public class Server{
 			connectionThread.start();
 			pingThread.start();
 			if(!GLCraft.getGLCraft().isServer()){
-				((GUIPauseMenu)GUIManager.getMainManager().getGUI("pauseMenu")).setHost(true);
+				GUIPauseMenu.isHost = true;
 				GLCraft.getGLCraft().getWorldManager(false).isHost = true;
 			}
 		} catch (SocketException e) {
@@ -429,8 +430,8 @@ public class Server{
 		connectionThread.interrupt();
 		clients.clear();
 		if(!GLCraft.getGLCraft().isServer()){
-			((GUIPauseMenu)GUIManager.getMainManager().getGUI("pauseMenu")).setHost(false);
-			GLCraft.getGLCraft().getWorldManager(false).isHost = true;
+			GUIPauseMenu.isHost = false;
+			GLCraft.getGLCraft().getWorldManager(false).isHost = false;
 		}
 	}
 	

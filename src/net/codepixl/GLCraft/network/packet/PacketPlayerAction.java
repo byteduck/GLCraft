@@ -15,6 +15,7 @@ public class PacketPlayerAction extends Packet {
 	public boolean isTile;
 	public int count;
 	public boolean all;
+	public boolean isNull;
 	
 	private PacketPlayerAction(EntityPlayer p, Type type){
 		this.type = type;
@@ -32,6 +33,7 @@ public class PacketPlayerAction extends Packet {
 		pa.meta = stack.getMeta();
 		pa.isTile = stack.isTile();
 		pa.count = stack.count;
+		pa.isNull = stack.isNull();
 		return pa;
 	}
 	
