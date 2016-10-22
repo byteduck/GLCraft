@@ -462,22 +462,28 @@ public class Chunk {
 						if(shouldRender && t != Tile.Air && !checkTileNotInView(x+(int)pos.getX(),y+(int)pos.getY(),z+(int)pos.getZ())){
 							if(!translucent)
 								visible = true;
-							float[] light = new float[]{
-								getLightIntensity(x,y-1,z),
-								getLightIntensity(x,y+1,z),
-								getLightIntensity(x,y,z-1),
-								getLightIntensity(x,y,z+1),
-								getLightIntensity(x+1,y,z),
-								getLightIntensity(x-1,y,z)
-							};
-							Color4f[] col = new Color4f[]{
+							Color4f[] col;
+							if(!t.isTransparent()){
+								float[] light = new float[]{
+										getLightIntensity(x,y-1,z),
+										getLightIntensity(x,y+1,z),
+										getLightIntensity(x,y,z-1),
+										getLightIntensity(x,y,z+1),
+										getLightIntensity(x+1,y,z),
+										getLightIntensity(x-1,y,z)
+									};
+								col = new Color4f[]{
 									new Color4f(t.getColor().r*light[0],t.getColor().g*light[0],t.getColor().b*light[0],t.getColor().a),
 									new Color4f(t.getColor().r*light[1],t.getColor().g*light[1],t.getColor().b*light[1],t.getColor().a),
 									new Color4f(t.getColor().r*light[2],t.getColor().g*light[2],t.getColor().b*light[2],t.getColor().a),
 									new Color4f(t.getColor().r*light[3],t.getColor().g*light[3],t.getColor().b*light[3],t.getColor().a),
 									new Color4f(t.getColor().r*light[4],t.getColor().g*light[4],t.getColor().b*light[4],t.getColor().a),
 									new Color4f(t.getColor().r*light[5],t.getColor().g*light[5],t.getColor().b*light[5],t.getColor().a),
-							};
+								};
+							}else{
+								Color4f col0=new Color4f(t.getColor().r*getLightIntensity(x,y,z),t.getColor().g*getLightIntensity(x,y,z),t.getColor().b*getLightIntensity(x,y,z),t.getColor().a);
+								col = new Color4f[]{col0,col0,col0,col0,col0,col0};
+							}
 							/**if(tiles[x][y][z] != Tile.TallGrass.getId()){
 								//Logger.log(Tile.getTile(tiles[x][y][z]).getName());
 								//Logger.log(pos);

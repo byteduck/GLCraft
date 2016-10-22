@@ -123,6 +123,7 @@ public class Client{
 				e.setPos(p.pos[0], p.pos[1], p.pos[2]);
 				e.setRot(p.rot[0], p.rot[1], p.rot[2]);
 			}else if(op instanceof PacketBlockChange){
+				GLogger.log("DOOOOOOT", LogSource.CLIENT);
 				PacketBlockChange p = (PacketBlockChange) op;
 				if(!p.justMeta)
 					worldManager.setTileAtPos(p.x, p.y, p.z, p.id, p.source, true, p.meta);

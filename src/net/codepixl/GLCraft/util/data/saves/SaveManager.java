@@ -28,6 +28,8 @@ import com.evilco.mc.nbt.tag.TagLong;
 import com.evilco.mc.nbt.tag.TagString;
 
 import net.codepixl.GLCraft.GLCraft;
+import net.codepixl.GLCraft.GUI.GUIManager;
+import net.codepixl.GLCraft.GUI.GUIServerError;
 import net.codepixl.GLCraft.network.packet.PacketPlayerPos;
 import net.codepixl.GLCraft.util.Constants;
 import net.codepixl.GLCraft.util.FileUtil;
@@ -100,12 +102,14 @@ public class SaveManager {
 			if(save != null){
 				if(!save.format.equals(currentFormat)){
 					if(!upgradeWorld(save)){
-						JOptionPane.showMessageDialog(null, "Unsupported world format: "+save.format, "Error", JOptionPane.ERROR_MESSAGE);
+						if(!GLCraft.getGLCraft().isServer())
+							GUIManager.getMainManager().showGUI(new GUIServerError("Error loading world:","Unsupported world format "+save.format));
 						return false;
 					}
 				}
 			}else{
-				JOptionPane.showMessageDialog(null, "Unknown error loading the world.", "Error", JOptionPane.ERROR_MESSAGE);
+				if(!GLCraft.getGLCraft().isServer())
+					GUIManager.getMainManager().showGUI(new GUIServerError("Error loading world:\n","Unknown Error"));
 				return false;
 			}
 			
@@ -148,7 +152,9 @@ public class SaveManager {
 		} catch (IllegalArgumentException e) {
 			e.printStackTrace();
 		}
-		JOptionPane.showMessageDialog(null, "Unknown error loading the world.", "Error", JOptionPane.ERROR_MESSAGE);
+		if(!GLCraft.getGLCraft().isServer())
+			GUIManager.getMainManager().showGUI(new GUIServerError("Error loading world:\n","Unknown Error"));
+		worldManager.closeWorld("Error", false);
 		return false;
 	}
 

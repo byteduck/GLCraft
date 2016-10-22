@@ -37,8 +37,9 @@ public class EntitySolid extends Entity{
 	public void move(float x, float y, float z){
 		if(moveMain(x,0,0))
 			this.getVel().x = 0;
-		if(moveMain(0,y,0))
+		if(moveMain(0,y,0)){
 			this.getVel().y = 0;
+		}
 		if(moveMain(0,0,z))
 			this.getVel().z = 0;
 	}
@@ -71,13 +72,12 @@ public class EntitySolid extends Entity{
 				exit = true;
 			}
 		}
-		onGround = testOnGround(new Vector3f(this.getX(),this.getY()-0.01f,this.getZ()));
 		setPos(toPos);
 		return collided;
 	}
 	
 	private boolean testOnGround(Vector3f pos){
-		AABB floorAABB = new AABB(this.aabb.getSize().x-0.05f,0,this.aabb.getSize().z-0.05f);
+		AABB floorAABB = new AABB(this.aabb.getSize().x,0,this.aabb.getSize().z);
 		floorAABB.update(pos);
 		Iterator<AABB> i = worldManager.BlockAABBForEntity(this).iterator();
 		while(i.hasNext()){
@@ -134,10 +134,9 @@ public class EntitySolid extends Entity{
 		/*while(testHitHead(new Vector3f(this.getX(),this.getY()+this.aabb.getSize().y+0.01f,this.getZ()))){
 			this.getVel().y = 0f;
 		}*/
-		if(worldManager.isServer && this instanceof EntityPlayer){
-			onGround = testOnGround(new Vector3f(this.getX(),this.getY()-0.01f,this.getZ()));
+		onGround = this.testOnGround(new Vector3f(getX(),getY()-0.005f,getZ()));
+		if(worldManager.isServer && this instanceof EntityPlayer)
 			return;
-		}
 		this.move((this.getVelocity().x * (float)Time.getDelta() * 10),(this.getVelocity().y * (float)Time.getDelta() * 10),(this.getVelocity().z * (float)Time.getDelta() * 10));
 		if(this.isInWater()){
 			this.getVelocity().y = MathUtils.towardsValue(this.getVelocity().y, (float)Time.getDelta()*3, -0.2f);
@@ -151,9 +150,9 @@ public class EntitySolid extends Entity{
 		this.getVelocity().x = MathUtils.towardsZero(this.getVelocity().x,(float)Time.getDelta());
 		this.getVelocity().z = MathUtils.towardsZero(this.getVelocity().z,(float)Time.getDelta());
 		if(onGround){
-			this.getVelocity().x = 0;
+			this.getVelocity().x = MathUtils.towardsZero(this.getVelocity().x,(float)Time.getDelta()*4);
+			this.getVelocity().z = MathUtils.towardsZero(this.getVelocity().z,(float)Time.getDelta()*4);
 			this.getVelocity().y = 0;
-			this.getVelocity().z = 0;
 		}
 	}
 	
@@ -162,6 +161,7 @@ public class EntitySolid extends Entity{
 		super.clientUpdate();
 		//All of this is to move the entity based on it's last position & velocity from the server, so movement looks smooth.
 		if(!(this instanceof EntityPlayer) || this instanceof EntityPlayerMP){
+			onGround = this.testOnGround(new Vector3f(getX(),getY()-0.005f,getZ()));
 			aabb.update(new Vector3f(pos.x+(float)aabb.r[0],pos.y,pos.z+(float)aabb.r[2]));
 			/*while(testHitHead(new Vector3f(this.getX(),this.getY()+this.aabb.getSize().y+0.01f,this.getZ()))){
 				this.getVel().y = 0f;
@@ -179,9 +179,9 @@ public class EntitySolid extends Entity{
 			this.getVelocity().x = MathUtils.towardsZero(this.getVelocity().x,(float)Time.getDelta());
 			this.getVelocity().z = MathUtils.towardsZero(this.getVelocity().z,(float)Time.getDelta());
 			if(onGround){
-				this.getVelocity().x = 0;
+				this.getVelocity().x = MathUtils.towardsZero(this.getVelocity().x,(float)Time.getDelta()*4);
+				this.getVelocity().z = MathUtils.towardsZero(this.getVelocity().z,(float)Time.getDelta()*4);
 				this.getVelocity().y = 0;
-				this.getVelocity().z = 0;
 			}
 		}
 	}

@@ -204,7 +204,7 @@ public class Server{
 				c.writePacket(new PacketSendChunks(worldManager.getActiveChunks().size()));
 			}else if(op instanceof PacketBlockChange){
 				PacketBlockChange p = (PacketBlockChange)op;
-				sendToAllClients(p);
+				sendToAllClientsExcept(p,c);
 				if(!p.justMeta)
 					worldManager.setTileAtPos(p.x, p.y, p.z, p.id, p.source, false, p.meta);
 				else
@@ -423,7 +423,7 @@ public class Server{
 
 	public void close(String reason) throws IOException{
 		GLogger.log("Closing server: "+reason, LogSource.SERVER);
-		broadcastThread.interrupt();
+		if(broadcastThread != null) broadcastThread.interrupt();
 		pingThread.interrupt();
 		sendToAllClients(new PacketServerClose(reason));
 		socket.close();

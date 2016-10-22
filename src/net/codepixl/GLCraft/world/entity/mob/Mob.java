@@ -86,6 +86,7 @@ public class Mob extends EntitySolid implements GameObj{
 	
 	@Override
 	public void move(float x, float y, float z){
+		boolean posVelY = this.getVel().y > 0;
 		if(!isInWater()){
 			if(moveMain(x,0,0)){ lastCollideX = System.currentTimeMillis(); this.getVel().x = 0;}
 			if(moveMain(0,y,0)){ lastCollideY = System.currentTimeMillis(); this.getVel().y = 0;}
@@ -181,7 +182,7 @@ public class Mob extends EntitySolid implements GameObj{
 			handleAI();
 			DebugTimer.pauseTimer("ai_time");
 
-			if(!this.tileAtEye().canPassThrough()){
+			if(!this.tileAtEye().canPassThrough() && !this.tileAtEye().isTransparent()){
 				this.hurt(2.0f, 1.0f, DamageSource.ENVIRONMENT);
 			}
 			

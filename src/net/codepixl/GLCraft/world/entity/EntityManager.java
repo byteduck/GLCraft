@@ -10,7 +10,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.ConcurrentModificationException;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -24,17 +23,16 @@ import com.evilco.mc.nbt.stream.NbtOutputStream;
 import com.evilco.mc.nbt.tag.TagCompound;
 import com.evilco.mc.nbt.tag.TagList;
 
-import net.codepixl.GLCraft.GLCraft;
+import net.codepixl.GLCraft.network.packet.Packet;
 import net.codepixl.GLCraft.network.packet.PacketAddEntity;
+import net.codepixl.GLCraft.network.packet.PacketMultiPacket;
 import net.codepixl.GLCraft.network.packet.PacketRemoveEntity;
 import net.codepixl.GLCraft.util.Constants;
 import net.codepixl.GLCraft.util.DebugTimer;
 import net.codepixl.GLCraft.util.GameObj;
-import net.codepixl.GLCraft.util.LogSource;
 import net.codepixl.GLCraft.util.MathUtils;
 import net.codepixl.GLCraft.util.Vector3i;
 import net.codepixl.GLCraft.util.data.saves.Save;
-import net.codepixl.GLCraft.util.logging.GLogger;
 import net.codepixl.GLCraft.world.WorldManager;
 import net.codepixl.GLCraft.world.entity.mob.EntityPlayer;
 import net.codepixl.GLCraft.world.entity.mob.EntityPlayerMP;
@@ -143,13 +141,16 @@ public class EntityManager implements GameObj{
 	}
 	
 	@Override
-	public void update() {
+	public void update(){
+		ArrayList<Packet> packs = null;
+		if(isServer)
+			packs = new ArrayList<Packet>();
 		while(!toRemove.isEmpty()){
 			Entity e = toRemove.get(0);
 			toRemove.remove(0);
 			entities.remove(e.getID());
 			if(isServer)
-				w.sendPacket(new PacketRemoveEntity(e.getID()));
+				packs.add(new PacketRemoveEntity(e.getID()));
 		}
 		if(shouldRemoveAll){
 			Iterator<Entry<Integer,Entity>> it = this.entities.entrySet().iterator();
@@ -166,14 +167,14 @@ public class EntityManager implements GameObj{
 			toAdd.remove(0);
 			entities.put(e.getID(),e);
 			if(!(e instanceof EntityPlayer) && isServer)
-				w.sendPacket(new PacketAddEntity(e));
+				packs.add(new PacketAddEntity(e));
 		}
 		Iterator<Entry<Integer,Entity>> it = this.entities.entrySet().iterator();
 	    iterating = true;
 	    while (it.hasNext()) {
 	        Entity e = it.next().getValue();
 	        if(isServer && e.isDead() && !(e instanceof EntityPlayer)){
-				w.sendPacket(new PacketRemoveEntity(e.getID()));
+				packs.add(new PacketRemoveEntity(e.getID()));
 	        	it.remove();
 	        }
 	        if(this.isServer)
@@ -185,6 +186,8 @@ public class EntityManager implements GameObj{
 		if(this.getPlayer() != null)
 			this.getPlayer().update();
 	    DebugTimer.endTimer("ai_time");
+	    if(isServer)
+	    	w.sendPacket(new PacketMultiPacket(packs));
 	}
 	
 	public Entity getEntity(int id){

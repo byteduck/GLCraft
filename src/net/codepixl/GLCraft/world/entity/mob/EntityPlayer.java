@@ -513,8 +513,8 @@ public class EntityPlayer extends Mob implements CommandExecutor{
 										int sub = worldManager.getEntityManager().getPlayer().getSelectedItemStack().subFromStack(1);
 										if(sub > 0) {
 											worldManager.getEntityManager().getPlayer().getInventory()[worldManager.getEntityManager().getPlayer().getSelectedSlot()] = new ItemStack();
-											this.updatedInventory = true;
 										}
+										this.updatedInventory = true;
 										setBuildCooldown(0.2f);
 										r.next();
 									}

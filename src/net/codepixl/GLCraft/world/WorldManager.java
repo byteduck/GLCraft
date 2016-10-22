@@ -662,6 +662,9 @@ public class WorldManager {
 			this.centralManager.getServer().setBroadcast(s.dispName);
 			return true;
 		}else{
+			GLogger.logerr("Error loading world", LogSource.SERVER);
+			this.isServer = true;
+			closeWorldNow("Error");
 			return false;
 		}
 	}
@@ -854,12 +857,12 @@ public class WorldManager {
 			Chunk c = getChunk(dest.x, dest.y, dest.z);
 			if(c != null){
 				dbl = c.getSunlight(dest.x, dest.y, dest.z);
-				if(dbl < bl-1){
+				if(dbl < bl-1 || (downwards  && bl == 15)){
 					sunlightQueue.add(new Light(dest, c));
 					byte tra = Tile.getTile((byte)getTileAtPos(dest.x, dest.y, dest.z)).getTransparency();
 					byte res = 0;
 					if(bl == 15 && downwards && tra <= 1)
-						tra-=1;
+						tra -= 1;
 					if(tra < bl)
 						res = (byte) (bl-tra);
 					c.setSunlight(dest.x, dest.y, dest.z, res, false);
