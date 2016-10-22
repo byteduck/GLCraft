@@ -263,8 +263,12 @@ public class Server{
 				}
 				c.writePacket(new PacketSendChunks(chunks));
 			}else if(op instanceof PacketPing){
-				c.setPingTime(System.currentTimeMillis());
-				c.writePacket(new PacketPing(true));
+				try {
+					c.setPingTime(System.currentTimeMillis());
+					c.writePacket(new PacketPing(true));
+				} catch (NullPointerException e) {
+					//FIXME NullPointerException
+				}
 			}else if(op instanceof PacketChat){
 				String msg = ((PacketChat) op).msg;
 				if(msg.startsWith("/"))
@@ -378,7 +382,7 @@ public class Server{
 				try {
 					for(ServerClient c : server.clients.values()){
 						if(c.player.shouldUpdate){
-							if(System.currentTimeMillis()-c.getPingTime() > 10000){
+							if(System.currentTimeMillis()-c.getPingTime() > 20000){
 								c.writePacket(new PacketKick("Timed out"));
 								SaveManager.savePlayer(server.worldManager, c.player);
 								server.clients.remove(new InetAddressAndPort(c.addr, c.port));
