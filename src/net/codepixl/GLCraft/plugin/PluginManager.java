@@ -19,6 +19,7 @@ public class PluginManager {
 	
 	ArrayList<LoadedPlugin> loadedPlugins = new ArrayList<LoadedPlugin>();
 	HashMap<Plugin,LoadedPlugin> plugins = new HashMap<Plugin,LoadedPlugin>();
+	public final HashMap<String,LoadedPlugin> pluginIDs = new HashMap<String,LoadedPlugin>();
 	public static String path;
 	byte currentTile = 0x64;
 	byte currentItem = 0x64;
@@ -72,6 +73,7 @@ public class PluginManager {
 				LoadedPlugin p = new LoadedPlugin(plugins[i].getAbsolutePath());
 				this.loadedPlugins.add(p);
 				this.plugins.put(p.plugin, p);
+				this.pluginIDs.put(p.mainClass+":"+p.version, p);
 			} catch (IOException | ClassNotFoundException | InstantiationException | IllegalAccessException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -82,5 +84,9 @@ public class PluginManager {
 	
 	public LoadedPlugin getLoadedPlugin(Plugin p){
 		return this.plugins.get(p);
+	}
+	
+	public HashMap<Plugin, LoadedPlugin> getPlugins(){
+		return plugins;
 	}
 }

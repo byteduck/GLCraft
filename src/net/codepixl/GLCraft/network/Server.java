@@ -7,11 +7,12 @@ import java.net.InetAddress;
 import java.net.MulticastSocket;
 import java.net.SocketException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map.Entry;
 
-import org.apache.commons.lang3.SerializationUtils;
 import org.lwjgl.util.vector.Vector3f;
 
 import net.codepixl.GLCraft.GLCraft;
@@ -42,6 +43,7 @@ import net.codepixl.GLCraft.network.packet.PacketSetInventory;
 import net.codepixl.GLCraft.network.packet.PacketUpdateEntity;
 import net.codepixl.GLCraft.network.packet.PacketUtil;
 import net.codepixl.GLCraft.network.packet.PacketWorldTime;
+import net.codepixl.GLCraft.plugin.LoadedPlugin;
 import net.codepixl.GLCraft.util.ChatFormat;
 import net.codepixl.GLCraft.util.Constants;
 import net.codepixl.GLCraft.util.LogSource;
@@ -160,10 +162,18 @@ public class Server{
 			ServerClient c = clients.get(new InetAddressAndPort(dgp.getAddress(), dgp.getPort()));
 			if(op instanceof PacketPlayerLogin){
 				PacketPlayerLogin p = (PacketPlayerLogin)op;
+				GLogger.log("New player logged in: "+p.name, LogSource.SERVER);
 				EntityPlayerMP mp = new EntityPlayerMP(new Vector3f(spawnPos), worldManager);
 				mp.setName(p.name);
 				c = new ServerClient(dgp.getAddress(), dgp.getPort(), this.socket, mp);
-				GLogger.log("New player logged in: "+p.name, LogSource.SERVER);
+				List<String> plugins = Arrays.asList(p.plugins);
+				for(String plugin : GLCraft.getGLCraft().getPluginManager().pluginIDs.keySet()){
+					if(!plugins.contains(plugin)){
+						LoadedPlugin loadedPlugin = GLCraft.getGLCraft().getPluginManager().pluginIDs.get(plugin);
+						c.writePacket(new PacketPlayerLoginResponse("Missing plugin:\n"+loadedPlugin.name+" : "+loadedPlugin.version));
+						return;
+					}
+				}
 				for(Entity e : worldManager.getEntityManager().getEntities(EntityPlayerMP.class))
 					if(((EntityPlayerMP)e).getName().equalsIgnoreCase(p.name)){
 						c.writePacket(new PacketPlayerLoginResponse("There's already a player with that name!"));

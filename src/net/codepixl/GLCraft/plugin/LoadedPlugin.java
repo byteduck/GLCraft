@@ -50,7 +50,7 @@ public class LoadedPlugin {
 				plugin = (Plugin) loader.loadClass(mainClass).newInstance();
 				plugin.init();
 			}
-			GLogger.log("Loaded \""+name+"\" version \""+version+"\" with description \""+description+"\"", LogSource.CLIENT);
+			GLogger.log("Loaded \""+name+"\" version \""+version+"\" with description \""+description+"\"", LogSource.GLCRAFT);
 		}catch(JSONException e){
 			e.printStackTrace();
 			JOptionPane.showMessageDialog(null, "The Plugin "+this.name+" could not be loaded because it is missing 1 or more JSON properties.", "Error", JOptionPane.ERROR_MESSAGE);
