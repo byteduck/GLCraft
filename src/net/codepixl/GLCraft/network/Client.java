@@ -161,9 +161,10 @@ public class Client{
 			}else if(op instanceof PacketRemoveEntity){
 				PacketRemoveEntity p = (PacketRemoveEntity)op;
 				Entity e = worldManager.getEntityManager().getEntity(p.entityID);
-				if(e != null){
+				if(e != null)
 					worldManager.entityManager.remove(e);
-				}
+				else
+					GLogger.logerr("Failed to remove entity "+p.entityID+"!", LogSource.CLIENT);
 			}else if(op instanceof PacketSetInventory){
 				PacketSetInventory p = (PacketSetInventory)op;
 				if(this.worldManager.getEntityManager().getPlayer().getID() == p.entityID){

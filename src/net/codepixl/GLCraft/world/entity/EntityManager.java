@@ -173,10 +173,8 @@ public class EntityManager implements GameObj{
 	    iterating = true;
 	    while (it.hasNext()) {
 	        Entity e = it.next().getValue();
-	        if(isServer && e.isDead() && !(e instanceof EntityPlayer)){
-				packs.add(new PacketRemoveEntity(e.getID()));
-	        	it.remove();
-	        }
+	        if(isServer && e.isDead() && !(e instanceof EntityPlayer))
+				toRemove.add(e);
 	        if(this.isServer)
 	        	e.update();
 	        else
@@ -186,7 +184,7 @@ public class EntityManager implements GameObj{
 		if(this.getPlayer() != null)
 			this.getPlayer().update();
 	    DebugTimer.endTimer("ai_time");
-	    if(isServer)
+	    if(isServer && packs.size() > 0)
 	    	w.sendPacket(new PacketMultiPacket(packs));
 	}
 	

@@ -53,13 +53,13 @@ import java.net.UnknownHostException;
 import java.nio.ByteBuffer;
 import java.nio.FloatBuffer;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.Iterator;
 
 import javax.imageio.ImageIO;
 
 import org.lwjgl.BufferUtils;
-import org.lwjgl.LWJGLException;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.Display;
@@ -77,18 +77,15 @@ import net.codepixl.GLCraft.GLCraft;
 import net.codepixl.GLCraft.GUI.GUIChat;
 import net.codepixl.GLCraft.GUI.GUIGame;
 import net.codepixl.GLCraft.GUI.GUIManager;
-import net.codepixl.GLCraft.GUI.GUIMultiplayer;
 import net.codepixl.GLCraft.GUI.GUIPauseMenu;
 import net.codepixl.GLCraft.GUI.GUIScreen;
-import net.codepixl.GLCraft.GUI.GUISettings;
-import net.codepixl.GLCraft.GUI.GUISinglePlayer;
-import net.codepixl.GLCraft.GUI.GUIStartScreen;
 import net.codepixl.GLCraft.GUI.Inventory.GUICrafting;
 import net.codepixl.GLCraft.GUI.Inventory.GUICraftingAdvanced;
 import net.codepixl.GLCraft.GUI.Inventory.Elements.GUISlot;
 import net.codepixl.GLCraft.network.Client;
 import net.codepixl.GLCraft.network.Server;
 import net.codepixl.GLCraft.network.packet.Packet;
+import net.codepixl.GLCraft.network.packet.PacketMultiPacket;
 import net.codepixl.GLCraft.render.Shape;
 import net.codepixl.GLCraft.render.TextureManager;
 import net.codepixl.GLCraft.sound.SoundManager;
@@ -139,6 +136,8 @@ public class CentralManager extends Screen{
 	private String splashLine2;
 
 	private boolean renderSplashPercent;
+	
+	private ArrayList<Packet> toSend = new ArrayList<Packet>();
 	
 	public static final int AIRCHUNK = 0, MIXEDCHUNK = 1;
 
@@ -667,6 +666,22 @@ public class CentralManager extends Screen{
 		}else{
 			commandManager.update();
 		}
+		
+		try{
+			if(toSend.size() > 1){
+				PacketMultiPacket p = new PacketMultiPacket(toSend);
+				if(isServer)
+					server.sendToAllClients(p);
+				else
+					client.sendToServer(p);
+			}else if(toSend.size() > 0)
+				if(isServer)
+					server.sendToAllClients(toSend.get(0));
+				else
+					client.sendToServer(toSend.get(0));
+			toSend.clear();
+		}catch(IOException e){e.printStackTrace();}
+		
 		if(Constants.GAME_STATE == Constants.GAME){
 			worldManager.update();
 		}
@@ -766,14 +781,7 @@ public class CentralManager extends Screen{
 	}
 	
 	public void sendPacket(Packet p){
-		try {
-			if(isServer)
-				server.sendToAllClients(p);
-			else
-				client.sendToServer(p);
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+		toSend.add(p);
 	}
 
 	public void sendPacket(Packet p, EntityPlayerMP mp){
