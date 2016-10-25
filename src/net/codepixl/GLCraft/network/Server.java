@@ -16,7 +16,6 @@ import java.util.Map.Entry;
 import org.lwjgl.util.vector.Vector3f;
 
 import net.codepixl.GLCraft.GLCraft;
-import net.codepixl.GLCraft.GUI.GUIManager;
 import net.codepixl.GLCraft.GUI.GUIPauseMenu;
 import net.codepixl.GLCraft.network.packet.Packet;
 import net.codepixl.GLCraft.network.packet.PacketAddEntity;
@@ -25,6 +24,7 @@ import net.codepixl.GLCraft.network.packet.PacketChat;
 import net.codepixl.GLCraft.network.packet.PacketContainer;
 import net.codepixl.GLCraft.network.packet.PacketKick;
 import net.codepixl.GLCraft.network.packet.PacketLANBroadcast;
+import net.codepixl.GLCraft.network.packet.PacketMessage;
 import net.codepixl.GLCraft.network.packet.PacketMultiPacket;
 import net.codepixl.GLCraft.network.packet.PacketOnPlace;
 import net.codepixl.GLCraft.network.packet.PacketPing;
@@ -279,6 +279,8 @@ public class Server{
 				Packet[] ps = ((PacketMultiPacket) op).packets;
 				for(Packet p : ps)
 					handlePacket(dgp, p);
+			}else if(op instanceof PacketMessage){
+				((PacketMessage) op).evaluate(worldManager);
 			}else{
 				GLogger.logerr("Unhandled Packet: "+op.getClass(), LogSource.SERVER);
 			}

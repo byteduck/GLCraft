@@ -23,6 +23,7 @@ import net.codepixl.GLCraft.network.packet.PacketContainer;
 import net.codepixl.GLCraft.network.packet.PacketFurnace;
 import net.codepixl.GLCraft.network.packet.PacketHealth;
 import net.codepixl.GLCraft.network.packet.PacketKick;
+import net.codepixl.GLCraft.network.packet.PacketMessage;
 import net.codepixl.GLCraft.network.packet.PacketMultiPacket;
 import net.codepixl.GLCraft.network.packet.PacketPing;
 import net.codepixl.GLCraft.network.packet.PacketPlayerAdd;
@@ -197,6 +198,8 @@ public class Client{
 				Packet[] ps = ((PacketMultiPacket) op).packets;
 				for(Packet p : ps)
 					handlePacket(dgp, p);
+			}else if(op instanceof PacketMessage){
+				((PacketMessage) op).evaluate(worldManager);
 			}else{
 				System.err.println("[CLIENT] Received unhandled packet: "+op.getClass());
 				//throw new IOException("Invalid Packet "+op.getClass());

@@ -2,9 +2,8 @@ package net.codepixl.GLCraft.util.command;
 
 import net.codepixl.GLCraft.world.CentralManager;
 
-public interface Command{
+public interface Command extends CommandExecutable{
 	public String getName();
-	public boolean execute(CentralManager centralManager, CommandExecutor e, String... args);
 	public Permission getPermission();
 	public String getUsage();
 	public static enum Permission{

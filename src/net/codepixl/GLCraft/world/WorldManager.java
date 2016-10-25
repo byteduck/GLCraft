@@ -30,15 +30,12 @@ import com.nishu.utils.Time;
 
 import net.codepixl.GLCraft.GLCraft;
 import net.codepixl.GLCraft.GUI.GUIManager;
-import net.codepixl.GLCraft.GUI.GUIPauseMenu;
 import net.codepixl.GLCraft.GUI.GUIServerError;
 import net.codepixl.GLCraft.GUI.GUIStartScreen;
-import net.codepixl.GLCraft.GUI.Inventory.GUICrafting;
-import net.codepixl.GLCraft.GUI.Inventory.GUICraftingAdvanced;
 import net.codepixl.GLCraft.network.packet.Packet;
 import net.codepixl.GLCraft.network.packet.PacketBlockChange;
+import net.codepixl.GLCraft.network.packet.PacketMessage;
 import net.codepixl.GLCraft.network.packet.PacketReady;
-import net.codepixl.GLCraft.network.packet.PacketRespawn;
 import net.codepixl.GLCraft.network.packet.PacketSendChunks;
 import net.codepixl.GLCraft.network.packet.PacketWorldTime;
 import net.codepixl.GLCraft.util.AABB;
@@ -698,6 +695,11 @@ public class WorldManager {
 
 	public void setSaving(boolean saving) {
 		this.saving = saving;
+		if(isServer)
+			if(saving)
+				sendPacket(new PacketMessage("SAVE|start"));
+			else
+				sendPacket(new PacketMessage("SAVE|end"));
 	}
 
 	public boolean isSaving() {

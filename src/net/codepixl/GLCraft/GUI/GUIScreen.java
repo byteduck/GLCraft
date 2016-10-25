@@ -40,7 +40,7 @@ public class GUIScreen{
 		this.drawStoneBackground = drawStoneBackground;
 	}
 
-	public void renderMain(){
+	public final void renderMain(){
 		GL11.glPushMatrix();
 		GL11.glTranslatef(x, y, 0);
 		drawBG();

@@ -39,6 +39,7 @@ public class CommandManager {
 		addCommand(new CommandKick());
 		addCommand(new CommandGive());
 		addCommand(new CommandTime());
+		addCommand(new CommandSave());
 	}
 	
 	public void addCommand(Command c){
@@ -77,17 +78,19 @@ public class CommandManager {
 		HashMap<String,CommandExecutor> commandQueue = (HashMap<String,CommandExecutor>)this.commandQueue.clone();
 		this.commandQueue.clear();
 		for(Entry<String,CommandExecutor> cmd : commandQueue.entrySet()){
-			String[] args = cmd.getKey().split(" ");
-			if(this.commands.containsKey(args[0].toLowerCase())){
-				Command c = this.commands.get(args[0].toLowerCase());
-				if(c.getPermission().val <= cmd.getValue().getPermission().val){
-					if(c.execute(centralManager, cmd.getValue(), args)); else
-						cmd.getValue().sendMessage(this.commands.get(args[0].toLowerCase()).getUsage());
-				}else
-					cmd.getValue().sendMessage("You do not have permission to do that!");
-			}else{
-				cmd.getValue().sendMessage(ChatFormat.RED+"Unknown command "+args[0]+"!");
-			}
+			new Thread(()->{
+				String[] args = cmd.getKey().split(" ");
+				if(this.commands.containsKey(args[0].toLowerCase())){
+					Command c = this.commands.get(args[0].toLowerCase());
+					if(c.getPermission().val <= cmd.getValue().getPermission().val){
+						if(c.execute(centralManager, cmd.getValue(), args)); else
+							cmd.getValue().sendMessage(this.commands.get(args[0].toLowerCase()).getUsage());
+					}else
+						cmd.getValue().sendMessage("You do not have permission to do that!");
+				}else{
+					cmd.getValue().sendMessage(ChatFormat.RED+"Unknown command "+args[0]+"!");
+				}
+			}).start();
 		}
 	}
 
