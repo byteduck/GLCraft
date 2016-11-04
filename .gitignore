@@ -46,6 +46,7 @@ Temporary Items
 world
 GLCraft.log
 plugins
+out
 
 # Test Things
 ./src/net/codepixl/GLCraft/testthings/PluginTesting.java
