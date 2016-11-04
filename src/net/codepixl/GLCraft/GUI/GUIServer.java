@@ -2,9 +2,11 @@ package net.codepixl.GLCraft.GUI;
 
 import java.net.InetAddress;
 
+import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.GL11;
 
 import net.codepixl.GLCraft.GUI.Elements.GUILabel;
+import net.codepixl.GLCraft.network.Server.InetAddressAndPort;
 import net.codepixl.GLCraft.util.Constants;
 
 public class GUIServer extends GUIScreen{
@@ -12,6 +14,7 @@ public class GUIServer extends GUIScreen{
 	GUILabel name;
 	GUILabel addr;
 	GUIMultiplayer pgui;
+	InetAddressAndPort iaddr;
 	public boolean selected;
 	
 	public GUIServer(GUIMultiplayer pgui, String msg, InetAddress addr, int port){
@@ -21,6 +24,7 @@ public class GUIServer extends GUIScreen{
 		this.name = new GUILabel(10, 0, msg);
 		this.addr = new GUILabel(10, (int) (100-(Constants.FONT.getHeight()+10)), addr+":"+port);
 		this.addr.size = 1f;
+		this.iaddr = new InetAddressAndPort(addr,port);
 		
 		addElement(this.name);
 		addElement(this.addr);
@@ -45,5 +49,22 @@ public class GUIServer extends GUIScreen{
 		GL11.glPopAttrib();
 		GL11.glPopMatrix();
 		GL11.glEnable(GL11.GL_TEXTURE_2D);
+	}
+	
+	@Override
+	public void input(int xof, int yof){
+		super.input(xof, yof);
+		if(testMouse(xof,yof)){
+			while(Mouse.next()){
+				if(Mouse.getEventButtonState()){
+					if(Mouse.isButtonDown(0)){
+						if(!selected)
+							pgui.setSelectedServer(this);
+						else
+							pgui.connect(this);
+					}
+				}
+			}
+		}
 	}
 }

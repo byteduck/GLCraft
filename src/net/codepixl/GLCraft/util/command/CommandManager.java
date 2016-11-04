@@ -40,6 +40,7 @@ public class CommandManager {
 		addCommand(new CommandGive());
 		addCommand(new CommandTime());
 		addCommand(new CommandSave());
+		addCommand(new CommandAnnounce());
 	}
 	
 	public void addCommand(Command c){

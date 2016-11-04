@@ -33,6 +33,7 @@ public class GUIMultiplayer extends GUIScreen{
 	private GUIMultiplayer thisinst;
 	private GUITextBox textBox;
 	private GUIButton joinButton;
+	private GUIServer selectedServer;
 	
 	public void makeElements(){
 		int JOINX = (int) (Constants.getWidth()*0.7);
@@ -75,21 +76,8 @@ public class GUIMultiplayer extends GUIScreen{
 							addrs = addrs.substring(0, addrs.indexOf(":"));
 						}
 						InetAddress addr = InetAddress.getByName(addrs);
-						if(addr != null){
-							Constants.setState(Constants.GAME);
-							GLCraft.getGLCraft().getWorldManager(false).createBlankWorld();
-							Client.ServerConnectionState cs = GLCraft.getGLCraft().getCentralManager(false).connectToServer(addr, port);
-							if(!cs.success){
-								Constants.setState(Constants.START_SCREEN);
-								GUIManager.getMainManager().showGUI(new GUIServerError("Error connecting to server:\n",cs.message));
-								return null;
-							}
-							glDisable(GL_TEXTURE_2D);
-							GUIPauseMenu.isHost = false;
-							GLCraft.getGLCraft().getWorldManager(false).isHost = false;
-							GUIManager.getMainManager().clearGUIStack();
-							GUIManager.getMainManager().closeGUI(false);
-						}
+						if(addr != null)
+							connect(addr, port);
 					}
 				}catch(UnknownHostException | IndexOutOfBoundsException | NumberFormatException e){}
 				return null;
@@ -165,6 +153,37 @@ public class GUIMultiplayer extends GUIScreen{
 					e.printStackTrace();
 				}
 			}
+		}
+	}
+
+	protected void setSelectedServer(GUIServer guiServer){
+		if(selectedServer != null)
+			selectedServer.selected = false;
+		selectedServer = guiServer;
+		guiServer.selected = true;
+	}
+	
+	public void connect(InetAddress addr, int port) throws IOException{
+		Constants.setState(Constants.GAME);
+		GLCraft.getGLCraft().getWorldManager(false).createBlankWorld();
+		Client.ServerConnectionState cs = GLCraft.getGLCraft().getCentralManager(false).connectToServer(addr, port);
+		if(!cs.success){
+			Constants.setState(Constants.START_SCREEN);
+			GUIManager.getMainManager().showGUI(new GUIServerError("Error connecting to server:\n",cs.message));
+			return;
+		}
+		glDisable(GL_TEXTURE_2D);
+		GUIPauseMenu.isHost = false;
+		GLCraft.getGLCraft().getWorldManager(false).isHost = false;
+		GUIManager.getMainManager().clearGUIStack();
+		GUIManager.getMainManager().closeGUI(false);
+	}
+	
+	protected void connect(GUIServer guiServer){
+		try {
+			connect(guiServer.iaddr.addr, guiServer.iaddr.port);
+		} catch (IOException e) {
+			e.printStackTrace();
 		}
 	}
 }
