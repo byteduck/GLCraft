@@ -10,8 +10,6 @@ import java.util.Map.Entry;
 import java.util.Properties;
 
 import net.codepixl.GLCraft.util.Constants;
-import net.codepixl.GLCraft.util.LogSource;
-import net.codepixl.GLCraft.util.logging.GLogger;
 
 public class SettingsManager{
 	private static Properties defaultProps = new Properties();

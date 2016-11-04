@@ -105,7 +105,7 @@ public class WorldManager {
 	}
 	
 	private void initGL(){
-		Shader temp = new Shader("/shaders/chunk.vert","/shaders/chunk.frag");
+		Shader temp = new Shader("/shaders/chunk.vert", "/shaders/chunk.frag");
 		shader = new ShaderProgram(temp.getvShader(), temp.getfShader());
 	}
 	

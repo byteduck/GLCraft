@@ -1,9 +1,7 @@
 package net.codepixl.GLCraft.world.item;
 
-import net.codepixl.GLCraft.GLCraft;
 import net.codepixl.GLCraft.plugin.Plugin;
 import net.codepixl.GLCraft.render.TextureManager;
-import net.codepixl.GLCraft.world.tile.PluginTile;
 
 public class PluginItem extends Item{
 	
@@ -23,7 +21,7 @@ public class PluginItem extends Item{
 	public PluginItem(Plugin p){
 		this.plugin = p;
 		if(this.getClass() != PluginItem.class){
-			TextureManager.addPluginTexture("items."+getTextureName(), "textures/items/"+getTextureName()+".png", p);
+			TextureManager.addPluginTexture("items."+getTextureName(), "textures/items/" +getTextureName()+".png", p);
 		}
 	}
 }

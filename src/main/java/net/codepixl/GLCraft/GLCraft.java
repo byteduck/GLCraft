@@ -132,8 +132,8 @@ public class GLCraft extends Screen{
 	 * Main code for the display.
 	 */
 	private void commonInitializer(boolean dedicatedServer) throws IOException, LWJGLException{
-		if(new File("res/natives").exists())
-			System.setProperty("org.lwjgl.librarypath", new File("res/natives").getAbsolutePath());
+		if(new File("libs/natives").exists())
+			System.setProperty("org.lwjgl.librarypath", new File("libs/natives").getAbsolutePath());
 		else
 			System.setProperty("org.lwjgl.librarypath", new File(".").getAbsolutePath());
 		UncaughtExceptionHandler ueh = new UncaughtExceptionHandler(){

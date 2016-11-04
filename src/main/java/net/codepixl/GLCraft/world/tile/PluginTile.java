@@ -1,6 +1,5 @@
 package net.codepixl.GLCraft.world.tile;
 
-import net.codepixl.GLCraft.GLCraft;
 import net.codepixl.GLCraft.plugin.Plugin;
 import net.codepixl.GLCraft.render.TextureManager;
 
@@ -25,16 +24,16 @@ public class PluginTile extends Tile{
 				if(this.hasMultipleTextures()){
 					for(String name : this.getMultiTextureNames()){
 						if(!TextureManager.hasTexture("tiles."+name)){
-							TextureManager.addPluginTexture("tiles."+name,"textures/tiles/"+name+".png",plugin);
+							TextureManager.addPluginTexture("tiles."+name, "textures/tiles/" +name+".png",plugin);
 						}
 					}
 				}else{
 					if(!TextureManager.hasTexture("tiles."+this.getTextureName())){
-						TextureManager.addPluginTexture("tiles."+this.getTextureName(), "textures/tiles/"+this.getTextureName()+".png",plugin);
+						TextureManager.addPluginTexture("tiles."+this.getTextureName(), "textures/tiles/" +this.getTextureName()+".png",plugin);
 					}
 				}
 				if(!TextureManager.hasTexture("tiles."+this.getIconName())){
-					TextureManager.addPluginTexture("tiles."+this.getIconName(), "textures/tiles/"+this.getIconName()+".png",plugin);
+					TextureManager.addPluginTexture("tiles."+this.getIconName(), "textures/tiles/" +this.getIconName()+".png",plugin);
 				}
 			}
 		}

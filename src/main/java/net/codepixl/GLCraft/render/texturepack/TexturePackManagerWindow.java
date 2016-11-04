@@ -23,14 +23,11 @@ import java.util.zip.ZipFile;
 import javax.imageio.ImageIO;
 import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
-import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
-import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.SwingConstants;
-import javax.swing.border.Border;
 
 import net.codepixl.GLCraft.util.Constants;
 import net.lingala.zip4j.exception.ZipException;
