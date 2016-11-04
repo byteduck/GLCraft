@@ -1,9 +1,9 @@
 <component name="libraryTable">
   <library name="jar1">
     <CLASSES>
+      <root url="jar://$PROJECT_DIR$/res/jar/lwjgl_util.jar!/" />
       <root url="jar://$PROJECT_DIR$/res/jar/guava-19.0.jar!/" />
       <root url="jar://$PROJECT_DIR$/res/jar/lwjgl.jar!/" />
-      <root url="jar://$PROJECT_DIR$/res/jar/lwjgl_util.jar!/" />
       <root url="jar://$PROJECT_DIR$/res/jar/nbt.jar!/" />
       <root url="jar://$PROJECT_DIR$/res/jar/json-20151123.jar!/" />
       <root url="jar://$PROJECT_DIR$/res/jar/GLUtils.jar!/" />
