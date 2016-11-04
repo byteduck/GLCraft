@@ -2,115 +2,8 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="5331cae0-a7fc-44ce-8da0-5f6867b88d42" name="Default" comment="">
-      <change type="DELETED" beforePath="$PROJECT_DIR$/.idea/libraries/jar.xml" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/.idea/libraries/jar1.xml" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/net/codepixl/GLCraft/world/CentralManager.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/net/codepixl/GLCraft/world/Chunk.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/net/codepixl/GLCraft/world/GenChunk.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/net/codepixl/GLCraft/world/Generator.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/net/codepixl/GLCraft/world/WorldLoadJobList.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/net/codepixl/GLCraft/world/WorldManager.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/net/codepixl/GLCraft/world/crafting/CraftingManager.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/net/codepixl/GLCraft/world/crafting/FurnaceFuel.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/net/codepixl/GLCraft/world/crafting/FurnaceRecipe.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/net/codepixl/GLCraft/world/crafting/ItemStackGroup.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/net/codepixl/GLCraft/world/crafting/Recipe.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/net/codepixl/GLCraft/world/entity/Entity.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/net/codepixl/GLCraft/world/entity/EntityFallingBlock.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/net/codepixl/GLCraft/world/entity/EntityItem.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/net/codepixl/GLCraft/world/entity/EntityManager.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/net/codepixl/GLCraft/world/entity/EntitySolid.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/net/codepixl/GLCraft/world/entity/EntityTNT.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/net/codepixl/GLCraft/world/entity/NBTUtil.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/net/codepixl/GLCraft/world/entity/mob/AI/AI.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/net/codepixl/GLCraft/world/entity/mob/AI/AIFollowNearest.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/net/codepixl/GLCraft/world/entity/mob/AI/AIHurtNearest.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/net/codepixl/GLCraft/world/entity/mob/AI/AIPathfind.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/net/codepixl/GLCraft/world/entity/mob/AI/AIPathfindAway.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/net/codepixl/GLCraft/world/entity/mob/AI/AIRunAway.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/net/codepixl/GLCraft/world/entity/mob/AI/AIWander.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/net/codepixl/GLCraft/world/entity/mob/AI/pathfinding/GLCraftPathfinderProvider.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/net/codepixl/GLCraft/world/entity/mob/AI/pathfinding/Pathfinder.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/net/codepixl/GLCraft/world/entity/mob/AI/pathfinding/PathfinderProvider.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/net/codepixl/GLCraft/world/entity/mob/AI/pathfinding/PathfindingNode.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/net/codepixl/GLCraft/world/entity/mob/AI/pathfinding/PathfindingNodeComparator.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/net/codepixl/GLCraft/world/entity/mob/DamageSource.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/net/codepixl/GLCraft/world/entity/mob/DeathMessage.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/net/codepixl/GLCraft/world/entity/mob/EntityPlayer.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/net/codepixl/GLCraft/world/entity/mob/EntityPlayerMP.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/net/codepixl/GLCraft/world/entity/mob/Mob.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/net/codepixl/GLCraft/world/entity/mob/animal/Animal.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/net/codepixl/GLCraft/world/entity/mob/animal/EntityTestAnimal.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/net/codepixl/GLCraft/world/entity/mob/hostile/EntityTestHostile.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/net/codepixl/GLCraft/world/entity/mob/hostile/Hostile.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/net/codepixl/GLCraft/world/entity/particle/Particle.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/net/codepixl/GLCraft/world/entity/tileentity/TileEntity.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/net/codepixl/GLCraft/world/entity/tileentity/TileEntityChest.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/net/codepixl/GLCraft/world/entity/tileentity/TileEntityContainer.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/net/codepixl/GLCraft/world/entity/tileentity/TileEntityFurnace.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/net/codepixl/GLCraft/world/item/Item.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/net/codepixl/GLCraft/world/item/ItemBucketEmpty.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/net/codepixl/GLCraft/world/item/ItemBucketWater.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/net/codepixl/GLCraft/world/item/ItemCoal.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/net/codepixl/GLCraft/world/item/ItemDiamond.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/net/codepixl/GLCraft/world/item/ItemGoldIngot.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/net/codepixl/GLCraft/world/item/ItemIronIngot.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/net/codepixl/GLCraft/world/item/ItemSeeds.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/net/codepixl/GLCraft/world/item/ItemStack.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/net/codepixl/GLCraft/world/item/ItemStick.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/net/codepixl/GLCraft/world/item/PluginItem.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/net/codepixl/GLCraft/world/item/tool/ItemDiamondAxe.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/net/codepixl/GLCraft/world/item/tool/ItemDiamondPickaxe.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/net/codepixl/GLCraft/world/item/tool/ItemGoldAxe.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/net/codepixl/GLCraft/world/item/tool/ItemGoldPickaxe.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/net/codepixl/GLCraft/world/item/tool/ItemIronAxe.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/net/codepixl/GLCraft/world/item/tool/ItemIronPickaxe.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/net/codepixl/GLCraft/world/item/tool/ItemStoneAxe.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/net/codepixl/GLCraft/world/item/tool/ItemStonePickaxe.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/net/codepixl/GLCraft/world/item/tool/ItemWoodAxe.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/net/codepixl/GLCraft/world/item/tool/ItemWoodPickaxe.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/net/codepixl/GLCraft/world/item/tool/Tool.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/net/codepixl/GLCraft/world/item/tool/ToolType.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/net/codepixl/GLCraft/world/tile/PluginTile.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/net/codepixl/GLCraft/world/tile/Tile.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/net/codepixl/GLCraft/world/tile/TileAir.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/net/codepixl/GLCraft/world/tile/TileBedrock.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/net/codepixl/GLCraft/world/tile/TileBluestone.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/net/codepixl/GLCraft/world/tile/TileCobblestone.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/net/codepixl/GLCraft/world/tile/TileCondensedBluestone.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/net/codepixl/GLCraft/world/tile/TileDirt.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/net/codepixl/GLCraft/world/tile/TileDoor.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/net/codepixl/GLCraft/world/tile/TileFire.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/net/codepixl/GLCraft/world/tile/TileGlass.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/net/codepixl/GLCraft/world/tile/TileGrass.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/net/codepixl/GLCraft/world/tile/TileLamp.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/net/codepixl/GLCraft/world/tile/TileLava.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/net/codepixl/GLCraft/world/tile/TileLeaf.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/net/codepixl/GLCraft/world/tile/TileLog.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/net/codepixl/GLCraft/world/tile/TileParticleProjector.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/net/codepixl/GLCraft/world/tile/TileSand.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/net/codepixl/GLCraft/world/tile/TileSapling.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/net/codepixl/GLCraft/world/tile/TileTallGrass.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/net/codepixl/GLCraft/world/tile/TileTnt.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/net/codepixl/GLCraft/world/tile/TileVoid.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/net/codepixl/GLCraft/world/tile/TileWater.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/net/codepixl/GLCraft/world/tile/TileWood.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/net/codepixl/GLCraft/world/tile/TileWorkbench.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/net/codepixl/GLCraft/world/tile/material/Material.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/net/codepixl/GLCraft/world/tile/ore/TileBluestoneOre.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/net/codepixl/GLCraft/world/tile/ore/TileCoalOre.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/net/codepixl/GLCraft/world/tile/ore/TileDiamondOre.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/net/codepixl/GLCraft/world/tile/ore/TileGoldOre.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/net/codepixl/GLCraft/world/tile/ore/TileIronOre.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/net/codepixl/GLCraft/world/tile/ore/TileOre.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/net/codepixl/GLCraft/world/tile/ore/TileStone.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/net/codepixl/GLCraft/world/tile/tick/TickHelper.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/net/codepixl/GLCraft/world/tile/tileentity/TileChest.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/net/codepixl/GLCraft/world/tile/tileentity/TileFurnace.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/net/codepixl/GLCraft/world/tile/tileentity/TileTileEntity.java" afterPath="" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/res/jar/commons-lang3-3.1.jar" afterPath="$PROJECT_DIR$/res/jar/commons-lang3-3.1.jar" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/res/jar/nbt.jar" afterPath="$PROJECT_DIR$/res/jar/nbt.jar" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.gitignore" afterPath="$PROJECT_DIR$/.gitignore" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
     </list>
     <ignored path="GLCraft.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -134,8 +27,8 @@
       <file leaf-file-name=".gitignore" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/.gitignore">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="213">
-              <caret line="51" column="0" selection-start-line="51" selection-start-column="0" selection-end-line="51" selection-end-column="0" />
+            <state relative-caret-position="451">
+              <caret line="98" column="0" selection-start-line="98" selection-start-column="0" selection-end-line="98" selection-end-column="0" />
               <folding />
             </state>
           </provider>
@@ -645,7 +538,7 @@
   </component>
   <component name="ToolWindowManager">
     <frame x="260" y="20" width="1400" height="1000" extended-state="0" />
-    <editor active="false" />
+    <editor active="true" />
     <layout>
       <window_info id="Palette" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="-1" side_tool="false" content_ui="tabs" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
@@ -659,7 +552,7 @@
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="-1" side_tool="false" content_ui="tabs" />
       <window_info id="Capture Tool" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="-1" side_tool="false" content_ui="tabs" />
       <window_info id="Designer" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="-1" side_tool="false" content_ui="tabs" />
-      <window_info id="Project" active="true" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.25820896" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.25820896" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="UI Designer" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="-1" side_tool="false" content_ui="tabs" />
@@ -703,8 +596,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/.gitignore">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="213">
-          <caret line="51" column="0" selection-start-line="51" selection-start-column="0" selection-end-line="51" selection-end-column="0" />
+        <state relative-caret-position="451">
+          <caret line="98" column="0" selection-start-line="98" selection-start-column="0" selection-end-line="98" selection-end-column="0" />
           <folding />
         </state>
       </provider>
