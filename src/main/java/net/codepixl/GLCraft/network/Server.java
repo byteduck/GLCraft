@@ -13,6 +13,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map.Entry;
 
+import net.codepixl.GLCraft.util.*;
 import org.lwjgl.util.vector.Vector3f;
 
 import net.codepixl.GLCraft.GLCraft;
@@ -44,11 +45,6 @@ import net.codepixl.GLCraft.network.packet.PacketUpdateEntity;
 import net.codepixl.GLCraft.network.packet.PacketUtil;
 import net.codepixl.GLCraft.network.packet.PacketWorldTime;
 import net.codepixl.GLCraft.plugin.LoadedPlugin;
-import net.codepixl.GLCraft.util.ChatFormat;
-import net.codepixl.GLCraft.util.Constants;
-import net.codepixl.GLCraft.util.LogSource;
-import net.codepixl.GLCraft.util.Vector2i;
-import net.codepixl.GLCraft.util.Vector3i;
 import net.codepixl.GLCraft.util.command.Command.Permission;
 import net.codepixl.GLCraft.util.data.saves.SaveManager;
 import net.codepixl.GLCraft.util.logging.GLogger;
@@ -79,6 +75,7 @@ public class Server{
 	
 	public Server(WorldManager w, int port) throws IOException{
 		if(!commonInit(w,port)){throw new IOException("Error binding to port");}
+		if(GLCraft.getGLCraft().isServer()) setBroadcast(SettingsManager.getSetting("server_name"));
 	}
 	
 	public Server(WorldManager w) throws IOException{
@@ -181,6 +178,11 @@ public class Server{
 					}
 				if(lanWorld && host == null)
 					host = c;
+				int maxplayers = SettingsManager.getInt("max_players");
+				if(clients.size() >= maxplayers){
+					c.writePacket(new PacketPlayerLoginResponse("Player limit reached. ("+maxplayers+")"));
+					return;
+				}
 				clients.put(new InetAddressAndPort(c.addr, c.port), c);
 				this.worldManager.entityManager.add(mp);
 				c.writePacket(new PacketPlayerLoginResponse(mp.getID(),mp.getPos()));
@@ -247,6 +249,15 @@ public class Server{
 				if(GLCraft.getGLCraft().getWorldManager(false) != null && GLCraft.getGLCraft().getWorldManager(false).getPlayer().equals(c.player))
 					c.player.setPermission(Permission.OP);
 				sendToAllClients(new PacketChat(ChatFormat.YELLOW+c.player.getName()+" joined the game."));
+				if(GLCraft.getGLCraft().isServer()){
+					String message = SettingsManager.getSetting("welcome_message");
+					message = message.replace("%servername%", SettingsManager.getSetting("server_name"));
+					message = message.replace("%playername%", c.player.getName());
+					message = message.replace("%numplayers%", Integer.toString(clients.size()));
+					for(String operator : SettingsManager.getSetting("ops").split(","))
+						if(!operator.equals("") && c.player.getName().equalsIgnoreCase(operator)) c.player.setPermission(Permission.OP);
+					c.writePacket(new PacketChat(message));
+				}
 			}else if(op instanceof PacketPlayerLeave){
 				if(c == null)
 					return;

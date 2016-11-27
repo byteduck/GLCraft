@@ -73,4 +73,7 @@ public class EntityFallingBlock extends EntitySolid{
 		return new EntityFallingBlock(pos.x, pos.y, pos.z, w);
 	}
 
+	@Override
+	public void renderShadow(){}
+
 }

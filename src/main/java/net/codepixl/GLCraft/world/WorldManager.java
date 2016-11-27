@@ -18,6 +18,7 @@ import java.util.Timer;
 import java.util.TimerTask;
 import java.util.concurrent.Callable;
 
+import org.lwjgl.opengl.GL11;
 import org.lwjgl.util.vector.Vector3f;
 
 import com.evilco.mc.nbt.stream.NbtInputStream;
@@ -195,7 +196,7 @@ public class WorldManager {
 		this.worldTime = Constants.dayLengthMS/2;
 		this.gameTime = new GameTime(this.worldTime);
 		this.sendBlockPackets = true;
-		this.centralManager.getServer().setBroadcast(saveName);
+		if(!GLCraft.getGLCraft().isServer()) this.centralManager.getServer().setBroadcast(saveName);
 		int x = (int) (Constants.CHUNKSIZE*(Constants.worldLengthChunks/2f));
 		int z = (int) (Constants.CHUNKSIZE*(Constants.worldLengthChunks/2f));
 		int y = Constants.CHUNKSIZE*Constants.worldLengthChunks+1;
@@ -656,7 +657,7 @@ public class WorldManager {
 			while(Tile.getTile((byte) getTileAtPos(x, y-1, z)).canPassThrough() || Tile.getTile((byte)getTileAtPos(x, y-1, z)) == Tile.Void){y--;}
 			centralManager.getServer().spawnPos = new Vector3f(x,y,z);
 			this.doneGenerating = true;
-			this.centralManager.getServer().setBroadcast(s.dispName);
+			if(!GLCraft.getGLCraft().isServer()) this.centralManager.getServer().setBroadcast(s.dispName);
 			return true;
 		}else{
 			GLogger.logerr("Error loading world", LogSource.SERVER);

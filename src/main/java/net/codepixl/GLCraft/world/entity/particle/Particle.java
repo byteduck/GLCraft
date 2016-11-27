@@ -111,5 +111,8 @@ public class Particle extends EntitySolid{
 		p.setLifeTime(t.getFloat("lifetime"));
 		return p;
 	}
+
+	@Override
+	public void renderShadow(){}
 	
 }

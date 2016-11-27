@@ -1,4 +1,6 @@
-package net.codepixl.GLCraft.render.util;
+package net.codepixl.GLCraft.util;
+
+import net.codepixl.GLCraft.GLCraft;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -9,18 +11,18 @@ import java.io.OutputStream;
 import java.util.Map.Entry;
 import java.util.Properties;
 
-import net.codepixl.GLCraft.util.Constants;
-
 public class SettingsManager{
 	private static Properties defaultProps = new Properties();
 	private static Properties userProps = new Properties();
+	public static File propsFile;
 	public static void init(){
+		propsFile = new File(GLCraft.getGLCraft().isServer() ? "server.properties" : Constants.GLCRAFTDIR+File.separator+"settings.properties");
 		boolean loadedUserProps = false;
 		try {
-			defaultProps.load(SettingsManager.class.getClassLoader().getResourceAsStream("properties/settings.properties"));
-			if(new File(Constants.GLCRAFTDIR, "settings.properties").exists()){
+			defaultProps.load(SettingsManager.class.getClassLoader().getResourceAsStream(GLCraft.getGLCraft().isServer() ? "properties/server.properties" : "properties/settings.properties"));
+			if(propsFile.exists()){
 				loadedUserProps = true;
-				InputStream is = new FileInputStream(Constants.GLCRAFTDIR+File.separator+"settings.properties");
+				InputStream is = new FileInputStream(propsFile);
 				userProps.load(is);
 				is.close();
 			}
@@ -31,11 +33,11 @@ public class SettingsManager{
 			for(Entry<Object, Object> e : defaultProps.entrySet()){
 				userProps.setProperty((String)e.getKey(), (String)e.getValue());
 			}
-			userProps.setProperty("name", "Player"+Constants.randInt(1, 10000));
+			if(!GLCraft.getGLCraft().isServer()) userProps.setProperty("name", "Player"+Constants.randInt(1, 10000));
 			OutputStream os;
 			try {
-				os = new FileOutputStream(Constants.GLCRAFTDIR+File.separator+"settings.properties");
-				userProps.store(os, "The GLCraft settings file.");
+				os = new FileOutputStream(propsFile);
+				userProps.store(os, GLCraft.getGLCraft().isServer() ? "Properties for your server." : "The GLCraft settings file.");
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
@@ -56,6 +58,15 @@ public class SettingsManager{
 	public static String getSetting(String key){
 		return userProps.getProperty(key, defaultProps.getProperty(key, ""));
 	}
+
+	public static int getInt(String key){
+		String setting = getSetting(key);
+		try{
+			return key == null ? 0 : Integer.parseInt(setting);
+		}catch(NumberFormatException e){
+			return 0;
+		}
+	}
 	
 	public static void setSetting(String key, String value){
 		userProps.setProperty(key, value);
@@ -64,7 +75,7 @@ public class SettingsManager{
 	public static void saveSettings(){
 		OutputStream os;
 		try {
-			os = new FileOutputStream(Constants.GLCRAFTDIR+File.separator+"settings.properties");
+			os = new FileOutputStream(propsFile);
 			userProps.store(os, "The GLCraft settings file.");
 		} catch (IOException e) {
 			e.printStackTrace();

@@ -24,7 +24,7 @@ public class CommandStop implements Command{
 
 	@Override
 	public Permission getPermission(){
-		return Permission.SERVER;
+		return Permission.OP;
 	}
 
 	@Override

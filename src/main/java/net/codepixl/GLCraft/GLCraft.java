@@ -84,7 +84,7 @@ import net.codepixl.GLCraft.plugin.Plugin;
 import net.codepixl.GLCraft.plugin.PluginManager;
 import net.codepixl.GLCraft.render.TextureManager;
 import net.codepixl.GLCraft.render.texturepack.TexturePackManager;
-import net.codepixl.GLCraft.render.util.SettingsManager;
+import net.codepixl.GLCraft.util.SettingsManager;
 import net.codepixl.GLCraft.util.Constants;
 import net.codepixl.GLCraft.util.DebugTimer;
 import net.codepixl.GLCraft.util.LogSource;
@@ -287,7 +287,9 @@ public class GLCraft extends Screen{
 	}
 	
 	public void initServer(){
-		
+
+		SettingsManager.init();
+
 		Constants.init(true);
 		
 		Constants.gatherSystemInfo();

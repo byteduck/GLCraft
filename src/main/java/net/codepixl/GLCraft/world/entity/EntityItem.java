@@ -148,10 +148,10 @@ public class EntityItem extends EntitySolid{
 	@Override
 	public void clientUpdate(){
 		super.clientUpdate();
-		if(timeAlive % 2000 <=1000){
-			yPos = MathUtils.easeInOutQuad((float)timeAlive/1000f, 0f, 0.3f, 1f);
+		if(timeAlive % 2000 <= 1000){
+			yPos = MathUtils.easeInOutQuad((float)timeAlive/1000f, 0.05f, 0.25f, 1f);
 		}else{
-			yPos = MathUtils.easeInOutQuad((float)timeAlive/1000f, 0.3f, -0.3f, 1f);
+			yPos = MathUtils.easeInOutQuad((float)timeAlive/1000f, 0.3f, -0.25f, 1f);
 		}
 
 		this.yRot = (float) (this.yRot+Time.getDelta()*50);

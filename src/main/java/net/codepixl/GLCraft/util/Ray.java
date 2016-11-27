@@ -1,11 +1,16 @@
 package net.codepixl.GLCraft.util;
 
+import net.codepixl.GLCraft.util.logging.GLogger;
 import org.lwjgl.opengl.GL11;
+import org.lwjgl.util.vector.Vector;
 import org.lwjgl.util.vector.Vector3f;
+
+import java.util.ArrayList;
 
 public class Ray {
 	
 	public Vector3f pos, dir, scaledDir, origPos;
+	public ArrayList<Vector3f> poses = new ArrayList<Vector3f>();
 	public float distance;
 	public float scalar;
 	
@@ -15,6 +20,7 @@ public class Ray {
 		this.dir = dir;
 		this.scalar = scalar;
 		this.scaledDir = scale(dir, scalar);
+		this.poses.add(pos);
 	}
 	
 	public void next() {
@@ -42,17 +48,23 @@ public class Ray {
 	
 	public void drawRay(){
 		GL11.glLineWidth(0.2f);
-		GL11.glBegin(GL11.GL_LINES);
-			GL11.glVertex3f(origPos.x, origPos.y, origPos.z);
+		Vector3f prevPos = origPos;
+		poses.add(pos);
+		for(Vector3f pos : poses){
+			GL11.glBegin(GL11.GL_LINES);
+			GL11.glVertex3f(prevPos.x, prevPos.y, prevPos.z);
 			GL11.glVertex3f(pos.x, pos.y, pos.z);
-		GL11.glEnd();
+			GL11.glEnd();
+			prevPos = pos;
+		}
 	}
 	public void drawRayBlock(){
 		GL11.glLineWidth(0.2f);
+		GL11.glLineWidth(10f);
+		GL11.glDisable(GL11.GL_TEXTURE_2D);
 		GL11.glBegin(GL11.GL_LINES);
 			GL11.glVertex3f(origPos.x, origPos.y, origPos.z);
 			GL11.glVertex3f(((int)pos.x)+0.5f, ((int)pos.y)+0.5f, ((int)pos.z)+0.5f);
 		GL11.glEnd();
 	}
-	
 }

@@ -177,6 +177,10 @@ public class Tile {
 		else
 			return tileMap.get(id);
 	}
+
+	public static Tile getTile(int id){
+		return getTile((byte)id);
+	}
 	
 	public Material getMaterial(){
 		return Material.DEFAULT;

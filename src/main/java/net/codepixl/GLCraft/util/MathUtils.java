@@ -2,6 +2,7 @@ package net.codepixl.GLCraft.util;
 
 import java.util.Random;
 
+import org.lwjgl.util.vector.ReadableVector3f;
 import org.lwjgl.util.vector.Vector3f;
 
 import com.nishu.utils.Color4f;
@@ -128,4 +129,8 @@ public class MathUtils {
     		flag = false;
     	return flag;
     }
+
+	public static Vector3f subtract(Vector3f left, Vector3f right){
+		return new Vector3f(left.x - right.x, left.y - right.y, left.z - right.z);
+	}
 }

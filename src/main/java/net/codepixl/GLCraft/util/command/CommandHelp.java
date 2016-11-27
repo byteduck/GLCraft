@@ -3,6 +3,8 @@ package net.codepixl.GLCraft.util.command;
 import net.codepixl.GLCraft.util.ChatFormat;
 import net.codepixl.GLCraft.world.CentralManager;
 
+import java.util.Iterator;
+
 public class CommandHelp implements Command{
 
 	@Override
@@ -12,19 +14,23 @@ public class CommandHelp implements Command{
 
 	@Override
 	public boolean execute(CentralManager centralManager, CommandExecutor e, String... args) {
-		if(args.length == 1){
-			e.sendMessage(ChatFormat.GREEN+"COMMANDS: "+ChatFormat.GOLD+"Permissions- (N)one (O)p (S)erver");
-			for(Command c : centralManager.commandManager.getCommands()){
-				if(c.getPermission().val <= e.getPermission().val)
-					e.sendMessage(ChatFormat.GREEN+c.getName()+ChatFormat.WHITE+" "+c.getUsage()+" "+ChatFormat.GOLD+c.getPermission().getLabel());
-			}
-		}else{
-			Command c = centralManager.commandManager.getCommand(args[1]);
-			if(c != null){
-				e.sendMessage(ChatFormat.GOLD+"Permissions- (N)one (O)p (S)erver");
+		e.sendMessage(ChatFormat.GREEN+"COMMANDS: "+ChatFormat.GOLD+"Permissions- (N)one (O)p (S)erver");
+		Iterator<Command> i = centralManager.commandManager.getCommands().iterator();
+		int page = 1;
+		if(args.length >= 2)
+			try {
+				page = Integer.parseInt(args[1]);
+			}catch(NumberFormatException e2){}
+		e.sendMessage(ChatFormat.GREEN+"Showing page "+page+" of "+(centralManager.commandManager.getCommands().size()/8+(centralManager.commandManager.getCommands().size()%8==0 ? 0 : 1)));
+		for(int s = 0; s < (page-1)*8; s++)
+			if(i.hasNext())
+				i.next();
+		int done = 0;
+		while(i.hasNext() && done < 8){
+			Command c = i.next();
+			if(c.getPermission().val <= e.getPermission().val)
 				e.sendMessage(ChatFormat.GREEN+c.getName()+ChatFormat.WHITE+" "+c.getUsage()+" "+ChatFormat.GOLD+c.getPermission().getLabel());
-			}else
-				e.sendMessage("Cannot give help for that command!");
+			done++;
 		}
 		return true;
 	}
@@ -36,7 +42,7 @@ public class CommandHelp implements Command{
 
 	@Override
 	public String getUsage() {
-		return "[command] - Get help for a command/commands.";
+		return "[page] - Get help for a command/commands.";
 	}
 
 }

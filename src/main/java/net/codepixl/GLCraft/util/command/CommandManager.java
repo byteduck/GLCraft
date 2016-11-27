@@ -41,6 +41,8 @@ public class CommandManager {
 		addCommand(new CommandTime());
 		addCommand(new CommandSave());
 		addCommand(new CommandAnnounce());
+		addCommand(new CommandOp());
+		addCommand(new CommandTp());
 	}
 	
 	public void addCommand(Command c){

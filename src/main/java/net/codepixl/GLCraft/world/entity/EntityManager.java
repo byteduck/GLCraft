@@ -17,6 +17,8 @@ import java.util.Map.Entry;
 
 import javax.swing.JOptionPane;
 
+import net.codepixl.GLCraft.util.*;
+import org.lwjgl.opengl.GL11;
 import org.lwjgl.util.vector.Vector3f;
 
 import com.evilco.mc.nbt.stream.NbtOutputStream;
@@ -27,11 +29,6 @@ import net.codepixl.GLCraft.network.packet.Packet;
 import net.codepixl.GLCraft.network.packet.PacketAddEntity;
 import net.codepixl.GLCraft.network.packet.PacketMultiPacket;
 import net.codepixl.GLCraft.network.packet.PacketRemoveEntity;
-import net.codepixl.GLCraft.util.Constants;
-import net.codepixl.GLCraft.util.DebugTimer;
-import net.codepixl.GLCraft.util.GameObj;
-import net.codepixl.GLCraft.util.MathUtils;
-import net.codepixl.GLCraft.util.Vector3i;
 import net.codepixl.GLCraft.util.data.saves.Save;
 import net.codepixl.GLCraft.world.WorldManager;
 import net.codepixl.GLCraft.world.entity.mob.EntityPlayer;
@@ -206,6 +203,11 @@ public class EntityManager implements GameObj{
 	        	((EntitySolid) e).aabb.render();
 	        }**/
 	    }
+		GL11.glBindTexture(GL11.GL_TEXTURE_2D,0);
+	    for(Entity e : entities.values())
+			if(!(e instanceof TileEntity))
+				e.renderShadow();
+		Spritesheet.atlas.bind();
 		glCallList(mobRenderID);
 		iterating = false;
 	}

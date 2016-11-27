@@ -198,4 +198,7 @@ public class EntitySolid extends Entity{
 		return new AABB(0.98f,0.98f,0.98f);
 	}
 
+	@Override
+	public float getShadowSize(){ return (getAABB().getSize().x+getAABB().getSize().z)/3f; }
+
 }

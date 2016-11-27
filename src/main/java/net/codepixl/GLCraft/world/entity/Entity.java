@@ -1,5 +1,7 @@
 package net.codepixl.GLCraft.world.entity;
 
+import net.codepixl.GLCraft.render.Shape;
+import org.lwjgl.opengl.GL11;
 import org.lwjgl.util.vector.Vector3f;
 
 import com.evilco.mc.nbt.error.TagNotFoundException;
@@ -76,7 +78,7 @@ public class Entity implements GameObj{
 	}
 	
 	public void setPos(Vector3f pos){
-		this.pos = pos;
+		this.pos.set(pos);
 	}
 	
 	public void setPos(float x, float y, float z){
@@ -304,6 +306,23 @@ public class Entity implements GameObj{
 	@Override
 	public boolean equals(Object obj){
 		return obj instanceof Entity && ((Entity)obj).getID() == getID();
+	}
+
+	public float getShadowSize(){ return 0.3f; }
+
+	public void renderShadow(){
+		int i = 0;
+		while(Tile.getTile(worldManager.getTileAtPos(pos.x, pos.y-i, pos.z)).isTransparent() && i < 5)
+			i++;
+		final float ypos = (float)Math.floor(pos.y-i+1)+0.01f;
+		GL11.glColor4f(0,0,0,(MathUtils.distance(pos, new Vector3f(pos.x, ypos, pos.z))*-1+5f)/10f);
+		GL11.glBegin(GL11.GL_POLYGON);
+		float shadowSize = getShadowSize();
+		for( int n = 30; n >= 0; n-- ) {
+			float t = 2 * (float)Math.PI * (float)n /30f;
+			GL11.glVertex3f(pos.x + (float)Math.sin(t) * shadowSize, ypos, pos.z + (float)Math.cos(t) * shadowSize);
+		}
+		GL11.glEnd();
 	}
 	
 }

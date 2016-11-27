@@ -8,7 +8,6 @@ import org.lwjgl.opengl.Display;
 import org.lwjgl.util.vector.Vector3f;
 import org.newdawn.slick.TrueTypeFont;
 
-import net.codepixl.GLCraft.render.util.SettingsManager;
 import net.codepixl.GLCraft.util.logging.GLogger;
 
 public class Constants {
