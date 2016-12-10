@@ -384,9 +384,11 @@ public class GLCraft extends Screen{
 	@Override
 	public void update() {
 		DebugTimer.startTimer("loop_time");
-		if(!Display.isFullscreen()){
-			xSize = Display.getWidth();
-			ySize = Display.getHeight();
+		if(!this.isServer()) {
+			if (!Display.isFullscreen()) {
+				xSize = Display.getWidth();
+				ySize = Display.getHeight();
+			}
 		}
 		if(clientCentralManager != null)
 			clientCentralManager.update();
