@@ -3,11 +3,13 @@ package net.codepixl.GLCraft.util.data.saves;
 import java.io.File;
 
 import net.codepixl.GLCraft.util.Constants;
+import net.codepixl.GLCraft.world.WeatherState;
 
 public class Save implements Comparable<Save>{
 	public String name,dispName,version,format;
 	public long timestamp, worldTime;
 	public boolean isDedicated = false;
+	public WeatherState weatherState;
 	public Save(String name, String dispName, String version, String format){
 		this.name = name;
 		this.dispName = dispName;
@@ -15,16 +17,17 @@ public class Save implements Comparable<Save>{
 		this.format = format;
 	}
 	
-	public Save(String name, String dispName, String version, String format, long timestamp, long worldTime){
+	public Save(String name, String dispName, String version, String format, long timestamp, long worldTime, WeatherState weatherState){
 		this.name = name;
 		this.dispName = dispName;
 		this.version = version;
 		this.format = format;
 		this.timestamp = timestamp;
 		this.worldTime = worldTime;
+		this.weatherState = weatherState;
 	}
 	
-	public Save(String name, String dispName, String version, String format, long timestamp, long worldTime, boolean dedicated){
+	public Save(String name, String dispName, String version, String format, long timestamp, long worldTime, boolean dedicated, WeatherState weatherState){
 		this.name = name;
 		this.dispName = dispName;
 		this.version = version;
@@ -32,6 +35,7 @@ public class Save implements Comparable<Save>{
 		this.timestamp = timestamp;
 		this.worldTime = worldTime;
 		this.isDedicated = dedicated;
+		this.weatherState = weatherState;
 	}
 	
 	@Override

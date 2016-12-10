@@ -14,6 +14,10 @@ import java.util.Map.Entry;
 
 import javax.swing.JOptionPane;
 
+import com.sun.xml.internal.ws.encoding.soap.DeserializationException;
+import net.codepixl.GLCraft.world.WeatherState;
+import net.codepixl.GLCraft.world.WeatherType;
+import org.apache.commons.lang3.SerializationUtils;
 import org.lwjgl.util.vector.Vector3f;
 
 import com.evilco.mc.nbt.error.TagNotFoundException;
@@ -77,7 +81,7 @@ public class SaveManager {
 					worldManager.getEntityManager().save(save);
 					
 					//METADATA SAVING
-					writeMetadata(save);
+					writeMetadata(save, worldManager);
 					
 				}catch(IOException e){
 					e.printStackTrace();
@@ -101,7 +105,7 @@ public class SaveManager {
 			//METADATA LOADING
 			if(save != null){
 				if(!save.format.equals(currentFormat)){
-					if(!upgradeWorld(save)){
+					if(!upgradeWorld(save, worldManager)){
 						if(!GLCraft.getGLCraft().isServer())
 							GUIManager.getMainManager().showGUI(new GUIServerError("Error loading world:","Unsupported world format "+save.format));
 						return false;
@@ -117,6 +121,7 @@ public class SaveManager {
 			
 			//WORLD LOADING
 			worldManager.loadChunks(save);
+			if(save.weatherState != null) save.weatherState.worldManager = worldManager; else save.weatherState = new WeatherState(WeatherType.CLEAR, worldManager);
 			
 			//ENTITY & PLAYER LOADING
 			worldManager.entityManager.removeAll();
@@ -158,7 +163,7 @@ public class SaveManager {
 		return false;
 	}
 
-	private static boolean upgradeWorld(Save s) throws IOException {
+	private static boolean upgradeWorld(Save s, WorldManager worldManager) throws IOException {
 		while(!s.format.equals(currentFormat)){
 			if(s.format.equals(formatV1)){
 				for(int chunk = 0; chunk < 1000; chunk++){
@@ -221,7 +226,7 @@ public class SaveManager {
 				return false;
 			}
 		}
-		writeMetadata(s);
+		writeMetadata(s, worldManager);
 		return true;
 	}
 	
@@ -318,7 +323,7 @@ public class SaveManager {
 		}
 	}
 
-	private static void writeMetadata(Save save) throws IOException {
+	private static void writeMetadata(Save save, WorldManager worldManager) throws IOException {
 		FileOutputStream outputStream = new FileOutputStream(new File(save.getDirectory(),"world.nbt"));
 		NbtOutputStream nbtOutputStream = new NbtOutputStream(outputStream);
 		TagCompound t = new TagCompound("level");
@@ -333,6 +338,8 @@ public class SaveManager {
 		t.setTag(timeTag);
 		TagLong worldTimeTag = new TagLong("worldTime", save.worldTime);
 		t.setTag(worldTimeTag);
+		TagByteArray weatherState = new TagByteArray("weatherState", SerializationUtils.serialize(worldManager.currentWeather));
+		t.setTag(weatherState);
 		nbtOutputStream.write(t);
 		nbtOutputStream.close();
 		outputStream.close();
@@ -348,13 +355,15 @@ public class SaveManager {
 				long timestamp = 0;
 				timestamp = tag.getLong("timestamp");
 				long worldTime = Constants.dayLengthMS/2;
+				WeatherState weatherState = null;
 				try{
 					worldTime = tag.getLong("worldTime");
-				}catch(TagNotFoundException | NullPointerException e){
+					weatherState = (WeatherState) SerializationUtils.deserialize(tag.getByteArray("weatherState"));
+				}catch(TagNotFoundException | NullPointerException | ClassCastException | DeserializationException e){
 					
 				}
 				inputStream.close();
-				return new Save(name,tag.getString("name"),tag.getString("version"),tag.getString("format"),timestamp,worldTime);
+				return new Save(name,tag.getString("name"),tag.getString("version"),tag.getString("format"),timestamp,worldTime,weatherState);
 			}catch(TagNotFoundException | NullPointerException e){
 				System.err.println("WARNING: world "+name+" is corrupted!");
 				return null;
@@ -390,13 +399,15 @@ public class SaveManager {
 			long timestamp = 0;
 			timestamp = tag.getLong("timestamp");
 			long worldTime = Constants.dayLengthMS/2;
+			WeatherState weatherState = null;
 			try{
 				worldTime = tag.getLong("worldTime");
-			}catch(TagNotFoundException | NullPointerException e){
+				weatherState = (WeatherState) SerializationUtils.deserialize(tag.getByteArray("weatherState"));
+			}catch(TagNotFoundException | NullPointerException | ClassCastException | DeserializationException e){
 				
 			}
 			inputStream.close();
-			return new Save("world",tag.getString("name"),tag.getString("version"),tag.getString("format"),timestamp,worldTime,true);
+			return new Save("world",tag.getString("name"),tag.getString("version"),tag.getString("format"),timestamp,worldTime,true,weatherState);
 		}else{
 			Save s = new Save("world","world","?",formatV0);
 			s.isDedicated = true;

@@ -198,6 +198,7 @@ public class WorldManager {
 		this.worldTime = Constants.dayLengthMS/2;
 		this.gameTime = new GameTime(this.worldTime);
 		this.currentWeather = new WeatherState(WeatherType.CLEAR, this);
+		this.weatherTransitionCountdown = 0;
 		this.sendBlockPackets = true;
 		if(!GLCraft.getGLCraft().isServer()) this.centralManager.getServer().setBroadcast(saveName);
 		int x = (int) (Constants.CHUNKSIZE*(Constants.worldLengthChunks/2f));
@@ -659,6 +660,8 @@ public class WorldManager {
 		this.worldTime = s.worldTime;
 		this.gameTime = new GameTime(s.worldTime);
 		boolean success = SaveManager.loadWorld(this, s);
+		this.currentWeather = s.weatherState;
+		this.weatherTransitionCountdown = 0;
 		this.sendBlockPackets = true;
 		if(success){
 			int x = (int) (Constants.CHUNKSIZE*(Constants.worldLengthChunks/2f));
@@ -668,7 +671,6 @@ public class WorldManager {
 			centralManager.getServer().spawnPos = new Vector3f(x,y,z);
 			this.doneGenerating = true;
 			if(!GLCraft.getGLCraft().isServer()) this.centralManager.getServer().setBroadcast(s.dispName);
-			this.currentWeather =  new WeatherState(WeatherType.CLEAR, this);
 			return true;
 		}else{
 			GLogger.logerr("Error loading world", LogSource.SERVER);
@@ -1159,6 +1161,16 @@ public class WorldManager {
 		weatherTransitionCountdown = 10f;
 		if(isServer)
 			this.sendPacket(new PacketWeather(currentWeather));
+	}
+
+	public boolean openToSky(int x, int y, int z){
+		for(; y < Constants.worldLength; y++)
+			if(!Tile.getTile(getTileAtPos(x,y,z)).canPassThrough()) return false;
+		return true;
+	}
+
+	public boolean openToSky(Vector3f pos){
+		return openToSky((int)pos.x, (int)pos.y, (int)pos.z);
 	}
 	
 }

@@ -322,10 +322,10 @@ public class CentralManager extends Screen{
 				glLoadIdentity();
 				render3D();
 				worldManager.render();
+				currentBlock = raycast();
 				renderSky();
 				if(this.renderDebug && this.pathfinder != null && this.pathfinder.path.size() > 0)
 					this.pathfinder.renderPath();
-				currentBlock = raycast();
 				renderEtc();
 				//renderInventory();
 			}
@@ -418,37 +418,62 @@ public class CentralManager extends Screen{
 		worldManager.cloudShader.release();
 		GL11.glPopMatrix();
 
-		if(worldManager.getPlayer().canBreathe()) renderRain();
+		if(worldManager.getPlayer().canBreathe() && worldManager.getRainOpacity() > 0) renderRain();
 		
 		//Spritesheet.atlas.bind();
 		//Shape.currentSpritesheet = Spritesheet.atlas;
 	}
 
 	private void renderRain(){
+		EntityPlayer p = worldManager.getPlayer();
 		Spritesheet.rain.bind();
 		glPushMatrix();
 		glEnable (GL_BLEND);
+		glCullFace(GL_BACK);
 		glBlendFunc (GL_SRC_ALPHA,GL_ONE_MINUS_SRC_ALPHA);
 		Cylinder c = new Cylinder();
 		float light = worldManager.getSkyLightIntensity()*2;
-		GL11.glTranslatef(worldManager.getPlayer().getX(), 0, worldManager.getPlayer().getZ());
-		GL11.glRotatef(-90, 1, 0, 0);
+		GL11.glTranslatef((int)p.getX()+0.5f, 0, (int)p.getZ()+0.55f);
 		c.setDrawStyle(GLU_FILL);
 		c.setTextureFlag(true);
 		c.setNormals(GLU_SMOOTH);
 		GL11.glColor4f(light, light, light, worldManager.getRainOpacity());
-		for(int i = 10; i > 0; i--){
-			glMatrixMode(GL_TEXTURE);
-			glTranslatef(i/7f, GLCraft.getTime() % 1 + i/7f, 0);
-			glScalef(4*i,13,1);
-			glMatrixMode(GL_MODELVIEW);
-			c.draw(1.5f*i-0.5f, 1.5f*i-0.5f, 127f, 10, 1);
-			glMatrixMode(GL_TEXTURE);
-			glLoadIdentity();
-			glMatrixMode(GL_MODELVIEW);
+		for(int x = 10; x >= 0; x--){
+			for(int z = 10; z >= 0; z--){
+				if(!(x ==0 && z == 0)) {
+					drawRainColumn(x, z, p, c);
+					drawRainColumn(-x, z, p, c);
+					drawRainColumn(-x, -z, p, c);
+					drawRainColumn(x, -z, p, c);
+				}else{
+					glCullFace(GL_FRONT);
+					drawRainColumn(x, z-0.05f, p, c);
+					glCullFace(GL_BACK);
+				}
+			}
 		}
 		glPopMatrix();
 		Spritesheet.atlas.bind();
+	}
+
+	private void drawRainColumn(float x, float z, EntityPlayer p, Cylinder c){
+		int y = 0;
+		while(!worldManager.openToSky(new Vector3f(p.getX()+x, y, p.getZ()+z))) y++;
+		glMatrixMode(GL_TEXTURE);
+		glTranslatef(0, GLCraft.getTime() % 1 + z / 7f, 0);
+		glScalef(4, 13, 1);
+		glMatrixMode(GL_MODELVIEW);
+		glTranslatef(x,y,z);
+		GL11.glRotatef(-90, 1, 0, 0);
+		glRotatef(-45, 0, 0, 1);
+		if(!((int)x == 0 && (int)z == 0)) c.draw(0.5f, 0.6f, 127f, 4, 1);
+		else c.draw(0.6f, 0.6f, 127f, 50, 1);
+		glRotatef(45, 0, 0, 1);
+		GL11.glRotatef(90, 1, 0, 0);
+		glTranslatef(-x,-y,-z);
+		glMatrixMode(GL_TEXTURE);
+		glLoadIdentity();
+		glMatrixMode(GL_MODELVIEW);
 	}
 
 	@Deprecated
