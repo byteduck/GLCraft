@@ -68,8 +68,6 @@ public class DebugTimer{
 	
 	@Override
 	public String toString(){
-		DecimalFormat df = new DecimalFormat("##.##");
-		df.setRoundingMode(RoundingMode.DOWN);
-		return name+": "+df.format(getMillis())+"ms";
+		return name+": "+String.format("%.2f",getMillis())+"ms";
 	}
 }

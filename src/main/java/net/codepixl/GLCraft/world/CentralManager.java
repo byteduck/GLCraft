@@ -1,6 +1,8 @@
 package net.codepixl.GLCraft.world;
 
 import static org.lwjgl.opengl.GL11.*;
+import static org.lwjgl.util.glu.GLU.GLU_FILL;
+import static org.lwjgl.util.glu.GLU.GLU_SMOOTH;
 import static org.lwjgl.util.glu.GLU.gluPerspective;
 
 import java.awt.image.BufferedImage;
@@ -24,6 +26,7 @@ import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.Display;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL20;
+import org.lwjgl.util.glu.Cylinder;
 import org.lwjgl.util.vector.Vector3f;
 import org.newdawn.slick.TrueTypeFont;
 import org.newdawn.slick.opengl.TextureImpl;
@@ -52,7 +55,7 @@ import net.codepixl.GLCraft.sound.SoundManager;
 import net.codepixl.GLCraft.util.Constants;
 import net.codepixl.GLCraft.util.DebugTimer;
 import net.codepixl.GLCraft.util.LogSource;
-import net.codepixl.GLCraft.util.Spritesheet;
+import net.codepixl.GLCraft.render.util.Spritesheet;
 import net.codepixl.GLCraft.util.Vector3i;
 import net.codepixl.GLCraft.util.command.CommandManager;
 import net.codepixl.GLCraft.util.data.saves.Save;
@@ -390,7 +393,7 @@ public class CentralManager extends Screen{
 		GL11.glTranslatef(worldManager.getEntityManager().getPlayer().getX(), worldManager.getEntityManager().getPlayer().getY(), worldManager.getEntityManager().getPlayer().getZ());
 		GL11.glRotatef((worldManager.getWorldTime() - (Constants.dayLengthMS/24*5f) % Constants.dayLengthMS)/(float)Constants.dayLengthMS*360f, 0, 0, 1);
 		GL11.glBegin(GL11.GL_POINTS);
-		float intensity = (-worldManager.getSkyLightIntensity()+0.5f)*2f;
+		float intensity = (-worldManager.getSkyLightIntensity(true)+0.5f)*2f;
 		GL11.glColor4f(1f, 1f, 1f, intensity);
 		for(int i = 0; i < Constants.stars.length; i++){
 	    	GL11.glVertex3f(Constants.stars[i].x, Constants.stars[i].y, Constants.stars[i].z);
@@ -405,20 +408,49 @@ public class CentralManager extends Screen{
 		//GL11.glRotatef(-90f, 1f, 0f, 0f);
 		worldManager.cloudShader.use();
 		GL20.glUniform1f(GL20.glGetUniformLocation(worldManager.cloudShader.getProgram(), "time"), GLCraft.getTime());
-		GL20.glUniform1f(GL20.glGetUniformLocation(worldManager.cloudShader.getProgram(), "cover"), 0.8f);
+		GL20.glUniform1f(GL20.glGetUniformLocation(worldManager.cloudShader.getProgram(), "cover"), worldManager.getCloudDensity());
 		GL20.glUniform1f(GL20.glGetUniformLocation(worldManager.cloudShader.getProgram(), "sharpness"), 0.01f);
 		GL20.glUniform1f(GL20.glGetUniformLocation(worldManager.cloudShader.getProgram(), "speed"), 0.005f);
 		GL11.glBegin(GL_QUADS);
-		float lightIntensity = worldManager.getSkyLightIntensity();
+		float lightIntensity = worldManager.getSkyLightIntensity()*worldManager.getCloudDarkness();
 		Shape.createTexturelessFlat(-1000f, 127f, -1000f, new Color4f(lightIntensity,lightIntensity,lightIntensity,0.5f), 2000f);
 		GL11.glEnd();
 		worldManager.cloudShader.release();
 		GL11.glPopMatrix();
+
+		renderRain();
 		
 		//Spritesheet.atlas.bind();
 		//Shape.currentSpritesheet = Spritesheet.atlas;
 	}
-	
+
+	private void renderRain(){
+		Spritesheet.rain.bind();
+		glPushMatrix();
+		glEnable (GL_BLEND);
+		glBlendFunc (GL_SRC_ALPHA,GL_ONE_MINUS_SRC_ALPHA);
+		Cylinder c = new Cylinder();
+		float light = worldManager.getSkyLightIntensity()*2;
+		GL11.glTranslatef(worldManager.getPlayer().getX(), 0, worldManager.getPlayer().getZ());
+		GL11.glRotatef(-90, 1, 0, 0);
+		c.setDrawStyle(GLU_FILL);
+		c.setTextureFlag(true);
+		c.setNormals(GLU_SMOOTH);
+		GL11.glColor4f(light, light, light, worldManager.getRainOpacity());
+		for(int i = 10; i > 0; i--){
+			glMatrixMode(GL_TEXTURE);
+			glTranslatef(i/7f, GLCraft.getTime() % 1 + i/7f, 0);
+			glScalef(4*i,13,1);
+			glMatrixMode(GL_MODELVIEW);
+			c.draw(1.5f*i-0.5f, 1.5f*i-0.5f, 127f, 10, 1);
+			glMatrixMode(GL_TEXTURE);
+			glLoadIdentity();
+			glMatrixMode(GL_MODELVIEW);
+		}
+		glPopMatrix();
+		Spritesheet.atlas.bind();
+	}
+
 	@Deprecated
 	private void renderInventory() {
 		glLoadIdentity();
@@ -527,10 +559,12 @@ public class CentralManager extends Screen{
 			Constants.FONT.drawString(10,Constants.FONT.getLineHeight()*4+10, "FPS: "+Constants.FPS);
 			Constants.FONT.drawString(10,Constants.FONT.getLineHeight()*5+10, "Entities: "+worldManager.entityManager.totalEntities());
 			Constants.FONT.drawString(10,Constants.FONT.getLineHeight()*6+10, "Time: "+worldManager.getTime());
+			Constants.FONT.drawString(10,Constants.FONT.getLineHeight()*7+10, "Weather: "+worldManager.currentWeather);
 			Iterator<DebugTimer> i = DebugTimer.getTimers().iterator();
-			int ind = 7;
+			int ind = 0;
 			while(i.hasNext()){
-				Constants.FONT.drawString(10,Constants.FONT.getLineHeight()*ind+10, i.next().toString());
+				String next = i.next().toString();
+				Constants.FONT.drawString(Constants.getWidth()-10-Constants.FONT.getWidth(next),Constants.FONT.getLineHeight()*ind+10, next);
 				ind++;
 			}
 		}

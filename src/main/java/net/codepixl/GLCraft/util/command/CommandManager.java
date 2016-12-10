@@ -3,6 +3,7 @@ package net.codepixl.GLCraft.util.command;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
@@ -43,6 +44,7 @@ public class CommandManager {
 		addCommand(new CommandAnnounce());
 		addCommand(new CommandOp());
 		addCommand(new CommandTp());
+		addCommand(new CommandWeather());
 	}
 	
 	public void addCommand(Command c){
@@ -54,6 +56,13 @@ public class CommandManager {
 	
 	public Collection<Command> getCommands(){
 		return commands.values();
+	}
+
+	public Collection<Command> getCommands(Command.Permission perm){
+		ArrayList<Command> ret = new ArrayList<Command>();
+		for(Command c : commands.values())
+			if(c.getPermission().val <= perm.val) ret.add(c);
+		return ret;
 	}
 	
 	public static class DuplicateCommandException extends RuntimeException{

@@ -92,6 +92,11 @@ public class MathUtils {
     	dest.y = (1-u)*a.y+u*b.y;
     	dest.z = (1-u)*a.z+u*b.z;
     }
+
+    //A value between a and b at u% along the way.
+    public static float pointAlongValues(float a, float b, float u){
+		return (1-u)*a+u*b;
+	}
     
     public static float easeInOutQuad(float t, float b, float c, float d) {
     	t = t%d;

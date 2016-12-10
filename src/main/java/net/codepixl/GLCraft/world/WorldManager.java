@@ -18,7 +18,7 @@ import java.util.Timer;
 import java.util.TimerTask;
 import java.util.concurrent.Callable;
 
-import org.lwjgl.opengl.GL11;
+import net.codepixl.GLCraft.network.packet.*;
 import org.lwjgl.opengl.GL20;
 import org.lwjgl.util.vector.Vector2f;
 import org.lwjgl.util.vector.Vector3f;
@@ -35,12 +35,6 @@ import net.codepixl.GLCraft.GLCraft;
 import net.codepixl.GLCraft.GUI.GUIManager;
 import net.codepixl.GLCraft.GUI.GUIServerError;
 import net.codepixl.GLCraft.GUI.GUIStartScreen;
-import net.codepixl.GLCraft.network.packet.Packet;
-import net.codepixl.GLCraft.network.packet.PacketBlockChange;
-import net.codepixl.GLCraft.network.packet.PacketMessage;
-import net.codepixl.GLCraft.network.packet.PacketReady;
-import net.codepixl.GLCraft.network.packet.PacketSendChunks;
-import net.codepixl.GLCraft.network.packet.PacketWorldTime;
 import net.codepixl.GLCraft.util.AABB;
 import net.codepixl.GLCraft.util.BreakSource;
 import net.codepixl.GLCraft.util.Constants;
@@ -50,7 +44,7 @@ import net.codepixl.GLCraft.util.GameTime;
 import net.codepixl.GLCraft.util.LogSource;
 import net.codepixl.GLCraft.util.MathUtils;
 import net.codepixl.GLCraft.util.OpenSimplexNoise;
-import net.codepixl.GLCraft.util.Spritesheet;
+import net.codepixl.GLCraft.render.util.Spritesheet;
 import net.codepixl.GLCraft.util.Vector2i;
 import net.codepixl.GLCraft.util.Vector3i;
 import net.codepixl.GLCraft.util.data.saves.Save;
@@ -95,6 +89,9 @@ public class WorldManager {
 	public boolean kicked = false;
 	private static WorldManager cw;
 	public boolean isHost = false; //Set if this worldManager is a client and is hosting a LAN world
+	public WeatherState previousWeather = new WeatherState(WeatherType.CLEAR, this);
+	public WeatherState currentWeather = new WeatherState(WeatherType.CLEAR, this);
+	public float weatherTransitionCountdown = 0.0f;
 	
 	public WorldManager(CentralManager w, boolean isServer){
 		this.centralManager = w;
@@ -200,6 +197,7 @@ public class WorldManager {
 		}
 		this.worldTime = Constants.dayLengthMS/2;
 		this.gameTime = new GameTime(this.worldTime);
+		this.currentWeather = new WeatherState(WeatherType.CLEAR, this);
 		this.sendBlockPackets = true;
 		if(!GLCraft.getGLCraft().isServer()) this.centralManager.getServer().setBroadcast(saveName);
 		int x = (int) (Constants.CHUNKSIZE*(Constants.worldLengthChunks/2f));
@@ -265,11 +263,14 @@ public class WorldManager {
 				}
 				DebugTimer.endTimer("chunk_tick");
 			}
+
+			if(currentWeather.isWeatherOver())
+				changeWeather();
 		}
 		
 		worldTime+=Time.getDelta()*1000;
 		gameTime.updateTime(worldTime);
-		
+		if(weatherTransitionCountdown > 0) weatherTransitionCountdown -= Time.getDelta(); else weatherTransitionCountdown = 0;
 	}
 	
 	private void loadUnload() {
@@ -369,6 +370,10 @@ public class WorldManager {
 	}
 	
 	public float getSkyLightIntensity(){
+		return getSkyLightIntensity(false);
+	}
+
+	public float getSkyLightIntensity(boolean ignoreWeather){
 		float ret;
 		int mins = this.gameTime.getHours()*60+this.gameTime.getMinutes();
 		if(this.gameTime.getHours() >= 4 && this.gameTime.getHours() <= 9)
@@ -379,7 +384,7 @@ public class WorldManager {
 			ret = 0.15f;
 		else
 			ret = 1;
-		return ret;
+		return ret*(ignoreWeather ? 1 : getWeatherLight());
 	}
 	
 	public void saveChunks(Save save) throws IOException{
@@ -663,6 +668,7 @@ public class WorldManager {
 			centralManager.getServer().spawnPos = new Vector3f(x,y,z);
 			this.doneGenerating = true;
 			if(!GLCraft.getGLCraft().isServer()) this.centralManager.getServer().setBroadcast(s.dispName);
+			this.currentWeather =  new WeatherState(WeatherType.CLEAR, this);
 			return true;
 		}else{
 			GLogger.logerr("Error loading world", LogSource.SERVER);
@@ -942,7 +948,7 @@ public class WorldManager {
 	public GameTime getTime(){
 		return this.gameTime;
 	}
-	
+
 	public static class LightRemoval{
 		public Vector3i pos;
 		public byte level;
@@ -968,15 +974,16 @@ public class WorldManager {
 	}
 
 	public void rebuildNextChunk() {
+		ArrayList<Chunk> activeChunks = new ArrayList<Chunk>(this.activeChunks.values());
 		if(activeChunks.size() > 0){
-			Chunk c = (new ArrayList<Chunk>(activeChunks.values())).get(currentRebuild);
+			Chunk c = activeChunks.get(currentRebuild);
 			while(!c.isVisible()){
 				currentRebuild++;
 				if(currentRebuild >= activeChunks.size()){
 					currentRebuild = 0;
 					break;
 				}
-				c = (new ArrayList<Chunk>(activeChunks.values())).get(currentRebuild);
+				c = activeChunks.get(currentRebuild);
 			}
 			c.rebuildBase(true);
 			c.rebuildBase(false);
@@ -1119,6 +1126,39 @@ public class WorldManager {
 
 	public void setShaderUniform(String uniform, Vector4f val){
 		GL20.glUniform4f(GL20.glGetUniformLocation(shader.getProgram(), uniform), val.x, val.y, val.z, val.w);
+	}
+
+	public float getCloudDensity(){
+		return MathUtils.pointAlongValues(previousWeather.type.cloudDensity,currentWeather.type.cloudDensity, (-weatherTransitionCountdown+10)/10f);
+	}
+
+	public float getWeatherLight(){
+		return MathUtils.pointAlongValues(previousWeather.type.lightMultiplier,currentWeather.type.lightMultiplier, (-weatherTransitionCountdown+10)/10f);
+	}
+
+	public float getCloudDarkness(){
+		return MathUtils.pointAlongValues(previousWeather.type.cloudDarkness,currentWeather.type.cloudDarkness, (-weatherTransitionCountdown+10)/10f);
+	}
+
+	public float getRainOpacity(){
+		return MathUtils.pointAlongValues(previousWeather.type.rainOpacity,currentWeather.type.rainOpacity, (-weatherTransitionCountdown+10)/10f);
+	}
+
+	public void changeWeather(){
+		if(isServer) {
+			weatherTransitionCountdown = 10f;
+			previousWeather = currentWeather;
+			currentWeather = WeatherState.random(previousWeather.type, this);
+			this.sendPacket(new PacketWeather(currentWeather));
+		}
+	}
+
+	public void changeWeather(WeatherState weather) {
+		previousWeather = currentWeather;
+		currentWeather = weather;
+		weatherTransitionCountdown = 10f;
+		if(isServer)
+			this.sendPacket(new PacketWeather(currentWeather));
 	}
 	
 }

@@ -14,7 +14,6 @@ import com.evilco.mc.nbt.error.TagNotFoundException;
 import com.evilco.mc.nbt.error.UnexpectedTagTypeException;
 import com.evilco.mc.nbt.tag.TagByte;
 import com.evilco.mc.nbt.tag.TagCompound;
-import com.evilco.mc.nbt.tag.TagInteger;
 import com.nishu.utils.Color4f;
 
 import net.codepixl.GLCraft.render.RenderType;
@@ -22,7 +21,7 @@ import net.codepixl.GLCraft.render.Shape;
 import net.codepixl.GLCraft.render.TextureManager;
 import net.codepixl.GLCraft.render.util.Tesselator;
 import net.codepixl.GLCraft.util.Constants;
-import net.codepixl.GLCraft.util.Spritesheet;
+import net.codepixl.GLCraft.render.util.Spritesheet;
 import net.codepixl.GLCraft.world.tile.Tile;
 
 public class ItemStack{

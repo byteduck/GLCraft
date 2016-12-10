@@ -17,6 +17,7 @@ import java.util.Map.Entry;
 
 import javax.swing.JOptionPane;
 
+import net.codepixl.GLCraft.render.util.Spritesheet;
 import net.codepixl.GLCraft.util.*;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.util.vector.Vector3f;

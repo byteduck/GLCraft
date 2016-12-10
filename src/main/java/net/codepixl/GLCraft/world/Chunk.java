@@ -1,15 +1,5 @@
 package net.codepixl.GLCraft.world;
 
-import static org.lwjgl.opengl.GL11.GL_COMPILE;
-import static org.lwjgl.opengl.GL11.GL_QUADS;
-import static org.lwjgl.opengl.GL11.glBegin;
-import static org.lwjgl.opengl.GL11.glCallList;
-import static org.lwjgl.opengl.GL11.glDeleteLists;
-import static org.lwjgl.opengl.GL11.glEnd;
-import static org.lwjgl.opengl.GL11.glEndList;
-import static org.lwjgl.opengl.GL11.glGenLists;
-import static org.lwjgl.opengl.GL11.glNewList;
-
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -45,6 +35,8 @@ import net.codepixl.GLCraft.world.tile.Tile;
 import net.codepixl.GLCraft.world.tile.ore.TileOre;
 import net.codepixl.GLCraft.world.tile.tick.TickHelper;
 import org.lwjgl.util.vector.Vector4f;
+
+import static org.lwjgl.opengl.GL11.*;
 
 
 public class Chunk {
@@ -447,7 +439,6 @@ public class Chunk {
 	
 	protected void rebuildBase(boolean translucent){
 		if(type != CentralManager.AIRCHUNK && !this.worldManager.isServer){
-							
 			if(translucent)
 				glNewList(transvcID, GL_COMPILE);
 			else{
@@ -559,20 +550,25 @@ public class Chunk {
 	
 	private boolean checkTileNotInView(int x, int y, int z){
 		boolean facesHidden[] = new boolean[6];
-		if(!Tile.getTile((byte)worldManager.getTileAtPos(x-1,y,z)).isTransparent()) facesHidden[0] = true;
+		if(!Tile.getTile(getTileEfficient(x-1,y,z)).isTransparent()) facesHidden[0] = true;
 		else facesHidden[0] = false;
-		if(!Tile.getTile((byte)worldManager.getTileAtPos(x+1,y,z)).isTransparent()) facesHidden[1] = true;
+		if(!Tile.getTile(getTileEfficient(x+1,y,z)).isTransparent()) facesHidden[1] = true;
 		else facesHidden[1] = false;
-		if(!Tile.getTile((byte)worldManager.getTileAtPos(x,y-1,z)).isTransparent()) facesHidden[2] = true;
+		if(!Tile.getTile(getTileEfficient(x,y-1,z)).isTransparent()) facesHidden[2] = true;
 		else facesHidden[2] = false;
-		if(!Tile.getTile((byte)worldManager.getTileAtPos(x,y+1,z)).isTransparent()) facesHidden[3] = true;
+		if(!Tile.getTile(getTileEfficient(x,y+1,z)).isTransparent()) facesHidden[3] = true;
 		else facesHidden[3] = false;
-		if(!Tile.getTile((byte)worldManager.getTileAtPos(x,y,z-1)).isTransparent()) facesHidden[4] = true;
+		if(!Tile.getTile(getTileEfficient(x,y,z-1)).isTransparent()) facesHidden[4] = true;
 		else facesHidden[4] = false;
-		if(!Tile.getTile((byte)worldManager.getTileAtPos(x,y,z+1)).isTransparent()) facesHidden[5] = true;
+		if(!Tile.getTile(getTileEfficient(x,y,z+1)).isTransparent()) facesHidden[5] = true;
 		else facesHidden[5] = false;
 		
 		return facesHidden[0] && facesHidden[1] && facesHidden[2] && facesHidden[3] && facesHidden[4] && facesHidden[5];
+	}
+
+	private byte getTileEfficient(int x, int y, int z){
+		if(checkInBounds(x,y,z)) return tiles[(int) (x-this.getPos().x)][(int) (y-this.getPos().y)][(int) (z-this.getPos().z)];
+		else return (byte) worldManager.getTileAtPos(x,y,z);
 	}
 	
 	public byte getTileID(int x, int y, int z){
@@ -591,6 +587,16 @@ public class Chunk {
 			return tiles[x][y][z];
 		}
 		return -1;
+	}
+
+	public boolean checkInBounds(int x, int y, int z){
+		x-=this.getPos().x;
+		y-=this.getPos().y;
+		z-=this.getPos().z;
+		boolean inBoundsOne = (x >= 0) && (x < tiles.length);
+		boolean inBoundsTwo = (y >= 0) && (y < tiles[0].length);
+		boolean inBoundsThree = (z >= 0) && (z < tiles[0][0].length);
+		return inBoundsOne && inBoundsTwo && inBoundsThree;
 	}
 	
 	public byte getMetaAtCoord(int x, int y, int z){

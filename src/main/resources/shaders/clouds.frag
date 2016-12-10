@@ -58,5 +58,5 @@ void main( void ) {
 	f = 1.0 - (pow(sharpness, c));
 	
 
-	gl_FragColor = vec4(f,f,f,f*(100.0/distToCamera))*color;
+	gl_FragColor = vec4(f,f,f,f*clamp(200.0/(distToCamera), 0.0, 1.0))*color;
 }

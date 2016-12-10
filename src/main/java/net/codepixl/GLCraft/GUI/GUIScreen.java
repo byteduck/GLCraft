@@ -16,9 +16,7 @@ import com.nishu.utils.Color4f;
 import net.codepixl.GLCraft.render.Shape;
 import net.codepixl.GLCraft.render.TextureManager;
 import net.codepixl.GLCraft.util.Constants;
-import net.codepixl.GLCraft.util.LogSource;
-import net.codepixl.GLCraft.util.Spritesheet;
-import net.codepixl.GLCraft.util.logging.GLogger;
+import net.codepixl.GLCraft.render.util.Spritesheet;
 import net.codepixl.GLCraft.world.tile.Tile;
 import net.codepixl.GLCraft.world.tile.ore.TileOre;
 

@@ -1,4 +1,4 @@
-package net.codepixl.GLCraft.util;
+package net.codepixl.GLCraft.render.util;
 
 import java.awt.image.BufferedImage;
 
@@ -10,6 +10,7 @@ public class Spritesheet {
 	public int id;
 	
 	public static Spritesheet atlas;
+	public static Spritesheet rain = new Spritesheet("textures/environment/rain.png", 1);
 	
 	public Spritesheet(String path, float size){
 		this.path = path;

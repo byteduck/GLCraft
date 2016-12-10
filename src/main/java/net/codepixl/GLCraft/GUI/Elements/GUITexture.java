@@ -6,7 +6,7 @@ import com.nishu.utils.Color4f;
 
 import net.codepixl.GLCraft.render.Shape;
 import net.codepixl.GLCraft.render.TextureManager;
-import net.codepixl.GLCraft.util.Spritesheet;
+import net.codepixl.GLCraft.render.util.Spritesheet;
 
 public class GUITexture extends GUIElement{
 	private String texture;

@@ -14,13 +14,20 @@ public class CommandHelp implements Command{
 
 	@Override
 	public boolean execute(CentralManager centralManager, CommandExecutor e, String... args) {
-		e.sendMessage(ChatFormat.GREEN+"COMMANDS: "+ChatFormat.GOLD+"Permissions- (N)one (O)p (S)erver");
-		Iterator<Command> i = centralManager.commandManager.getCommands().iterator();
+		Iterator<Command> i = centralManager.commandManager.getCommands(e.getPermission()).iterator();
 		int page = 1;
 		if(args.length >= 2)
 			try {
 				page = Integer.parseInt(args[1]);
-			}catch(NumberFormatException e2){}
+			}catch(NumberFormatException e2){
+				Command c = centralManager.commandManager.getCommand(args[1]);
+				if(c != null)
+					e.sendMessage(ChatFormat.GREEN+c.getName()+ChatFormat.WHITE+" "+c.getUsage()+" "+ChatFormat.GOLD+c.getPermission().getLabel());
+				else
+					e.sendMessage(ChatFormat.RED+"Unknown command!");
+				return true;
+			}
+		e.sendMessage(ChatFormat.GREEN+"COMMANDS: "+ChatFormat.GOLD+"Permissions- (N)one (O)p (S)erver");
 		e.sendMessage(ChatFormat.GREEN+"Showing page "+page+" of "+(centralManager.commandManager.getCommands().size()/8+(centralManager.commandManager.getCommands().size()%8==0 ? 0 : 1)));
 		for(int s = 0; s < (page-1)*8; s++)
 			if(i.hasNext())
@@ -42,7 +49,7 @@ public class CommandHelp implements Command{
 
 	@Override
 	public String getUsage() {
-		return "[page] - Get help for a command/commands.";
+		return "[page/command] - Get help for a command/commands.";
 	}
 
 }

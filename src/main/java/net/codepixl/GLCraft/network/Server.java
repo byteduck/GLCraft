@@ -13,37 +13,12 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map.Entry;
 
+import net.codepixl.GLCraft.network.packet.*;
 import net.codepixl.GLCraft.util.*;
 import org.lwjgl.util.vector.Vector3f;
 
 import net.codepixl.GLCraft.GLCraft;
 import net.codepixl.GLCraft.GUI.GUIPauseMenu;
-import net.codepixl.GLCraft.network.packet.Packet;
-import net.codepixl.GLCraft.network.packet.PacketAddEntity;
-import net.codepixl.GLCraft.network.packet.PacketBlockChange;
-import net.codepixl.GLCraft.network.packet.PacketChat;
-import net.codepixl.GLCraft.network.packet.PacketContainer;
-import net.codepixl.GLCraft.network.packet.PacketKick;
-import net.codepixl.GLCraft.network.packet.PacketLANBroadcast;
-import net.codepixl.GLCraft.network.packet.PacketMessage;
-import net.codepixl.GLCraft.network.packet.PacketMultiPacket;
-import net.codepixl.GLCraft.network.packet.PacketOnPlace;
-import net.codepixl.GLCraft.network.packet.PacketPing;
-import net.codepixl.GLCraft.network.packet.PacketPlayerAction;
-import net.codepixl.GLCraft.network.packet.PacketPlayerAdd;
-import net.codepixl.GLCraft.network.packet.PacketPlayerDead;
-import net.codepixl.GLCraft.network.packet.PacketPlayerLeave;
-import net.codepixl.GLCraft.network.packet.PacketPlayerLogin;
-import net.codepixl.GLCraft.network.packet.PacketPlayerLoginResponse;
-import net.codepixl.GLCraft.network.packet.PacketPlayerPos;
-import net.codepixl.GLCraft.network.packet.PacketReady;
-import net.codepixl.GLCraft.network.packet.PacketRequestChunks;
-import net.codepixl.GLCraft.network.packet.PacketSendChunks;
-import net.codepixl.GLCraft.network.packet.PacketServerClose;
-import net.codepixl.GLCraft.network.packet.PacketSetInventory;
-import net.codepixl.GLCraft.network.packet.PacketUpdateEntity;
-import net.codepixl.GLCraft.network.packet.PacketUtil;
-import net.codepixl.GLCraft.network.packet.PacketWorldTime;
 import net.codepixl.GLCraft.plugin.LoadedPlugin;
 import net.codepixl.GLCraft.util.command.Command.Permission;
 import net.codepixl.GLCraft.util.data.saves.SaveManager;
@@ -202,6 +177,7 @@ public class Server{
 				for(Entity e : worldManager.entityManager.getEntities(Entity.class)){
 					if(!(e instanceof EntityPlayer)) entityPackets.add(new PacketAddEntity(e));
 				}
+				entityPackets.add(new PacketWeather(worldManager.currentWeather));
 				Packet ps[] = new Packet[entityPackets.size()];
 				c.writePacket(new PacketMultiPacket(entityPackets.toArray(ps)));
 				sendToAllClientsExcept(new PacketPlayerAdd(c.player.getID(), c.player.getName(), c.player.getPos()), c);
