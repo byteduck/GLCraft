@@ -1,47 +1,6 @@
 package net.codepixl.GLCraft.world;
 
-import static org.lwjgl.opengl.GL11.GL_BACK;
-import static org.lwjgl.opengl.GL11.GL_BLEND;
-import static org.lwjgl.opengl.GL11.GL_COLOR_MATERIAL;
-import static org.lwjgl.opengl.GL11.GL_CULL_FACE;
-import static org.lwjgl.opengl.GL11.GL_DEPTH_TEST;
-import static org.lwjgl.opengl.GL11.GL_DIFFUSE;
-import static org.lwjgl.opengl.GL11.GL_FRONT;
-import static org.lwjgl.opengl.GL11.GL_LIGHT0;
-import static org.lwjgl.opengl.GL11.GL_LIGHTING;
-import static org.lwjgl.opengl.GL11.GL_LIGHT_MODEL_AMBIENT;
-import static org.lwjgl.opengl.GL11.GL_MODELVIEW;
-import static org.lwjgl.opengl.GL11.GL_MODULATE;
-import static org.lwjgl.opengl.GL11.GL_ONE_MINUS_SRC_ALPHA;
-import static org.lwjgl.opengl.GL11.GL_POSITION;
-import static org.lwjgl.opengl.GL11.GL_PROJECTION;
-import static org.lwjgl.opengl.GL11.GL_QUADS;
-import static org.lwjgl.opengl.GL11.GL_SMOOTH;
-import static org.lwjgl.opengl.GL11.GL_SRC_ALPHA;
-import static org.lwjgl.opengl.GL11.GL_TEXTURE_2D;
-import static org.lwjgl.opengl.GL11.GL_TEXTURE_ENV;
-import static org.lwjgl.opengl.GL11.GL_TEXTURE_ENV_MODE;
-import static org.lwjgl.opengl.GL11.glBegin;
-import static org.lwjgl.opengl.GL11.glBlendFunc;
-import static org.lwjgl.opengl.GL11.glClearColor;
-import static org.lwjgl.opengl.GL11.glClearDepth;
-import static org.lwjgl.opengl.GL11.glColor3f;
-import static org.lwjgl.opengl.GL11.glColorMaterial;
-import static org.lwjgl.opengl.GL11.glCullFace;
-import static org.lwjgl.opengl.GL11.glDisable;
-import static org.lwjgl.opengl.GL11.glEnable;
-import static org.lwjgl.opengl.GL11.glEnd;
-import static org.lwjgl.opengl.GL11.glLight;
-import static org.lwjgl.opengl.GL11.glLightModel;
-import static org.lwjgl.opengl.GL11.glLoadIdentity;
-import static org.lwjgl.opengl.GL11.glMatrixMode;
-import static org.lwjgl.opengl.GL11.glOrtho;
-import static org.lwjgl.opengl.GL11.glPopMatrix;
-import static org.lwjgl.opengl.GL11.glPushMatrix;
-import static org.lwjgl.opengl.GL11.glShadeModel;
-import static org.lwjgl.opengl.GL11.glTexEnvi;
-import static org.lwjgl.opengl.GL11.glVertex2f;
-import static org.lwjgl.opengl.GL11.glViewport;
+import static org.lwjgl.opengl.GL11.*;
 import static org.lwjgl.util.glu.GLU.gluPerspective;
 
 import java.awt.image.BufferedImage;
@@ -64,6 +23,7 @@ import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.Display;
 import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL20;
 import org.lwjgl.util.vector.Vector3f;
 import org.newdawn.slick.TrueTypeFont;
 import org.newdawn.slick.opengl.TextureImpl;
@@ -110,8 +70,6 @@ import net.codepixl.GLCraft.world.entity.mob.hostile.EntityTestHostile;
 import net.codepixl.GLCraft.world.tile.Tile;
 
 public class CentralManager extends Screen{
-
-	private float cloudMove = 0f;
 	
 	public boolean renderDebug = false;
 	TrueTypeFont font;
@@ -441,23 +399,24 @@ public class CentralManager extends Screen{
 		GL11.glPopMatrix();
 		GL11.glEnable(GL11.GL_TEXTURE_2D);
 		
-		Spritesheet.clouds.bind();
-		Shape.currentSpritesheet = Spritesheet.clouds;
+		//Spritesheet.clouds.bind();
+		//Shape.currentSpritesheet = Spritesheet.clouds;
 		GL11.glPushMatrix();
-		GL11.glTranslatef(cloudMove, 127f, 1000f);
-		GL11.glRotatef(-90f, 1f, 0f, 0f);
-		worldManager.shader.use();
+		//GL11.glRotatef(-90f, 1f, 0f, 0f);
+		worldManager.cloudShader.use();
+		GL20.glUniform1f(GL20.glGetUniformLocation(worldManager.cloudShader.getProgram(), "time"), GLCraft.getTime());
+		GL20.glUniform1f(GL20.glGetUniformLocation(worldManager.cloudShader.getProgram(), "cover"), 0.8f);
+		GL20.glUniform1f(GL20.glGetUniformLocation(worldManager.cloudShader.getProgram(), "sharpness"), 0.01f);
+		GL20.glUniform1f(GL20.glGetUniformLocation(worldManager.cloudShader.getProgram(), "speed"), 0.005f);
 		GL11.glBegin(GL_QUADS);
 		float lightIntensity = worldManager.getSkyLightIntensity();
-		Shape.createPlane(-4000f, 0, 0, new Color4f(lightIntensity,lightIntensity,lightIntensity,0.5f), new float[]{0f,0f}, 2000f);
-		Shape.createPlane(0, 0, 0, new Color4f(lightIntensity,lightIntensity,lightIntensity,0.5f), new float[]{0f,0f}, 2000f);
-		Shape.createPlane(-2000f, 0, 0, new Color4f(lightIntensity,lightIntensity,lightIntensity,0.5f), new float[]{0f,0f}, 2000f);
+		Shape.createTexturelessFlat(-1000f, 127f, -1000f, new Color4f(lightIntensity,lightIntensity,lightIntensity,0.5f), 2000f);
 		GL11.glEnd();
-		worldManager.shader.release();
+		worldManager.cloudShader.release();
 		GL11.glPopMatrix();
 		
-		Spritesheet.atlas.bind();
-		Shape.currentSpritesheet = Spritesheet.atlas;
+		//Spritesheet.atlas.bind();
+		//Shape.currentSpritesheet = Spritesheet.atlas;
 	}
 	
 	@Deprecated
@@ -598,32 +557,17 @@ public class CentralManager extends Screen{
 		GL11.glDisable(GL11.GL_COLOR_LOGIC_OP);
 	}
 
-	public void render2D(){
+	public void render2D() {
 		glCullFace(GL_BACK);
 		glClearDepth(1);
 		glMatrixMode(GL_PROJECTION);
 		glLoadIdentity();
-		glViewport(0,0,Constants.getWidth(),Constants.getHeight());
-		glOrtho(0,Constants.getWidth(),Constants.getHeight(),0,-400,400);
+		glViewport(0, 0, Constants.getWidth(), Constants.getHeight());
+		glOrtho(0, Constants.getWidth(), Constants.getHeight(), 0, -400, 400);
 		glMatrixMode(GL_MODELVIEW);
 		glLoadIdentity();
 		glDisable(GL_DEPTH_TEST);
 		glDisable(GL_LIGHTING);
-	}
-	
-	public void createFog(){
-		final FloatBuffer fogColours = BufferUtils.createFloatBuffer(4);
-        {
-            fogColours.put(new float[]{0.4f, 0.7f, 1.0f, 0.2f});
-            fogColours.flip();
-        }
-        GL11.glClearColor(0, 0, 0, 1);
-        GL11.glFog(GL11.GL_FOG_COLOR, fogColours);
-        GL11.glFogi(GL11.GL_FOG_MODE, GL11.GL_LINEAR);
-        GL11.glHint(GL11.GL_FOG_HINT, GL11.GL_FASTEST);// GL_NICEST
-        GL11.glFogf(GL11.GL_FOG_START, 10);
-        GL11.glFogf(GL11.GL_FOG_END, 20);
-        GL11.glFogf(GL11.GL_FOG_DENSITY, 0.2f);
 	}
 	
 	public void render3D(){
@@ -661,8 +605,6 @@ public class CentralManager extends Screen{
 			guiManager.update();
 			guiManager.setShowGame(Constants.GAME_STATE == Constants.GAME);
 			input();
-			cloudMove+=Time.getDelta()*2;
-			cloudMove = cloudMove % 2000f;
 		}else{
 			commandManager.update();
 		}

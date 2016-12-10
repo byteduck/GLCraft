@@ -1,17 +1,14 @@
 package net.codepixl.GLCraft.render;
 
-import static org.lwjgl.opengl.GL11.glColor4f;
-import static org.lwjgl.opengl.GL11.glTexCoord2f;
-import static org.lwjgl.opengl.GL11.glVertex2f;
-import static org.lwjgl.opengl.GL11.glVertex3f;
-
+import net.codepixl.GLCraft.util.MathUtils;
+import org.lwjgl.opengl.GL11;
 import org.lwjgl.util.vector.Vector3f;
 
 import com.nishu.utils.Color4f;
 
 import net.codepixl.GLCraft.util.LogSource;
 import net.codepixl.GLCraft.util.Spritesheet;
-import net.codepixl.GLCraft.util.logging.GLogger;;
+import net.codepixl.GLCraft.util.logging.GLogger;;import static org.lwjgl.opengl.GL11.*;
 
 public class Shape {
 	
@@ -496,6 +493,43 @@ public class Shape {
 		glVertex3f(x, y + size, z);
 		glTexCoord2f(texCoords[0], texCoords[1]);
 		glVertex3f(x, y, z);
+	}
+	
+	public static void createHemisphere(float radius, Color4f color){
+		int lats=16;
+		int longs=16;
+
+		int i, j;
+		int halfLats = lats / 2;
+		for(i = 0; i <= halfLats; i++){
+			double lat0     = Math.PI * (-0.5 + (double) (i - 1) / lats);
+			double z0       = Math.sin(lat0)* radius;
+			double zr0      = Math.cos(lat0)* radius;
+
+			double lat1     = Math.PI * (-0.5 + (double) i / lats);
+			double z1       = Math.sin(lat1)* radius;
+			double zr1      = Math.cos(lat1)* radius;
+
+			GL11.glBegin(GL11.GL_QUAD_STRIP);
+			GL11.glColor4f(color.r,color.g,color.b,color.a);
+			for(j = 0; j <= longs; j++){
+				double lng = 2 * Math.PI * (double) (j - 1) / longs;
+				double x  = Math.cos(lng);
+				double y  = Math.sin(lng);
+
+				double s1, s2, t;
+				s1        = ((double) i) / halfLats;
+				s2        = ((double) i + 1) / halfLats;
+				t         = ((double) j) / longs;
+
+				GL11.glNormal3d(x * zr0, y * zr0, z0);
+				GL11.glVertex3d(x * zr0, y * zr0, z0);
+
+				GL11.glNormal3d(x * zr1, y * zr1, z1);
+				GL11.glVertex3d(x * zr1, y * zr1, z1);
+			}
+			GL11.glEnd();
+		}
 	}
 	
 	public static void createFlat(float x, float y, float z, Color4f color, float[] texCoords, float size){

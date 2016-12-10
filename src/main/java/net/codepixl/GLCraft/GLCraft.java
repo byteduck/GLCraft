@@ -113,6 +113,7 @@ public class GLCraft extends Screen{
 	private Client client;
 	private boolean isServer = false;
 	private static int xSize, ySize;
+	private static float time;
 	
 	public static GLCraft getGLCraft(){
 		return glcraft;
@@ -185,6 +186,7 @@ public class GLCraft extends Screen{
 			double secondCounter = 0;
 			while(!Display.isCloseRequested()){
 				ltime = Time.getTime();
+				time+=Time.getDelta();
 				update();
 				render();
 				Window.update();
@@ -236,6 +238,7 @@ public class GLCraft extends Screen{
 			long ltime = Time.getTime();
 			while(true){
 				ltime = Time.getTime();
+				time+=Time.getDelta();
 				update();
 				Time.setDelta((Time.getTime()-ltime)/(double)Time.SECOND);
 			}
@@ -519,6 +522,13 @@ public class GLCraft extends Screen{
 			}
 			GUIManager.getMainManager().resize();
 		}catch(LWJGLException e){}
+	}
+
+	/**
+	 * @return The runtime, in seconds.
+	 */
+	public static float getTime(){
+		return time;
 	}
 
 }

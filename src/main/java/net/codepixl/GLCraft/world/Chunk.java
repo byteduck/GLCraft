@@ -18,6 +18,7 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.Queue;
 
+import net.codepixl.GLCraft.GLCraft;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.util.vector.Vector3f;
 
@@ -43,6 +44,7 @@ import net.codepixl.GLCraft.world.WorldManager.LightRemoval;
 import net.codepixl.GLCraft.world.tile.Tile;
 import net.codepixl.GLCraft.world.tile.ore.TileOre;
 import net.codepixl.GLCraft.world.tile.tick.TickHelper;
+import org.lwjgl.util.vector.Vector4f;
 
 
 public class Chunk {
@@ -345,6 +347,7 @@ public class Chunk {
 	public void render(boolean translucent){
 		if(type != CentralManager.AIRCHUNK){
 			shader.use();
+			worldManager.setShaderUniform("time", GLCraft.getTime());
 			GL11.glPolygonOffset(1.0f,1.0f);
 			if(translucent)
 				glCallList(transvcID);

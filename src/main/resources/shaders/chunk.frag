@@ -5,14 +5,14 @@ varying float distToCamera;
 
 uniform sampler2D u_texture;
 uniform int lightingEnabled;
+uniform float time;
 
 void main(){
-	
-	/**float ambientLight = 0.05f;
-	float pdistToCamera = (5.0f/distToCamera) + ambientLight - 0.1f;**/
-	
-	vec4 texColor = texture2D(u_texture, gl_TexCoord[0].st);
-	
+
+    vec2 uv = gl_TexCoord[0].st;
+
+	vec4 texColor = texture2D(u_texture, uv);
+
 	if(texColor.a <= float(0)){
 		discard;
 	}else{

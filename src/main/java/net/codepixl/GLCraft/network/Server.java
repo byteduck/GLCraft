@@ -178,10 +178,12 @@ public class Server{
 					}
 				if(lanWorld && host == null)
 					host = c;
-				int maxplayers = SettingsManager.getInt("max_players");
-				if(clients.size() >= maxplayers){
-					c.writePacket(new PacketPlayerLoginResponse("Player limit reached. ("+maxplayers+")"));
-					return;
+				if(GLCraft.getGLCraft().isServer()){
+					int maxplayers = SettingsManager.getInt("max_players");
+					if (clients.size() >= maxplayers) {
+						c.writePacket(new PacketPlayerLoginResponse("Player limit reached. (" + maxplayers + ")"));
+						return;
+					}
 				}
 				clients.put(new InetAddressAndPort(c.addr, c.port), c);
 				this.worldManager.entityManager.add(mp);

@@ -19,6 +19,8 @@ import java.util.TimerTask;
 import java.util.concurrent.Callable;
 
 import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL20;
+import org.lwjgl.util.vector.Vector2f;
 import org.lwjgl.util.vector.Vector3f;
 
 import com.evilco.mc.nbt.stream.NbtInputStream;
@@ -62,6 +64,7 @@ import net.codepixl.GLCraft.world.entity.mob.EntityPlayerMP;
 import net.codepixl.GLCraft.world.entity.tileentity.TileEntity;
 import net.codepixl.GLCraft.world.tile.Tile;
 import net.codepixl.GLCraft.world.tile.tick.TickHelper;
+import org.lwjgl.util.vector.Vector4f;
 
 public class WorldManager {
 	public int loop = 0;
@@ -69,7 +72,7 @@ public class WorldManager {
 	public boolean doneGenerating = false;
 	public EntityManager entityManager;
 	private volatile HashMap<Vector3i,Chunk> activeChunks; //Vector3i because HashMap doesn't play well with floats (therefore vector3f)
-	public ShaderProgram shader;
+	public ShaderProgram shader,cloudShader;
 	public static Tile selectedBlock = Tile.Air;
 	public CentralManager centralManager;
 	public float tick = 0f;
@@ -108,6 +111,8 @@ public class WorldManager {
 	private void initGL(){
 		Shader temp = new Shader("/shaders/chunk.vert", "/shaders/chunk.frag");
 		shader = new ShaderProgram(temp.getvShader(), temp.getfShader());
+		temp = new Shader("/shaders/clouds.vert","/shaders/clouds.frag");
+		cloudShader = new ShaderProgram(temp.getvShader(), temp.getfShader());
 	}
 	
 	private void init(){
@@ -1094,6 +1099,26 @@ public class WorldManager {
 				e.printStackTrace();
 			}}
 		closeWorldMain(reason);
+	}
+
+	public void setShaderUniform(String uniform, int val){
+		GL20.glUniform1i(GL20.glGetUniformLocation(shader.getProgram(), uniform), val);
+	}
+
+	public void setShaderUniform(String uniform, float val){
+		GL20.glUniform1f(GL20.glGetUniformLocation(shader.getProgram(), uniform), val);
+	}
+
+	public void setShaderUniform(String uniform, Vector3f val){
+		GL20.glUniform3f(GL20.glGetUniformLocation(shader.getProgram(), uniform), val.x, val.y, val.z);
+	}
+
+	public void setShaderUniform(String uniform, Vector2f val){
+		GL20.glUniform2f(GL20.glGetUniformLocation(shader.getProgram(), uniform), val.x, val.y);
+	}
+
+	public void setShaderUniform(String uniform, Vector4f val){
+		GL20.glUniform4f(GL20.glGetUniformLocation(shader.getProgram(), uniform), val.x, val.y, val.z, val.w);
 	}
 	
 }
