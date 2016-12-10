@@ -418,7 +418,7 @@ public class CentralManager extends Screen{
 		worldManager.cloudShader.release();
 		GL11.glPopMatrix();
 
-		renderRain();
+		if(worldManager.getPlayer().canBreathe()) renderRain();
 		
 		//Spritesheet.atlas.bind();
 		//Shape.currentSpritesheet = Spritesheet.atlas;

@@ -34,7 +34,7 @@ float fbm( vec2 p )
 
 // Entry point
 void main( void ) {
-    vec2 resolution = (1000,1000);
+    vec2 resolution = vec2(1000.0,1000.0);
 
 	// Wind - Used to animate the clouds
 	vec2 wind_vec = vec2(0.001 + time*speed, 0.003 + time*speed);
