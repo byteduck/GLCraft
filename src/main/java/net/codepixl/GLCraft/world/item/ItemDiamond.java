@@ -5,8 +5,4 @@ public class ItemDiamond extends Item{
 	public String getName(){
 		return "Diamond";
 	}
-	@Override
-	public byte getId(){
-		return 8;
-	}
 }

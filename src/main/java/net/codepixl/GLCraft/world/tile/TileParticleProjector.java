@@ -25,11 +25,6 @@ public class TileParticleProjector extends Tile{
 	}
 	
 	@Override
-	public byte getId() {
-		return 19;
-	}
-	
-	@Override
 	public int tickRate(){
 		return 1;
 	}

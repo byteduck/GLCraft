@@ -20,12 +20,6 @@ public class TileBluestoneOre extends TileOre{
 	}
 	
 	@Override
-	public byte getId() {
-		// TODO Auto-generated method stub
-		return 26;
-	}
-	
-	@Override
 	public float getHardness(){
 		return 4f;
 	}

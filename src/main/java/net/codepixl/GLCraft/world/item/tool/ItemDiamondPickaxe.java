@@ -20,9 +20,4 @@ public class ItemDiamondPickaxe extends Tool{
 	public String getTextureName(){
 		return "pick_diamond";
 	}
-	
-	@Override
-	public byte getId(){
-		return 11;
-	}
 }

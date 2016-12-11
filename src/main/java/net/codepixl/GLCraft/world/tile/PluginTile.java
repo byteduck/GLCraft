@@ -5,12 +5,6 @@ import net.codepixl.GLCraft.render.TextureManager;
 
 public class PluginTile extends Tile{
 	public Plugin plugin;
-	public static byte assignedID = -1;
-	@Override
-	public byte getId(){
-		return assignedID;
-	}
-	
 	
 	@Override
 	public void registerTile(){
@@ -37,5 +31,9 @@ public class PluginTile extends Tile{
 				}
 			}
 		}
+	}
+
+	public void setId(byte id){
+		this.id = id;
 	}
 }

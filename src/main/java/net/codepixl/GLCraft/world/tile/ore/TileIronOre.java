@@ -11,12 +11,6 @@ public class TileIronOre extends TileOre{
 	}
 	
 	@Override
-	public byte getId() {
-		// TODO Auto-generated method stub
-		return 6;
-	}
-	
-	@Override
 	public float getHardness(){
 		return 5.5f;
 	}

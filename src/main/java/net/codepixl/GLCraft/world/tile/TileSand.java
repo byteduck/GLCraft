@@ -16,11 +16,6 @@ public class TileSand extends Tile{
 	public Material getMaterial(){
 		return Material.SAND;
 	}
-	
-	@Override
-	public byte getId() {
-		return 18;
-	}
 
 	@Override
 	public Color4f getColor() {

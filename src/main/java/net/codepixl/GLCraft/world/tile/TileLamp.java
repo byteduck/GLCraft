@@ -9,11 +9,6 @@ public class TileLamp extends Tile{
 		// TODO Auto-generated method stub
 		return "Lamp";
 	}
-	@Override
-	public byte getId() {
-		// TODO Auto-generated method stub
-		return 11;
-	}
 
 	@Override
 	public Color4f getColor() {

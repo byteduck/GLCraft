@@ -28,11 +28,6 @@ public class TileGlass extends Tile{
 	public String getTextureName(){
 		return "glass";
 	}
-	@Override
-	public byte getId() {
-		// TODO Auto-generated method stub
-		return 4;
-	}
 
 	@Override
 	public Color4f getColor() {

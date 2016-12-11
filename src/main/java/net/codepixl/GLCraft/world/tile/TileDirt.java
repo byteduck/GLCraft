@@ -19,11 +19,6 @@ public class TileDirt extends Tile{
 	}
 
 	@Override
-	public byte getId() {
-		return 23;
-	}
-
-	@Override
 	public Color4f getColor() {
 		return Color4f.WHITE;
 	}

@@ -8,12 +8,6 @@ import net.codepixl.GLCraft.world.item.ItemStack;
 import net.codepixl.GLCraft.world.tile.material.Material;
 
 public class TileGrass extends Tile{
-
-	@Override
-	public byte getId() {
-		// TODO Auto-generated method stub
-		return 1;
-	}
 	
 	@Override
 	public Material getMaterial(){

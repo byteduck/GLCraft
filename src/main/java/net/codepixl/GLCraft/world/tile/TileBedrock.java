@@ -16,12 +16,6 @@ public class TileBedrock extends Tile{
 	public Material getMaterial(){
 		return Material.STONE;
 	}
-	
-	@Override
-	public byte getId() {
-		// TODO Auto-generated method stub
-		return 21;
-	}
 
 	@Override
 	public Color4f getColor() {

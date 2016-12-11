@@ -20,12 +20,12 @@ import net.codepixl.GLCraft.world.item.tool.ItemWoodAxe;
 import net.codepixl.GLCraft.world.item.tool.ItemWoodPickaxe;
 
 public class Item {
-	
+	private static byte currentID = (byte)0x01; //Because idiot me started them at one when I made the game and now I have to stick with it
 	public static HashMap<Byte, Item> itemMap = new HashMap<Byte, Item>();
 	public static Item Seeds = new ItemSeeds();
-	public static Item Stick = new ItemStick();
 	public static Item WoodPick = new ItemWoodPickaxe();
 	public static Item StonePick = new ItemStonePickaxe();
+	public static Item Stick = new ItemStick();
 	public static Item Bucket = new ItemBucketEmpty();
 	public static Item BucketWater = new ItemBucketWater();
 	public static Item IronPick = new ItemIronPickaxe();
@@ -40,13 +40,15 @@ public class Item {
 	public static Item IronAxe = new ItemIronAxe();
 	public static Item GoldAxe = new ItemGoldAxe();
 	public static Item DiamondAxe = new ItemDiamondAxe();
+
+	protected byte id;
 	
 	public String getName(){
 		return "Un-named item";
 	}
 	
-	public byte getId(){
-		return -1;
+	public final byte getId(){
+		return id;
 	}
 	
 	public static Item getItem(byte id){
@@ -61,14 +63,15 @@ public class Item {
 		return TextureManager.item(this);
 	}
 	
-	public void registerItem() {
-		GLogger.log("Registering Item "+getName()+" ("+getId()+")", LogSource.GLCRAFT);
+	public void registerItem(){
+		this.id = currentID;
 		Item.itemMap.put(getId(), this);
+		currentID++;
 		TextureManager.addTexture("items."+this.getTextureName(), TextureManager.ITEMS+this.getTextureName()+".png");
+		GLogger.log("Registering Item "+getName()+" ("+getId()+")", LogSource.GLCRAFT);
 	}
 	
 	public String getTextureName() {
-		// TODO Auto-generated method stub
 		return this.getName().toLowerCase().replace(' ', '_');
 	}
 	

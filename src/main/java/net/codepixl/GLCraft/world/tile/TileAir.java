@@ -5,13 +5,6 @@ import com.nishu.utils.Color4f;
 import net.codepixl.GLCraft.world.WorldManager;
 
 public class TileAir extends Tile{
-
-	@Override
-	public byte getId() {
-		// TODO Auto-generated method stub
-		return 0;
-	}
-
 	@Override
 	public Color4f getColor() {
 		// TODO Auto-generated method stub
@@ -50,5 +43,4 @@ public class TileAir extends Tile{
 	public boolean canBePlacedOver() {
 		return true;
 	}
-
 }

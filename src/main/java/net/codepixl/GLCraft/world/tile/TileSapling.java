@@ -11,12 +11,6 @@ import net.codepixl.GLCraft.world.WorldManager;
 public class TileSapling extends Tile{
 
 	@Override
-	public byte getId() {
-		// TODO Auto-generated method stub
-		return 17;
-	}
-
-	@Override
 	public Color4f getColor() {
 		// TODO Auto-generated method stub
 		return Color4f.WHITE;

@@ -24,11 +24,6 @@ public class TileTallGrass extends Tile {
 	}
 
 	@Override
-	public byte getId() {
-		return 10;
-	}
-
-	@Override
 	public Color4f getColor() {
 		return Color4f.WHITE;
 	}

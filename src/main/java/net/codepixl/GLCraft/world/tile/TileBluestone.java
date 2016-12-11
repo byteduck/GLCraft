@@ -43,12 +43,6 @@ public class TileBluestone extends Tile{
 	}
 
 	@Override
-	public byte getId() {
-		// TODO Auto-generated method stub
-		return 13;
-	}
-
-	@Override
 	public Color4f getColor() {
 		// TODO Auto-generated method stub
 		return Color4f.WHITE;

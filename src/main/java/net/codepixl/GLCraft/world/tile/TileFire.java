@@ -16,11 +16,6 @@ public class TileFire extends Tile{
 		// TODO Auto-generated method stub
 		return "Fire";
 	}
-	@Override
-	public byte getId() {
-		// TODO Auto-generated method stub
-		return 12;
-	}
 
 	@Override
 	public Color4f getColor() {

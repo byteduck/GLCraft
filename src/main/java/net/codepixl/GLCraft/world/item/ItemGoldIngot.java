@@ -5,8 +5,4 @@ public class ItemGoldIngot extends Item{
 	public String getName(){
 		return "Gold Ingot";
 	}
-	@Override
-	public byte getId(){
-		return 13;
-	}
 }

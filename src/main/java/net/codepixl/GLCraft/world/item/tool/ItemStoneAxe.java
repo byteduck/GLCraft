@@ -20,9 +20,4 @@ public class ItemStoneAxe extends Tool{
 	public String getTextureName(){
 		return "axe_stone";
 	}
-	
-	@Override
-	public byte getId(){
-		return 15;
-	}
 }

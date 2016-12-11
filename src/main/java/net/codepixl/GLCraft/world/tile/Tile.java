@@ -36,6 +36,7 @@ public class Tile {
 
 	public static HashMap<Byte, Tile> tileMap = new HashMap<Byte, Tile>();
 	public static HashMap<Tile, TickHelper> tickMap = new HashMap<Tile, TickHelper>();
+	private static byte currentTile = (byte)0xFF;
 	
 	//TILES
 	public static Tile Void = new TileVoid();
@@ -69,13 +70,15 @@ public class Tile {
 	public static Tile DiamondOre = new TileDiamondOre();
 	public static Tile CondensedBluestone = new TileCondensedBluestone();
 	public static Tile Door = new TileDoor();
+
+	protected byte id;
 	
 	public String getName(){
 		return "Un-named block";
 	}
 	
-	public byte getId(){
-		return -1;
+	public final byte getId(){
+		return id;
 	}
 	
 	public boolean customHitbox(){
@@ -213,9 +216,11 @@ public class Tile {
 		return 0.4f;
 	}
 	
-	public void registerTile() {
-		GLogger.log("Registering Tile "+getName()+" ("+getId()+")", LogSource.GLCRAFT);
+	public void registerTile(){
+		this.id = currentTile;
+		currentTile++;
 		Tile.tileMap.put(getId(), this);
+		GLogger.log("Registering Tile "+getName()+" ("+(getId() & 0xFF)+")", LogSource.GLCRAFT);
 	}
 	
 	/**

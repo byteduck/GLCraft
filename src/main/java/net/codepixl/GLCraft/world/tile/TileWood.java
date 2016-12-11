@@ -39,12 +39,6 @@ public class TileWood extends Tile{
 		}
 		return "wood_"+suffix;
 	}
-	
-	@Override
-	public byte getId() {
-		// TODO Auto-generated method stub
-		return 16;
-	}
 
 	@Override
 	public Color4f getColor() {

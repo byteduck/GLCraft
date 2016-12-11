@@ -37,14 +37,14 @@ public class PluginManager {
 	}
 	
 	public void addTile(PluginTile t){
-		t.assignedID = currentTile;
+		t.setId(currentTile);
 		Tile.tileMap.put(currentTile, t);
 		GLogger.log("Registered plugin tile "+t.getName()+" with ID "+currentTile, LogSource.GLCRAFT);
 		currentTile++;
 	}
 	
 	public void addItem(PluginItem i){
-		i.assignedID = currentItem;
+		i.setId(currentItem);
 		Item.itemMap.put(currentItem, i);
 		GLogger.log("Registered item "+i.getName()+" with ID "+currentItem, LogSource.GLCRAFT);
 		currentItem++;

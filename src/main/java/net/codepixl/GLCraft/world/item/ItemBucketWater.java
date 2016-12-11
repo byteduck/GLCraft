@@ -15,11 +15,6 @@ public class ItemBucketWater extends Item{
 	}
 	
 	@Override
-	public byte getId(){
-		return 6;
-	}
-	
-	@Override
 	public void onClick(EntityPlayer p){
 		p.placeTile(Tile.Water, (byte)1);
 		p.setSelectedItemStack(new ItemStack(Item.Bucket));

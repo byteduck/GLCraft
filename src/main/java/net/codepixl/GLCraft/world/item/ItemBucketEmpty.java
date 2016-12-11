@@ -15,11 +15,6 @@ public class ItemBucketEmpty extends Item{
 	}
 	
 	@Override
-	public byte getId(){
-		return 5;
-	}
-	
-	@Override
 	public void onClick(EntityPlayer p){
 		if(p.worldManager.getTileAtPos(p.getLookRayPos()) == Tile.Water.getId() && p.worldManager.getMetaAtPos(p.getLookRayPos()) < 2){
 			p.setSelectedItemStack(new ItemStack(Item.BucketWater));

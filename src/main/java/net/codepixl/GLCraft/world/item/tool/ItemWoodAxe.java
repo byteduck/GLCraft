@@ -22,9 +22,4 @@ public class ItemWoodAxe extends Tool{
 		return "axe_wood";
 	}
 	
-	@Override
-	public byte getId(){
-		return 14;
-	}
-	
 }

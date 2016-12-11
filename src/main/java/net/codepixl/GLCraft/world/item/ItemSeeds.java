@@ -5,8 +5,4 @@ public class ItemSeeds extends Item{
 	public String getName(){
 		return "Seeds";
 	}
-	@Override
-	public byte getId(){
-		return 1;
-	}
 }

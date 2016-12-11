@@ -17,10 +17,4 @@ public class TileCobblestone extends Tile{
 	public float getHardness(){
 		return 4f;
 	}
-	
-	@Override
-	public byte getId() {
-		// TODO Auto-generated method stub
-		return 25;
-	}
 }

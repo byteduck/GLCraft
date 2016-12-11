@@ -39,11 +39,6 @@ public class TileDoor extends Tile{
 	}
 	
 	@Override
-	public byte getId(){
-		return 29;
-	}
-	
-	@Override
 	public RenderType getRenderType(){
 		return RenderType.CUSTOM;
 	}

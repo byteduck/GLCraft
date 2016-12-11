@@ -17,11 +17,6 @@ public class TileCondensedBluestone extends Tile{
 	public Material getMaterial(){
 		return Material.STONE;
 	}
-
-	@Override
-	public byte getId() {
-		return 28;
-	}
 	
 	@Override
 	public float getHardness(){

@@ -5,8 +5,4 @@ public class ItemStick extends Item{
 	public String getName(){
 		return "Stick";
 	}
-	@Override
-	public byte getId(){
-		return 4;
-	}
 }

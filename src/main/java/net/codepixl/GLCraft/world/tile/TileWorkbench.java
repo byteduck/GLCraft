@@ -21,12 +21,6 @@ public class TileWorkbench extends Tile{
 	}
 	
 	@Override
-	public byte getId() {
-		// TODO Auto-generated method stub
-		return 20;
-	}
-	
-	@Override
 	public String getIconName(){
 		return "workbench_top";
 	}

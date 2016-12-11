@@ -50,12 +50,6 @@ public class TileChest extends TileTileEntity{
 	}
 	
 	@Override
-	public byte getId() {
-		// TODO Auto-generated method stub
-		return 22;
-	}
-	
-	@Override
 	public TileEntity getSpawnTileEntity(int x, int y, int z, WorldManager w){
 		return new TileEntityChest(x, y, z, 20, w);
 	}

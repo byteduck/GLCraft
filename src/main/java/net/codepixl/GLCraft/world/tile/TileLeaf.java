@@ -15,11 +15,6 @@ public class TileLeaf extends Tile{
 		// TODO Auto-generated method stub
 		return "Leaves";
 	}
-	@Override
-	public byte getId() {
-		// TODO Auto-generated method stub
-		return 9;
-	}
 
 	@Override
 	public Color4f getColor() {

@@ -16,12 +16,6 @@ public class TileDiamondOre extends TileOre{
 	public Tool toolUsed(){
 		return (Tool) Tool.IronPick;
 	}
-
-	@Override
-	public byte getId() {
-		// TODO Auto-generated method stub
-		return 27;
-	}
 	
 	@Override
 	public float getHardness(){

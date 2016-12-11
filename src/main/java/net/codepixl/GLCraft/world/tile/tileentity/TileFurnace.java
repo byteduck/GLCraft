@@ -12,12 +12,6 @@ import net.codepixl.GLCraft.world.tile.material.Material;
 public class TileFurnace extends TileTileEntity{
 	
 	@Override
-	public byte getId() {
-		// TODO Auto-generated method stub
-		return 24;
-	}
-	
-	@Override
 	public String getName() {
 		// TODO Auto-generated method stub
 		return "Furnace";

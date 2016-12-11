@@ -19,9 +19,4 @@ public class TileTnt extends Tile {
 		// TODO Auto-generated method stub
 		return "Tnt";
 	}
-	@Override
-	public byte getId() {
-		// TODO Auto-generated method stub
-		return 14;
-	}
 }

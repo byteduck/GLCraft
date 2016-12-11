@@ -24,11 +24,6 @@ public class TileWater extends Tile{
 	public Material getMaterial(){
 		return Material.LIQUID;
 	}
-	
-	@Override
-	public byte getId() {
-		return 3;
-	}
 
 	@Override
 	public Color4f getColor() {

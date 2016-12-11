@@ -10,12 +10,6 @@ public class TileCoalOre extends TileOre{
 		// TODO Auto-generated method stub
 		return "Coal Ore";
 	}
-
-	@Override
-	public byte getId() {
-		// TODO Auto-generated method stub
-		return 5;
-	}
 	
 	@Override
 	public float getHardness(){
