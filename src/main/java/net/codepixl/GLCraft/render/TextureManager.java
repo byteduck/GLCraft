@@ -151,6 +151,9 @@ public class TextureManager {
 				e.printStackTrace();
 			}
 		}
+
+		Shape.currentSpritesheet = Spritesheet.atlas;
+
 	}
 	public static float[] tile(Tile t){
 		if(t.hasMultipleTextures()){

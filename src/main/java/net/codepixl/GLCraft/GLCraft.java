@@ -18,6 +18,7 @@
 
 package net.codepixl.GLCraft;
 
+import com.nishu.utils.Color4f;
 import com.nishu.utils.Screen;
 import com.nishu.utils.Time;
 import com.nishu.utils.Window;
@@ -27,8 +28,10 @@ import net.codepixl.GLCraft.network.Client;
 import net.codepixl.GLCraft.network.Server;
 import net.codepixl.GLCraft.plugin.Plugin;
 import net.codepixl.GLCraft.plugin.PluginManager;
-import net.codepixl.GLCraft.render.TextureManager;
+import net.codepixl.GLCraft.render.*;
+import net.codepixl.GLCraft.render.Shape;
 import net.codepixl.GLCraft.render.texturepack.TexturePackManager;
+import net.codepixl.GLCraft.render.util.Spritesheet;
 import net.codepixl.GLCraft.render.util.Tesselator;
 import net.codepixl.GLCraft.util.Constants;
 import net.codepixl.GLCraft.util.DebugTimer;
@@ -336,10 +339,13 @@ public class GLCraft extends Screen{
 	public static void renderSplashText(String line1, String line2){
 		if(!getGLCraft().isServer){
 			GL11.glClear(GL11.GL_COLOR_BUFFER_BIT);
-			String ltext = "GLCraft is loading...";
-			Tesselator.drawString(Constants.getWidth()/2-Tesselator.getFontWidth(ltext)/2,30, ltext);
-			Tesselator.drawString(Constants.getWidth()/2-Tesselator.getFontWidth(line1)/2,Constants.getHeight()/2-Tesselator.getFontHeight(line1), line1);
-			Tesselator.drawString(Constants.getWidth()/2-Tesselator.getFontWidth(line2)/2,Constants.getHeight()/2+Tesselator.getFontHeight(line2), line2);
+			Tesselator.drawString(Constants.getWidth()/2-Tesselator.getFontWidth(line1)/2,Constants.getHeight()/2-Tesselator.getFontHeight(line1)/2, line1);
+			Tesselator.drawString(Constants.getWidth()/2-Tesselator.getFontWidth(line2)/2,Constants.getHeight()/2+Tesselator.getFontHeight(line2)/2+10, line2);
+			Spritesheet.logo.bind();
+			Shape.currentSpritesheet = Spritesheet.logo;
+			glBegin(GL_QUADS);
+			Shape.createCenteredRect2D(Constants.getWidth()/2,Constants.getHeight()/2-Tesselator.getFontHeight()*2-30, Color4f.WHITE, new float[]{0,0}, 200f, 100f);
+			glEnd();
 			TextureImpl.unbind();
 			Display.update();
 		}

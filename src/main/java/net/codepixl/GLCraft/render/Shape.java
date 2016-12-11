@@ -7,6 +7,7 @@ import net.codepixl.GLCraft.util.logging.GLogger;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.util.vector.Vector3f;
 
+import static net.codepixl.GLCraft.GUI.Inventory.Elements.GUISlot.size;
 import static org.lwjgl.opengl.GL11.*;
 
 ;
@@ -613,5 +614,21 @@ public class Shape {
 		glVertex3f(x, y, z + size);
 		glVertex3f(x + size, y, z);
 		glVertex3f(x + size, y + size, z);
+	}
+
+	public static void createRect2D(int x, int y, Color4f color, float[] texCoords, float sizeX, float sizeY){
+		glColor4f(color.r, color.g, color.b, color.a);
+		glTexCoord2f(texCoords[0], texCoords[1]);
+		glVertex2f(x, y);
+		glTexCoord2f(texCoords[0], texCoords[1] + currentSpritesheet.uniformSize());
+		glVertex2f(x, y + sizeY);
+		glTexCoord2f(texCoords[0] + currentSpritesheet.uniformSize(), texCoords[1] + currentSpritesheet.uniformSize());
+		glVertex2f(x + sizeX, y + sizeY);
+		glTexCoord2f(texCoords[0] + currentSpritesheet.uniformSize(), texCoords[1]);
+		glVertex2f(x + sizeX, y);
+	}
+
+	public static void createCenteredRect2D(int x, int y, Color4f color, float[] texCoords, float sizeX, float sizeY){
+		createRect2D(x - (int)sizeX/2, y - (int)sizeY/2, color, texCoords, sizeX, sizeY);
 	}
 }
