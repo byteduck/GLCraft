@@ -101,8 +101,6 @@ public class Tesselator{
 	}
 
 	public static void initFont(){
-		int size = 16;
-		if(Constants.getWidth() > 2000) size = 32;
-		FONT = new TrueTypeFont(new Font("GLCraft", Font.PLAIN, size), true);
+		FONT = new TrueTypeFont(new Font("GLCraft", Font.PLAIN, 16*Constants.getGUIScale()), true);
 	}
 }

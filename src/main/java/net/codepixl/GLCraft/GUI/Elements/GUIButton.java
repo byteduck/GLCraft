@@ -14,8 +14,8 @@ import static org.lwjgl.opengl.GL11.*;
 
 public class GUIButton extends GUIElement{
 
-	public static final int BTNHEIGHT = 30;
-	public static final int BTNPADDING = 10;
+	public static int BTNHEIGHT = 30;
+	public static int BTNPADDING = 10;
 	public static final Color4f BTNCOLOR = new Color4f(0f, 0f, 0f, 1f);
 	public static final Color4f BTNHOVERCOLOR = new Color4f(0.25f, 0.25f, 0.25f, 1f);
 	public static final Color4f BTNPRESSEDCOLOR = new Color4f(0.35f, 0.35f, 0.35f, 1f);

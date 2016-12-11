@@ -2,6 +2,8 @@ package net.codepixl.GLCraft.GUI;
 
 import com.nishu.utils.Color4f;
 import net.codepixl.GLCraft.GLCraft;
+import net.codepixl.GLCraft.GUI.Elements.GUIButton;
+import net.codepixl.GLCraft.GUI.Elements.GUISlider;
 import net.codepixl.GLCraft.GUI.Elements.GUITextBox;
 import net.codepixl.GLCraft.GUI.Inventory.Elements.GUISlot;
 import net.codepixl.GLCraft.GUI.Inventory.GUIInventoryScreen;
@@ -194,6 +196,9 @@ public class GUIManager {
 			GUISlot.size = Constants.getWidth()/18f;
 		else
 			GUISlot.size = Constants.getWidth()/25f;
+		GUIButton.BTNHEIGHT = 30*Constants.getGUIScale();
+		GUIButton.BTNPADDING = 10*Constants.getGUIScale();
+		GUISlider.HEIGHT = 20*Constants.getGUIScale();
 		Tesselator.initFont();
 	}
 }

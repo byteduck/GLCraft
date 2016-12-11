@@ -128,4 +128,8 @@ public class Constants {
 		return Display.getHeight();
 	}
 
+	public static int getGUIScale(){
+		return getWidth() > 2000 ? 2 : 1;
+	}
+
 }

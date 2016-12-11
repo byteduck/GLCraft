@@ -3,6 +3,7 @@ package net.codepixl.GLCraft.GUI;
 import net.codepixl.GLCraft.GUI.Elements.GUILabel;
 import net.codepixl.GLCraft.network.Server.InetAddressAndPort;
 import net.codepixl.GLCraft.render.util.Tesselator;
+import net.codepixl.GLCraft.util.Constants;
 import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.GL11;
 
@@ -18,10 +19,10 @@ public class GUIServer extends GUIScreen{
 	
 	public GUIServer(GUIMultiplayer pgui, String msg, InetAddress addr, int port){
 		this.width = 100;
-		this.height = 100;
+		this.height = 100 * Constants.getGUIScale();
 		this.pgui = pgui;
 		this.name = new GUILabel(10, 0, msg);
-		this.addr = new GUILabel(10, (int) (100-(Tesselator.getFontHeight()+10)), addr+":"+port);
+		this.addr = new GUILabel(10, (int) (100*Constants.getGUIScale()-(Tesselator.getFontHeight()+10)), addr+":"+port);
 		this.addr.size = 1f;
 		this.iaddr = new InetAddressAndPort(addr,port);
 		
