@@ -1,18 +1,15 @@
 package net.codepixl.GLCraft.GUI.Elements;
 
-import java.util.concurrent.Callable;
-
+import com.nishu.utils.Color4f;
+import net.codepixl.GLCraft.render.Shape;
+import net.codepixl.GLCraft.render.util.Tesselator;
+import net.codepixl.GLCraft.util.Constants;
 import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.GL11;
 import org.newdawn.slick.Color;
 import org.newdawn.slick.opengl.TextureImpl;
 
-import com.nishu.utils.Color4f;
-
-import net.codepixl.GLCraft.GUI.GUIScreen;
-import net.codepixl.GLCraft.render.Shape;
-import net.codepixl.GLCraft.render.util.Tesselator;
-import net.codepixl.GLCraft.util.Constants;
+import java.util.concurrent.Callable;
 
 public class GUISlider extends GUIElement{
 	
@@ -61,7 +58,7 @@ public class GUISlider extends GUIElement{
 		
 		String lblend = (!maxlbl.equals("") && val == max) ? maxlbl : Integer.toString((int) val);
 		String fulllbl = lbl+":"+lblend;
-		Constants.FONT.drawString(width/2-Constants.FONT.getWidth(fulllbl)/2, height/2-Constants.FONT.getHeight()/2, fulllbl, Color.gray);
+		Tesselator.drawString(width/2-Tesselator.getFontWidth(fulllbl)/2, height/2-Tesselator.getFontHeight()/2, fulllbl, Color.gray);
 		TextureImpl.unbind();
 	}
 	

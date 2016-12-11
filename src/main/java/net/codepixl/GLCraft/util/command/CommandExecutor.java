@@ -1,7 +1,6 @@
 package net.codepixl.GLCraft.util.command;
 
 import net.codepixl.GLCraft.util.command.Command.Permission;
-import net.codepixl.GLCraft.world.entity.mob.EntityPlayer;
 
 public interface CommandExecutor{
 	

@@ -1,13 +1,10 @@
 package net.codepixl.GLCraft.GUI.Elements;
 
-import net.codepixl.GLCraft.util.Constants;
+import net.codepixl.GLCraft.GUI.GUISinglePlayer;
+import net.codepixl.GLCraft.render.util.Tesselator;
 import net.codepixl.GLCraft.util.data.saves.Save;
-
 import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.GL11;
-
-import net.codepixl.GLCraft.GUI.GUISinglePlayer;
-import net.codepixl.GLCraft.sound.SoundManager;
 
 public class GUISave extends GUIElement{
 	
@@ -23,7 +20,7 @@ public class GUISave extends GUIElement{
 		
 		this.dispName = new GUILabel(10, 0, s.dispName);
 		
-		this.name = new GUILabel(10, (int) (100-(Constants.FONT.getHeight()+10)), "(Saved in '"+s.name+"')");
+		this.name = new GUILabel(10, (int) (100-(Tesselator.getFontHeight()+10)), "(Saved in '"+s.name+"')");
 		this.name.size = 1f;
 		
 		this.width = 100;

@@ -1,9 +1,9 @@
 package net.codepixl.GLCraft.util.command;
 
+import net.codepixl.GLCraft.network.packet.PacketChat;
 import net.codepixl.GLCraft.util.ChatFormat;
 import net.codepixl.GLCraft.util.StringUtil;
 import net.codepixl.GLCraft.world.CentralManager;
-import net.codepixl.GLCraft.network.packet.PacketChat;
 
 public class CommandAnnounce implements Command{
 

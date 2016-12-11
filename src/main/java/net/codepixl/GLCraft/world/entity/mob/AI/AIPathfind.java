@@ -1,12 +1,10 @@
 package net.codepixl.GLCraft.world.entity.mob.AI;
 
-import org.lwjgl.util.vector.Vector3f;
-
 import net.codepixl.GLCraft.util.MathUtils;
 import net.codepixl.GLCraft.util.Vector3i;
-import net.codepixl.GLCraft.world.entity.mob.Mob;
 import net.codepixl.GLCraft.world.entity.mob.AI.pathfinding.Pathfinder;
-import net.codepixl.GLCraft.world.tile.Tile;
+import net.codepixl.GLCraft.world.entity.mob.Mob;
+import org.lwjgl.util.vector.Vector3f;
 
 public class AIPathfind extends AI{
 	

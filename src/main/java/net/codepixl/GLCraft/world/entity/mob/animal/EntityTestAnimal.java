@@ -1,16 +1,13 @@
 package net.codepixl.GLCraft.world.entity.mob.animal;
 
-import org.lwjgl.opengl.GL11;
-import org.lwjgl.util.vector.Vector3f;
-
-import com.nishu.utils.Color4f;
-
 import net.codepixl.GLCraft.render.Shape;
 import net.codepixl.GLCraft.world.WorldManager;
 import net.codepixl.GLCraft.world.entity.mob.AI.AIRunAway;
 import net.codepixl.GLCraft.world.entity.mob.AI.AIWander;
 import net.codepixl.GLCraft.world.entity.mob.hostile.Hostile;
 import net.codepixl.GLCraft.world.tile.Tile;
+import org.lwjgl.opengl.GL11;
+import org.lwjgl.util.vector.Vector3f;
 
 public class EntityTestAnimal extends Animal{
 

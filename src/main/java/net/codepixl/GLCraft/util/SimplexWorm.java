@@ -1,8 +1,7 @@
 package net.codepixl.GLCraft.util;
 
-import org.lwjgl.util.vector.Vector3f;
-
 import net.codepixl.GLCraft.util.logging.GLogger;
+import org.lwjgl.util.vector.Vector3f;
 
 public class SimplexWorm {
 	private OpenSimplexNoise n = new OpenSimplexNoise();

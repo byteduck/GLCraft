@@ -3,7 +3,6 @@ package net.codepixl.GLCraft.world.entity.tileentity;
 import com.evilco.mc.nbt.error.TagNotFoundException;
 import com.evilco.mc.nbt.error.UnexpectedTagTypeException;
 import com.evilco.mc.nbt.tag.TagCompound;
-
 import net.codepixl.GLCraft.GUI.tileentity.GUIChest;
 import net.codepixl.GLCraft.world.WorldManager;
 import net.codepixl.GLCraft.world.entity.Entity;

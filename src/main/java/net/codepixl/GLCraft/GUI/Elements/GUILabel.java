@@ -1,22 +1,11 @@
 package net.codepixl.GLCraft.GUI.Elements;
 
-import static org.lwjgl.opengl.GL11.GL_QUADS;
-import static org.lwjgl.opengl.GL11.GL_TEXTURE_2D;
-import static org.lwjgl.opengl.GL11.glBegin;
-import static org.lwjgl.opengl.GL11.glColor3f;
-import static org.lwjgl.opengl.GL11.glColor4f;
-import static org.lwjgl.opengl.GL11.glDisable;
-import static org.lwjgl.opengl.GL11.glEnable;
-import static org.lwjgl.opengl.GL11.glEnd;
-import static org.lwjgl.opengl.GL11.glVertex2f;
-
+import com.nishu.utils.Color4f;
+import net.codepixl.GLCraft.render.util.Tesselator;
 import org.lwjgl.opengl.GL11;
 import org.newdawn.slick.opengl.TextureImpl;
 
-import com.nishu.utils.Color4f;
-
-import net.codepixl.GLCraft.GUI.GUIScreen;
-import net.codepixl.GLCraft.util.Constants;
+import static org.lwjgl.opengl.GL11.glColor4f;
 
 public class GUILabel extends GUIElement{
 	public static Color4f LBLTEXTCOLOR = new Color4f(1f,1f,1f,1f);
@@ -51,19 +40,19 @@ public class GUILabel extends GUIElement{
 		GL11.glPushMatrix();
 		GL11.glScalef(size, size, 0);
 		glColor4f(textColor.r,textColor.g,textColor.b,textColor.a);
-		int y = -Constants.FONT.getHeight();
+		int y = -Tesselator.getFontHeight();
 		switch(alignment){
 		case LEFT:
 			for (String line : text.split("\n"))
-		        Constants.FONT.drawString(0, y += Constants.FONT.getHeight(), line);
+		        Tesselator.drawString(0, y += Tesselator.getFontHeight(), line);
 			break;
 		case CENTER:
 			for (String line : text.split("\n"))
-		        Constants.FONT.drawString(-Constants.FONT.getWidth(line)/2, y += Constants.FONT.getHeight(), line);
+		        Tesselator.drawString(-Tesselator.getFontWidth(line)/2, y += Tesselator.getFontHeight(), line);
 			break;
 		case RIGHT:
 			for (String line : text.split("\n"))
-		        Constants.FONT.drawString(-Constants.FONT.getWidth(line), y += Constants.FONT.getHeight(), line);
+		        Tesselator.drawString(-Tesselator.getFontWidth(line), y += Tesselator.getFontHeight(), line);
 			break;
 		}
 		TextureImpl.unbind();

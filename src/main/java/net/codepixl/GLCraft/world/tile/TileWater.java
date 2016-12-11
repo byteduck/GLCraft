@@ -1,17 +1,15 @@
 package net.codepixl.GLCraft.world.tile;
 
-import org.lwjgl.opengl.GL11;
-import org.lwjgl.util.vector.Vector3f;
-
 import com.nishu.utils.Color4f;
-
 import net.codepixl.GLCraft.render.RenderType;
+import net.codepixl.GLCraft.render.util.Spritesheet;
 import net.codepixl.GLCraft.util.AABB;
 import net.codepixl.GLCraft.util.EnumFacing;
-import net.codepixl.GLCraft.render.util.Spritesheet;
 import net.codepixl.GLCraft.world.Chunk;
 import net.codepixl.GLCraft.world.WorldManager;
 import net.codepixl.GLCraft.world.tile.material.Material;
+import org.lwjgl.opengl.GL11;
+import org.lwjgl.util.vector.Vector3f;
 
 public class TileWater extends Tile{
 

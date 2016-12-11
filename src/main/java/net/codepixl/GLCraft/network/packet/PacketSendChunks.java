@@ -1,10 +1,10 @@
 package net.codepixl.GLCraft.network.packet;
 
-import java.util.Collection;
-import java.util.Iterator;
-
 import net.codepixl.GLCraft.util.Vector3i;
 import net.codepixl.GLCraft.world.Chunk;
+
+import java.util.Collection;
+import java.util.Iterator;
 
 public class PacketSendChunks extends Packet{
 	

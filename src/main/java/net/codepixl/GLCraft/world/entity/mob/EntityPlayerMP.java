@@ -1,27 +1,26 @@
 package net.codepixl.GLCraft.world.entity.mob;
 
-import java.util.Iterator;
-
-import org.lwjgl.opengl.GL11;
-import org.lwjgl.util.vector.Vector3f;
-import org.newdawn.slick.opengl.TextureImpl;
-
 import com.nishu.utils.Color4f;
-
 import net.codepixl.GLCraft.network.packet.PacketChat;
 import net.codepixl.GLCraft.network.packet.PacketPlayerAction;
 import net.codepixl.GLCraft.network.packet.PacketRespawn;
 import net.codepixl.GLCraft.network.packet.PacketSetInventory;
 import net.codepixl.GLCraft.render.Shape;
+import net.codepixl.GLCraft.render.util.Spritesheet;
+import net.codepixl.GLCraft.render.util.Tesselator;
 import net.codepixl.GLCraft.util.Constants;
 import net.codepixl.GLCraft.util.MathUtils;
-import net.codepixl.GLCraft.render.util.Spritesheet;
 import net.codepixl.GLCraft.world.WorldManager;
 import net.codepixl.GLCraft.world.entity.Entity;
 import net.codepixl.GLCraft.world.entity.EntityItem;
 import net.codepixl.GLCraft.world.item.Item;
 import net.codepixl.GLCraft.world.item.ItemStack;
 import net.codepixl.GLCraft.world.tile.Tile;
+import org.lwjgl.opengl.GL11;
+import org.lwjgl.util.vector.Vector3f;
+import org.newdawn.slick.opengl.TextureImpl;
+
+import java.util.Iterator;
 
 public class EntityPlayerMP extends EntityPlayer{
 
@@ -46,10 +45,10 @@ public class EntityPlayerMP extends EntityPlayer{
 		GL11.glTranslatef(pos.x, pos.y+(float)getAABB().r[0]*2f+1.75f, pos.z);
 		GL11.glRotatef(180, 1, 0, 0);
 		GL11.glRotatef(worldManager.getPlayer().getRot().y, 0, 1, 0);
-		GL11.glTranslatef(-Constants.FONT.getWidth(getName())/2*0.02f, 0, 0);
+		GL11.glTranslatef(-Tesselator.getFontWidth(getName())/2*0.02f, 0, 0);
 		GL11.glScalef(0.02f, 0.02f, 0.02f);
 		TextureImpl.bindNone();
-		Constants.FONT.drawString(0, 0, getName());
+		Tesselator.drawString(0, 0, getName());
 		TextureImpl.unbind();
 		GL11.glFrontFace(GL11.GL_CCW);
 		GL11.glEnable(GL11.GL_DEPTH_TEST);

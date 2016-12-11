@@ -1,6 +1,5 @@
 package net.codepixl.GLCraft.util.command;
 
-import com.sun.scenario.Settings;
 import net.codepixl.GLCraft.GLCraft;
 import net.codepixl.GLCraft.util.SettingsManager;
 import net.codepixl.GLCraft.world.CentralManager;

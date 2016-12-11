@@ -1,24 +1,20 @@
 package net.codepixl.GLCraft.GUI;
 
-import static org.lwjgl.opengl.GL11.GL_QUADS;
-import static org.lwjgl.opengl.GL11.glBegin;
-import static org.lwjgl.opengl.GL11.glEnd;
-
-import java.util.ArrayList;
-import java.util.Iterator;
-
+import com.nishu.utils.Color4f;
+import net.codepixl.GLCraft.render.Shape;
+import net.codepixl.GLCraft.render.TextureManager;
+import net.codepixl.GLCraft.render.util.Spritesheet;
+import net.codepixl.GLCraft.util.Constants;
+import net.codepixl.GLCraft.world.tile.Tile;
+import net.codepixl.GLCraft.world.tile.ore.TileOre;
 import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.Display;
 import org.lwjgl.opengl.GL11;
 
-import com.nishu.utils.Color4f;
+import java.util.ArrayList;
+import java.util.Iterator;
 
-import net.codepixl.GLCraft.render.Shape;
-import net.codepixl.GLCraft.render.TextureManager;
-import net.codepixl.GLCraft.util.Constants;
-import net.codepixl.GLCraft.render.util.Spritesheet;
-import net.codepixl.GLCraft.world.tile.Tile;
-import net.codepixl.GLCraft.world.tile.ore.TileOre;
+import static org.lwjgl.opengl.GL11.*;
 
 public class GUIScreen{
 	public int x = 0;

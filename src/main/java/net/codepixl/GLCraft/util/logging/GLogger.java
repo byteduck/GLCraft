@@ -1,11 +1,11 @@
 package net.codepixl.GLCraft.util.logging;
 
+import net.codepixl.GLCraft.util.LogSource;
+
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.PrintStream;
-
-import net.codepixl.GLCraft.util.LogSource;
 
 public class GLogger {
 	private static PrintStream out, err;
@@ -20,6 +20,17 @@ public class GLogger {
 		else
 			try {
 				lfos.write((l.toString() + log + "\n").getBytes());
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+	}
+
+	public static void log(Object log){
+		if(log == null)
+			log = "null";
+		else
+			try {
+				lfos.write(("[" + Thread.currentThread().getStackTrace()[1] + "]" + log + "\n").getBytes());
 			} catch (IOException e) {
 				e.printStackTrace();
 			}

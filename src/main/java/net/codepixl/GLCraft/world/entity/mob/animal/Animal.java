@@ -1,11 +1,8 @@
 package net.codepixl.GLCraft.world.entity.mob.animal;
 
-import org.lwjgl.util.vector.Vector3f;
-
-import net.codepixl.GLCraft.util.MathUtils;
 import net.codepixl.GLCraft.world.WorldManager;
-import net.codepixl.GLCraft.world.entity.Entity;
 import net.codepixl.GLCraft.world.entity.mob.Mob;
+import org.lwjgl.util.vector.Vector3f;
 
 public class Animal extends Mob{
 

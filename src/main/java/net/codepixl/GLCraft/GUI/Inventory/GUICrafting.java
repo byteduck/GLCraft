@@ -1,9 +1,5 @@
 package net.codepixl.GLCraft.GUI.Inventory;
 
-import org.lwjgl.input.Keyboard;
-import org.lwjgl.input.Mouse;
-
-import net.codepixl.GLCraft.GUI.GUIScreen;
 import net.codepixl.GLCraft.GUI.Inventory.Elements.GUISlot;
 import net.codepixl.GLCraft.util.Constants;
 import net.codepixl.GLCraft.world.crafting.CraftingManager;

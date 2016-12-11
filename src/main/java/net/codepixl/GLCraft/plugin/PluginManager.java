@@ -1,12 +1,5 @@
 package net.codepixl.GLCraft.plugin;
 
-import java.io.File;
-import java.io.FilenameFilter;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Iterator;
-
 import net.codepixl.GLCraft.GLCraft;
 import net.codepixl.GLCraft.util.LogSource;
 import net.codepixl.GLCraft.util.logging.GLogger;
@@ -14,6 +7,13 @@ import net.codepixl.GLCraft.world.item.Item;
 import net.codepixl.GLCraft.world.item.PluginItem;
 import net.codepixl.GLCraft.world.tile.PluginTile;
 import net.codepixl.GLCraft.world.tile.Tile;
+
+import java.io.File;
+import java.io.FilenameFilter;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
 
 public class PluginManager {
 	

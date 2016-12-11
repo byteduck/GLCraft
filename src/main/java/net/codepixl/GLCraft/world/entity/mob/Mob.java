@@ -1,22 +1,12 @@
 package net.codepixl.GLCraft.world.entity.mob;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-
-import org.lwjgl.util.vector.Vector3f;
-
 import com.evilco.mc.nbt.tag.TagCompound;
 import com.evilco.mc.nbt.tag.TagFloat;
 import com.nishu.utils.Time;
-
 import net.codepixl.GLCraft.network.packet.PacketHealth;
 import net.codepixl.GLCraft.util.AABB;
 import net.codepixl.GLCraft.util.DebugTimer;
 import net.codepixl.GLCraft.util.GameObj;
-import net.codepixl.GLCraft.util.LogSource;
-import net.codepixl.GLCraft.util.logging.GLogger;
 import net.codepixl.GLCraft.world.WorldManager;
 import net.codepixl.GLCraft.world.entity.Entity;
 import net.codepixl.GLCraft.world.entity.EntityItem;
@@ -24,6 +14,12 @@ import net.codepixl.GLCraft.world.entity.EntitySolid;
 import net.codepixl.GLCraft.world.entity.mob.AI.AI;
 import net.codepixl.GLCraft.world.item.ItemStack;
 import net.codepixl.GLCraft.world.tile.Tile;
+import org.lwjgl.util.vector.Vector3f;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
 
 public class Mob extends EntitySolid implements GameObj{
 	

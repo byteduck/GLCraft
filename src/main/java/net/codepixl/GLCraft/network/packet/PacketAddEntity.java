@@ -1,17 +1,16 @@
 package net.codepixl.GLCraft.network.packet;
 
+import com.evilco.mc.nbt.stream.NbtInputStream;
+import com.evilco.mc.nbt.stream.NbtOutputStream;
+import com.evilco.mc.nbt.tag.TagCompound;
+import net.codepixl.GLCraft.world.WorldManager;
+import net.codepixl.GLCraft.world.entity.Entity;
+import net.codepixl.GLCraft.world.entity.NBTUtil;
+
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
-
-import com.evilco.mc.nbt.stream.NbtInputStream;
-import com.evilco.mc.nbt.stream.NbtOutputStream;
-import com.evilco.mc.nbt.tag.TagCompound;
-
-import net.codepixl.GLCraft.world.WorldManager;
-import net.codepixl.GLCraft.world.entity.Entity;
-import net.codepixl.GLCraft.world.entity.NBTUtil;
 
 public class PacketAddEntity extends Packet{
 	public byte[] entityData;

@@ -1,31 +1,22 @@
 package net.codepixl.GLCraft.GUI;
 
-import static org.lwjgl.opengl.GL11.GL_QUADS;
-import static org.lwjgl.opengl.GL11.glBegin;
-import static org.lwjgl.opengl.GL11.glEnd;
-
-import java.util.HashMap;
-import java.util.Stack;
-
+import com.nishu.utils.Color4f;
+import net.codepixl.GLCraft.GLCraft;
+import net.codepixl.GLCraft.GUI.Elements.GUITextBox;
+import net.codepixl.GLCraft.GUI.Inventory.Elements.GUISlot;
+import net.codepixl.GLCraft.GUI.Inventory.GUIInventoryScreen;
+import net.codepixl.GLCraft.render.Shape;
+import net.codepixl.GLCraft.render.TextureManager;
+import net.codepixl.GLCraft.render.util.Tesselator;
+import net.codepixl.GLCraft.util.Constants;
+import net.codepixl.GLCraft.world.entity.mob.EntityPlayer;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.Display;
 import org.lwjgl.opengl.GL11;
 import org.newdawn.slick.opengl.TextureImpl;
 
-import com.nishu.utils.Color4f;
-
-import net.codepixl.GLCraft.GLCraft;
-import net.codepixl.GLCraft.GUI.Elements.GUITextBox;
-import net.codepixl.GLCraft.GUI.Inventory.GUIInventoryScreen;
-import net.codepixl.GLCraft.GUI.Inventory.Elements.GUISlot;
-import net.codepixl.GLCraft.render.Shape;
-import net.codepixl.GLCraft.render.TextureManager;
-import net.codepixl.GLCraft.render.util.Tesselator;
-import net.codepixl.GLCraft.util.Constants;
-import net.codepixl.GLCraft.util.LogSource;
-import net.codepixl.GLCraft.util.logging.GLogger;
-import net.codepixl.GLCraft.world.entity.mob.EntityPlayer;
+import java.util.Stack;
 
 public class GUIManager {
 
@@ -113,10 +104,10 @@ public class GUIManager {
 			TextureImpl.unbind();
 			GL11.glDisable(GL11.GL_TEXTURE_2D);
 			GL11.glBegin(GL11.GL_QUADS);
-			Shape.createTexturelessRect2D(Mouse.getX(), -Mouse.getY()+Constants.getHeight()-Constants.FONT.getHeight(), Constants.FONT.getWidth(p.hoverSlot.itemstack.getName())+4, Constants.FONT.getHeight()+4, new Color4f(0f, 0f, 0f, 0.5f));
+			Shape.createTexturelessRect2D(Mouse.getX(), -Mouse.getY()+Constants.getHeight()-Tesselator.getFontHeight(), Tesselator.getFontWidth(p.hoverSlot.itemstack.getName())+4, Tesselator.getFontHeight()+4, new Color4f(0f, 0f, 0f, 0.5f));
 			GL11.glEnd();
 			GL11.glEnable(GL11.GL_TEXTURE_2D);
-			Tesselator.drawTextWithShadow(Mouse.getX()+2, -Mouse.getY()+Constants.getHeight()-Constants.FONT.getHeight()+2, p.hoverSlot.itemstack.getName());
+			Tesselator.drawTextWithShadow(Mouse.getX()+2, -Mouse.getY()+Constants.getHeight()-Tesselator.getFontHeight()+2, p.hoverSlot.itemstack.getName());
 		}
 	}
 
@@ -203,5 +194,6 @@ public class GUIManager {
 			GUISlot.size = Constants.getWidth()/18f;
 		else
 			GUISlot.size = Constants.getWidth()/25f;
+		Tesselator.initFont();
 	}
 }

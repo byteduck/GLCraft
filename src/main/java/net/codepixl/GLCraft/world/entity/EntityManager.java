@@ -1,35 +1,14 @@
 package net.codepixl.GLCraft.world.entity;
 
-import static org.lwjgl.opengl.GL11.glCallList;
-import static org.lwjgl.opengl.GL11.glDeleteLists;
-import static org.lwjgl.opengl.GL11.glGenLists;
-
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map.Entry;
-
-import javax.swing.JOptionPane;
-
-import net.codepixl.GLCraft.render.util.Spritesheet;
-import net.codepixl.GLCraft.util.*;
-import org.lwjgl.opengl.GL11;
-import org.lwjgl.util.vector.Vector3f;
-
 import com.evilco.mc.nbt.stream.NbtOutputStream;
 import com.evilco.mc.nbt.tag.TagCompound;
 import com.evilco.mc.nbt.tag.TagList;
-
 import net.codepixl.GLCraft.network.packet.Packet;
 import net.codepixl.GLCraft.network.packet.PacketAddEntity;
 import net.codepixl.GLCraft.network.packet.PacketMultiPacket;
 import net.codepixl.GLCraft.network.packet.PacketRemoveEntity;
+import net.codepixl.GLCraft.render.util.Spritesheet;
+import net.codepixl.GLCraft.util.*;
 import net.codepixl.GLCraft.util.data.saves.Save;
 import net.codepixl.GLCraft.world.WorldManager;
 import net.codepixl.GLCraft.world.entity.mob.EntityPlayer;
@@ -40,6 +19,17 @@ import net.codepixl.GLCraft.world.entity.particle.Particle;
 import net.codepixl.GLCraft.world.entity.tileentity.TileEntity;
 import net.codepixl.GLCraft.world.entity.tileentity.TileEntityChest;
 import net.codepixl.GLCraft.world.entity.tileentity.TileEntityFurnace;
+import org.lwjgl.opengl.GL11;
+import org.lwjgl.util.vector.Vector3f;
+
+import javax.swing.*;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.util.*;
+import java.util.Map.Entry;
+
+import static org.lwjgl.opengl.GL11.*;
 
 public class EntityManager implements GameObj{
 	

@@ -1,18 +1,17 @@
 package net.codepixl.GLCraft.util.command;
 
+import net.codepixl.GLCraft.GLCraft;
+import net.codepixl.GLCraft.util.ChatFormat;
+import net.codepixl.GLCraft.world.CentralManager;
+import net.codepixl.GLCraft.world.WorldManager;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map.Entry;
-
-import net.codepixl.GLCraft.GLCraft;
-import net.codepixl.GLCraft.util.ChatFormat;
-import net.codepixl.GLCraft.world.CentralManager;
-import net.codepixl.GLCraft.world.WorldManager;
 
 public class CommandManager {
 	

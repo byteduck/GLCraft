@@ -1,7 +1,6 @@
 package net.codepixl.GLCraft.world.tile;
 
 import com.nishu.utils.Color4f;
-
 import net.codepixl.GLCraft.world.tile.material.Material;
 
 public class TileWood extends Tile{

@@ -1,23 +1,13 @@
 package net.codepixl.GLCraft.world.item;
 
-import java.util.HashMap;
-
 import com.nishu.utils.Color4f;
-
 import net.codepixl.GLCraft.render.TextureManager;
 import net.codepixl.GLCraft.util.LogSource;
 import net.codepixl.GLCraft.util.logging.GLogger;
 import net.codepixl.GLCraft.world.entity.mob.EntityPlayer;
-import net.codepixl.GLCraft.world.item.tool.ItemDiamondAxe;
-import net.codepixl.GLCraft.world.item.tool.ItemDiamondPickaxe;
-import net.codepixl.GLCraft.world.item.tool.ItemGoldAxe;
-import net.codepixl.GLCraft.world.item.tool.ItemGoldPickaxe;
-import net.codepixl.GLCraft.world.item.tool.ItemIronAxe;
-import net.codepixl.GLCraft.world.item.tool.ItemIronPickaxe;
-import net.codepixl.GLCraft.world.item.tool.ItemStoneAxe;
-import net.codepixl.GLCraft.world.item.tool.ItemStonePickaxe;
-import net.codepixl.GLCraft.world.item.tool.ItemWoodAxe;
-import net.codepixl.GLCraft.world.item.tool.ItemWoodPickaxe;
+import net.codepixl.GLCraft.world.item.tool.*;
+
+import java.util.HashMap;
 
 public class Item {
 	private static byte currentID = (byte)0x01; //Because idiot me started them at one when I made the game and now I have to stick with it

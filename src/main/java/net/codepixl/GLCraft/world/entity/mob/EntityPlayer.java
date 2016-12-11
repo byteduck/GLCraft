@@ -1,42 +1,19 @@
 package net.codepixl.GLCraft.world.entity.mob;
 
-import static org.lwjgl.opengl.GL11.GL_MODELVIEW;
-import static org.lwjgl.opengl.GL11.GL_QUADS;
-import static org.lwjgl.opengl.GL11.GL_TRANSFORM_BIT;
-import static org.lwjgl.opengl.GL11.glBegin;
-import static org.lwjgl.opengl.GL11.glEnd;
-import static org.lwjgl.opengl.GL11.glMatrixMode;
-import static org.lwjgl.opengl.GL11.glPopAttrib;
-import static org.lwjgl.opengl.GL11.glPushAttrib;
-import static org.lwjgl.opengl.GL11.glRotatef;
-import static org.lwjgl.opengl.GL11.glTranslatef;
-
-import org.lwjgl.input.Keyboard;
-import org.lwjgl.input.Mouse;
-import org.lwjgl.opengl.GL11;
-import org.lwjgl.util.vector.Vector3f;
-
 import com.nishu.utils.Color4f;
 import com.nishu.utils.Time;
-
 import net.codepixl.GLCraft.GUI.GUIManager;
 import net.codepixl.GLCraft.GUI.Inventory.Elements.GUISlot;
-import net.codepixl.GLCraft.network.packet.PacketPlayerAction;
 import net.codepixl.GLCraft.network.packet.PacketOnPlace;
+import net.codepixl.GLCraft.network.packet.PacketPlayerAction;
 import net.codepixl.GLCraft.network.packet.PacketSetInventory;
 import net.codepixl.GLCraft.render.RenderType;
 import net.codepixl.GLCraft.render.Shape;
 import net.codepixl.GLCraft.render.TextureManager;
-import net.codepixl.GLCraft.util.SettingsManager;
 import net.codepixl.GLCraft.sound.SoundManager;
-import net.codepixl.GLCraft.util.AABB;
-import net.codepixl.GLCraft.util.BreakSource;
-import net.codepixl.GLCraft.util.Constants;
-import net.codepixl.GLCraft.util.MathUtils;
-import net.codepixl.GLCraft.util.Ray;
-import net.codepixl.GLCraft.util.Raytracer;
-import net.codepixl.GLCraft.util.command.CommandExecutor;
+import net.codepixl.GLCraft.util.*;
 import net.codepixl.GLCraft.util.command.Command.Permission;
+import net.codepixl.GLCraft.util.command.CommandExecutor;
 import net.codepixl.GLCraft.world.WorldManager;
 import net.codepixl.GLCraft.world.item.Item;
 import net.codepixl.GLCraft.world.item.ItemStack;
@@ -44,6 +21,12 @@ import net.codepixl.GLCraft.world.item.ItemStick;
 import net.codepixl.GLCraft.world.item.tool.Tool;
 import net.codepixl.GLCraft.world.tile.Tile;
 import net.codepixl.GLCraft.world.tile.material.Material;
+import org.lwjgl.input.Keyboard;
+import org.lwjgl.input.Mouse;
+import org.lwjgl.opengl.GL11;
+import org.lwjgl.util.vector.Vector3f;
+
+import static org.lwjgl.opengl.GL11.*;
 
 public class EntityPlayer extends Mob implements CommandExecutor{
 	

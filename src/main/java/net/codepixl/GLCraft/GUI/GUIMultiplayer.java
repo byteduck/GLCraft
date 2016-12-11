@@ -1,7 +1,15 @@
 package net.codepixl.GLCraft.GUI;
 
-import static org.lwjgl.opengl.GL11.GL_TEXTURE_2D;
-import static org.lwjgl.opengl.GL11.glDisable;
+import net.codepixl.GLCraft.GLCraft;
+import net.codepixl.GLCraft.GUI.Elements.GUIButton;
+import net.codepixl.GLCraft.GUI.Elements.GUIScrollBox;
+import net.codepixl.GLCraft.GUI.Elements.GUITextBox;
+import net.codepixl.GLCraft.network.Client;
+import net.codepixl.GLCraft.network.packet.Packet;
+import net.codepixl.GLCraft.network.packet.PacketLANBroadcast;
+import net.codepixl.GLCraft.network.packet.PacketUtil;
+import net.codepixl.GLCraft.render.util.Tesselator;
+import net.codepixl.GLCraft.util.Constants;
 
 import java.io.IOException;
 import java.net.DatagramPacket;
@@ -11,17 +19,8 @@ import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.concurrent.Callable;
 
-import net.codepixl.GLCraft.GLCraft;
-import net.codepixl.GLCraft.GUI.Elements.GUIButton;
-import net.codepixl.GLCraft.GUI.Elements.GUIScrollBox;
-import net.codepixl.GLCraft.GUI.Elements.GUITextBox;
-import net.codepixl.GLCraft.network.Client;
-import net.codepixl.GLCraft.network.packet.Packet;
-import net.codepixl.GLCraft.network.packet.PacketLANBroadcast;
-import net.codepixl.GLCraft.network.packet.PacketUtil;
-import net.codepixl.GLCraft.util.Constants;
-import net.codepixl.GLCraft.util.LogSource;
-import net.codepixl.GLCraft.util.logging.GLogger;
+import static org.lwjgl.opengl.GL11.GL_TEXTURE_2D;
+import static org.lwjgl.opengl.GL11.glDisable;
 
 public class GUIMultiplayer extends GUIScreen{
 	
@@ -52,14 +51,14 @@ public class GUIMultiplayer extends GUIScreen{
 		
 		scrollBox = new GUIScrollBox(10);
 		scrollBox.x = 100;
-		scrollBox.y = Constants.FONT.getHeight()*2+20;
+		scrollBox.y = Tesselator.getFontHeight()*2+20;
 		scrollBox.width = Constants.getWidth()-200;
 		scrollBox.height = (int) (Constants.getHeight()*0.75f-scrollBox.y);
 		
 		recvRunnable = new RecvThread(scrollBox);
 		
 		final String tbp = "   Enter Server Address   ";
-		int tbtwidth = Constants.FONT.getWidth(tbp);
+		int tbtwidth = Tesselator.getFontWidth(tbp);
 		
 		textBox = new GUITextBox(TEXTBOXX, TEXTBOXY, tbtwidth, tbp);
 		textBox.y-=textBox.height/2;

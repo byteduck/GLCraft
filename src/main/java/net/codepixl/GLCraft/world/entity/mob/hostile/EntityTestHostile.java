@@ -1,18 +1,15 @@
 package net.codepixl.GLCraft.world.entity.mob.hostile;
 
-import org.lwjgl.opengl.GL11;
-import org.lwjgl.util.vector.Vector3f;
-
-import com.nishu.utils.Color4f;
-
 import net.codepixl.GLCraft.render.Shape;
 import net.codepixl.GLCraft.world.WorldManager;
-import net.codepixl.GLCraft.world.entity.mob.EntityPlayer;
 import net.codepixl.GLCraft.world.entity.mob.AI.AIFollowNearest;
 import net.codepixl.GLCraft.world.entity.mob.AI.AIHurtNearest;
 import net.codepixl.GLCraft.world.entity.mob.AI.AIWander;
 import net.codepixl.GLCraft.world.entity.mob.AI.pathfinding.Pathfinder;
+import net.codepixl.GLCraft.world.entity.mob.EntityPlayer;
 import net.codepixl.GLCraft.world.tile.Tile;
+import org.lwjgl.opengl.GL11;
+import org.lwjgl.util.vector.Vector3f;
 
 public class EntityTestHostile extends Hostile{
 

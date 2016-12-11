@@ -1,10 +1,9 @@
 package net.codepixl.GLCraft.world;
 
-import java.util.ArrayList;
-
+import com.nishu.utils.ShaderProgram;
 import org.lwjgl.util.vector.Vector3f;
 
-import com.nishu.utils.ShaderProgram;
+import java.util.ArrayList;
 
 public class WorldLoadJobList{
 	Chunk cChunk;

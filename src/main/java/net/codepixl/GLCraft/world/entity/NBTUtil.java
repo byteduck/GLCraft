@@ -1,18 +1,15 @@
 package net.codepixl.GLCraft.world.entity;
 
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
-import java.util.List;
-
-import org.lwjgl.util.vector.Vector3f;
-
 import com.evilco.mc.nbt.error.TagNotFoundException;
 import com.evilco.mc.nbt.error.UnexpectedTagTypeException;
 import com.evilco.mc.nbt.tag.TagCompound;
 import com.evilco.mc.nbt.tag.TagFloat;
-
 import net.codepixl.GLCraft.world.WorldManager;
-import net.codepixl.GLCraft.world.entity.tileentity.TileEntityChest;
+import org.lwjgl.util.vector.Vector3f;
+
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+import java.util.List;
 
 public class NBTUtil {
 	public static Entity readEntity(TagCompound t, WorldManager w) throws UnexpectedTagTypeException, TagNotFoundException, NoSuchMethodException, SecurityException, IllegalAccessException, IllegalArgumentException, InvocationTargetException{

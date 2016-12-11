@@ -1,36 +1,10 @@
 package net.codepixl.GLCraft.util.data.saves;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map.Entry;
-
-import javax.swing.JOptionPane;
-
-import com.sun.xml.internal.ws.encoding.soap.DeserializationException;
-import net.codepixl.GLCraft.world.WeatherState;
-import net.codepixl.GLCraft.world.WeatherType;
-import org.apache.commons.lang3.SerializationUtils;
-import org.lwjgl.util.vector.Vector3f;
-
 import com.evilco.mc.nbt.error.TagNotFoundException;
 import com.evilco.mc.nbt.stream.NbtInputStream;
 import com.evilco.mc.nbt.stream.NbtOutputStream;
-import com.evilco.mc.nbt.tag.TagByteArray;
-import com.evilco.mc.nbt.tag.TagCompound;
-import com.evilco.mc.nbt.tag.TagFloat;
-import com.evilco.mc.nbt.tag.TagInteger;
-import com.evilco.mc.nbt.tag.TagList;
-import com.evilco.mc.nbt.tag.TagLong;
-import com.evilco.mc.nbt.tag.TagString;
-
+import com.evilco.mc.nbt.tag.*;
+import com.sun.xml.internal.ws.encoding.soap.DeserializationException;
 import net.codepixl.GLCraft.GLCraft;
 import net.codepixl.GLCraft.GUI.GUIManager;
 import net.codepixl.GLCraft.GUI.GUIServerError;
@@ -40,12 +14,24 @@ import net.codepixl.GLCraft.util.FileUtil;
 import net.codepixl.GLCraft.util.LogSource;
 import net.codepixl.GLCraft.util.Vector2i;
 import net.codepixl.GLCraft.util.logging.GLogger;
+import net.codepixl.GLCraft.world.WeatherState;
+import net.codepixl.GLCraft.world.WeatherType;
 import net.codepixl.GLCraft.world.WorldManager;
 import net.codepixl.GLCraft.world.entity.Entity;
 import net.codepixl.GLCraft.world.entity.NBTUtil;
 import net.codepixl.GLCraft.world.entity.mob.EntityPlayer;
 import net.codepixl.GLCraft.world.entity.mob.EntityPlayerMP;
 import net.codepixl.GLCraft.world.item.ItemStack;
+import org.apache.commons.lang3.SerializationUtils;
+import org.lwjgl.util.vector.Vector3f;
+
+import javax.swing.*;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.util.*;
+import java.util.Map.Entry;
 
 public class SaveManager {
 	

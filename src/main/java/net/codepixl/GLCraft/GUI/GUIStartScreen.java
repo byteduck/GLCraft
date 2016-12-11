@@ -1,18 +1,18 @@
 package net.codepixl.GLCraft.GUI;
 
-import java.awt.Desktop;
-import java.io.File;
-import java.net.URI;
-import java.util.concurrent.Callable;
-
 import net.codepixl.GLCraft.GLCraft;
 import net.codepixl.GLCraft.GUI.Elements.GUIButton;
 import net.codepixl.GLCraft.GUI.Elements.GUILabel;
 import net.codepixl.GLCraft.GUI.Elements.GUILabel.Alignment;
 import net.codepixl.GLCraft.plugin.PluginManagerWindow;
 import net.codepixl.GLCraft.render.TextureManager;
-import net.codepixl.GLCraft.util.Constants;
 import net.codepixl.GLCraft.render.util.Spritesheet;
+import net.codepixl.GLCraft.util.Constants;
+
+import java.awt.*;
+import java.io.File;
+import java.net.URI;
+import java.util.concurrent.Callable;
 
 public class GUIStartScreen extends GUIScreen{
 	

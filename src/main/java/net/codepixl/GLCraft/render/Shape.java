@@ -1,13 +1,15 @@
 package net.codepixl.GLCraft.render;
 
+import com.nishu.utils.Color4f;
+import net.codepixl.GLCraft.render.util.Spritesheet;
+import net.codepixl.GLCraft.util.LogSource;
+import net.codepixl.GLCraft.util.logging.GLogger;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.util.vector.Vector3f;
 
-import com.nishu.utils.Color4f;
+import static org.lwjgl.opengl.GL11.*;
 
-import net.codepixl.GLCraft.util.LogSource;
-import net.codepixl.GLCraft.render.util.Spritesheet;
-import net.codepixl.GLCraft.util.logging.GLogger;;import static org.lwjgl.opengl.GL11.*;
+;
 
 public class Shape {
 	

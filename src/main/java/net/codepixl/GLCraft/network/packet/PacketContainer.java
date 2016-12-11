@@ -1,7 +1,5 @@
 package net.codepixl.GLCraft.network.packet;
 
-import net.codepixl.GLCraft.util.LogSource;
-import net.codepixl.GLCraft.util.logging.GLogger;
 import net.codepixl.GLCraft.world.WorldManager;
 import net.codepixl.GLCraft.world.entity.Entity;
 import net.codepixl.GLCraft.world.entity.tileentity.TileEntityContainer;

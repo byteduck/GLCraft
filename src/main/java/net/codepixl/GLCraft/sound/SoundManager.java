@@ -1,7 +1,6 @@
 package net.codepixl.GLCraft.sound;
 
 import org.lwjgl.util.vector.Vector3f;
-
 import paulscode.sound.SoundSystem;
 import paulscode.sound.SoundSystemConfig;
 import paulscode.sound.SoundSystemException;

@@ -2,8 +2,6 @@ package net.codepixl.GLCraft.world.tile;
 
 import com.nishu.utils.Color4f;
 
-import net.codepixl.GLCraft.world.WorldManager;
-
 public class TileAir extends Tile{
 	@Override
 	public Color4f getColor() {

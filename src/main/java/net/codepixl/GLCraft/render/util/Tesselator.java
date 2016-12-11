@@ -1,20 +1,19 @@
 package net.codepixl.GLCraft.render.util;
 
-import static org.lwjgl.opengl.GL11.GL_LINE_LOOP;
-import static org.lwjgl.opengl.GL11.glBegin;
-import static org.lwjgl.opengl.GL11.glEnd;
-import static org.lwjgl.opengl.GL11.glVertex2f;
-
-import org.lwjgl.opengl.GL11;
-import org.newdawn.slick.Color;
-
 import net.codepixl.GLCraft.util.Constants;
 import net.codepixl.GLCraft.util.FormattedString;
 import net.codepixl.GLCraft.util.FormattedStringSet;
-import net.codepixl.GLCraft.util.LogSource;
 import net.codepixl.GLCraft.util.logging.GLogger;
+import org.lwjgl.opengl.GL11;
+import org.newdawn.slick.Color;
+import org.newdawn.slick.TrueTypeFont;
+
+import java.awt.*;
+
+import static org.lwjgl.opengl.GL11.*;
 
 public class Tesselator{
+	private static TrueTypeFont FONT;
 	/**
 	 * Uses OpenGL Stenciling to make only the area defined visible.
 	 * Once you are done using the stencil, you must call stencilFinish().
@@ -62,8 +61,8 @@ public class Tesselator{
 	}
 	
 	public static void drawTextWithShadow(float x, float y, String text, Color color, Color shadowColor){
-		Constants.FONT.drawString(x+2, y+2, text, shadowColor);
-		Constants.FONT.drawString(x, y, text, color);
+		drawString(x+2, y+2, text, shadowColor);
+		drawString(x, y, text, color);
 	}
 
 	public static void drawTextWithShadow(float x, float y, String text) {
@@ -75,9 +74,35 @@ public class Tesselator{
 		for(FormattedString s : text.strings){
 			Color fg = s.getColor();
 			Color bg = s.getBackgroundColor();
-			Constants.FONT.drawString(cx+2, y+2, s.string, bg.multiply(new Color(1f,1f,1f,opacity)));
-			Constants.FONT.drawString(cx, y, s.string, fg.multiply(new Color(1f,1f,1f,opacity)));
-			cx+=Constants.FONT.getWidth(s.string);
+			drawString(cx+2, y+2, s.string, bg.multiply(new Color(1f,1f,1f,opacity)));
+			drawString(cx, y, s.string, fg.multiply(new Color(1f,1f,1f,opacity)));
+			cx+=Tesselator.getFontWidth(s.string);
 		}
+	}
+
+	public static void drawString(float x, float y, String s){
+		FONT.drawString(x,y,s);
+	}
+
+	public static void drawString(float x, float y, String s, Color c){
+		FONT.drawString(x,y,s,c);
+	}
+
+	public static int getFontWidth(String s){
+		return FONT.getWidth(s);
+	}
+
+	public static int getFontHeight(){
+		return FONT.getHeight();
+	}
+
+	public static int getFontHeight(String s){
+		return FONT.getHeight(s);
+	}
+
+	public static void initFont(){
+		int size = 16;
+		if(Constants.getWidth() > 2000) size = 32;
+		FONT = new TrueTypeFont(new Font("GLCraft", Font.PLAIN, size), true);
 	}
 }

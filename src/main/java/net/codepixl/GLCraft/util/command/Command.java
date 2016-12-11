@@ -1,7 +1,5 @@
 package net.codepixl.GLCraft.util.command;
 
-import net.codepixl.GLCraft.world.CentralManager;
-
 public interface Command extends CommandExecutable{
 	public String getName();
 	public Permission getPermission();

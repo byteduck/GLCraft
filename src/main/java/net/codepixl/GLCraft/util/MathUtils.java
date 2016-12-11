@@ -1,11 +1,9 @@
 package net.codepixl.GLCraft.util;
 
-import java.util.Random;
-
-import org.lwjgl.util.vector.ReadableVector3f;
+import com.nishu.utils.Color4f;
 import org.lwjgl.util.vector.Vector3f;
 
-import com.nishu.utils.Color4f;
+import java.util.Random;
 
 public class MathUtils {
 	public static float distance(Vector3f a, Vector3f b){

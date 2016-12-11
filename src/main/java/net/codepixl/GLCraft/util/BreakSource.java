@@ -1,11 +1,11 @@
 package net.codepixl.GLCraft.util;
 
-import java.io.Serializable;
-
 import net.codepixl.GLCraft.world.WorldManager;
 import net.codepixl.GLCraft.world.entity.Entity;
 import net.codepixl.GLCraft.world.entity.mob.EntityPlayer;
 import net.codepixl.GLCraft.world.entity.mob.Mob;
+
+import java.io.Serializable;
 
 public class BreakSource implements Serializable{
 	public static enum Type{

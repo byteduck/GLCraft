@@ -1,8 +1,6 @@
 package net.codepixl.GLCraft.world.tile.tileentity;
 
-import net.codepixl.GLCraft.render.RenderType;
 import net.codepixl.GLCraft.util.BreakSource;
-import net.codepixl.GLCraft.util.Utils;
 import net.codepixl.GLCraft.world.WorldManager;
 import net.codepixl.GLCraft.world.entity.mob.EntityPlayer;
 import net.codepixl.GLCraft.world.entity.tileentity.TileEntity;

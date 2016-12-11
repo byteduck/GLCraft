@@ -1,28 +1,5 @@
 package net.codepixl.GLCraft.world;
 
-import static org.lwjgl.opengl.GL11.glClearColor;
-
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
-import java.util.Queue;
-import java.util.Timer;
-import java.util.TimerTask;
-import java.util.concurrent.Callable;
-
-import net.codepixl.GLCraft.network.packet.*;
-import org.lwjgl.opengl.GL20;
-import org.lwjgl.util.vector.Vector2f;
-import org.lwjgl.util.vector.Vector3f;
-
 import com.evilco.mc.nbt.stream.NbtInputStream;
 import com.evilco.mc.nbt.stream.NbtOutputStream;
 import com.evilco.mc.nbt.tag.ITag;
@@ -30,23 +7,13 @@ import com.evilco.mc.nbt.tag.TagCompound;
 import com.nishu.utils.Shader;
 import com.nishu.utils.ShaderProgram;
 import com.nishu.utils.Time;
-
 import net.codepixl.GLCraft.GLCraft;
 import net.codepixl.GLCraft.GUI.GUIManager;
 import net.codepixl.GLCraft.GUI.GUIServerError;
 import net.codepixl.GLCraft.GUI.GUIStartScreen;
-import net.codepixl.GLCraft.util.AABB;
-import net.codepixl.GLCraft.util.BreakSource;
-import net.codepixl.GLCraft.util.Constants;
-import net.codepixl.GLCraft.util.DebugTimer;
-import net.codepixl.GLCraft.util.Frustum;
-import net.codepixl.GLCraft.util.GameTime;
-import net.codepixl.GLCraft.util.LogSource;
-import net.codepixl.GLCraft.util.MathUtils;
-import net.codepixl.GLCraft.util.OpenSimplexNoise;
+import net.codepixl.GLCraft.network.packet.*;
 import net.codepixl.GLCraft.render.util.Spritesheet;
-import net.codepixl.GLCraft.util.Vector2i;
-import net.codepixl.GLCraft.util.Vector3i;
+import net.codepixl.GLCraft.util.*;
 import net.codepixl.GLCraft.util.data.saves.Save;
 import net.codepixl.GLCraft.util.data.saves.SaveManager;
 import net.codepixl.GLCraft.util.logging.GLogger;
@@ -58,7 +25,20 @@ import net.codepixl.GLCraft.world.entity.mob.EntityPlayerMP;
 import net.codepixl.GLCraft.world.entity.tileentity.TileEntity;
 import net.codepixl.GLCraft.world.tile.Tile;
 import net.codepixl.GLCraft.world.tile.tick.TickHelper;
+import org.lwjgl.opengl.GL20;
+import org.lwjgl.util.vector.Vector2f;
+import org.lwjgl.util.vector.Vector3f;
 import org.lwjgl.util.vector.Vector4f;
+
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.util.*;
+import java.util.Map.Entry;
+import java.util.concurrent.Callable;
+
+import static org.lwjgl.opengl.GL11.glClearColor;
 
 public class WorldManager {
 	public int loop = 0;

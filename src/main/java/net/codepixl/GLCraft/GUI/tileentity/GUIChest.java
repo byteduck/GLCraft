@@ -1,13 +1,12 @@
 package net.codepixl.GLCraft.GUI.tileentity;
 
-import java.util.concurrent.Callable;
-
-import net.codepixl.GLCraft.GUI.Inventory.GUIInventoryScreen;
 import net.codepixl.GLCraft.GUI.Inventory.Elements.GUISlot;
+import net.codepixl.GLCraft.GUI.Inventory.GUIInventoryScreen;
 import net.codepixl.GLCraft.util.Constants;
-import net.codepixl.GLCraft.util.logging.GLogger;
 import net.codepixl.GLCraft.world.entity.mob.EntityPlayer;
 import net.codepixl.GLCraft.world.entity.tileentity.TileEntityChest;
+
+import java.util.concurrent.Callable;
 
 public class GUIChest extends GUIInventoryScreen{
 	

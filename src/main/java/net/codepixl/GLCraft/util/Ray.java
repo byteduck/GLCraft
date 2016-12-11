@@ -1,8 +1,6 @@
 package net.codepixl.GLCraft.util;
 
-import net.codepixl.GLCraft.util.logging.GLogger;
 import org.lwjgl.opengl.GL11;
-import org.lwjgl.util.vector.Vector;
 import org.lwjgl.util.vector.Vector3f;
 
 import java.util.ArrayList;

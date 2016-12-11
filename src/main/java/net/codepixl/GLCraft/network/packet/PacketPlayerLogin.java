@@ -1,9 +1,9 @@
 package net.codepixl.GLCraft.network.packet;
 
-import java.util.Collection;
-
 import net.codepixl.GLCraft.GLCraft;
 import net.codepixl.GLCraft.plugin.LoadedPlugin;
+
+import java.util.Collection;
 
 public class PacketPlayerLogin extends Packet{
 	

@@ -1,28 +1,21 @@
 package net.codepixl.GLCraft.world.item;
 
-import static org.lwjgl.opengl.GL11.GL_QUADS;
-import static org.lwjgl.opengl.GL11.glBegin;
-import static org.lwjgl.opengl.GL11.glEnd;
-import static org.lwjgl.opengl.GL11.glScalef;
-import static org.lwjgl.opengl.GL11.glTranslatef;
-
-import org.lwjgl.opengl.GL11;
-import org.newdawn.slick.Color;
-import org.newdawn.slick.opengl.TextureImpl;
-
 import com.evilco.mc.nbt.error.TagNotFoundException;
 import com.evilco.mc.nbt.error.UnexpectedTagTypeException;
 import com.evilco.mc.nbt.tag.TagByte;
 import com.evilco.mc.nbt.tag.TagCompound;
 import com.nishu.utils.Color4f;
-
 import net.codepixl.GLCraft.render.RenderType;
 import net.codepixl.GLCraft.render.Shape;
 import net.codepixl.GLCraft.render.TextureManager;
-import net.codepixl.GLCraft.render.util.Tesselator;
-import net.codepixl.GLCraft.util.Constants;
 import net.codepixl.GLCraft.render.util.Spritesheet;
+import net.codepixl.GLCraft.render.util.Tesselator;
 import net.codepixl.GLCraft.world.tile.Tile;
+import org.lwjgl.opengl.GL11;
+import org.newdawn.slick.Color;
+import org.newdawn.slick.opengl.TextureImpl;
+
+import static org.lwjgl.opengl.GL11.*;
 
 public class ItemStack{
 	private Tile tile;
@@ -313,9 +306,9 @@ public class ItemStack{
 			GL11.glPopMatrix();
 			if(text){
 				if(this.count > 1)
-					Tesselator.drawTextWithShadow(x+size*0.4f-Constants.FONT.getWidth(Integer.toString(this.count)), y, Integer.toString(this.count));
+					Tesselator.drawTextWithShadow(x+size*0.4f-Tesselator.getFontWidth(Integer.toString(this.count)), y, Integer.toString(this.count));
 				else if(this.count < 1)
-					Tesselator.drawTextWithShadow(x+size*0.4f-Constants.FONT.getWidth(Integer.toString(this.count)), y, Integer.toString(this.count), Color.red, Color.darkGray);
+					Tesselator.drawTextWithShadow(x+size*0.4f-Tesselator.getFontWidth(Integer.toString(this.count)), y, Integer.toString(this.count), Color.red, Color.darkGray);
 				TextureImpl.unbind();
 			}
 		}

@@ -1,7 +1,5 @@
 package net.codepixl.GLCraft.render;
 
-import net.codepixl.GLCraft.GLCraft;
-import net.codepixl.GLCraft.plugin.LoadedPlugin;
 import net.codepixl.GLCraft.plugin.Plugin;
 
 public class PluginTexture {

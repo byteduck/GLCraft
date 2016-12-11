@@ -1,14 +1,14 @@
 package net.codepixl.GLCraft.GUI;
 
-import java.util.concurrent.Callable;
-
 import net.codepixl.GLCraft.GLCraft;
 import net.codepixl.GLCraft.GUI.Elements.GUIButton;
 import net.codepixl.GLCraft.GUI.Elements.GUISlider;
 import net.codepixl.GLCraft.GUI.Elements.GUITextBox;
 import net.codepixl.GLCraft.render.texturepack.TexturePackManagerWindow;
-import net.codepixl.GLCraft.util.SettingsManager;
 import net.codepixl.GLCraft.util.Constants;
+import net.codepixl.GLCraft.util.SettingsManager;
+
+import java.util.concurrent.Callable;
 
 public class GUISettings extends GUIScreen{
 	

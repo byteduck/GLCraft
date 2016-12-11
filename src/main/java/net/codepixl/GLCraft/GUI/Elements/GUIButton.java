@@ -1,27 +1,16 @@
 package net.codepixl.GLCraft.GUI.Elements;
 
-import static org.lwjgl.opengl.GL11.GL_QUADS;
-import static org.lwjgl.opengl.GL11.GL_TEXTURE_2D;
-import static org.lwjgl.opengl.GL11.glBegin;
-import static org.lwjgl.opengl.GL11.glColor3f;
-import static org.lwjgl.opengl.GL11.glColor4f;
-import static org.lwjgl.opengl.GL11.glEnable;
-import static org.lwjgl.opengl.GL11.glEnd;
-import static org.lwjgl.opengl.GL11.glVertex2f;
-import static org.lwjgl.opengl.GL11.GL_LINE_LOOP;
-
-import java.util.concurrent.Callable;
-
+import com.nishu.utils.Color4f;
+import net.codepixl.GLCraft.render.util.Tesselator;
+import net.codepixl.GLCraft.sound.SoundManager;
+import net.codepixl.GLCraft.util.Constants;
 import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.GL11;
 import org.newdawn.slick.opengl.TextureImpl;
 
-import com.nishu.utils.Color4f;
+import java.util.concurrent.Callable;
 
-import net.codepixl.GLCraft.GUI.GUIScreen;
-import net.codepixl.GLCraft.render.util.Tesselator;
-import net.codepixl.GLCraft.sound.SoundManager;
-import net.codepixl.GLCraft.util.Constants;
+import static org.lwjgl.opengl.GL11.*;
 
 public class GUIButton extends GUIElement{
 
@@ -50,7 +39,7 @@ public class GUIButton extends GUIElement{
 		this.pressedColor = BTNPRESSEDCOLOR;
 		this.textColor = BTNTEXTCOLOR;
 		this.disabledColor = BTNDISABLEDCOLOR;
-		this.width = Constants.FONT.getWidth(text) + padding*2;
+		this.width = Tesselator.getFontWidth(text) + padding*2;
 		this.action = action;
 		this.enabled = true;
 	}
@@ -66,7 +55,7 @@ public class GUIButton extends GUIElement{
 		this.pressedColor = BTNPRESSEDCOLOR;
 		this.textColor = BTNTEXTCOLOR;
 		this.disabledColor = BTNDISABLEDCOLOR;
-		this.width = Constants.FONT.getWidth(text) + padding*2;
+		this.width = Tesselator.getFontWidth(text) + padding*2;
 		this.action = action;
 		this.enabled = true;
 	}
@@ -82,7 +71,7 @@ public class GUIButton extends GUIElement{
 		this.pressedColor = pressedColor;
 		this.textColor = textColor;
 		this.disabledColor = disabledColor;
-		this.width = Constants.FONT.getWidth(text) + padding*2;
+		this.width = Tesselator.getFontWidth(text) + padding*2;
 		this.action = action;
 		this.enabled = true;
 	}
@@ -97,7 +86,7 @@ public class GUIButton extends GUIElement{
 		this.hoverColor = hoverColor;
 		this.pressedColor = pressedColor;
 		this.textColor = textColor;
-		this.width = Constants.FONT.getWidth(text) + padding*2;
+		this.width = Tesselator.getFontWidth(text) + padding*2;
 		this.action = action;
 		this.enabled = true;
 	}
@@ -124,7 +113,7 @@ public class GUIButton extends GUIElement{
 		Tesselator.drawOutline(x-width/2, y-height/2, width, height, 1.5f);
 		glEnable(GL_TEXTURE_2D);
 		glColor4f(textColor.r,textColor.g,textColor.b,textColor.a);
-		Constants.FONT.drawString(x-Constants.FONT.getWidth(text)/2, y-Constants.FONT.getHeight(text)/2, text);
+		Tesselator.drawString(x-Tesselator.getFontWidth(text)/2, y-Tesselator.getFontHeight(text)/2, text);
 		TextureImpl.unbind();
 	}
 
@@ -192,7 +181,7 @@ public class GUIButton extends GUIElement{
 	
 	public void setText(String text){
 		this.text = text;
-		this.width = Constants.FONT.getWidth(text)+padding*2;
+		this.width = Tesselator.getFontWidth(text)+padding*2;
 	}
 	
 }

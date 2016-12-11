@@ -18,64 +18,9 @@
 
 package net.codepixl.GLCraft;
 
-import static org.lwjgl.opengl.GL11.GL_BACK;
-import static org.lwjgl.opengl.GL11.GL_BLEND;
-import static org.lwjgl.opengl.GL11.GL_COLOR_BUFFER_BIT;
-import static org.lwjgl.opengl.GL11.GL_CULL_FACE;
-import static org.lwjgl.opengl.GL11.GL_DEPTH_BUFFER_BIT;
-import static org.lwjgl.opengl.GL11.GL_DEPTH_TEST;
-import static org.lwjgl.opengl.GL11.GL_LIGHTING;
-import static org.lwjgl.opengl.GL11.GL_LINE_SMOOTH;
-import static org.lwjgl.opengl.GL11.GL_LINE_SMOOTH_HINT;
-import static org.lwjgl.opengl.GL11.GL_MODELVIEW;
-import static org.lwjgl.opengl.GL11.GL_MODULATE;
-import static org.lwjgl.opengl.GL11.GL_NICEST;
-import static org.lwjgl.opengl.GL11.GL_ONE_MINUS_SRC_ALPHA;
-import static org.lwjgl.opengl.GL11.GL_PERSPECTIVE_CORRECTION_HINT;
-import static org.lwjgl.opengl.GL11.GL_PROJECTION;
-import static org.lwjgl.opengl.GL11.GL_SRC_ALPHA;
-import static org.lwjgl.opengl.GL11.GL_TEXTURE_ENV;
-import static org.lwjgl.opengl.GL11.GL_TEXTURE_ENV_MODE;
-import static org.lwjgl.opengl.GL11.glBlendFunc;
-import static org.lwjgl.opengl.GL11.glClear;
-import static org.lwjgl.opengl.GL11.glClearDepth;
-import static org.lwjgl.opengl.GL11.glCullFace;
-import static org.lwjgl.opengl.GL11.glDisable;
-import static org.lwjgl.opengl.GL11.glEnable;
-import static org.lwjgl.opengl.GL11.glHint;
-import static org.lwjgl.opengl.GL11.glLoadIdentity;
-import static org.lwjgl.opengl.GL11.glMatrixMode;
-import static org.lwjgl.opengl.GL11.glOrtho;
-import static org.lwjgl.opengl.GL11.glTexEnvi;
-import static org.lwjgl.opengl.GL11.glViewport;
-import static org.lwjgl.util.glu.GLU.gluPerspective;
-
-import java.awt.Font;
-import java.awt.FontFormatException;
-import java.awt.GraphicsEnvironment;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.PrintStream;
-import java.lang.Thread.UncaughtExceptionHandler;
-import java.net.URL;
-import java.nio.ByteBuffer;
-import java.nio.file.FileSystemException;
-import java.nio.file.Files;
-
-import org.lwjgl.LWJGLException;
-import org.lwjgl.opengl.Display;
-import org.lwjgl.opengl.DisplayMode;
-import org.lwjgl.opengl.GL11;
-import org.lwjgl.opengl.PixelFormat;
-import org.newdawn.slick.opengl.PNGDecoder;
-import org.newdawn.slick.opengl.TextureImpl;
-
 import com.nishu.utils.Screen;
 import com.nishu.utils.Time;
 import com.nishu.utils.Window;
-
 import net.codepixl.GLCraft.GUI.GUIManager;
 import net.codepixl.GLCraft.GUI.GUIStartScreen;
 import net.codepixl.GLCraft.network.Client;
@@ -84,10 +29,11 @@ import net.codepixl.GLCraft.plugin.Plugin;
 import net.codepixl.GLCraft.plugin.PluginManager;
 import net.codepixl.GLCraft.render.TextureManager;
 import net.codepixl.GLCraft.render.texturepack.TexturePackManager;
-import net.codepixl.GLCraft.util.SettingsManager;
+import net.codepixl.GLCraft.render.util.Tesselator;
 import net.codepixl.GLCraft.util.Constants;
 import net.codepixl.GLCraft.util.DebugTimer;
 import net.codepixl.GLCraft.util.LogSource;
+import net.codepixl.GLCraft.util.SettingsManager;
 import net.codepixl.GLCraft.util.logging.CrashHandlerWindow;
 import net.codepixl.GLCraft.util.logging.GLogger;
 import net.codepixl.GLCraft.util.logging.TeeOutputStream;
@@ -96,6 +42,24 @@ import net.codepixl.GLCraft.world.WorldManager;
 import net.codepixl.GLCraft.world.entity.EntityManager;
 import net.codepixl.GLCraft.world.item.Item;
 import net.codepixl.GLCraft.world.tile.Tile;
+import org.lwjgl.LWJGLException;
+import org.lwjgl.opengl.Display;
+import org.lwjgl.opengl.DisplayMode;
+import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.PixelFormat;
+import org.newdawn.slick.opengl.PNGDecoder;
+import org.newdawn.slick.opengl.TextureImpl;
+
+import java.awt.*;
+import java.io.*;
+import java.lang.Thread.UncaughtExceptionHandler;
+import java.net.URL;
+import java.nio.ByteBuffer;
+import java.nio.file.FileSystemException;
+import java.nio.file.Files;
+
+import static org.lwjgl.opengl.GL11.*;
+import static org.lwjgl.util.glu.GLU.gluPerspective;
 
 public class GLCraft extends Screen{
 	private CentralManager clientCentralManager, serverCentralManager;
@@ -373,9 +337,9 @@ public class GLCraft extends Screen{
 		if(!getGLCraft().isServer){
 			GL11.glClear(GL11.GL_COLOR_BUFFER_BIT);
 			String ltext = "GLCraft is loading...";
-			Constants.FONT.drawString(Constants.getWidth()/2-Constants.FONT.getWidth(ltext)/2,30, ltext);
-			Constants.FONT.drawString(Constants.getWidth()/2-Constants.FONT.getWidth(line1)/2,Constants.getHeight()/2-Constants.FONT.getHeight(line1), line1);
-			Constants.FONT.drawString(Constants.getWidth()/2-Constants.FONT.getWidth(line2)/2,Constants.getHeight()/2+Constants.FONT.getHeight(line2), line2);
+			Tesselator.drawString(Constants.getWidth()/2-Tesselator.getFontWidth(ltext)/2,30, ltext);
+			Tesselator.drawString(Constants.getWidth()/2-Tesselator.getFontWidth(line1)/2,Constants.getHeight()/2-Tesselator.getFontHeight(line1), line1);
+			Tesselator.drawString(Constants.getWidth()/2-Tesselator.getFontWidth(line2)/2,Constants.getHeight()/2+Tesselator.getFontHeight(line2), line2);
 			TextureImpl.unbind();
 			Display.update();
 		}

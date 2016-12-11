@@ -1,17 +1,15 @@
 package net.codepixl.GLCraft.world.entity;
 
-import java.util.Iterator;
-
-import org.lwjgl.util.vector.Vector3f;
-
 import com.nishu.utils.Time;
-
 import net.codepixl.GLCraft.util.AABB;
 import net.codepixl.GLCraft.util.MathUtils;
 import net.codepixl.GLCraft.world.WorldManager;
 import net.codepixl.GLCraft.world.entity.mob.EntityPlayer;
 import net.codepixl.GLCraft.world.entity.mob.EntityPlayerMP;
 import net.codepixl.GLCraft.world.tile.Tile;
+import org.lwjgl.util.vector.Vector3f;
+
+import java.util.Iterator;
 
 public class EntitySolid extends Entity{
 	

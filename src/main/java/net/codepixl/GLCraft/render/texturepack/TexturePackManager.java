@@ -1,19 +1,11 @@
 package net.codepixl.GLCraft.render.texturepack;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.IOException;
-import java.io.PrintWriter;
-import java.io.UnsupportedEncodingException;
-
-import javax.swing.JOptionPane;
-
 import net.codepixl.GLCraft.render.TextureManager;
 import net.codepixl.GLCraft.util.Constants;
 import net.lingala.zip4j.core.ZipFile;
 import net.lingala.zip4j.exception.ZipException;
+
+import java.io.*;
 
 public class TexturePackManager {
 	public static void setTexturePack(String name) throws ZipException, FileNotFoundException, UnsupportedEncodingException{

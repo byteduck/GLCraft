@@ -1,9 +1,8 @@
 package net.codepixl.GLCraft.world.entity.mob.AI;
 
-import org.lwjgl.util.vector.Vector3f;
-
 import net.codepixl.GLCraft.util.MathUtils;
 import net.codepixl.GLCraft.world.entity.mob.Mob;
+import org.lwjgl.util.vector.Vector3f;
 
 public class AIPathfindAway extends AI{
 	

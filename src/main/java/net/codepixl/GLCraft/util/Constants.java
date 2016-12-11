@@ -1,14 +1,12 @@
 package net.codepixl.GLCraft.util;
 
-import java.awt.Font;
-import java.util.Arrays;
-import java.util.Random;
-
+import net.codepixl.GLCraft.render.util.Tesselator;
+import net.codepixl.GLCraft.util.logging.GLogger;
 import org.lwjgl.opengl.Display;
 import org.lwjgl.util.vector.Vector3f;
-import org.newdawn.slick.TrueTypeFont;
 
-import net.codepixl.GLCraft.util.logging.GLogger;
+import java.util.Arrays;
+import java.util.Random;
 
 public class Constants {
 	public static Random rand = new Random();
@@ -18,7 +16,6 @@ public class Constants {
 	public static final int CHUNKSIZE = 16;
 	public static final float textSize = 0.5f;
 	public static boolean doneGenerating = false;
-	public static TrueTypeFont FONT;
 	public static final int START_SCREEN = 0;
 	public static final int GAME = 1;
 	public static final int SERVER = 2;
@@ -115,7 +112,7 @@ public class Constants {
 	}
 	
 	public static void initGL(){
-		FONT = new TrueTypeFont(new Font("GLCraft", Font.PLAIN, 16), true);
+		Tesselator.initFont();
 	}
 	
 	public static void init(boolean dedicatedServer){

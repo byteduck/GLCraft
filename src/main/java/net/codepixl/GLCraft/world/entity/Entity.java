@@ -1,32 +1,23 @@
 package net.codepixl.GLCraft.world.entity;
 
-import net.codepixl.GLCraft.render.Shape;
-import org.lwjgl.opengl.GL11;
-import org.lwjgl.util.vector.Vector3f;
-
 import com.evilco.mc.nbt.error.TagNotFoundException;
 import com.evilco.mc.nbt.error.UnexpectedTagTypeException;
-import com.evilco.mc.nbt.tag.TagCompound;
-import com.evilco.mc.nbt.tag.TagFloat;
-import com.evilco.mc.nbt.tag.TagList;
-import com.evilco.mc.nbt.tag.TagLong;
-import com.evilco.mc.nbt.tag.TagString;
+import com.evilco.mc.nbt.tag.*;
 import com.nishu.utils.Color4f;
 import com.nishu.utils.Time;
-
 import net.codepixl.GLCraft.network.packet.PacketPlayerPos;
 import net.codepixl.GLCraft.network.packet.PacketUpdateEntity;
 import net.codepixl.GLCraft.util.EnumFacing;
 import net.codepixl.GLCraft.util.GameObj;
-import net.codepixl.GLCraft.util.LogSource;
 import net.codepixl.GLCraft.util.MathUtils;
-import net.codepixl.GLCraft.util.logging.GLogger;
 import net.codepixl.GLCraft.world.WorldManager;
 import net.codepixl.GLCraft.world.entity.mob.EntityPlayer;
 import net.codepixl.GLCraft.world.tile.Tile;
 import net.codepixl.GLCraft.world.tile.TileFire;
 import net.codepixl.GLCraft.world.tile.TileLava;
 import net.codepixl.GLCraft.world.tile.TileWater;
+import org.lwjgl.opengl.GL11;
+import org.lwjgl.util.vector.Vector3f;
 
 public class Entity implements GameObj{
 	protected Vector3f pos, rot;

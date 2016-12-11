@@ -1,22 +1,14 @@
 package net.codepixl.GLCraft.util.data.saves;
 
-import java.awt.BorderLayout;
-import java.awt.Dimension;
-import java.awt.GridLayout;
+import net.codepixl.GLCraft.util.Constants;
+import net.codepixl.GLCraft.world.WorldManager;
+
+import javax.swing.*;
+import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.File;
 import java.util.ArrayList;
-
-import javax.swing.JButton;
-import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.SwingConstants;
-
-import net.codepixl.GLCraft.util.Constants;
-import net.codepixl.GLCraft.world.WorldManager;
 
 public class SaveLoadWindow extends JFrame{
 	WorldManager worldManager;

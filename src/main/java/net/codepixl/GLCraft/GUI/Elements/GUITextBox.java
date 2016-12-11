@@ -1,21 +1,17 @@
 package net.codepixl.GLCraft.GUI.Elements;
 
-import java.util.concurrent.Callable;
-
+import com.nishu.utils.Color4f;
+import com.nishu.utils.Time;
+import net.codepixl.GLCraft.GUI.GUIManager;
+import net.codepixl.GLCraft.render.Shape;
+import net.codepixl.GLCraft.render.util.Tesselator;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.GL11;
 import org.newdawn.slick.Color;
 import org.newdawn.slick.opengl.TextureImpl;
 
-import com.nishu.utils.Color4f;
-import com.nishu.utils.Time;
-
-import net.codepixl.GLCraft.GUI.GUIManager;
-import net.codepixl.GLCraft.GUI.GUIScreen;
-import net.codepixl.GLCraft.render.Shape;
-import net.codepixl.GLCraft.render.util.Tesselator;
-import net.codepixl.GLCraft.util.Constants;
+import java.util.concurrent.Callable;
 
 public class GUITextBox extends GUIElement{
 	
@@ -47,7 +43,7 @@ public class GUITextBox extends GUIElement{
 		this.placeholder = placeholder;
 		this.length = length;
 		this.width = length + 20;
-		this.height = Constants.FONT.getHeight() + 10;
+		this.height = Tesselator.getFontHeight() + 10;
 		this.text = "";
 	}
 	
@@ -71,12 +67,12 @@ public class GUITextBox extends GUIElement{
 		GL11.glEnable(GL11.GL_TEXTURE_2D);
 		
 		if(!focused && text.equals("")){
-			Constants.FONT.drawString(10, 5, placeholder, new Color(placeholderTextColor.r, placeholderTextColor.g, placeholderTextColor.b));
+			Tesselator.drawString(10, 5, placeholder, new Color(placeholderTextColor.r, placeholderTextColor.g, placeholderTextColor.b));
 		}else{
 			GL11.glTranslatef(-trans, 0, 0);
 			Tesselator.drawTextWithShadow(10, 5, text, new Color(textColor.r, textColor.g, textColor.b), Color.darkGray);
 			if(cblink > 0.5f && focused)
-				Tesselator.drawTextWithShadow(10+Constants.FONT.getWidth(text.substring(0, index)), 7, "_");
+				Tesselator.drawTextWithShadow(10+Tesselator.getFontWidth(text.substring(0, index)), 7, "_");
 		}
 		TextureImpl.unbind();
 		
@@ -185,7 +181,7 @@ public class GUITextBox extends GUIElement{
 		}
 		
 		String tindex = text.substring(0,index);
-		int tindexWidth = Constants.FONT.getWidth(tindex);
+		int tindexWidth = Tesselator.getFontWidth(tindex);
 		if(tindexWidth > width-20){
 			trans = tindexWidth-width+20;
 		}else{

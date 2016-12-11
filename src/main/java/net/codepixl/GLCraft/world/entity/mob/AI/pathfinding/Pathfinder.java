@@ -1,14 +1,13 @@
 package net.codepixl.GLCraft.world.entity.mob.AI.pathfinding;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.PriorityQueue;
-
+import net.codepixl.GLCraft.util.Vector3i;
+import net.codepixl.GLCraft.world.WorldManager;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.util.vector.Vector3f;
 
-import net.codepixl.GLCraft.util.Vector3i;
-import net.codepixl.GLCraft.world.WorldManager;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.PriorityQueue;
 
 public class Pathfinder{
 	public PriorityQueue<PathfindingNode> frontier = new PriorityQueue<PathfindingNode>(1, new PathfindingNodeComparator());

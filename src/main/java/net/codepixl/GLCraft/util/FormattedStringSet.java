@@ -1,8 +1,8 @@
 package net.codepixl.GLCraft.util;
 
-import java.util.ArrayList;
-
 import org.newdawn.slick.Color;
+
+import java.util.ArrayList;
 
 public class FormattedStringSet{
 	public final FormattedString[] strings;

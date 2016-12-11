@@ -1,19 +1,17 @@
 package net.codepixl.GLCraft.GUI.Inventory.Elements;
 
-import java.util.concurrent.Callable;
-
-import org.lwjgl.input.Mouse;
-import org.lwjgl.opengl.GL11;
-
 import com.nishu.utils.Color4f;
-
 import net.codepixl.GLCraft.GUI.Elements.GUIElement;
 import net.codepixl.GLCraft.render.Shape;
 import net.codepixl.GLCraft.render.TextureManager;
-import net.codepixl.GLCraft.util.Constants;
 import net.codepixl.GLCraft.render.util.Spritesheet;
+import net.codepixl.GLCraft.util.Constants;
 import net.codepixl.GLCraft.world.entity.mob.EntityPlayer;
 import net.codepixl.GLCraft.world.item.ItemStack;
+import org.lwjgl.input.Mouse;
+import org.lwjgl.opengl.GL11;
+
+import java.util.concurrent.Callable;
 
 public class GUISlot extends GUIElement{
 	

@@ -1,11 +1,11 @@
 package net.codepixl.GLCraft.world;
 
-import java.util.ArrayList;
-
 import net.codepixl.GLCraft.util.Constants;
 import net.codepixl.GLCraft.util.LogSource;
 import net.codepixl.GLCraft.util.PerlinNoise;
 import net.codepixl.GLCraft.util.logging.GLogger;
+
+import java.util.ArrayList;
 
 public class Generator implements Runnable{
 	

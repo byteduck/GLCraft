@@ -1,36 +1,21 @@
 package net.codepixl.GLCraft.render.texturepack;
 
-import java.awt.BorderLayout;
-import java.awt.Color;
-import java.awt.GridLayout;
-import java.awt.Image;
-import java.awt.Toolkit;
+import net.codepixl.GLCraft.util.Constants;
+import net.lingala.zip4j.exception.ZipException;
+
+import javax.imageio.ImageIO;
+import javax.swing.*;
+import java.awt.*;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.UnsupportedEncodingException;
+import java.io.*;
 import java.nio.file.Files;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.zip.ZipFile;
-
-import javax.imageio.ImageIO;
-import javax.swing.BorderFactory;
-import javax.swing.ImageIcon;
-import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.SwingConstants;
-
-import net.codepixl.GLCraft.util.Constants;
-import net.lingala.zip4j.exception.ZipException;
 
 public class TexturePackManagerWindow extends JFrame {
 	BufferedImage ogIcon;

@@ -1,15 +1,14 @@
 package net.codepixl.GLCraft.world.tile;
 
-import java.util.Random;
-
 import com.nishu.utils.Color4f;
-
 import net.codepixl.GLCraft.render.RenderType;
 import net.codepixl.GLCraft.util.BreakSource;
 import net.codepixl.GLCraft.world.WorldManager;
 import net.codepixl.GLCraft.world.entity.EntityItem;
 import net.codepixl.GLCraft.world.item.Item;
 import net.codepixl.GLCraft.world.item.ItemStack;
+
+import java.util.Random;
 
 public class TileTallGrass extends Tile {
 

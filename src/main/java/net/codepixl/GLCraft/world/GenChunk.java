@@ -1,9 +1,8 @@
 package net.codepixl.GLCraft.world;
 
-import org.lwjgl.util.vector.Vector3f;
-
 import net.codepixl.GLCraft.util.Constants;
 import net.codepixl.GLCraft.world.tile.Tile;
+import org.lwjgl.util.vector.Vector3f;
 
 public class GenChunk {
 	

@@ -6,11 +6,8 @@ import com.evilco.mc.nbt.tag.TagByte;
 import com.evilco.mc.nbt.tag.TagCompound;
 import com.evilco.mc.nbt.tag.TagFloat;
 import com.nishu.utils.Time;
-
 import net.codepixl.GLCraft.GUI.tileentity.GUIFurnace;
 import net.codepixl.GLCraft.network.packet.PacketFurnace;
-import net.codepixl.GLCraft.util.LogSource;
-import net.codepixl.GLCraft.util.logging.GLogger;
 import net.codepixl.GLCraft.world.WorldManager;
 import net.codepixl.GLCraft.world.crafting.CraftingManager;
 import net.codepixl.GLCraft.world.crafting.FurnaceFuel;

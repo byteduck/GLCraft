@@ -1,30 +1,21 @@
 package net.codepixl.GLCraft.network;
 
-import java.io.IOException;
-import java.net.DatagramPacket;
-import java.net.DatagramSocket;
-import java.net.InetAddress;
-import java.net.SocketException;
-import java.net.SocketTimeoutException;
-
-import net.codepixl.GLCraft.network.packet.*;
-import org.lwjgl.util.vector.Vector3f;
-
 import com.nishu.utils.Time;
-
 import net.codepixl.GLCraft.GLCraft;
 import net.codepixl.GLCraft.GUI.GUIManager;
-import net.codepixl.GLCraft.network.Server.InetAddressAndPort;
-import net.codepixl.GLCraft.network.Server.ServerClient;
+import net.codepixl.GLCraft.network.packet.*;
 import net.codepixl.GLCraft.util.Constants;
 import net.codepixl.GLCraft.util.LogSource;
 import net.codepixl.GLCraft.util.Vector2i;
-import net.codepixl.GLCraft.util.data.saves.SaveManager;
 import net.codepixl.GLCraft.util.logging.GLogger;
 import net.codepixl.GLCraft.world.WorldManager;
 import net.codepixl.GLCraft.world.entity.Entity;
 import net.codepixl.GLCraft.world.entity.mob.EntityPlayerMP;
 import net.codepixl.GLCraft.world.entity.mob.Mob;
+import org.lwjgl.util.vector.Vector3f;
+
+import java.io.IOException;
+import java.net.*;
 
 public class Client{
 	

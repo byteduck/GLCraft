@@ -1,6 +1,19 @@
 package net.codepixl.GLCraft.render;
 
-import java.awt.Graphics;
+import net.codepixl.GLCraft.GLCraft;
+import net.codepixl.GLCraft.plugin.LoadedPlugin;
+import net.codepixl.GLCraft.plugin.Plugin;
+import net.codepixl.GLCraft.render.util.Spritesheet;
+import net.codepixl.GLCraft.render.util.Texture;
+import net.codepixl.GLCraft.util.Constants;
+import net.codepixl.GLCraft.util.LogSource;
+import net.codepixl.GLCraft.util.logging.GLogger;
+import net.codepixl.GLCraft.world.item.Item;
+import net.codepixl.GLCraft.world.item.ItemStack;
+import net.codepixl.GLCraft.world.tile.Tile;
+
+import javax.imageio.ImageIO;
+import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
@@ -8,20 +21,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
-
-import javax.imageio.ImageIO;
-
-import net.codepixl.GLCraft.GLCraft;
-import net.codepixl.GLCraft.plugin.LoadedPlugin;
-import net.codepixl.GLCraft.plugin.Plugin;
-import net.codepixl.GLCraft.util.Constants;
-import net.codepixl.GLCraft.util.LogSource;
-import net.codepixl.GLCraft.render.util.Spritesheet;
-import net.codepixl.GLCraft.render.util.Texture;
-import net.codepixl.GLCraft.util.logging.GLogger;
-import net.codepixl.GLCraft.world.item.Item;
-import net.codepixl.GLCraft.world.item.ItemStack;
-import net.codepixl.GLCraft.world.tile.Tile;
 
 public class TextureManager {
 	private static HashMap<String,String> textures = new HashMap<String,String>();

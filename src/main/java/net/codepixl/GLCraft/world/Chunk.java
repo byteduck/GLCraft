@@ -1,40 +1,31 @@
 package net.codepixl.GLCraft.world;
 
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.Queue;
-
-import net.codepixl.GLCraft.GLCraft;
-import org.lwjgl.opengl.GL11;
-import org.lwjgl.util.vector.Vector3f;
-
 import com.evilco.mc.nbt.tag.TagByteArray;
 import com.evilco.mc.nbt.tag.TagCompound;
 import com.evilco.mc.nbt.tag.TagFloat;
 import com.nishu.utils.Color4f;
 import com.nishu.utils.ShaderProgram;
-
+import net.codepixl.GLCraft.GLCraft;
 import net.codepixl.GLCraft.network.packet.PacketSendChunks;
 import net.codepixl.GLCraft.render.RenderType;
 import net.codepixl.GLCraft.render.Shape;
 import net.codepixl.GLCraft.util.BreakSource;
 import net.codepixl.GLCraft.util.Constants;
-import net.codepixl.GLCraft.util.EnumFacing;
-import net.codepixl.GLCraft.util.LogSource;
-import net.codepixl.GLCraft.util.Utils;
 import net.codepixl.GLCraft.util.Vector2i;
 import net.codepixl.GLCraft.util.Vector3i;
-import net.codepixl.GLCraft.util.logging.GLogger;
 import net.codepixl.GLCraft.world.WorldManager.Light;
 import net.codepixl.GLCraft.world.WorldManager.LightRemoval;
 import net.codepixl.GLCraft.world.tile.Tile;
 import net.codepixl.GLCraft.world.tile.ore.TileOre;
 import net.codepixl.GLCraft.world.tile.tick.TickHelper;
-import org.lwjgl.util.vector.Vector4f;
+import org.lwjgl.opengl.GL11;
+import org.lwjgl.util.vector.Vector3f;
+
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.Iterator;
 
 import static org.lwjgl.opengl.GL11.*;
 

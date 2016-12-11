@@ -1,11 +1,10 @@
 package net.codepixl.GLCraft.network.packet;
 
-import java.io.IOException;
-import java.io.Serializable;
-
+import net.codepixl.GLCraft.network.Compressor;
 import org.apache.commons.lang3.SerializationUtils;
 
-import net.codepixl.GLCraft.network.Compressor;
+import java.io.IOException;
+import java.io.Serializable;
 
 public class Packet implements Serializable{
 	public byte[] getBytes() throws IOException{

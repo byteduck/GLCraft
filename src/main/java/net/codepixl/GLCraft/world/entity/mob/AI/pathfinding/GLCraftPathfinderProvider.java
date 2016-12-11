@@ -1,12 +1,11 @@
 package net.codepixl.GLCraft.world.entity.mob.AI.pathfinding;
 
-import java.util.ArrayList;
-
-import org.lwjgl.util.vector.Vector3f;
-
 import net.codepixl.GLCraft.util.Vector3i;
 import net.codepixl.GLCraft.world.WorldManager;
 import net.codepixl.GLCraft.world.tile.Tile;
+import org.lwjgl.util.vector.Vector3f;
+
+import java.util.ArrayList;
 
 public class GLCraftPathfinderProvider implements PathfinderProvider<Vector3i>{
 	

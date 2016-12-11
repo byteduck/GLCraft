@@ -1,11 +1,10 @@
 package net.codepixl.GLCraft.world.entity.mob.AI;
 
-import java.util.List;
-
-import org.lwjgl.util.vector.Vector3f;
-
 import net.codepixl.GLCraft.world.entity.Entity;
 import net.codepixl.GLCraft.world.entity.mob.Mob;
+import org.lwjgl.util.vector.Vector3f;
+
+import java.util.List;
 
 public class AIRunAway extends AIPathfindAway{
 

@@ -1,23 +1,13 @@
 package net.codepixl.GLCraft.util;
 
-import static org.lwjgl.opengl.GL11.GL_QUADS;
-import static org.lwjgl.opengl.GL11.glBegin;
-import static org.lwjgl.opengl.GL11.glEnd;
-import static org.lwjgl.opengl.GL11.glPopMatrix;
-import static org.lwjgl.opengl.GL11.glPushMatrix;
+import com.nishu.utils.Color4f;
+import net.codepixl.GLCraft.render.Shape;
+import org.lwjgl.opengl.GL11;
+import org.lwjgl.util.vector.Vector3f;
 
 import java.util.Arrays;
 
-import org.lwjgl.opengl.GL11;
-import org.lwjgl.util.vector.Vector3f;
-import org.newdawn.slick.opengl.TextureImpl;
-
-import com.nishu.utils.Color4f;
-
-import net.codepixl.GLCraft.GLCraft;
-import net.codepixl.GLCraft.render.Shape;
-import net.codepixl.GLCraft.render.TextureManager;
-import net.codepixl.GLCraft.world.tile.Tile;
+import static org.lwjgl.opengl.GL11.*;
 
 public class AABB {
 	public double center[];

@@ -1,5 +1,8 @@
 package net.codepixl.GLCraft.world.entity;
 
+import com.evilco.mc.nbt.error.TagNotFoundException;
+import com.evilco.mc.nbt.error.UnexpectedTagTypeException;
+import com.evilco.mc.nbt.tag.TagCompound;
 import net.codepixl.GLCraft.render.Shape;
 import net.codepixl.GLCraft.util.AABB;
 import net.codepixl.GLCraft.util.Constants;
@@ -7,18 +10,12 @@ import net.codepixl.GLCraft.util.MathUtils;
 import net.codepixl.GLCraft.world.Chunk;
 import net.codepixl.GLCraft.world.WorldManager;
 import net.codepixl.GLCraft.world.tile.Tile;
-
-import static org.lwjgl.opengl.GL11.*;
+import org.lwjgl.util.vector.Vector3f;
 
 import java.util.ArrayList;
 import java.util.Iterator;
 
-import org.lwjgl.util.vector.Vector3f;
-
-import com.evilco.mc.nbt.error.TagNotFoundException;
-import com.evilco.mc.nbt.error.UnexpectedTagTypeException;
-import com.evilco.mc.nbt.tag.TagCompound;
-import com.nishu.utils.Color4f;
+import static org.lwjgl.opengl.GL11.*;
 
 public class EntityTNT extends EntitySolid{
 

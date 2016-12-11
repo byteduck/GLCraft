@@ -1,10 +1,10 @@
 package net.codepixl.GLCraft.util;
 
-import java.util.Arrays;
-
 import net.codepixl.GLCraft.world.item.Item;
 import net.codepixl.GLCraft.world.item.ItemStack;
 import net.codepixl.GLCraft.world.tile.Tile;
+
+import java.util.Arrays;
 
 public class Utils {
 	public static Object[] rotateArray(Object[] array, int amt) {

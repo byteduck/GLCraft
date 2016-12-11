@@ -1,18 +1,10 @@
 package net.codepixl.GLCraft.GUI.Elements;
 
-import static org.lwjgl.opengl.GL11.GL_QUADS;
-import static org.lwjgl.opengl.GL11.GL_TEXTURE_2D;
-import static org.lwjgl.opengl.GL11.glBegin;
-import static org.lwjgl.opengl.GL11.glDisable;
-import static org.lwjgl.opengl.GL11.glEnable;
-import static org.lwjgl.opengl.GL11.glEnd;
-
+import com.nishu.utils.Color4f;
+import net.codepixl.GLCraft.render.Shape;
 import org.lwjgl.opengl.GL11;
 
-import com.nishu.utils.Color4f;
-
-import net.codepixl.GLCraft.GUI.GUIScreen;
-import net.codepixl.GLCraft.render.Shape;
+import static org.lwjgl.opengl.GL11.*;
 
 public class GUIProgressBar extends GUIElement{
 	

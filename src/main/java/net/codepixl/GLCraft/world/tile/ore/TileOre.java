@@ -1,7 +1,5 @@
 package net.codepixl.GLCraft.world.tile.ore;
 
-import java.util.ArrayList;
-
 import net.codepixl.GLCraft.util.BreakSource;
 import net.codepixl.GLCraft.util.Constants;
 import net.codepixl.GLCraft.util.Vector3i;
@@ -12,6 +10,8 @@ import net.codepixl.GLCraft.world.item.ItemStack;
 import net.codepixl.GLCraft.world.item.tool.Tool;
 import net.codepixl.GLCraft.world.tile.Tile;
 import net.codepixl.GLCraft.world.tile.material.Material;
+
+import java.util.ArrayList;
 
 public class TileOre extends Tile{
 	public static ArrayList<TileOre> ores = new ArrayList<TileOre>();

@@ -1,7 +1,5 @@
 package net.codepixl.GLCraft.util;
 
-import java.math.RoundingMode;
-import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 

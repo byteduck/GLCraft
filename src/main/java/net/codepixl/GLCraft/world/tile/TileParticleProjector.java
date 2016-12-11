@@ -1,12 +1,10 @@
 package net.codepixl.GLCraft.world.tile;
 
-import org.lwjgl.util.vector.Vector3f;
-
 import net.codepixl.GLCraft.util.Constants;
 import net.codepixl.GLCraft.world.WorldManager;
-import net.codepixl.GLCraft.world.entity.Entity;
 import net.codepixl.GLCraft.world.entity.particle.Particle;
 import net.codepixl.GLCraft.world.tile.material.Material;
+import org.lwjgl.util.vector.Vector3f;
 
 public class TileParticleProjector extends Tile{
 	private Particle particle;

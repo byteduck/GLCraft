@@ -1,10 +1,53 @@
 package net.codepixl.GLCraft.world;
 
-import static org.lwjgl.opengl.GL11.*;
-import static org.lwjgl.util.glu.GLU.GLU_FILL;
-import static org.lwjgl.util.glu.GLU.GLU_SMOOTH;
-import static org.lwjgl.util.glu.GLU.gluPerspective;
+import com.google.common.io.Files;
+import com.nishu.utils.Color4f;
+import com.nishu.utils.Screen;
+import com.nishu.utils.Time;
+import net.codepixl.GLCraft.GLCraft;
+import net.codepixl.GLCraft.GUI.*;
+import net.codepixl.GLCraft.GUI.Inventory.Elements.GUISlot;
+import net.codepixl.GLCraft.GUI.Inventory.GUICrafting;
+import net.codepixl.GLCraft.GUI.Inventory.GUICraftingAdvanced;
+import net.codepixl.GLCraft.network.Client;
+import net.codepixl.GLCraft.network.Server;
+import net.codepixl.GLCraft.network.packet.Packet;
+import net.codepixl.GLCraft.network.packet.PacketMultiPacket;
+import net.codepixl.GLCraft.render.Shape;
+import net.codepixl.GLCraft.render.TextureManager;
+import net.codepixl.GLCraft.render.util.Spritesheet;
+import net.codepixl.GLCraft.render.util.Tesselator;
+import net.codepixl.GLCraft.sound.SoundManager;
+import net.codepixl.GLCraft.util.Constants;
+import net.codepixl.GLCraft.util.DebugTimer;
+import net.codepixl.GLCraft.util.LogSource;
+import net.codepixl.GLCraft.util.Vector3i;
+import net.codepixl.GLCraft.util.command.CommandManager;
+import net.codepixl.GLCraft.util.data.saves.Save;
+import net.codepixl.GLCraft.util.data.saves.SaveManager;
+import net.codepixl.GLCraft.util.logging.CrashHandler;
+import net.codepixl.GLCraft.util.logging.GLogger;
+import net.codepixl.GLCraft.world.crafting.CraftingManager;
+import net.codepixl.GLCraft.world.crafting.Recipe.InvalidRecipeException;
+import net.codepixl.GLCraft.world.entity.EntityManager;
+import net.codepixl.GLCraft.world.entity.mob.AI.pathfinding.Pathfinder;
+import net.codepixl.GLCraft.world.entity.mob.EntityPlayer;
+import net.codepixl.GLCraft.world.entity.mob.EntityPlayerMP;
+import net.codepixl.GLCraft.world.entity.mob.animal.EntityTestAnimal;
+import net.codepixl.GLCraft.world.entity.mob.hostile.EntityTestHostile;
+import net.codepixl.GLCraft.world.tile.Tile;
+import org.lwjgl.BufferUtils;
+import org.lwjgl.input.Keyboard;
+import org.lwjgl.input.Mouse;
+import org.lwjgl.opengl.Display;
+import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL20;
+import org.lwjgl.util.glu.Cylinder;
+import org.lwjgl.util.vector.Vector3f;
+import org.newdawn.slick.TrueTypeFont;
+import org.newdawn.slick.opengl.TextureImpl;
 
+import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
@@ -18,59 +61,8 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.Iterator;
 
-import javax.imageio.ImageIO;
-
-import org.lwjgl.BufferUtils;
-import org.lwjgl.input.Keyboard;
-import org.lwjgl.input.Mouse;
-import org.lwjgl.opengl.Display;
-import org.lwjgl.opengl.GL11;
-import org.lwjgl.opengl.GL20;
-import org.lwjgl.util.glu.Cylinder;
-import org.lwjgl.util.vector.Vector3f;
-import org.newdawn.slick.TrueTypeFont;
-import org.newdawn.slick.opengl.TextureImpl;
-
-import com.google.common.io.Files;
-import com.nishu.utils.Color4f;
-import com.nishu.utils.Screen;
-import com.nishu.utils.Time;
-
-import net.codepixl.GLCraft.GLCraft;
-import net.codepixl.GLCraft.GUI.GUIChat;
-import net.codepixl.GLCraft.GUI.GUIGame;
-import net.codepixl.GLCraft.GUI.GUIManager;
-import net.codepixl.GLCraft.GUI.GUIPauseMenu;
-import net.codepixl.GLCraft.GUI.GUIScreen;
-import net.codepixl.GLCraft.GUI.Inventory.GUICrafting;
-import net.codepixl.GLCraft.GUI.Inventory.GUICraftingAdvanced;
-import net.codepixl.GLCraft.GUI.Inventory.Elements.GUISlot;
-import net.codepixl.GLCraft.network.Client;
-import net.codepixl.GLCraft.network.Server;
-import net.codepixl.GLCraft.network.packet.Packet;
-import net.codepixl.GLCraft.network.packet.PacketMultiPacket;
-import net.codepixl.GLCraft.render.Shape;
-import net.codepixl.GLCraft.render.TextureManager;
-import net.codepixl.GLCraft.sound.SoundManager;
-import net.codepixl.GLCraft.util.Constants;
-import net.codepixl.GLCraft.util.DebugTimer;
-import net.codepixl.GLCraft.util.LogSource;
-import net.codepixl.GLCraft.render.util.Spritesheet;
-import net.codepixl.GLCraft.util.Vector3i;
-import net.codepixl.GLCraft.util.command.CommandManager;
-import net.codepixl.GLCraft.util.data.saves.Save;
-import net.codepixl.GLCraft.util.data.saves.SaveManager;
-import net.codepixl.GLCraft.util.logging.CrashHandler;
-import net.codepixl.GLCraft.util.logging.GLogger;
-import net.codepixl.GLCraft.world.crafting.CraftingManager;
-import net.codepixl.GLCraft.world.crafting.Recipe.InvalidRecipeException;
-import net.codepixl.GLCraft.world.entity.EntityManager;
-import net.codepixl.GLCraft.world.entity.mob.EntityPlayer;
-import net.codepixl.GLCraft.world.entity.mob.EntityPlayerMP;
-import net.codepixl.GLCraft.world.entity.mob.AI.pathfinding.Pathfinder;
-import net.codepixl.GLCraft.world.entity.mob.animal.EntityTestAnimal;
-import net.codepixl.GLCraft.world.entity.mob.hostile.EntityTestHostile;
-import net.codepixl.GLCraft.world.tile.Tile;
+import static org.lwjgl.opengl.GL11.*;
+import static org.lwjgl.util.glu.GLU.*;
 
 public class CentralManager extends Screen{
 	
@@ -565,31 +557,31 @@ public class CentralManager extends Screen{
 	private void renderText(){
 		render2D();
 		glColor3f(1f,1f,1f);
-		Constants.FONT.drawString(10, 10, "GLCraft Beta "+GLCraft.version+" "+GLCraft.versionTag);
+		Tesselator.drawString(10, 10, "GLCraft Beta "+GLCraft.version+" "+GLCraft.versionTag);
 		if(messageTime > 0){
 			messageTime -= Time.getDelta();
 			if(messageTime < 0)
 				messageTime = 0;
-			Constants.FONT.drawString(10, Constants.FONT.getHeight()+20, this.message);
+			Tesselator.drawString(10, Tesselator.getFontHeight()+20, this.message);
 		}
 		if(!guiManager.isGUIOpen() && currentBlock != -1){
 			String toolTip = "Block: "+Tile.getTile((byte)currentBlock).getName();
-			Constants.FONT.drawString(Constants.getWidth()/2-Constants.FONT.getWidth(toolTip)/2, 10, toolTip);
+			Tesselator.drawString(Constants.getWidth()/2-Tesselator.getFontWidth(toolTip)/2, 10, toolTip);
 		}
 		if(renderDebug){
 			EntityPlayer p = getEntityManager().getPlayer();
-			Constants.FONT.drawString(10,Constants.FONT.getLineHeight()+10, "X: "+(int)p.getX()+" Y: "+(int)p.getY()+" Z: "+(int)p.getZ());
-			Constants.FONT.drawString(10,Constants.FONT.getLineHeight()*2+10, "RotX: "+(int)p.getRot().x+" RotY: "+(int)p.getRot().y+" RotZ: "+(int)p.getRot().z);
-			Constants.FONT.drawString(10,Constants.FONT.getLineHeight()*3+10, "Facing: "+p.getEnumFacing().removeUpDown());
-			Constants.FONT.drawString(10,Constants.FONT.getLineHeight()*4+10, "FPS: "+Constants.FPS);
-			Constants.FONT.drawString(10,Constants.FONT.getLineHeight()*5+10, "Entities: "+worldManager.entityManager.totalEntities());
-			Constants.FONT.drawString(10,Constants.FONT.getLineHeight()*6+10, "Time: "+worldManager.getTime());
-			Constants.FONT.drawString(10,Constants.FONT.getLineHeight()*7+10, "Weather: "+worldManager.currentWeather);
+			Tesselator.drawString(10,Tesselator.getFontHeight()+10, "X: "+(int)p.getX()+" Y: "+(int)p.getY()+" Z: "+(int)p.getZ());
+			Tesselator.drawString(10,Tesselator.getFontHeight()*2+10, "RotX: "+(int)p.getRot().x+" RotY: "+(int)p.getRot().y+" RotZ: "+(int)p.getRot().z);
+			Tesselator.drawString(10,Tesselator.getFontHeight()*3+10, "Facing: "+p.getEnumFacing().removeUpDown());
+			Tesselator.drawString(10,Tesselator.getFontHeight()*4+10, "FPS: "+Constants.FPS);
+			Tesselator.drawString(10,Tesselator.getFontHeight()*5+10, "Entities: "+worldManager.entityManager.totalEntities());
+			Tesselator.drawString(10,Tesselator.getFontHeight()*6+10, "Time: "+worldManager.getTime());
+			Tesselator.drawString(10,Tesselator.getFontHeight()*7+10, "Weather: "+worldManager.currentWeather);
 			Iterator<DebugTimer> i = DebugTimer.getTimers().iterator();
 			int ind = 0;
 			while(i.hasNext()){
 				String next = i.next().toString();
-				Constants.FONT.drawString(Constants.getWidth()-10-Constants.FONT.getWidth(next),Constants.FONT.getLineHeight()*ind+10, next);
+				Tesselator.drawString(Constants.getWidth()-10-Tesselator.getFontWidth(next),Tesselator.getFontHeight()*ind+10, next);
 				ind++;
 			}
 		}
@@ -715,9 +707,9 @@ public class CentralManager extends Screen{
 			glClearColor(0,0,0,1);
 			GL11.glClear(GL11.GL_COLOR_BUFFER_BIT);
 			String ltext = "GLCraft is generating the world...";
-			Constants.FONT.drawString(CENTER-Constants.FONT.getWidth(ltext)/2,30, ltext);
-			Constants.FONT.drawString(CENTER-Constants.FONT.getWidth(line1)/2,HCENTER-Constants.FONT.getHeight(line1), line1);
-			Constants.FONT.drawString(CENTER-Constants.FONT.getWidth(line2)/2,HCENTER+Constants.FONT.getHeight(line2), line2);
+			Tesselator.drawString(CENTER-Tesselator.getFontWidth(ltext)/2,30, ltext);
+			Tesselator.drawString(CENTER-Tesselator.getFontWidth(line1)/2,HCENTER-Tesselator.getFontHeight(line1), line1);
+			Tesselator.drawString(CENTER-Tesselator.getFontWidth(line2)/2,HCENTER+Tesselator.getFontHeight(line2), line2);
 			TextureImpl.unbind();
 		}
 	}
@@ -744,9 +736,9 @@ public class CentralManager extends Screen{
 			glClearColor(0,0,0,1);
 			GL11.glClear(GL11.GL_COLOR_BUFFER_BIT);
 			String ltext = "GLCraft is loading...";
-			Constants.FONT.drawString(CENTER-Constants.FONT.getWidth(ltext)/2,30, ltext);
-			Constants.FONT.drawString(CENTER-Constants.FONT.getWidth(line1)/2,HCENTER-Constants.FONT.getHeight(line1), line1);
-			Constants.FONT.drawString(CENTER-Constants.FONT.getWidth(line2)/2,HCENTER+Constants.FONT.getHeight(line2), line2);
+			Tesselator.drawString(CENTER-Tesselator.getFontWidth(ltext)/2,30, ltext);
+			Tesselator.drawString(CENTER-Tesselator.getFontWidth(line1)/2,HCENTER-Tesselator.getFontHeight(line1), line1);
+			Tesselator.drawString(CENTER-Tesselator.getFontWidth(line2)/2,HCENTER+Tesselator.getFontHeight(line2), line2);
 			TextureImpl.unbind();
 			glLoadIdentity();
 			render2D();

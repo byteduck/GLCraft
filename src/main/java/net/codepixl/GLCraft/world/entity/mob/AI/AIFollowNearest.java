@@ -1,15 +1,11 @@
 package net.codepixl.GLCraft.world.entity.mob.AI;
 
-import java.util.List;
-
+import com.nishu.utils.Time;
+import net.codepixl.GLCraft.world.entity.Entity;
+import net.codepixl.GLCraft.world.entity.mob.Mob;
 import org.lwjgl.util.vector.Vector3f;
 
-import com.nishu.utils.Time;
-
-import net.codepixl.GLCraft.world.CentralManager;
-import net.codepixl.GLCraft.world.entity.Entity;
-import net.codepixl.GLCraft.world.entity.mob.EntityPlayer;
-import net.codepixl.GLCraft.world.entity.mob.Mob;
+import java.util.List;
 
 public class AIFollowNearest extends AIPathfind{
 	

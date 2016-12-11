@@ -1,10 +1,9 @@
 package net.codepixl.GLCraft.world.entity.tileentity;
 
-import org.lwjgl.util.vector.Vector3f;
-
 import net.codepixl.GLCraft.util.Vector3i;
 import net.codepixl.GLCraft.world.WorldManager;
 import net.codepixl.GLCraft.world.entity.Entity;
+import org.lwjgl.util.vector.Vector3f;
 
 public class TileEntity extends Entity{
 	

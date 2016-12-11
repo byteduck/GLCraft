@@ -1,8 +1,6 @@
 package net.codepixl.GLCraft.util.command;
 
 import net.codepixl.GLCraft.util.ChatFormat;
-import net.codepixl.GLCraft.util.LogSource;
-import net.codepixl.GLCraft.util.logging.GLogger;
 import net.codepixl.GLCraft.world.CentralManager;
 import net.codepixl.GLCraft.world.WorldManager;
 

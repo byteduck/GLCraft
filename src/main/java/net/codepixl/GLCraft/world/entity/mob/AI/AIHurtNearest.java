@@ -1,10 +1,10 @@
 package net.codepixl.GLCraft.world.entity.mob.AI;
 
-import java.util.List;
-
 import net.codepixl.GLCraft.world.entity.Entity;
 import net.codepixl.GLCraft.world.entity.mob.DamageSource;
 import net.codepixl.GLCraft.world.entity.mob.Mob;
+
+import java.util.List;
 
 public class AIHurtNearest extends AI{
 

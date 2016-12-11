@@ -1,7 +1,6 @@
 package net.codepixl.GLCraft.GUI;
 
 import com.nishu.utils.Time;
-
 import net.codepixl.GLCraft.util.FormattedStringSet;
 
 public class ChatMessage {

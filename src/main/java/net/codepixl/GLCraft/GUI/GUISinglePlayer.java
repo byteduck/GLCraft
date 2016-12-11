@@ -1,24 +1,20 @@
 package net.codepixl.GLCraft.GUI;
 
-import static org.lwjgl.opengl.GL11.GL_TEXTURE_2D;
-import static org.lwjgl.opengl.GL11.glDisable;
+import net.codepixl.GLCraft.GLCraft;
+import net.codepixl.GLCraft.GUI.Elements.*;
+import net.codepixl.GLCraft.GUI.Elements.GUILabel.Alignment;
+import net.codepixl.GLCraft.network.Client;
+import net.codepixl.GLCraft.render.util.Tesselator;
+import net.codepixl.GLCraft.util.Constants;
+import net.codepixl.GLCraft.util.data.saves.Save;
+import net.codepixl.GLCraft.util.data.saves.SaveManager;
+import org.lwjgl.opengl.GL11;
 
 import java.io.IOException;
 import java.util.concurrent.Callable;
 
-import org.lwjgl.opengl.GL11;
-
-import net.codepixl.GLCraft.GLCraft;
-import net.codepixl.GLCraft.GUI.Elements.GUIButton;
-import net.codepixl.GLCraft.GUI.Elements.GUILabel;
-import net.codepixl.GLCraft.GUI.Elements.GUISave;
-import net.codepixl.GLCraft.GUI.Elements.GUILabel.Alignment;
-import net.codepixl.GLCraft.network.Client;
-import net.codepixl.GLCraft.GUI.Elements.GUIScrollBox;
-import net.codepixl.GLCraft.GUI.Elements.GUITextBox;
-import net.codepixl.GLCraft.util.Constants;
-import net.codepixl.GLCraft.util.data.saves.Save;
-import net.codepixl.GLCraft.util.data.saves.SaveManager;
+import static org.lwjgl.opengl.GL11.GL_TEXTURE_2D;
+import static org.lwjgl.opengl.GL11.glDisable;
 
 public class GUISinglePlayer extends GUIScreen{
 	
@@ -104,12 +100,12 @@ public class GUISinglePlayer extends GUIScreen{
 		
 		scrollBox = new GUIScrollBox(10);
 		scrollBox.x = 100;
-		scrollBox.y = Constants.FONT.getHeight()*2+20;
+		scrollBox.y = Tesselator.getFontHeight()*2+20;
 		scrollBox.width = Constants.getWidth()-200;
 		scrollBox.height = (int) (Constants.getHeight()*0.75f-scrollBox.y);
 		
 		final String tbp = "   Enter New World Name   ";
-		int tbtwidth = Constants.FONT.getWidth(tbp);
+		int tbtwidth = Tesselator.getFontWidth(tbp);
 		textBox = new GUITextBox(TEXTBOXX, TEXTBOXY, tbtwidth, tbp);
 		textBox.y-=textBox.height/2;
 		

@@ -1,12 +1,8 @@
 package net.codepixl.GLCraft.world.tile.ore;
 
-import net.codepixl.GLCraft.util.BreakSource;
-import net.codepixl.GLCraft.util.Constants;
-import net.codepixl.GLCraft.world.WorldManager;
 import net.codepixl.GLCraft.world.item.ItemStack;
 import net.codepixl.GLCraft.world.item.tool.Tool;
 import net.codepixl.GLCraft.world.tile.Tile;
-import net.codepixl.GLCraft.world.tile.material.Material;
 
 public class TileBluestoneOre extends TileOre{
 	@Override

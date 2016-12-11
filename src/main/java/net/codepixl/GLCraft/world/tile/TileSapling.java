@@ -1,7 +1,6 @@
 package net.codepixl.GLCraft.world.tile;
 
 import com.nishu.utils.Color4f;
-
 import net.codepixl.GLCraft.render.RenderType;
 import net.codepixl.GLCraft.util.BreakSource;
 import net.codepixl.GLCraft.util.Constants;

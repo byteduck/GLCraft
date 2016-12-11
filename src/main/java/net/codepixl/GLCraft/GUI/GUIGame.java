@@ -1,27 +1,21 @@
 package net.codepixl.GLCraft.GUI;
 
-import static org.lwjgl.opengl.GL11.GL_QUADS;
-import static org.lwjgl.opengl.GL11.glBegin;
-import static org.lwjgl.opengl.GL11.glEnd;
-import static org.lwjgl.opengl.GL11.glPopMatrix;
-import static org.lwjgl.opengl.GL11.glPushMatrix;
+import com.nishu.utils.Color4f;
+import net.codepixl.GLCraft.GUI.Inventory.Elements.GUISlot;
+import net.codepixl.GLCraft.render.Shape;
+import net.codepixl.GLCraft.render.util.Spritesheet;
+import net.codepixl.GLCraft.render.util.Tesselator;
+import net.codepixl.GLCraft.util.Constants;
+import net.codepixl.GLCraft.world.WorldManager;
+import net.codepixl.GLCraft.world.entity.mob.EntityPlayer;
+import net.codepixl.GLCraft.world.tile.Tile;
+import org.lwjgl.opengl.GL11;
+import org.newdawn.slick.opengl.TextureImpl;
 
 import java.util.ArrayList;
 import java.util.Iterator;
 
-import org.lwjgl.opengl.GL11;
-import org.newdawn.slick.opengl.TextureImpl;
-
-import com.nishu.utils.Color4f;
-
-import net.codepixl.GLCraft.GUI.Inventory.Elements.GUISlot;
-import net.codepixl.GLCraft.render.Shape;
-import net.codepixl.GLCraft.render.util.Tesselator;
-import net.codepixl.GLCraft.util.Constants;
-import net.codepixl.GLCraft.render.util.Spritesheet;
-import net.codepixl.GLCraft.world.WorldManager;
-import net.codepixl.GLCraft.world.entity.mob.EntityPlayer;
-import net.codepixl.GLCraft.world.tile.Tile;
+import static org.lwjgl.opengl.GL11.*;
 
 public class GUIGame extends GUIScreen{
 	
@@ -142,11 +136,11 @@ public class GUIGame extends GUIScreen{
 	}
 	
 	private static void renderChatMessage(ChatMessage c, int ind) {
-		int y = GUIChat.CHATY-Constants.FONT.getHeight()-4-((Constants.FONT.getHeight()+4)*ind);
+		int y = GUIChat.CHATY-Tesselator.getFontHeight()-4-((Tesselator.getFontHeight()+4)*ind);
 		GL11.glColor4f(0f, 0f, 0f, c.opacity*0.5f);
 		GL11.glDisable(GL11.GL_TEXTURE_2D);
 		GL11.glBegin(GL11.GL_QUADS);
-		Shape.createTexturelessRect2D(GUIChat.CHATX, y, GUIChat.CHATWIDTH+20, Constants.FONT.getHeight()+4, new Color4f(0,0,0,c.opacity*0.5f));
+		Shape.createTexturelessRect2D(GUIChat.CHATX, y, GUIChat.CHATWIDTH+20, Tesselator.getFontHeight()+4, new Color4f(0,0,0,c.opacity*0.5f));
 		GL11.glEnd();
 		GL11.glEnable(GL11.GL_TEXTURE_2D);
 		Tesselator.drawTextWithShadow(GUIChat.CHATX+2, y+2, c.msg, c.opacity);
@@ -157,7 +151,7 @@ public class GUIGame extends GUIScreen{
 			String msg2 = "";
 			for(Character c : line.toCharArray()){
 				msg2+=c;
-				if(Constants.FONT.getWidth(msg2) > GUIChat.CHATWIDTH-4){
+				if(Tesselator.getFontWidth(msg2) > GUIChat.CHATWIDTH-4){
 					chatMessages.add(new ChatMessage(msg2));
 					msg2 = "";
 				}

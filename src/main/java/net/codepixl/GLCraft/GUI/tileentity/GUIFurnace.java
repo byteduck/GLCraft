@@ -1,15 +1,14 @@
 package net.codepixl.GLCraft.GUI.tileentity;
 
-import java.util.concurrent.Callable;
-
 import com.nishu.utils.Color4f;
-
 import net.codepixl.GLCraft.GUI.Elements.GUIProgressBar;
-import net.codepixl.GLCraft.GUI.Inventory.GUIInventoryScreen;
 import net.codepixl.GLCraft.GUI.Inventory.Elements.GUISlot;
+import net.codepixl.GLCraft.GUI.Inventory.GUIInventoryScreen;
 import net.codepixl.GLCraft.util.Constants;
 import net.codepixl.GLCraft.world.entity.mob.EntityPlayer;
 import net.codepixl.GLCraft.world.entity.tileentity.TileEntityFurnace;
+
+import java.util.concurrent.Callable;
 
 public class GUIFurnace extends GUIInventoryScreen{
 	

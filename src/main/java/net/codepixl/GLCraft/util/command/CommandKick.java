@@ -4,7 +4,6 @@ package net.codepixl.GLCraft.util.command;
 import net.codepixl.GLCraft.network.packet.PacketChat;
 import net.codepixl.GLCraft.network.packet.PacketKick;
 import net.codepixl.GLCraft.util.ChatFormat;
-import net.codepixl.GLCraft.util.command.Command.Permission;
 import net.codepixl.GLCraft.world.CentralManager;
 import net.codepixl.GLCraft.world.entity.mob.EntityPlayerMP;
 

@@ -1,10 +1,9 @@
 package net.codepixl.GLCraft.network.packet;
 
-import java.io.IOException;
-
+import net.codepixl.GLCraft.network.Compressor;
 import org.apache.commons.lang3.SerializationUtils;
 
-import net.codepixl.GLCraft.network.Compressor;
+import java.io.IOException;
 
 public class PacketUtil {
 	public static Packet getPacket(byte[] packet) throws ClassCastException, IOException{

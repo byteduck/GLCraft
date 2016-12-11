@@ -1,8 +1,7 @@
 package net.codepixl.GLCraft.util.logging;
 
-import java.awt.BorderLayout;
-import java.awt.Desktop;
-import java.awt.Toolkit;
+import javax.swing.*;
+import java.awt.*;
 import java.awt.datatransfer.Clipboard;
 import java.awt.datatransfer.StringSelection;
 import java.awt.event.ActionEvent;
@@ -12,12 +11,6 @@ import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.nio.file.Files;
-
-import javax.swing.JButton;
-import javax.swing.JFrame;
-import javax.swing.JOptionPane;
-import javax.swing.JScrollPane;
-import javax.swing.JTextArea;
 
 public class CrashHandlerWindow extends JFrame{
 	public CrashHandlerWindow(Thread t, Throwable e) {

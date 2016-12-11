@@ -1,9 +1,9 @@
 package net.codepixl.GLCraft.world.crafting;
 
+import net.codepixl.GLCraft.world.item.ItemStack;
+
 import java.util.ArrayList;
 import java.util.HashMap;
-
-import net.codepixl.GLCraft.world.item.ItemStack;
 
 public class Recipe {
 	ItemStack result;

@@ -1,13 +1,13 @@
 package net.codepixl.GLCraft.util;
 
-import java.nio.FloatBuffer;
-import java.nio.IntBuffer;
-
 import org.lwjgl.BufferUtils;
 import org.lwjgl.opengl.Display;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.util.glu.GLU;
 import org.lwjgl.util.vector.Vector3f;
+
+import java.nio.FloatBuffer;
+import java.nio.IntBuffer;
 
 public class Raytracer {
 	

@@ -1,23 +1,20 @@
 package net.codepixl.GLCraft.plugin;
 
+import net.codepixl.GLCraft.GLCraft;
+import net.codepixl.GLCraft.util.LogSource;
+import net.codepixl.GLCraft.util.logging.GLogger;
+import net.codepixl.GLCraft.world.crafting.Recipe.InvalidRecipeException;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import javax.swing.*;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
 import java.net.URLClassLoader;
-import java.nio.ByteBuffer;
 import java.nio.charset.StandardCharsets;
-
-import javax.swing.JOptionPane;
-
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import net.codepixl.GLCraft.GLCraft;
-import net.codepixl.GLCraft.util.LogSource;
-import net.codepixl.GLCraft.util.logging.GLogger;
-import net.codepixl.GLCraft.world.crafting.Recipe.InvalidRecipeException;
 
 public class LoadedPlugin {
 	public String name;

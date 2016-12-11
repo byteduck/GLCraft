@@ -1,12 +1,12 @@
 package net.codepixl.GLCraft.world.crafting;
 
-import java.util.ArrayList;
-import java.util.Iterator;
-
 import net.codepixl.GLCraft.world.crafting.Recipe.InvalidRecipeException;
 import net.codepixl.GLCraft.world.item.Item;
 import net.codepixl.GLCraft.world.item.ItemStack;
 import net.codepixl.GLCraft.world.tile.Tile;
+
+import java.util.ArrayList;
+import java.util.Iterator;
 
 public class CraftingManager {
 	private static ArrayList<Recipe> recipes = new ArrayList<Recipe>();

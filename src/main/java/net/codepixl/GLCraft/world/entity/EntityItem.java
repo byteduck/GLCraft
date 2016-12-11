@@ -1,16 +1,9 @@
 package net.codepixl.GLCraft.world.entity;
 
-import java.util.Iterator;
-
-import org.lwjgl.opengl.GL11;
-import org.lwjgl.util.vector.Vector3f;
-
 import com.evilco.mc.nbt.error.TagNotFoundException;
 import com.evilco.mc.nbt.error.UnexpectedTagTypeException;
-import com.evilco.mc.nbt.tag.TagByte;
 import com.evilco.mc.nbt.tag.TagCompound;
 import com.nishu.utils.Time;
-
 import net.codepixl.GLCraft.render.RenderType;
 import net.codepixl.GLCraft.render.Shape;
 import net.codepixl.GLCraft.util.AABB;
@@ -19,6 +12,10 @@ import net.codepixl.GLCraft.world.WorldManager;
 import net.codepixl.GLCraft.world.item.Item;
 import net.codepixl.GLCraft.world.item.ItemStack;
 import net.codepixl.GLCraft.world.tile.Tile;
+import org.lwjgl.opengl.GL11;
+import org.lwjgl.util.vector.Vector3f;
+
+import java.util.Iterator;
 
 public class EntityItem extends EntitySolid{
 	private ItemStack itemstack;

@@ -2,12 +2,7 @@ package net.codepixl.GLCraft.util;
 
 import net.codepixl.GLCraft.GLCraft;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
+import java.io.*;
 import java.util.Map.Entry;
 import java.util.Properties;
 

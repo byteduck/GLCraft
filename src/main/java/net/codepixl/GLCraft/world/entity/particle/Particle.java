@@ -1,17 +1,11 @@
 package net.codepixl.GLCraft.world.entity.particle;
 
-import java.util.List;
-
-import org.lwjgl.opengl.GL11;
-import org.lwjgl.util.vector.Vector3f;
-
 import com.evilco.mc.nbt.error.TagNotFoundException;
 import com.evilco.mc.nbt.error.UnexpectedTagTypeException;
 import com.evilco.mc.nbt.tag.TagCompound;
 import com.evilco.mc.nbt.tag.TagFloat;
 import com.evilco.mc.nbt.tag.TagString;
 import com.nishu.utils.Time;
-
 import net.codepixl.GLCraft.render.Shape;
 import net.codepixl.GLCraft.render.TextureManager;
 import net.codepixl.GLCraft.util.AABB;
@@ -21,6 +15,10 @@ import net.codepixl.GLCraft.world.entity.EntitySolid;
 import net.codepixl.GLCraft.world.entity.NBTUtil;
 import net.codepixl.GLCraft.world.entity.mob.EntityPlayer;
 import net.codepixl.GLCraft.world.tile.Tile;
+import org.lwjgl.opengl.GL11;
+import org.lwjgl.util.vector.Vector3f;
+
+import java.util.List;
 
 public class Particle extends EntitySolid{
 	

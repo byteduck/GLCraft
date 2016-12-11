@@ -1,7 +1,5 @@
 package net.codepixl.GLCraft.network.packet;
 
-import org.lwjgl.util.vector.Vector3f;
-
 import net.codepixl.GLCraft.util.BreakSource;
 
 public class PacketBlockChange extends Packet{

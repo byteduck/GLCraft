@@ -1,15 +1,14 @@
 package net.codepixl.GLCraft.GUI;
 
-import java.util.concurrent.Callable;
-
-import org.lwjgl.input.Mouse;
-import org.lwjgl.opengl.GL11;
-
 import net.codepixl.GLCraft.GLCraft;
 import net.codepixl.GLCraft.GUI.Elements.GUIButton;
 import net.codepixl.GLCraft.GUI.Elements.GUITexture;
 import net.codepixl.GLCraft.util.Constants;
 import net.codepixl.GLCraft.world.WorldManager;
+import org.lwjgl.input.Mouse;
+import org.lwjgl.opengl.GL11;
+
+import java.util.concurrent.Callable;
 
 public class GUIPauseMenu extends GUIScreen{
 	

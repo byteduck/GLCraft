@@ -1,16 +1,14 @@
 package net.codepixl.GLCraft.render.util;
 
-import static org.lwjgl.opengl.GL11.*;
-import static org.lwjgl.opengl.GL12.GL_CLAMP_TO_EDGE;
+import org.lwjgl.BufferUtils;
 
+import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.nio.ByteBuffer;
 
-import javax.imageio.ImageIO;
-
-import org.lwjgl.BufferUtils;
+import static org.lwjgl.opengl.GL11.*;
 
 public class Texture {
 	int id,width,height;
