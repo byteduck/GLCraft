@@ -6,6 +6,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.PrintStream;
+import java.util.Arrays;
 
 public class GLogger {
 	private static PrintStream out, err;
@@ -26,14 +27,10 @@ public class GLogger {
 	}
 
 	public static void log(Object log){
-		if(log == null)
-			log = "null";
-		else
-			try {
-				lfos.write(("[" + Thread.currentThread().getStackTrace()[1] + "]" + log + "\n").getBytes());
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
+		if(log == null) log = "null";
+		StackTraceElement ste = Thread.currentThread().getStackTrace()[2];
+		String[] classElements = ste.getClassName().split("\\.");
+		out.println("[" + classElements[classElements.length-1] + ":" + ste.getMethodName() + ":" + ste.getLineNumber() + "] "+log);
 	}
 
 	public static void logerr(Object log, LogSource l){
