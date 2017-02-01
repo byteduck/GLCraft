@@ -22,13 +22,14 @@ Italic means half completed.
 * ~~Better GUI System~~
  * ~~A GUI manager to make showing and hiding GUIs easier~~
  * ~~A GUIScreen class to make building guis easier~~
-  * *Subclasses like ~~GUIButton~~, ~~GUITextField~~, ~~GUIImage~~, etc*
+  * *~~Subclasses like GUIButton, GUITextField, GUIImage, etc*~~
 * ~~Lighting~~
  * ~~Day and night cycle~~
+* *Weather*
 * Infinite world
 * ~~2x2 Crafting System~~
 * ~~3x3 Crafting System~~
-* Re-add multiplayer
+* ~~Re-add multiplayer~~
 * User accounts
 * *Animals/Monsters*
 * *Sound*
