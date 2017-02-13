@@ -60,6 +60,7 @@ public class GUIScreen{
 	}
 	
 	public boolean testMouse(int xof, int yof){
+		if(Mouse.isGrabbed()) return false;
 		int mouseY = Mouse.getY()+yof;
 		int mouseX = Mouse.getX()-xof;
 		mouseY = -mouseY+Constants.getHeight();

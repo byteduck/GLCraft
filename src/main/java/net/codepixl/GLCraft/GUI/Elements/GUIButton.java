@@ -151,6 +151,7 @@ public class GUIButton extends GUIElement{
 	}
 	
 	public boolean testMouse(int xof, int yof){
+		if(Mouse.isGrabbed()) return false;
 		int mouseY = Mouse.getY()+xof;
 		int mouseX = Mouse.getX()+yof;
 		mouseY = -mouseY+Constants.getHeight();
