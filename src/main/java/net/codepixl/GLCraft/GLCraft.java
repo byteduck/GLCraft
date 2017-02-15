@@ -72,7 +72,7 @@ public class GLCraft extends Screen{
 	public static boolean isDevEnvironment = false;
 	public static boolean loadExtPlugins = true;
 	public static final String version = "0.1";
-	public static final String versionTag = "Beta Pre-Release 1";
+	public static final String versionTag = "";
 	public static final String fullVersion = version + " " + versionTag; 
 	private Plugin devPlugin;
 	public boolean spendRemainingTime = true;
@@ -218,6 +218,10 @@ public class GLCraft extends Screen{
 		while(System.nanoTime() < targTime){
 		    clientWorldManager.rebuildNextChunk();
 		}
+	}
+
+	public boolean isLocalServerRunning(){
+		return this.serverCentralManager != null && this.serverCentralManager.isOpen();
 	}
 
 	@Override

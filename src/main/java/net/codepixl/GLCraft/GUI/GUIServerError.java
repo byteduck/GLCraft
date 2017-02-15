@@ -16,7 +16,7 @@ public class GUIServerError extends GUIScreen{
 			message = "Unknown error";
 		this.setDrawStoneBackground(true);
 		int lines = StringUtils.countMatches(prefix+message, "\n")+1;
-		lbl = new GUILabel(Constants.getWidth()/2, Constants.getHeight()/2-(int)((float) Tesselator.getFontHeight()*(lines/2f)), prefix+message);
+		lbl = new GUILabel(Constants.getWidth()/2, Constants.getHeight()/2-(int)((float) Tesselator.getFontHeight()*(lines/2f)), prefix+"\n"+message);
 		lbl.alignment = GUILabel.Alignment.CENTER;
 		lbl.size = 2f;
 		addElement(lbl);

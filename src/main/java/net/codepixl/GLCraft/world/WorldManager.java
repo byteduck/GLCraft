@@ -1002,7 +1002,7 @@ public class WorldManager {
 				chunksLeftToDownload--;
 		}
 		if(initial){
-			centralManager.setSplashText("Connecting to Server...", "Downloading Chunks...", (int)(((float)(-chunksLeftToDownload+1000)/1000f)*100));
+			centralManager.setSplashText(GLCraft.getGLCraft().isLocalServerRunning() ? "Loading World..." : "Connecting to Server...", "Downloading Chunks...", (int)(((float)(-chunksLeftToDownload+1000)/1000f)*100));
 			if(chunksLeftToDownload <= 0){
 				this.doneGenerating = true;
 				this.actionQueue.add(new Callable<Void>(){
