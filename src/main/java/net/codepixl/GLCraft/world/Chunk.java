@@ -810,9 +810,17 @@ public class Chunk {
 		return meta;
 	}
 
-	public void updateTiles(PacketSendChunks c, int i) {
+	public void updateTiles(PacketSendChunks c, int i){
 		this.tiles = Arrays.copyOf(c.tiles[i], c.tiles[i].length);
 		this.meta = Arrays.copyOf(c.meta[i], c.meta[i].length);
+		Tile t;
+		for(int x = 0; x < Constants.CHUNKSIZE; x++)
+			for(int y = 0; y < Constants.CHUNKSIZE; y++)
+				for(int z = 0; z < Constants.CHUNKSIZE; z++) {
+					t = Tile.getTile(tiles[x][y][z]);
+					if(t.getLightLevel(meta[x][y][z]) > 0)
+						this.setBlockLight(x+(int)getPos().x,y+(int)getPos().y,z+(int)getPos().z, t.getLightLevel(meta[x][y][z]), true);
+				}
 		this.rebuild();
 	}
 

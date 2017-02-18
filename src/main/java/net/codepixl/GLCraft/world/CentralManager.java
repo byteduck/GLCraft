@@ -245,7 +245,7 @@ public class CentralManager extends Screen{
 						pathfinder = new Pathfinder(new Vector3i(pos), pathfindPos, worldManager);
 						pathfinder.pathfind(1000);
 					}
-					if(Keyboard.isKeyDown(Keyboard.KEY_SEMICOLON)){
+					/*if(Keyboard.isKeyDown(Keyboard.KEY_SEMICOLON)){
 						worldManager.entityManager.add(new EntityTestAnimal(pos, worldManager));
 					}
 					if(Keyboard.isKeyDown(Keyboard.KEY_APOSTROPHE)){
@@ -255,7 +255,7 @@ public class CentralManager extends Screen{
 						Chunk c = worldManager.getChunk(pos);
 						GLogger.log(worldManager.getLight((int)pos.x, (int)pos.y, (int)pos.z), LogSource.CLIENT);
 					}
-					/*if(Keyboard.isKeyDown(Keyboard.KEY_G)){
+					if(Keyboard.isKeyDown(Keyboard.KEY_G)){
 						try {
 							Server s = new Server(worldManager, Server.DEFAULT_SERVER_PORT);
 							worldManager.isServer = false;
@@ -263,7 +263,6 @@ public class CentralManager extends Screen{
 							Client.ServerConnectionState cs = c.connectToServer(InetAddress.getLocalHost(), s.getPort());
 							Logger.log("Connection was a success: "+cs.success);
 						} catch (IOException e) {
-							// TODO Auto-generated catch block
 							e.printStackTrace();
 						}
 					}*/
