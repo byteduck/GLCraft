@@ -11,14 +11,16 @@ import java.io.IOException;
 import java.util.concurrent.Callable;
 
 public class GUIDeleteWorld extends GUIScreen{
-	
+
+	private final GUISinglePlayer gui;
 	private Save save;
 	private GUILabel warning;
 	private GUIButton yes, no;
 	
-	public GUIDeleteWorld(Save save){
+	public GUIDeleteWorld(Save save, GUISinglePlayer s){
 		super();
 		this.save = save;
+		this.gui = s;
 	}
 	
 	public void makeElements(){
@@ -58,6 +60,7 @@ public class GUIDeleteWorld extends GUIScreen{
 				e.printStackTrace();
 			}
 		}
+		gui.onOpen();
 		GUIManager.getMainManager().closeGUI(true);
 	}
 

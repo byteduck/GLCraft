@@ -83,12 +83,13 @@ public class GUISinglePlayer extends GUIScreen{
 			}
 		});
 		loadWorld.setEnabled(false);
-		
+
+		final GUISinglePlayer sthis = this;
 		deleteWorld = new GUIButton("Delete World", DELETEWORLDX, DELETEWORLDY, new Callable<Void>() {
 			@Override
 			public Void call() throws Exception {
 				if(selectedSave != null)
-					GUIManager.getMainManager().showGUI(new GUIDeleteWorld(selectedSave.save));
+					GUIManager.getMainManager().showGUI(new GUIDeleteWorld(selectedSave.save, sthis));
 				return null;
 			}
 		});
