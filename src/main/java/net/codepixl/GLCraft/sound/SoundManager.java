@@ -1,11 +1,14 @@
 package net.codepixl.GLCraft.sound;
 
+import net.codepixl.GLCraft.util.logging.GLogger;
 import org.lwjgl.util.vector.Vector3f;
 import paulscode.sound.SoundSystem;
 import paulscode.sound.SoundSystemConfig;
 import paulscode.sound.SoundSystemException;
 import paulscode.sound.codecs.CodecWav;
 import paulscode.sound.libraries.LibraryLWJGLOpenAL;
+
+import java.net.URL;
 
 public class SoundManager {
 	private static SoundManager mainManager;
@@ -35,18 +38,12 @@ public class SoundManager {
 	
 	public void quickPlay(String soundName){
 		system.setListenerPosition(0, 0, 0);
-		system.quickPlay(true,soundName+".wav",false,0f,0f,0f,0,0f);
+		system.quickPlay(true, SoundManager.class.getResource("/sounds/"+soundName+".wav"), soundName+".wav",false,0f,0f,0f,0,0f);
 		system.setListenerPosition(pos.x, pos.y, pos.z);
 	}
-	
-	public void quickPlayOnce(String soundName){
-		if(!system.playing(soundName)){
-			quickPlay(soundName);
-		}
-	}
-	
+
 	public void quickPlay(String soundName, Vector3f pos) {
-		system.quickPlay(true,soundName+".wav",false,pos.x,pos.y,pos.z,SoundSystemConfig.ATTENUATION_LINEAR,30f);
+		system.quickPlay(true, SoundManager.class.getResource("/sounds/"+soundName+".wav"), soundName+".wav",false,pos.x,pos.y,pos.z,SoundSystemConfig.ATTENUATION_LINEAR,30f);
 	}
 	
 	public void setPosAndRot(Vector3f pos, Vector3f rot){
