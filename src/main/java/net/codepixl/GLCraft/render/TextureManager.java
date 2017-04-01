@@ -33,7 +33,7 @@ public class TextureManager {
 	private static String currentBoundTexture = "";
 	private static boolean madeAtlas = false;
 	private static BufferedImage noimg;
-	public static String currentTexturepack = "none";
+	public static String currentTexturepack = "[[none]]";
 	public static boolean setAtlas;
 	public static final int maxWidth = 16;
 	
@@ -87,7 +87,7 @@ public class TextureManager {
 					if(next.getValue().startsWith("[EXTERNAL]")){
 						image = ImageIO.read(new File(next.getValue().substring(next.getValue().indexOf(']')+1)));
 					}else{
-						if(currentTexturepack.equals("none")){
+						if(currentTexturepack.equals("[[none]]")){
 							image = ImageIO.read(Texture.class.getClassLoader().getResourceAsStream(next.getValue()));
 						}else{
 							File tp = new File(Constants.GLCRAFTDIR + "Texturepacks/tmp/"+next.getValue());
@@ -144,8 +144,11 @@ public class TextureManager {
 				outputfile.getParentFile().mkdirs();
 				outputfile.createNewFile();
 				ImageIO.write(combined, "png", outputfile);
-				
-				if(!regen) Spritesheet.atlas = new Spritesheet(outputfile.getAbsolutePath(),maxWidth,true); else setAtlas = true;
+				if(regen){
+					Spritesheet.atlas.delete();
+					setAtlas = true;
+				}
+				Spritesheet.atlas = new Spritesheet(outputfile.getAbsolutePath(),maxWidth,true);
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();

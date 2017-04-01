@@ -37,24 +37,24 @@ public class TexturePackManagerWindow extends JFrame {
 		File[] tpacks = tpdir.listFiles();
 		HashMap<String, BufferedImage> otpacks = new HashMap<String, BufferedImage>();
 		if(tpacks !=null){
-		for (File tpack : tpacks) {
-			String ext = tpack.getName().substring(tpack.getName().lastIndexOf('.') + 1);
-			if (ext.equalsIgnoreCase("zip")) {
-				String tpname = tpack.getName().substring(0, tpack.getName().lastIndexOf('.'));
-				BufferedImage tpicon = null;
-				try {
-					ZipFile zf = new ZipFile(tpack);
-					InputStream in = zf.getInputStream(zf.getEntry("preview.png"));
-					tpicon = ImageIO.read(in);
-					zf.close();
-					in.close();
-				} catch (IOException e) {
-					e.printStackTrace();
-					tpicon = (BufferedImage) ogIcon.getScaledInstance(ogIcon.getWidth(), ogIcon.getHeight(), Image.SCALE_FAST);
+			for (File tpack : tpacks) {
+				String ext = tpack.getName().substring(tpack.getName().lastIndexOf('.') + 1);
+				if (ext.equalsIgnoreCase("zip")) {
+					String tpname = tpack.getName().substring(0, tpack.getName().lastIndexOf('.'));
+					BufferedImage tpicon = null;
+					try {
+						ZipFile zf = new ZipFile(tpack);
+						InputStream in = zf.getInputStream(zf.getEntry("preview.png"));
+						tpicon = ImageIO.read(in);
+						zf.close();
+						in.close();
+					} catch (IOException e) {
+						e.printStackTrace();
+						tpicon = (BufferedImage) ogIcon.getScaledInstance(ogIcon.getWidth(), ogIcon.getHeight(), Image.SCALE_FAST);
+					}
+					otpacks.put(tpname, tpicon);
 				}
-				otpacks.put(tpname, tpicon);
 			}
-		}
 		}
 		otpacks.put("Default textures", ogIcon);
 

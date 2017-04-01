@@ -2,6 +2,7 @@ package net.codepixl.GLCraft.render;
 
 import com.nishu.utils.Color4f;
 import net.codepixl.GLCraft.render.util.Spritesheet;
+import net.codepixl.GLCraft.render.util.Texture;
 import net.codepixl.GLCraft.util.LogSource;
 import net.codepixl.GLCraft.util.logging.GLogger;
 import org.lwjgl.opengl.GL11;
@@ -450,6 +451,18 @@ public class Shape {
 		glTexCoord2f(texCoords[0] + currentSpritesheet.uniformSize(), texCoords[1] + currentSpritesheet.uniformSize());
 		glVertex2f(x + size, y + size);
 		glTexCoord2f(texCoords[0] + currentSpritesheet.uniformSize(), texCoords[1]);
+		glVertex2f(x + size, y);
+	}
+
+	public static void createSquare(float x, float y, Color4f color, float size){
+		glColor4f(color.r, color.g, color.b, color.a);
+		glTexCoord2f(0, 0);
+		glVertex2f(x, y);
+		glTexCoord2f(0, 1);
+		glVertex2f(x, y + size);
+		glTexCoord2f(1, 1);
+		glVertex2f(x + size, y + size);
+		glTexCoord2f(1, 0);
 		glVertex2f(x + size, y);
 	}
 	

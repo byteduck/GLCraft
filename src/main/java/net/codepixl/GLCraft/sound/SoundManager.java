@@ -49,8 +49,8 @@ public class SoundManager {
 	public void setPosAndRot(Vector3f pos, Vector3f rot){
 		this.pos = pos;
 		system.setListenerPosition(pos.x, pos.y, pos.z);
-		//TODO: Make rotation work
-		//system.setListenerOrientation(rot.x/360f, rot.y/360f, rot.z/360f, 0, 0, 0);
+		//TODO rotation
+		//system.setListenerOrientation(rot.x/360f, rot.y/360f, rot.z/360f, 0, 1, 0);
 	}
 	
 	public void play(String name){

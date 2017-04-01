@@ -24,7 +24,7 @@ public class GUISettings extends GUIScreen{
 		texturepackButton = new GUIButton("Texture Packs", CENTERX, ySoFar, new Callable<Void>(){
 			@Override
 			public Void call() throws Exception {
-				new TexturePackManagerWindow();
+				GUIManager.getMainManager().showGUI(new GUITexturepacks());
 				return null;
 			}
 		});

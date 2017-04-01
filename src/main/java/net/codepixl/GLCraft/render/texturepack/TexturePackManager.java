@@ -52,7 +52,7 @@ public class TexturePackManager {
 			} catch (FileNotFoundException | UnsupportedEncodingException e) {
 				e.printStackTrace();
 			}
-			writer.print("none");
+			writer.print("[[none]]");
 			writer.close();
 		}
 		BufferedReader br = null;

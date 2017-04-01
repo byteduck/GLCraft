@@ -12,6 +12,7 @@ import static org.lwjgl.opengl.GL11.*;
 
 public class Texture {
 	int id,width,height;
+	private static Texture lastBind, cbind;
 	
 	private Texture(int id, int width, int height){
 		this.id = id;
@@ -27,6 +28,10 @@ public class Texture {
 			e.printStackTrace();
 		}
 		
+		return commonInit(image);
+	}
+
+	public static Texture makeTexture(BufferedImage image){
 		return commonInit(image);
 	}
 	
@@ -49,10 +54,18 @@ public class Texture {
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
 		glBindTexture(GL_TEXTURE_2D, id);
+		lastBind = cbind;
+		cbind = this;
 	}
 	
-	public void unbind(){
+	public static void unbind(){
 		glBindTexture(GL_TEXTURE_2D, 0);
+		lastBind = cbind;
+		cbind = null;
+	}
+
+	public static void rebind(){
+		if(lastBind != null) lastBind.bind();
 	}
 	
 	public void delete(){
@@ -85,5 +98,9 @@ public class Texture {
 		glBindTexture(GL_TEXTURE_2D, id);
 		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, image.getWidth(), image.getHeight(), 0, GL_RGBA, GL_UNSIGNED_BYTE, buffer);
 		return new Texture(id, image.getWidth(), image.getHeight());
+	}
+
+	public int getId(){
+		return id;
 	}
 }

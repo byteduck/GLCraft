@@ -30,6 +30,10 @@ public class GUIScrollBox extends GUIElement{
 		i.y = currentY;
 		currentY+=i.height+spacing;
 	}
+
+	public ArrayList<GUIScreen> getItems(){
+		return items;
+	}
 	
 	@Override
 	public void addElement(GUIScreen s){

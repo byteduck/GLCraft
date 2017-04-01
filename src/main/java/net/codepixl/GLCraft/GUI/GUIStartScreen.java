@@ -16,7 +16,7 @@ import java.util.concurrent.Callable;
 
 public class GUIStartScreen extends GUIScreen{
 	
-	private GUIButton startButton, pluginManagerButton, quitButton, bugButton, texturepackButton, multiplayerButton;
+	private GUIButton startButton, pluginManagerButton, quitButton, bugButton, settingsButton, multiplayerButton;
 	private GUILabel title;
 
 	public void makeElements(){
@@ -53,15 +53,15 @@ public class GUIStartScreen extends GUIScreen{
 			}
 		});
 		pluginManagerButton.width = BUTTONWIDTH;
-		
-		texturepackButton = new GUIButton("Settings", MIDDLE, MIDDLEY+GUIButton.BTNHEIGHT+10, new Callable<Void>() {
+
+		settingsButton = new GUIButton("Settings", MIDDLE, MIDDLEY+GUIButton.BTNHEIGHT+10, new Callable<Void>() {
 			@Override
 			public Void call() throws Exception {
 				GUIManager.getMainManager().showGUI(new GUISettings());
 				return null;
 			}
 		});
-		texturepackButton.width = BUTTONWIDTH;
+		settingsButton.width = BUTTONWIDTH;
 		
 		quitButton = new GUIButton("Quit", MIDDLE-BBUTTONWIDTH/2-5, MIDDLEY+GUIButton.BTNHEIGHT*2+20, new Callable<Void>() {
 			@Override
@@ -90,7 +90,7 @@ public class GUIStartScreen extends GUIScreen{
 		this.addElement(startButton);
 		this.addElement(pluginManagerButton);
 		this.addElement(bugButton);
-		this.addElement(texturepackButton);
+		this.addElement(settingsButton);
 		this.addElement(multiplayerButton);
 	}
 	
