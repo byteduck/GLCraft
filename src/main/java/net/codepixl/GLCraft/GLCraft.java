@@ -348,7 +348,7 @@ public class GLCraft extends Screen{
 			Spritesheet.logo.bind();
 			Shape.currentSpritesheet = Spritesheet.logo;
 			glBegin(GL_QUADS);
-			Shape.createCenteredRect2D(Constants.getWidth()/2,Constants.getHeight()/2-Tesselator.getFontHeight()*2-30, Color4f.WHITE, new float[]{0,0}, 200f, 100f);
+			Shape.createCenteredRect2D(Constants.getWidth()/2,Constants.getHeight()/2-Tesselator.getFontHeight()*2-30, Color4f.WHITE, new float[]{0,0,1,1}, 200f, 100f);
 			glEnd();
 			TextureImpl.unbind();
 			Display.update();

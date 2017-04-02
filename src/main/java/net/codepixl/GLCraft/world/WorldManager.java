@@ -1128,15 +1128,18 @@ public class WorldManager {
 	}
 
 	public float getWaveSpeed(){
-		return MathUtils.pointAlongValues(previousWeather.type.waveSpeed,currentWeather.type.waveSpeed, (-weatherTransitionCountdown+10)/10f);
+		//return MathUtils.pointAlongValues(previousWeather.type.waveSpeed,currentWeather.type.waveSpeed, (-weatherTransitionCountdown+10)/10f);
+		return currentWeather.type.waveSpeed;
 	}
 
 	public float getWaveFrequency(){
-		return MathUtils.pointAlongValues(previousWeather.type.waveFrequency,currentWeather.type.waveFrequency, (-weatherTransitionCountdown+10)/10f);
+		//return MathUtils.pointAlongValues(previousWeather.type.waveSpeed,currentWeather.type.waveSpeed, (-weatherTransitionCountdown+10)/10f);
+		return currentWeather.type.waveFrequency;
 	}
 
 	public float getWaveMultiplier(){
-		return MathUtils.pointAlongValues(previousWeather.type.waveMultiplier,currentWeather.type.waveMultiplier, (-weatherTransitionCountdown+10)/10f);
+		//return MathUtils.pointAlongValues(previousWeather.type.waveSpeed,currentWeather.type.waveSpeed, (-weatherTransitionCountdown+10)/10f);
+		return currentWeather.type.waveMultiplier;
 	}
 
 	public void changeWeather(){

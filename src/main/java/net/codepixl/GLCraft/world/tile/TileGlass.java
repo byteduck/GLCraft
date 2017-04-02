@@ -89,14 +89,18 @@ public class TileGlass extends Tile{
 		 * left - 8,9 (4)
 		 * right - 10,11 (5)
 		 */
-		float tempTexCoords[] = new float[12];
+		float tempTexCoords[] = new float[24];
 		for(int i = 0; i < 6; i++){
 			if(sideShouldRender(i,x,y,z,w)){
-				tempTexCoords[i*2] = getTexCoords()[0];
-				tempTexCoords[i*2+1] = getTexCoords()[1];
+				tempTexCoords[i*4] = getTexCoords()[0];
+				tempTexCoords[i*4+1] = getTexCoords()[1];
+				tempTexCoords[i*4+2] = getTexCoords()[2];
+				tempTexCoords[i*4+3] = getTexCoords()[3];
 			}else{
-				tempTexCoords[i*2] = TextureManager.texture("misc.nothing")[0];
-				tempTexCoords[i*2+1] = TextureManager.texture("misc.nothing")[1];
+				tempTexCoords[i*4] = TextureManager.texture("misc.nothing")[0];
+				tempTexCoords[i*4+1] = TextureManager.texture("misc.nothing")[1];
+				tempTexCoords[i*4+2] = TextureManager.texture("misc.nothing")[2];
+				tempTexCoords[i*4+3] = TextureManager.texture("misc.nothing")[3];
 			}
 		}
 		Shape.createCube(0, 0, 0, col, tempTexCoords, 1f);
