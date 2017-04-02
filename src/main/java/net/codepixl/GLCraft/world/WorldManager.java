@@ -122,9 +122,10 @@ public class WorldManager {
 	public void createWorld(String name, boolean dedicated){
 		this.sendBlockPackets = false;
 		GLogger.log("Creating Chunks...", LogSource.SERVER);
-		elevationNoise = new OpenSimplexNoise(Constants.rand.nextLong());
-		roughnessNoise = new OpenSimplexNoise(Constants.rand.nextLong());
-		detailNoise = new OpenSimplexNoise(Constants.rand.nextLong());
+		long seed = Constants.rand.nextLong();
+		elevationNoise = new OpenSimplexNoise(seed*2);
+		roughnessNoise = new OpenSimplexNoise(seed);
+		detailNoise = new OpenSimplexNoise(seed/2);
 		//centralManager.initSplashText();
 		for(int x = 0; x < Constants.worldLengthChunks; x++){
 			for(int y = 0; y < Constants.worldLengthChunks; y++){
@@ -166,7 +167,7 @@ public class WorldManager {
 		GLogger.log("Done!", LogSource.SERVER);
 		doneGenerating = true;
 		String saveName = name.replaceAll("[^ a-zA-Z0-9.-]", "_");
-		this.currentSave = new Save(saveName, name, GLCraft.version, SaveManager.currentFormat);
+		this.currentSave = new Save(saveName, name, GLCraft.version, SaveManager.currentFormat, seed);
 		this.currentSave.isDedicated = dedicated;
 		if(!SaveManager.saveWorld(this, currentSave)){
 			doneGenerating = false;

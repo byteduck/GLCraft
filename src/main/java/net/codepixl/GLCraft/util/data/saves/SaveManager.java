@@ -47,7 +47,6 @@ public class SaveManager {
     	GLogger.log("Saving world "+save+"...", LogSource.SERVER);
     	
 		save.name = save.name.replaceAll("[^ a-zA-Z0-9.-]", "_");
-		
 		save.worldTime = worldManager.getWorldTime();
 		
 		worldManager.setSaving(true);
@@ -326,6 +325,10 @@ public class SaveManager {
 		t.setTag(worldTimeTag);
 		TagByteArray weatherState = new TagByteArray("weatherState", SerializationUtils.serialize(worldManager.currentWeather));
 		t.setTag(weatherState);
+		if(save.hasSeed){
+			TagLong seed = new TagLong("seed", save.seed);
+			t.setTag(seed);
+		}
 		nbtOutputStream.write(t);
 		nbtOutputStream.close();
 		outputStream.close();
@@ -349,14 +352,21 @@ public class SaveManager {
 					
 				}
 				inputStream.close();
-				return new Save(name,tag.getString("name"),tag.getString("version"),tag.getString("format"),timestamp,worldTime,weatherState);
+				Save s = new Save(name,tag.getString("name"),tag.getString("version"),tag.getString("format"),timestamp,worldTime,weatherState);
+				try{
+					s.seed = tag.getLong("seed");
+					s.hasSeed = true;
+				}catch(TagNotFoundException e){}
+				return s;
 			}catch(TagNotFoundException | NullPointerException e){
 				System.err.println("WARNING: world "+name+" is corrupted!");
 				return null;
 			}
 			
 		}else if(new File(Constants.GLCRAFTDIR+"saves/"+name+"/player.nbt").exists()){ //No metadata file, check if player.nbt exists
-			return new Save(name,name,"?",formatV0);
+			Save s = new Save(name,name,"?",formatV0,0);
+			s.hasSeed = false;
+			return s;
 		}else{
 			return null;
 		}
@@ -395,8 +405,9 @@ public class SaveManager {
 			inputStream.close();
 			return new Save("world",tag.getString("name"),tag.getString("version"),tag.getString("format"),timestamp,worldTime,true,weatherState);
 		}else{
-			Save s = new Save("world","world","?",formatV0);
+			Save s = new Save("world","world","?",formatV0,0);
 			s.isDedicated = true;
+			s.hasSeed = false;
 			return s;
 		}
 	}

@@ -7,14 +7,16 @@ import java.io.File;
 
 public class Save implements Comparable<Save>{
 	public String name,dispName,version,format;
-	public long timestamp, worldTime;
-	public boolean isDedicated = false;
+	public long timestamp, worldTime, seed;
+	public boolean isDedicated = false, hasSeed = false;
 	public WeatherState weatherState;
-	public Save(String name, String dispName, String version, String format){
+	public Save(String name, String dispName, String version, String format, long seed){
 		this.name = name;
 		this.dispName = dispName;
 		this.version = version;
 		this.format = format;
+		this.seed = seed;
+		this.hasSeed = true;
 	}
 	
 	public Save(String name, String dispName, String version, String format, long timestamp, long worldTime, WeatherState weatherState){

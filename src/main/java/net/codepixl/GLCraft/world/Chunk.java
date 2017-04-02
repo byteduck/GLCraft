@@ -849,5 +849,4 @@ public class Chunk {
 	public byte[][][] getLight() {
 		return light;
 	}
-	
 }
