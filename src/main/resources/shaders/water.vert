@@ -9,7 +9,8 @@ uniform float waveFrequency;
 void main(){
 	gl_TexCoord[0] = gl_MultiTexCoord0;
 	color = gl_Color.rgba;
-	gl_Vertex.y += sin((gl_Vertex.x+time*waveSpeed)*waveFrequency)*cos(gl_Vertex.z*waveFrequency)*waveMultiplier-waveMultiplier+waveAdd;
+	vec4 vert = gl_Vertex;
+	vert.y += sin((gl_Vertex.x+time*waveSpeed)*waveFrequency)*cos(gl_Vertex.z*waveFrequency)*waveMultiplier-waveMultiplier+waveAdd;
 
-	gl_Position = gl_ProjectionMatrix * gl_ModelViewMatrix * gl_Vertex;
+	gl_Position = gl_ProjectionMatrix * gl_ModelViewMatrix * vert;
 }
