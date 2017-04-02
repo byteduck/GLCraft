@@ -11,4 +11,4 @@ void main(void){
 
     worldCoord = gl_ModelViewMatrix * gl_Vertex;
     worldCoord = gl_ModelViewMatrixInverse * worldCoord;
-}   
+}

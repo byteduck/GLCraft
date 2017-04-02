@@ -13,12 +13,14 @@ import net.codepixl.GLCraft.util.BreakSource;
 import net.codepixl.GLCraft.util.Constants;
 import net.codepixl.GLCraft.util.Vector2i;
 import net.codepixl.GLCraft.util.Vector3i;
+import net.codepixl.GLCraft.util.logging.GLogger;
 import net.codepixl.GLCraft.world.WorldManager.Light;
 import net.codepixl.GLCraft.world.WorldManager.LightRemoval;
 import net.codepixl.GLCraft.world.tile.Tile;
 import net.codepixl.GLCraft.world.tile.ore.TileOre;
 import net.codepixl.GLCraft.world.tile.tick.TickHelper;
 import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL20;
 import org.lwjgl.util.vector.Vector3f;
 
 import java.io.IOException;
@@ -36,8 +38,8 @@ public class Chunk {
 	private volatile byte [][][] tiles;
 	private volatile byte [][][] light;
 	private volatile byte [][][] meta;
-	private ShaderProgram shader;
-	public int vcID, transvcID;
+	private ShaderProgram shader, waterShader;
+	public int vcID, transvcID, waterID;
 	private int sizeX;
 	private int sizeY;
 	private int sizeZ;
@@ -51,37 +53,41 @@ public class Chunk {
 	private ArrayList<Vector3f> scheduledBlockUpdates = new ArrayList<Vector3f>();
 	private boolean visible = false;
 	
-	public Chunk(ShaderProgram shader, int type, float x, float y, float z, WorldManager w, boolean fromBuf){
+	public Chunk(ShaderProgram shader, ShaderProgram waterShader, int type, float x, float y, float z, WorldManager w, boolean fromBuf){
 		this.pos = new Vector3f(x,y,z);
 		this.shader = shader;
+		this.waterShader = waterShader;
 		this.type = type;
 		this.worldManager = w;
 		initGL(fromBuf, false);
 		init(false, false);
 	}
 	
-	public Chunk(ShaderProgram shader, int type, float x, float y, float z,WorldManager w){
+	public Chunk(ShaderProgram shader, ShaderProgram waterShader, int type, float x, float y, float z,WorldManager w){
 		this.pos = new Vector3f(x,y,z);
 		this.shader = shader;
+		this.waterShader = waterShader;
 		this.type = type;
 		this.worldManager = w;
 		initGL(false, false);
 		init(false, false);
 	}
 	
-	public Chunk(ShaderProgram shader, int type, Vector3f pos, WorldManager w){
+	public Chunk(ShaderProgram shader, ShaderProgram waterShader, int type, Vector3f pos, WorldManager w){
 		this.worldManager = w;
 		this.pos = pos;
 		this.shader = shader;
+		this.waterShader = waterShader;
 		this.type = type;
 		initGL(false, false);
 		init(false, false);
 	}
 	
-	public Chunk(ShaderProgram shader, Vector3f pos, WorldManager w){
+	public Chunk(ShaderProgram shader, ShaderProgram waterShader, Vector3f pos, WorldManager w){
 		this.worldManager = w;
 		this.pos = pos;
 		this.shader = shader;
+		this.waterShader = waterShader;
 		this.type = CentralManager.MIXEDCHUNK;
 		initGL(false, true);
 		init(false, true);
@@ -303,9 +309,10 @@ public class Chunk {
 	
 	public void initGL(boolean bufChunk, boolean blank){
 		if(!this.worldManager.isServer){
-			int tmp = glGenLists(1);
-			vcID = tmp*2;
-			transvcID = vcID+1;
+			int tmp = glGenLists(3);
+			vcID = tmp;
+			transvcID = tmp+1;
+			waterID = tmp+2;
 		}
 	}
 
@@ -327,24 +334,37 @@ public class Chunk {
 		}
 	}
 	
-	public void render(boolean translucent){
+	public void render(boolean translucent, boolean water){
 		if(type != CentralManager.AIRCHUNK){
-			shader.use();
-			worldManager.setShaderUniform("time", GLCraft.getTime());
+			if(!water) {
+				shader.use();
+				worldManager.setShaderUniform("time", GLCraft.getTime());
+			}
 			GL11.glPolygonOffset(1.0f,1.0f);
 			if(translucent)
 				glCallList(transvcID);
-			else
+			else if(water) {
+				waterShader.use();
+				GL20.glUniform1f(GL20.glGetUniformLocation(waterShader.getProgram(), "time"), GLCraft.getTime());
+				GL20.glUniform1f(GL20.glGetUniformLocation(waterShader.getProgram(), "waveMultiplier"), worldManager.getWaveMultiplier());
+				GL20.glUniform1f(GL20.glGetUniformLocation(waterShader.getProgram(), "waveAdd"), 0f);
+				GL20.glUniform1f(GL20.glGetUniformLocation(waterShader.getProgram(), "waveSpeed"), worldManager.getWaveSpeed());
+				GL20.glUniform1f(GL20.glGetUniformLocation(waterShader.getProgram(), "waveFrequency"), worldManager.getWaveFrequency());
+				glCallList(waterID);
+				waterShader.release();
+			}else
 				glCallList(vcID);
-			shader.release();
+			if(!water)
+				shader.release();
 		}
 	}
 	
 	public void update(){
 		if(needsRebuild && !worldManager.isServer){
 			worldManager.relight();
-			rebuildBase(true);
-			rebuildBase(false);
+			rebuildBase(true, false);
+			rebuildBase(false, false);
+			rebuildBase(false, true);
 			needsRebuild = false;
 		}
 		if(this.worldManager.isServer){
@@ -428,10 +448,12 @@ public class Chunk {
 		queueRebuild();
 	}
 	
-	protected void rebuildBase(boolean translucent){
+	protected void rebuildBase(boolean translucent, boolean water){
 		if(type != CentralManager.AIRCHUNK && !this.worldManager.isServer){
 			if(translucent)
 				glNewList(transvcID, GL_COMPILE);
+			else if(water)
+				glNewList(waterID, GL_COMPILE);
 			else{
 				glNewList(vcID, GL_COMPILE);
 				visible = false;
@@ -443,7 +465,7 @@ public class Chunk {
 						if(!Tile.tileMap.containsKey(tiles[x][y][z]))
 							tiles[x][y][z] = Tile.Air.getId();
 						Tile t = Tile.getTile(tiles[x][y][z]);
-						boolean shouldRender = translucent ? t.isTranslucent() : !t.isTranslucent();
+						boolean shouldRender = translucent ? t.isTranslucent() && t != Tile.Water : (water ? t == Tile.Water : !t.isTranslucent());
 						if(shouldRender && t != Tile.Air && !checkTileNotInView(x+(int)pos.getX(),y+(int)pos.getY(),z+(int)pos.getZ())){
 							if(!translucent)
 								visible = true;
@@ -466,7 +488,7 @@ public class Chunk {
 									new Color4f(t.getColor().r*light[5],t.getColor().g*light[5],t.getColor().b*light[5],t.getColor().a),
 								};
 							}else{
-								Color4f col0=new Color4f(t.getColor().r*getLightIntensity(x,y,z),t.getColor().g*getLightIntensity(x,y,z),t.getColor().b*getLightIntensity(x,y,z),t.getColor().a);
+								Color4f col0 = new Color4f(t.getColor().r*getLightIntensity(x,y,z),t.getColor().g*getLightIntensity(x,y,z),t.getColor().b*getLightIntensity(x,y,z),t.getColor().a);
 								col = new Color4f[]{col0,col0,col0,col0,col0,col0};
 							}
 							/**if(tiles[x][y][z] != Tile.TallGrass.getId()){

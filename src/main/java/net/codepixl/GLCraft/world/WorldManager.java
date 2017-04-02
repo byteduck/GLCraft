@@ -46,7 +46,7 @@ public class WorldManager {
 	public boolean doneGenerating = false;
 	public EntityManager entityManager;
 	private volatile HashMap<Vector3i,Chunk> activeChunks; //Vector3i because HashMap doesn't play well with floats (therefore vector3f)
-	public ShaderProgram shader,cloudShader;
+	public ShaderProgram shader,cloudShader,waterShader;
 	public static Tile selectedBlock = Tile.Air;
 	public CentralManager centralManager;
 	public float tick = 0f;
@@ -90,6 +90,8 @@ public class WorldManager {
 		shader = new ShaderProgram(temp.getvShader(), temp.getfShader());
 		temp = new Shader("/shaders/clouds.vert","/shaders/clouds.frag");
 		cloudShader = new ShaderProgram(temp.getvShader(), temp.getfShader());
+		temp = new Shader("/shaders/water.vert","/shaders/water.frag");
+		waterShader = new ShaderProgram(temp.getvShader(), temp.getfShader());
 	}
 	
 	private void init(){
@@ -104,7 +106,7 @@ public class WorldManager {
 		for(int x = 0; x < Constants.worldLengthChunks; x++){
 			for(int y = 0; y < Constants.worldLengthChunks; y++){
 				for(int z = 0; z < Constants.worldLengthChunks; z++){
-					Chunk c = new Chunk(shader, new Vector3f(x * Constants.CHUNKSIZE, y * Constants.CHUNKSIZE, z * Constants.CHUNKSIZE), this);
+					Chunk c = new Chunk(shader, waterShader, new Vector3f(x * Constants.CHUNKSIZE, y * Constants.CHUNKSIZE, z * Constants.CHUNKSIZE), this);
 					activeChunks.put(new Vector3i(c.getPos()), c);
 					//saveChunk(activeChunks.get(activeChunks.size() - 1));
 				}
@@ -128,9 +130,8 @@ public class WorldManager {
 			for(int y = 0; y < Constants.worldLengthChunks; y++){
 				for(int z = 0; z < Constants.worldLengthChunks; z++){
 					currentChunk++;
-					int progress = (int) (((float)currentChunk/(float)Math.pow(Constants.worldLengthChunks, 3))*100f);
 					//centralManager.renderSplashText("Terraforming...", progress+"%", progress);
-					Chunk c = new Chunk(shader, 1, x * Constants.CHUNKSIZE, y * Constants.CHUNKSIZE, z * Constants.CHUNKSIZE, this);
+					Chunk c = new Chunk(shader, waterShader, 1, x * Constants.CHUNKSIZE, y * Constants.CHUNKSIZE, z * Constants.CHUNKSIZE, this);
 					activeChunks.put(new Vector3i(c.getPos()), c);
 					//saveChunk(activeChunks.get(activeChunks.size() - 1));
 				}
@@ -141,7 +142,6 @@ public class WorldManager {
 		this.currentChunk = 0;
 		while(i.hasNext()){
 			this.currentChunk++;
-			int progress = (int) (((float)currentChunk/(float)Math.pow(Constants.worldLengthChunks, 3))*100f);
 			//centralManager.renderSplashText("Planting...", progress+"%", progress);
 			i.next().populateChunk();
 		}
@@ -150,7 +150,6 @@ public class WorldManager {
 		/*this.currentChunk = 0;
 		while(i.hasNext()){
 			this.currentChunk++;
-			int progress = (int) (((float)currentChunk/(float)Math.pow(Constants.worldLengthChunks, 3))*100f);
 			centralManager.renderSplashText("Lighting...", progress+"%", progress);
 		}*/
 		
@@ -159,7 +158,6 @@ public class WorldManager {
 		this.currentChunk = 0;
 		while(i.hasNext()){
 			this.currentChunk++;
-			int progress = (int) (((float)currentChunk/(float)Math.pow(Constants.worldLengthChunks, 3))*100f);
 			//centralManager.renderSplashText("Decorating...", progress+"%", progress);
 			Chunk c = i.next();
 			c.rebuildTickTiles();
@@ -197,7 +195,7 @@ public class WorldManager {
 			for(int y = 0; y < Constants.worldLengthChunks; y++){
 				for(int z = 0; z < Constants.worldLengthChunks; z++){
 					currentChunk++;
-					Chunk c = new Chunk(shader, CentralManager.MIXEDCHUNK, x * Constants.CHUNKSIZE, 0, z * Constants.CHUNKSIZE, this, true);
+					Chunk c = new Chunk(shader, waterShader, CentralManager.MIXEDCHUNK, x * Constants.CHUNKSIZE, 0, z * Constants.CHUNKSIZE, this, true);
 					activeChunks.put(new Vector3i(c.getPos()), c);
 					c.rebuild();
 				}
@@ -277,7 +275,7 @@ public class WorldManager {
 		}
 		if(toAdd.size() > 0){
 			Vector3f cpos = toAdd.get(0);
-			Chunk c = new Chunk(shader, 1, cpos, this);
+			Chunk c = new Chunk(shader, waterShader, 1, cpos, this);
 			activeChunks.put(new Vector3i(c.getPos()), c);
 			c.rebuild();
 			c.populateChunk();
@@ -328,7 +326,7 @@ public class WorldManager {
 			//}
 			i = toRender.iterator();
 			while(i.hasNext()){
-				i.next().render(false);
+				i.next().render(false, false);
 			}
 			
 			DebugTimer.startTimer("entity_render");
@@ -336,8 +334,11 @@ public class WorldManager {
 			DebugTimer.pauseTimer("entity_render");
 			
 			i = toRender.iterator();
+			Chunk c;
 			while(i.hasNext()){
-				i.next().render(true);
+				c = i.next();
+				c.render(true, false);
+				c.render(false, true);
 			}
 			DebugTimer.endTimer("chunk_render");
 			
@@ -421,8 +422,9 @@ public class WorldManager {
 		Iterator<Chunk> i = this.activeChunks.values().iterator();
 		while(i.hasNext()){
 			Chunk c = i.next();
-			c.rebuildBase(true);
-			c.rebuildBase(false);
+			c.rebuildBase(true, false);
+			c.rebuildBase(false, false);
+			c.rebuildBase(false, true);
 			c.rebuildTickTiles();
 		}
 			
@@ -565,7 +567,6 @@ public class WorldManager {
 		}
 		if(sendPacket && sendBlockPackets)
 			this.sendPacket(new PacketBlockChange(x,y,z,meta));
-		return;
 	}
 	
 	public void blockUpdate(int x, int y, int z){
@@ -595,8 +596,7 @@ public class WorldManager {
 		vector3i.x = (int) (Math.floor(vector3i.x/16f)*16);
 		vector3i.y = (int) (Math.floor(vector3i.y/16f)*16);
 		vector3i.z = (int) (Math.floor(vector3i.z/16f)*16);
-		Chunk c = activeChunks.get(vector3i);
-		return c;
+		return activeChunks.get(vector3i);
 	}
 	
 	public boolean isInBounds(Vector3f pos){
@@ -632,7 +632,7 @@ public class WorldManager {
 		for(int x = 0; x < Constants.worldLengthChunks; x++){
 			for(int y = 0; y < Constants.worldLengthChunks; y++){
 				for(int z = 0; z < Constants.worldLengthChunks; z++){
-					Chunk c = new Chunk(shader, new Vector3f(x * Constants.CHUNKSIZE, y * Constants.CHUNKSIZE, z * Constants.CHUNKSIZE), this);
+					Chunk c = new Chunk(shader, waterShader, new Vector3f(x * Constants.CHUNKSIZE, y * Constants.CHUNKSIZE, z * Constants.CHUNKSIZE), this);
 					activeChunks.put(new Vector3i(c.getPos()), c);
 				}
 			}
@@ -967,8 +967,9 @@ public class WorldManager {
 				}
 				c = activeChunks.get(currentRebuild);
 			}
-			c.rebuildBase(true);
-			c.rebuildBase(false);
+			c.rebuildBase(true, false);
+			c.rebuildBase(false, false);
+			c.rebuildBase(false, true);
 			currentRebuild++;
 			currentRebuild%=activeChunks.size();
 		}
@@ -1124,6 +1125,18 @@ public class WorldManager {
 
 	public float getRainOpacity(){
 		return MathUtils.pointAlongValues(previousWeather.type.rainOpacity,currentWeather.type.rainOpacity, (-weatherTransitionCountdown+10)/10f);
+	}
+
+	public float getWaveSpeed(){
+		return MathUtils.pointAlongValues(previousWeather.type.waveSpeed,currentWeather.type.waveSpeed, (-weatherTransitionCountdown+10)/10f);
+	}
+
+	public float getWaveFrequency(){
+		return MathUtils.pointAlongValues(previousWeather.type.waveFrequency,currentWeather.type.waveFrequency, (-weatherTransitionCountdown+10)/10f);
+	}
+
+	public float getWaveMultiplier(){
+		return MathUtils.pointAlongValues(previousWeather.type.waveMultiplier,currentWeather.type.waveMultiplier, (-weatherTransitionCountdown+10)/10f);
 	}
 
 	public void changeWeather(){
