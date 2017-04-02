@@ -99,7 +99,7 @@ public class GUIStartScreen extends GUIScreen{
 		super.update();
 		if(TextureManager.setAtlas){
 			File outputfile = new File(Constants.GLCRAFTDIR,"temp/atlas.png");
-			Spritesheet.atlas = new Spritesheet(outputfile.getAbsolutePath(),TextureManager.maxWidth,true);
+			Spritesheet.atlas = new Spritesheet(outputfile.getAbsolutePath(), true);
 			TextureManager.setAtlas = false;
 		}
 	}

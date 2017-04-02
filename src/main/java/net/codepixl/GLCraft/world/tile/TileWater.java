@@ -59,11 +59,11 @@ public class TileWater extends Tile{
 			GL11.glBegin(GL11.GL_QUADS);
 			GL11.glTexCoord2f(this.getTexCoords()[0], this.getTexCoords()[1]);
 			GL11.glVertex3f(x, y, z);
-			GL11.glTexCoord2f(this.getTexCoords()[0]+Spritesheet.atlas.uniformSize(), this.getTexCoords()[1]);
+			GL11.glTexCoord2f(this.getTexCoords()[2], this.getTexCoords()[1]);
 			GL11.glVertex3f(x,y,z+1);
-			GL11.glTexCoord2f(this.getTexCoords()[0]+Spritesheet.atlas.uniformSize(), this.getTexCoords()[1]+Spritesheet.atlas.uniformSize());
+			GL11.glTexCoord2f(this.getTexCoords()[2], this.getTexCoords()[3]);
 			GL11.glVertex3f(x+1,y,z+1);
-			GL11.glTexCoord2f(this.getTexCoords()[0], this.getTexCoords()[1]+Spritesheet.atlas.uniformSize());
+			GL11.glTexCoord2f(this.getTexCoords()[0], this.getTexCoords()[3]);
 			GL11.glVertex3f(x+1,y,z);
 			GL11.glEnd();
 		}
@@ -72,11 +72,11 @@ public class TileWater extends Tile{
 			GL11.glBegin(GL11.GL_QUADS);
 			GL11.glTexCoord2f(this.getTexCoords()[0], this.getTexCoords()[1]);
 			GL11.glVertex3f(x, y+cornerHeight[0], z);
-			GL11.glTexCoord2f(this.getTexCoords()[0]+Spritesheet.atlas.uniformSize(), this.getTexCoords()[1]);
+			GL11.glTexCoord2f(this.getTexCoords()[2], this.getTexCoords()[1]);
 			GL11.glVertex3f(x+1, y+cornerHeight[1], z);
-			GL11.glTexCoord2f(this.getTexCoords()[0]+Spritesheet.atlas.uniformSize(), this.getTexCoords()[1]+Spritesheet.atlas.uniformSize());
+			GL11.glTexCoord2f(this.getTexCoords()[2], this.getTexCoords()[3]);
 			GL11.glVertex3f(x+1, y+cornerHeight[2], z+1);
-			GL11.glTexCoord2f(this.getTexCoords()[0], this.getTexCoords()[1]+Spritesheet.atlas.uniformSize());
+			GL11.glTexCoord2f(this.getTexCoords()[0], this.getTexCoords()[3]);
 			GL11.glVertex3f(x, y+cornerHeight[3], z+1);
 			GL11.glEnd();
 		}
@@ -85,11 +85,11 @@ public class TileWater extends Tile{
 			GL11.glBegin(GL11.GL_QUADS);
 			GL11.glTexCoord2f(this.getTexCoords()[0], this.getTexCoords()[1]);
 			GL11.glVertex3f(x,y,z);
-			GL11.glTexCoord2f(this.getTexCoords()[0]+Spritesheet.atlas.uniformSize(), this.getTexCoords()[1]);
+			GL11.glTexCoord2f(this.getTexCoords()[2], this.getTexCoords()[1]);
 			GL11.glVertex3f(x+1,y,z);
-			GL11.glTexCoord2f(this.getTexCoords()[0]+Spritesheet.atlas.uniformSize(), this.getTexCoords()[1]+Spritesheet.atlas.uniformSize());
+			GL11.glTexCoord2f(this.getTexCoords()[2], this.getTexCoords()[3]);
 			GL11.glVertex3f(x+1, y+cornerHeight[1], z);
-			GL11.glTexCoord2f(this.getTexCoords()[0], this.getTexCoords()[1]+Spritesheet.atlas.uniformSize());
+			GL11.glTexCoord2f(this.getTexCoords()[0], this.getTexCoords()[3]);
 			GL11.glVertex3f(x, y+cornerHeight[0], z);
 			GL11.glEnd();
 		}
@@ -98,11 +98,11 @@ public class TileWater extends Tile{
 			GL11.glBegin(GL11.GL_QUADS);
 			GL11.glTexCoord2f(this.getTexCoords()[0], this.getTexCoords()[1]);
 			GL11.glVertex3f(x,y,z+1);
-			GL11.glTexCoord2f(this.getTexCoords()[0]+Spritesheet.atlas.uniformSize(), this.getTexCoords()[1]);
+			GL11.glTexCoord2f(this.getTexCoords()[2], this.getTexCoords()[1]);
 			GL11.glVertex3f(x, y+cornerHeight[3], z+1);
-			GL11.glTexCoord2f(this.getTexCoords()[0]+Spritesheet.atlas.uniformSize(), this.getTexCoords()[1]+Spritesheet.atlas.uniformSize());
+			GL11.glTexCoord2f(this.getTexCoords()[2], this.getTexCoords()[3]);
 			GL11.glVertex3f(x+1, y+cornerHeight[2], z+1);
-			GL11.glTexCoord2f(this.getTexCoords()[0], this.getTexCoords()[1]+Spritesheet.atlas.uniformSize());
+			GL11.glTexCoord2f(this.getTexCoords()[0], this.getTexCoords()[3]);
 			GL11.glVertex3f(x+1,y,z+1);
 			GL11.glEnd();
 		}
@@ -111,11 +111,11 @@ public class TileWater extends Tile{
 			GL11.glBegin(GL11.GL_QUADS);
 			GL11.glTexCoord2f(this.getTexCoords()[0], this.getTexCoords()[1]);
 			GL11.glVertex3f(x+1,y,z);
-			GL11.glTexCoord2f(this.getTexCoords()[0]+Spritesheet.atlas.uniformSize(), this.getTexCoords()[1]);
+			GL11.glTexCoord2f(this.getTexCoords()[2], this.getTexCoords()[1]);
 			GL11.glVertex3f(x+1,y,z+1);
-			GL11.glTexCoord2f(this.getTexCoords()[0]+Spritesheet.atlas.uniformSize(), this.getTexCoords()[1]+Spritesheet.atlas.uniformSize());
+			GL11.glTexCoord2f(this.getTexCoords()[2], this.getTexCoords()[3]);
 			GL11.glVertex3f(x+1, y+cornerHeight[2], z+1);
-			GL11.glTexCoord2f(this.getTexCoords()[0], this.getTexCoords()[1]+Spritesheet.atlas.uniformSize());
+			GL11.glTexCoord2f(this.getTexCoords()[0], this.getTexCoords()[3]);
 			GL11.glVertex3f(x+1, y+cornerHeight[1], z);
 			GL11.glEnd();
 		}
@@ -124,11 +124,11 @@ public class TileWater extends Tile{
 			GL11.glBegin(GL11.GL_QUADS);
 			GL11.glTexCoord2f(this.getTexCoords()[0], this.getTexCoords()[1]);
 			GL11.glVertex3f(x,y,z);
-			GL11.glTexCoord2f(this.getTexCoords()[0]+Spritesheet.atlas.uniformSize(), this.getTexCoords()[1]);
+			GL11.glTexCoord2f(this.getTexCoords()[2], this.getTexCoords()[1]);
 			GL11.glVertex3f(x, y+cornerHeight[0], z);
-			GL11.glTexCoord2f(this.getTexCoords()[0]+Spritesheet.atlas.uniformSize(), this.getTexCoords()[1]+Spritesheet.atlas.uniformSize());
+			GL11.glTexCoord2f(this.getTexCoords()[2], this.getTexCoords()[3]);
 			GL11.glVertex3f(x, y+cornerHeight[3], z+1);
-			GL11.glTexCoord2f(this.getTexCoords()[0], this.getTexCoords()[1]+Spritesheet.atlas.uniformSize());
+			GL11.glTexCoord2f(this.getTexCoords()[0], this.getTexCoords()[3]);
 			GL11.glVertex3f(x,y,z+1);
 			GL11.glEnd();
 		}

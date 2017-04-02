@@ -17,10 +17,7 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Map;
+import java.util.*;
 
 public class TextureManager {
 	private static HashMap<String,String> textures = new HashMap<String,String>();
@@ -35,7 +32,7 @@ public class TextureManager {
 	private static BufferedImage noimg;
 	public static String currentTexturepack = "[[none]]";
 	public static boolean setAtlas;
-	public static final int maxWidth = 16;
+	public static int maxWidth = 256;
 	
 	public static void addTexture(String name, String path){
 		textures.put(name.toLowerCase(),path.toLowerCase());
@@ -65,7 +62,7 @@ public class TextureManager {
 		atlasCoords = new HashMap<String,float[]>();
 		generateAtlas(true);
 	}
-	public static void generateAtlas(boolean regen){
+	/*public static void generateAtlas(boolean regen){
 		if(!madeAtlas || regen){
 			GLogger.log("Generating atlas with texture pack: "+currentTexturepack, LogSource.GLCRAFT);
 			madeAtlas = true;
@@ -74,7 +71,7 @@ public class TextureManager {
 			    total++;
 			}
 			Iterator<Map.Entry<String, String>> it = textures.entrySet().iterator();
-			int height = /*(int) Math.ceil((float)total/(float)maxWidth);*/ maxWidth;
+			int height = /*(int) Math.ceil((float)total/(float)maxWidth); maxWidth;
 			BufferedImage combined = new BufferedImage(maxWidth*16, height*16, BufferedImage.TYPE_INT_ARGB);
 			Graphics g = combined.getGraphics();
 			int x = 0;
@@ -157,14 +154,174 @@ public class TextureManager {
 
 		Shape.currentSpritesheet = Spritesheet.atlas;
 
+	}*/
+
+	private static int imageIndex = 0;
+	private static ArrayList<Boolean[]> lines;
+	
+	private static class AtlasTexture{
+		private final BufferedImage image;
+		private final String name;
+		private float[] location;
+
+		public AtlasTexture(BufferedImage image, String name){
+			this.image = image;
+			this.name = name;
+		}
 	}
+
+	public static void generateAtlas(boolean regen){
+		if(!madeAtlas || regen){
+			GLogger.log("Generating atlas with texture pack: "+currentTexturepack, LogSource.GLCRAFT);
+			madeAtlas = true;
+
+			//init images array
+			AtlasTexture[] images = new AtlasTexture[textures.size()+pluginTextures.size()];
+
+			imageIndex = 0;
+			maxWidth = 128;
+			lines = new ArrayList<Boolean[]>();
+
+			//load images into images[] and sort by width
+			loadTextures(images, regen);
+			loadPluginTextures(images, regen);
+			Arrays.sort(images, (a, b) -> b.image.getWidth() - a.image.getWidth());
+
+			//pack
+			for(int j = 0; j < images.length; j++) {
+				BufferedImage i = images[j].image;
+				int line = 0, xPos = 0;
+				while (!roomForImage(i, line, xPos)) {
+					xPos++;
+					if (xPos + i.getWidth() > maxWidth) {
+						xPos = 0;
+						line++;
+					}
+				}
+				for (int y = line; y < line + i.getHeight(); y++) {
+					Boolean[] l = lines.get(y);
+					for (int x = xPos; x < xPos + i.getWidth(); x++)
+						l[x] = true;
+				}
+				images[j].location = new float[]{xPos, line, 0, 0};
+			}
+
+			BufferedImage out = createImage(BufferedImage.TYPE_INT_ARGB, images);
+			try{
+				File outputfile = new File(Constants.GLCRAFTDIR,"/temp/atlas.png");
+				outputfile.getParentFile().mkdirs();
+				outputfile.createNewFile();
+				ImageIO.write(out, "png", outputfile);
+				if(regen){
+					Spritesheet.atlas.delete();
+					setAtlas = true;
+				}
+				Spritesheet.atlas = new Spritesheet(outputfile.getAbsolutePath(),true);
+			}catch (IOException e){
+				e.printStackTrace();
+			}
+		}
+	}
+
+	private static BufferedImage createImage(int type, AtlasTexture[] images){
+		BufferedImage img = new BufferedImage(maxWidth, lines.size(), type);
+		Graphics2D g = img.createGraphics();
+		for(int i = 0; i < images.length; i++) {
+			AtlasTexture tex = images[i];
+			g.drawImage(tex.image, (int) tex.location[0], (int) tex.location[1], null);
+			tex.location[0] /= (float)maxWidth;
+			tex.location[1] /= (float)img.getHeight();
+			tex.location[2] = tex.location[0]+((float)tex.image.getWidth()/(float)maxWidth);
+			tex.location[3] = tex.location[1]+((float)tex.image.getHeight()/(float)img.getHeight());
+			atlasCoords.put(tex.name, tex.location);
+		}
+		return img;
+	}
+
+	private static boolean roomForImage(BufferedImage i, int line, int xPos){
+		if(xPos+i.getWidth() > maxWidth) return false;
+		for(int y = line; y < line + i.getHeight(); y++) {
+			Boolean[] l = getLine(y);
+			for (int x = xPos; x < xPos + i.getWidth(); x++)
+				if(l[x]) return false;
+		}
+		return true;
+	}
+
+	private static Boolean[] getLine(int line){
+		while(lines.size() < line+1){
+			Boolean[] lineB = new Boolean[maxWidth];
+			for(int i = 0; i < maxWidth; i++)
+				lineB[i] = false;
+			lines.add(lineB);
+		}
+		return lines.get(line);
+	}
+
+	private static void loadTextures(AtlasTexture[] images, boolean regen){
+		Iterator<Map.Entry<String, String>> it = textures.entrySet().iterator();
+		while(it.hasNext()){
+			Map.Entry<String, String> next = it.next();
+			BufferedImage image;
+			try {
+				if(!regen) GLCraft.renderSplashText("Generating Texture Atlas...", "Loading "+next.getKey());
+				if(next.getValue().startsWith("[EXTERNAL]")){
+					image = ImageIO.read(new File(next.getValue().substring(next.getValue().indexOf(']')+1)));
+				}else{
+					if(currentTexturepack.equals("[[none]]")){
+						image = ImageIO.read(Texture.class.getClassLoader().getResourceAsStream(next.getValue()));
+					}else{
+						File tp = new File(Constants.GLCRAFTDIR + "Texturepacks/tmp/"+next.getValue());
+						if(tp.exists()){
+							image = ImageIO.read(tp.getAbsoluteFile());
+						}else{
+							image = ImageIO.read(Texture.class.getClassLoader().getResourceAsStream(next.getValue()));
+						}
+					}
+				}
+				images[imageIndex++] = new AtlasTexture(image, next.getKey());
+				if(image.getWidth() > maxWidth) maxWidth = image.getWidth();
+				//Logger.log("Added "+next.getKey()+" at "+x+","+y+" to texture atlas");
+			} catch (Exception e) {
+				System.err.println("Error adding "+next.getKey()+" to texture atlas: Could not find file "+next.getValue()+". Replacing with \"NO IMG\"");
+				e.printStackTrace();
+				images[imageIndex++] = new AtlasTexture(noimg, next.getKey());;
+			}
+		}
+	}
+
+	private static void loadPluginTextures(AtlasTexture[] images, boolean regen){
+		Iterator<PluginTexture> it2 = pluginTextures.iterator();
+		while(it2.hasNext()){
+			PluginTexture next = it2.next();
+			BufferedImage image;
+			LoadedPlugin p = GLCraft.getGLCraft().getPluginManager().getLoadedPlugin(next.plugin);
+			try {
+				if(!GLCraft.getGLCraft().isDevEnvironment){
+					image = ImageIO.read(p.loader.getResourceAsStream(next.loc));
+				}else{
+					image = ImageIO.read(new File("res",next.loc));
+				}
+				images[imageIndex++] = new AtlasTexture(image, next.name);
+				if(image.getWidth() > maxWidth) maxWidth = image.getWidth();
+			} catch (IOException | IllegalArgumentException e) {
+				e.printStackTrace();
+				System.err.println("Error adding "+next.name+" to texture atlas: Could not find file "+next.loc+" in plugin "+p.name+". Replacing with \"NO IMG\"");
+				e.printStackTrace();
+				images[imageIndex++] = new AtlasTexture(noimg, next.name);
+			}
+		}
+	}
+
 	public static float[] tile(Tile t){
 		if(t.hasMultipleTextures()){
-			float[] coords = new float[12];
+			float[] coords = new float[24];
 			for(int i = 0; i < 6; i++){
-				int index = i*2;
+				int index = i*4;
 				coords[index] = atlasCoords.get("tiles."+t.getMultiTextureNames()[i].toLowerCase())[0];
 				coords[index+1] = atlasCoords.get("tiles."+t.getMultiTextureNames()[i].toLowerCase())[1];
+				coords[index+2] = atlasCoords.get("tiles."+t.getMultiTextureNames()[i].toLowerCase())[2];
+				coords[index+3] = atlasCoords.get("tiles."+t.getMultiTextureNames()[i].toLowerCase())[3];
 			}
 			return coords;
 		}else{
@@ -173,11 +330,13 @@ public class TextureManager {
 	}
 	public static float[] tile(Tile t, byte meta) {
 		if(t.hasMultipleTextures()){
-			float[] coords = new float[12];
+			float[] coords = new float[24];
 			for(int i = 0; i < 6; i++){
-				int index = i*2;
+				int index = i*4;
 				coords[index] = atlasCoords.get("tiles."+t.getMultiTextureNames(meta)[i].toLowerCase())[0];
 				coords[index+1] = atlasCoords.get("tiles."+t.getMultiTextureNames(meta)[i].toLowerCase())[1];
+				coords[index+2] = atlasCoords.get("tiles."+t.getMultiTextureNames(meta)[i].toLowerCase())[2];
+				coords[index+3] = atlasCoords.get("tiles."+t.getMultiTextureNames(meta)[i].toLowerCase())[3];
 			}
 			return coords;
 		}else{
