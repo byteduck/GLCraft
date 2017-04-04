@@ -27,6 +27,7 @@ public class Server{
 	
 	public DatagramSocket socket;
 	public HashMap<InetAddressAndPort, ServerClient> clients;
+	public Queue<PacketRequestChunks> chunkQueue = new LinkedList<>();
 	public ConnectionRunnable connectionRunnable;
 	private PingRunnable pingRunnable;
 	public Thread connectionThread, pingThread;
@@ -172,7 +173,7 @@ public class Server{
 				Packet ps[] = new Packet[entityPackets.size()];
 				c.writePacket(new PacketMultiPacket(entityPackets.toArray(ps)));
 				sendToAllClientsExcept(new PacketPlayerAdd(c.player.getID(), c.player.getName(), c.player.getPos()), c);
-				c.writePacket(new PacketSendChunks(worldManager.getActiveChunks().size()));
+				//c.writePacket(new PacketSendChunks(worldManager.getActiveChunks().size()));
 			}else if(op instanceof PacketBlockChange){
 				PacketBlockChange p = (PacketBlockChange)op;
 				sendToAllClientsExcept(p,c);
@@ -237,12 +238,8 @@ public class Server{
 				sendToAllClients(new PacketPlayerLeave(c.player.getID()));
 				sendToAllClients(new PacketChat(ChatFormat.YELLOW+c.player.getName()+" left the game."));
 			}else if(op instanceof PacketRequestChunks){
-				Vector2i pos = ((PacketRequestChunks) op).pos;
-				ArrayList<Chunk> chunks = new ArrayList<Chunk>();
-				for(int y = 0; y < Constants.worldLengthChunks; y++){
-					chunks.add(worldManager.getChunk(new Vector3i(pos.x,y*16,pos.y)));
-				}
-				c.writePacket(new PacketSendChunks(chunks));
+				((PacketRequestChunks) op).client = c;
+				chunkQueue.add((PacketRequestChunks) op);
 			}else if(op instanceof PacketPing){
 				c.setPingTime(System.currentTimeMillis());
 				c.writePacket(new PacketPing(true));
@@ -267,6 +264,10 @@ public class Server{
 		}catch(IOException e){
 			e.printStackTrace();
 		}
+	}
+
+	public Collection<ServerClient> getClients(){
+		return clients.values();
 	}
 	
 	public void sendToAllClients(Packet p) throws IOException{

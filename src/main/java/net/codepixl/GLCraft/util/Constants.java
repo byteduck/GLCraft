@@ -40,6 +40,7 @@ public class Constants {
 	public static int FPS = 0; //FPS that updates every so often
 	public static int QFPS = 0; //FPS that updates every frame
 	public static Vector3f[] stars;
+	public static final int LOAD_DISTANCE = 5; //The distance from the player at which chunks will load
 
 	public static void gatherSystemInfo() {
 		Arrays.sort(SystemPropertyName);

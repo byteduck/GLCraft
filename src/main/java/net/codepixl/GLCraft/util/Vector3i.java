@@ -51,5 +51,11 @@ public class Vector3i implements Serializable{
 		v3f.set(x,y,z);
 		return v3f;
 	}
-   
+
+	public Vector3i set(int x, int y, int z) {
+		this.x = x;
+		this.y = y;
+		this.z = z;
+		return this;
+	}
 }

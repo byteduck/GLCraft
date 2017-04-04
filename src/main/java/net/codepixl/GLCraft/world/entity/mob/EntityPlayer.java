@@ -26,6 +26,8 @@ import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.util.vector.Vector3f;
 
+import java.util.ArrayList;
+
 import static org.lwjgl.opengl.GL11.*;
 
 public class EntityPlayer extends Mob implements CommandExecutor{
@@ -45,6 +47,8 @@ public class EntityPlayer extends Mob implements CommandExecutor{
 	public boolean updatedInventory;
 	public boolean shouldUpdate = false;
 	private Permission permission = Permission.NONE;
+	public Vector2i chunkPos;
+	public ArrayList<Vector2i> playerChunks;
 	
 	public EntityPlayer(Vector3f pos, WorldManager w) {
 		super(pos, w);
@@ -61,6 +65,8 @@ public class EntityPlayer extends Mob implements CommandExecutor{
 		prevSelect = new Vector3f(-1, -1, -1);
 		eyeLevel = 1.6f;
 		this.name = SettingsManager.getSetting("name");
+		if(w.isServer || !(this instanceof EntityPlayerMP)) this.chunkPos = worldManager.posToChunkPos2i(pos);
+		if(w.isServer || !(this instanceof EntityPlayerMP)) this.playerChunks = new ArrayList<>(worldManager.getChunkPosInRadiusOfPlayer(this, Constants.LOAD_DISTANCE));
 	}
 	
 	public void setName(String name){

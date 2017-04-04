@@ -14,6 +14,11 @@ public class Vector2i implements Serializable{
 		this.y = (int) y;
 	}
 
+	public Vector2i(Vector2i pos) {
+		this.x = pos.x;
+		this.y = pos.y;
+	}
+
 	@Override
 	public String toString(){
 		return "["+x+","+y+"]";
@@ -32,5 +37,11 @@ public class Vector2i implements Serializable{
 
 	public Vector2i mult(int m) {
 		return new Vector2i(this.x*m, this.y*m);
+	}
+
+	public Vector2i set(int x, int y) {
+		this.x = x;
+		this.y = y;
+		return this;
 	}
 }

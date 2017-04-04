@@ -29,8 +29,8 @@ public class Client{
 	public int port;
 	public volatile ServerConnectionState connectionState;
 	private volatile boolean isClosed = false;
-	private Vector2i currentRequest = new Vector2i(0,0);
-	private boolean requestingChunks = true;
+	//private Vector2i currentRequest = new Vector2i(0,0);
+	//private boolean requestingChunks = true;
 	public long lastPingTime = 0, pingCountdown = 500;
 	
 	public Client(WorldManager w, int port) throws IOException{
@@ -64,15 +64,11 @@ public class Client{
 		try{
 			if(op instanceof PacketSendChunks){
 				PacketSendChunks p = (PacketSendChunks)op;
-				if(p.numChunks != 0){
-					worldManager.doneGenerating = false;
-					worldManager.chunksLeftToDownload = p.numChunks;
-				}else{
-					if(!p.failed){
-						worldManager.updateChunks(p,true);
-					}
-				}
-				requestNextChunks();
+				if(!p.failed){
+					worldManager.updateChunks(p);
+				}else
+					GLogger.logerr("Request for chunks failed ", LogSource.CLIENT);
+				//requestNextChunks();
 			}else if(op instanceof PacketRespawn){
 				this.worldManager.getEntityManager().getPlayer().respawn();
 			}else if(op instanceof PacketWorldTime){
@@ -225,7 +221,8 @@ public class Client{
 					this.worldManager.getEntityManager().getPlayer().setPos(new Vector3f(p.x, p.y, p.z));
 					this.connectedServer = new ClientServer(this, addr, port);
 					connectionThread.start();
-					this.requestNextChunks();
+					sendToServer(new PacketReady());
+					//this.requestNextChunks();
 				}else{
 					this.connectionState = new ServerConnectionState(p.message);
 				}
@@ -244,7 +241,7 @@ public class Client{
 		return connectionState;
 	}
 	
-	private void requestNextChunks(){
+	/*private void requestNextChunks(){
 		if(requestingChunks){
 			if(currentRequest.y >= Constants.worldLengthChunks)
 				requestingChunks = false;
@@ -261,7 +258,7 @@ public class Client{
 				currentRequest.y++;
 			}
 		}
-	}
+	}*/
 
 	public void sendToServer(Packet p) throws IOException{
 		this.connectedServer.sendPacket(p);
@@ -337,8 +334,8 @@ public class Client{
 
 	public void reinit() {
 		try {
-			this.requestingChunks = true;
-			this.currentRequest = new Vector2i(0,0);
+			//this.requestingChunks = true;
+			//this.currentRequest = new Vector2i(0,0);
 			socket = new DatagramSocket(port);
 			this.isClosed = false;
 			connectionThread = new Thread(connectionRunnable, "Client Thread");

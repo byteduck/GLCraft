@@ -10,6 +10,8 @@ import net.codepixl.GLCraft.render.util.Spritesheet;
 import net.codepixl.GLCraft.render.util.Tesselator;
 import net.codepixl.GLCraft.util.Constants;
 import net.codepixl.GLCraft.util.MathUtils;
+import net.codepixl.GLCraft.util.Vector2i;
+import net.codepixl.GLCraft.world.Chunk;
 import net.codepixl.GLCraft.world.WorldManager;
 import net.codepixl.GLCraft.world.entity.Entity;
 import net.codepixl.GLCraft.world.entity.EntityItem;
@@ -20,6 +22,7 @@ import org.lwjgl.opengl.GL11;
 import org.lwjgl.util.vector.Vector3f;
 import org.newdawn.slick.opengl.TextureImpl;
 
+import java.util.ArrayList;
 import java.util.Iterator;
 
 public class EntityPlayerMP extends EntityPlayer{

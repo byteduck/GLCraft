@@ -11,6 +11,7 @@ import net.codepixl.GLCraft.GLCraft;
 import net.codepixl.GLCraft.GUI.GUIManager;
 import net.codepixl.GLCraft.GUI.GUIServerError;
 import net.codepixl.GLCraft.GUI.GUIStartScreen;
+import net.codepixl.GLCraft.network.Server;
 import net.codepixl.GLCraft.network.packet.*;
 import net.codepixl.GLCraft.render.util.Spritesheet;
 import net.codepixl.GLCraft.util.*;
@@ -63,7 +64,7 @@ public class WorldManager {
 	private int currentRebuild = 0;
 	public boolean isServer;
 	ArrayList<Chunk> toRender = new ArrayList<Chunk>();
-	public int chunksLeftToDownload = 0;
+	ArrayList<Vector2i> playerChunks = new ArrayList<>(), playerChunksNew = new ArrayList<>();
 	private Queue<Callable<Void>> actionQueue = new LinkedList<Callable<Void>>();
 	public boolean sendBlockPackets = true;
 	public boolean kicked = false;
@@ -247,13 +248,102 @@ public class WorldManager {
 			if(currentWeather.isWeatherOver())
 				changeWeather();
 		}
-		
+
+		loadUnload();
+
+		if(this.isServer){
+			if(!centralManager.getServer().chunkQueue.isEmpty()) {
+				PacketRequestChunks p = centralManager.getServer().chunkQueue.poll();
+				Vector2i pos = p.pos;
+				ArrayList<Chunk> chunks = new ArrayList<Chunk>();
+				Chunk c;
+				boolean failed = false;
+				for(int y = 0; y < Constants.worldLengthChunks && !failed; y++){
+					chunks.add(getChunk(new Vector3i(pos.x,y*16,pos.y)));
+					if(chunks.get(chunks.size()-1) == null)
+						failed = true;
+				}
+				if(failed)
+					centralManager.getServer().chunkQueue.add(p);
+				else
+					sendPacket(new PacketSendChunks(chunks), p.client.player);
+			}
+		}
+
 		worldTime+=Time.getDelta()*1000;
 		gameTime.updateTime(worldTime);
 		if(weatherTransitionCountdown > 0) weatherTransitionCountdown -= Time.getDelta(); else weatherTransitionCountdown = 0;
 	}
+
+	private void loadUnload(){
+		playerChunksNew.clear();
+		Vector2i chunkPos;
+
+		if(this.isServer) {
+			for (Server.ServerClient c : centralManager.getServer().getClients()) {
+				if (!(chunkPos = posToChunkPos2i(c.player.getPos())).equals(c.player.chunkPos)) {
+					c.player.playerChunks.clear();
+					c.player.playerChunks.addAll(getChunkPosInRadiusOfPlayer(c.player, Constants.LOAD_DISTANCE));
+					c.player.chunkPos = chunkPos;
+				}
+			}
+			for (Server.ServerClient c : centralManager.getServer().getClients())
+				playerChunksNew.addAll(c.player.playerChunks);
+		}else if(centralManager.getClient().connectionState.connected){
+			if (!(chunkPos = posToChunkPos2i(getPlayer().getPos())).equals(getPlayer().chunkPos)) {
+				getPlayer().playerChunks.clear();
+				getPlayer().playerChunks.addAll(getChunkPosInRadiusOfPlayer(getPlayer(), Constants.LOAD_DISTANCE));
+				getPlayer().chunkPos = chunkPos;
+			}
+			playerChunksNew.addAll(getPlayer().playerChunks);
+		}
+
+		for(Vector2i c : playerChunks)
+			if(!playerChunksNew.contains(c))
+				if(!unloadChunks(c)) GLogger.logerr("Chunks at "+c+" were attempted to be unloaded but there is no chunk there.", LogSource.SERVER);
+		for(Vector2i c : playerChunksNew)
+			if(!playerChunks.contains(c))
+				if(!createOrLoadChunks(c)) GLogger.logerr("Chunks at "+c+" were tried to be loaded/created but it is not a valid chunk pos.", LogSource.SERVER);
+
+		playerChunks = (ArrayList<Vector2i>) playerChunksNew.clone();
+	}
+
+	private boolean unloadChunks(Vector2i pos){
+		Vector3i vec = new Vector3i(pos.x,0,pos.y);
+		Chunk c;
+		boolean ret = true;
+		for(int y = 0; y < Constants.worldLengthChunks; y++){
+			c = activeChunks.get(vec.set(vec.x, y*16, vec.z));
+			if(c == null) ret = false;
+			activeChunks.remove(vec);
+		}
+		return ret;
+	}
+
+	private boolean createOrLoadChunks(Vector2i pos){
+		Chunk c;
+		Vector3i v;
+		//GLogger.log(pos);
+		//GLogger.log("cchunks "+pos);
+		if(pos.x % 16 == 0 && pos.y % 16 == 0 && pos.x >= 0 && pos.y >= 0) {
+			if(isServer) {
+				for (int y = 0; y < Constants.worldLengthChunks; y++) {
+					v = new Vector3i(pos.x, y * 16, pos.y);
+					if (!activeChunks.containsKey(v)) {
+						c = new Chunk(shader, waterShader, 1, new Vector3f(pos.x, y * 16, pos.y), this);
+						activeChunks.put(new Vector3i(pos.x, y * 16, pos.y), c);
+					}//else chunk is already loaded
+				}
+			}else {
+				sendPacket(new PacketRequestChunks(pos));
+			}
+		}
+		else
+			return false;
+		return true;
+	}
 	
-	private void loadUnload() {
+	/*private void loadUnload() {
 		EntityPlayer p = entityManager.getPlayer();
 		Vector3f pos = p.getPos();
 		Iterator<Chunk> i = activeChunks.values().iterator();
@@ -282,23 +372,21 @@ public class WorldManager {
 			c.populateChunk();
 			c.rebuild();
 		}
-	}
-	
-	public List<Vector3f> getChunkPosInRadiusOfPlayer(){
-		ArrayList<Vector3f> ret = new ArrayList<Vector3f>();
-		EntityPlayer p = entityManager.getPlayer();
-		Vector3f pos = p.getPos();
-		for(int x = -Constants.worldLengthChunks * Constants.CHUNKSIZE; x < Constants.worldLengthChunks * Constants.CHUNKSIZE; x+=Constants.CHUNKSIZE){
-			for(int y = -Constants.worldLengthChunks * Constants.CHUNKSIZE; y < Constants.worldLengthChunks * Constants.CHUNKSIZE; y+=Constants.CHUNKSIZE){
-				for(int z = -Constants.worldLengthChunks * Constants.CHUNKSIZE; z < Constants.worldLengthChunks * Constants.CHUNKSIZE; z+=Constants.CHUNKSIZE){
-					Vector3f add = MathUtils.round(new Vector3f(x+pos.x-(Math.round(pos.x) % 16),y+pos.y-(Math.round(pos.y) % 16),z+pos.z-(Math.round(pos.z) % 16)));
-					if(add.x >= 0)
-						if(add.y >= 0)
-							if(add.z >= 0)
-								ret.add(add);
-				}
-			}
-		}
+	}*/
+
+	/**
+	 * @param player the player
+	 * @param chunkRadius radius (in chunks)
+	 * @return The 2D (x,z) positions of chunks within chunkRadius*CHUNKSIZE blocks of the player.
+	 */
+	public List<Vector2i> getChunkPosInRadiusOfPlayer(EntityPlayer player, int chunkRadius){
+		int rad = chunkRadius*Constants.CHUNKSIZE, px = (int)player.getX(), pz = (int)player.getZ();
+		ArrayList ret = new ArrayList<Vector2i>();
+		Vector2i vec = new Vector2i(0,0);
+		for(int x = px-rad; x < px+rad; x+=16)
+			for(int z = pz-rad; z < pz+rad; z+=16)
+				if(x >= 0 && z >= 0)
+					ret.add(posToChunkPos(vec.set(x,z)));
 		return ret;
 	}
 
@@ -431,9 +519,9 @@ public class WorldManager {
 			
 	}
 	
-	public void reSunlight() {
-		for(int x = 0; x < Constants.worldLength; x++)
-			for(int z = 0; z < Constants.worldLength; z++){
+	public void reSunlight(Vector2i pos) {
+		for(int x = pos.x; x < pos.x+Constants.CHUNKSIZE; x++)
+			for(int z = pos.y; z < pos.y+Constants.CHUNKSIZE; z++){
 				sunlightQueue.add(new Light(new Vector3i(x,Constants.worldLength-1,z)));
 				setSunlight(x,Constants.worldLength-1,z,15,false);
 			}
@@ -593,12 +681,33 @@ public class WorldManager {
 	}
 	
 	public Chunk getChunk(Vector3i pos){
+		return activeChunks.get(posToChunkPos(pos));
+	}
+
+	//Clamps pos to the chunk it's in
+	public Vector3i posToChunkPos(Vector3i pos){
 		Vector3i vector3i = new Vector3i(pos);
 		vector3i.x = (int) (Math.floor(vector3i.x/16f)*16);
 		vector3i.y = (int) (Math.floor(vector3i.y/16f)*16);
 		vector3i.z = (int) (Math.floor(vector3i.z/16f)*16);
-		return activeChunks.get(vector3i);
+		return vector3i;
 	}
+
+	//Clamps pos to the chunk it's in
+	public Vector2i posToChunkPos(Vector2i pos){
+		Vector2i vector2i = new Vector2i(pos);
+		vector2i.x = (int) (Math.floor(vector2i.x/16f)*16);
+		vector2i.y = (int) (Math.floor(vector2i.y/16f)*16);
+		return vector2i;
+	}
+
+	public Vector2i posToChunkPos2i(Vector3f pos) {
+		Vector2i vector2i = new Vector2i(pos.x, pos.z);
+		vector2i.x = (int) (Math.floor(vector2i.x/16f)*16);
+		vector2i.y = (int) (Math.floor(vector2i.y/16f)*16);
+		return vector2i;
+	}
+
 	
 	public boolean isInBounds(Vector3f pos){
 		if(pos.x < 0 || pos.x > Constants.worldLength)
@@ -652,6 +761,10 @@ public class WorldManager {
 			centralManager.getServer().spawnPos = new Vector3f(x,y,z);
 			this.doneGenerating = true;
 			if(!GLCraft.getGLCraft().isServer()) this.centralManager.getServer().setBroadcast(s.dispName);
+			long seed = currentSave.seed;
+			elevationNoise = new OpenSimplexNoise(seed*2);
+			roughnessNoise = new OpenSimplexNoise(seed);
+			detailNoise = new OpenSimplexNoise(seed/2);
 			return true;
 		}else{
 			GLogger.logerr("Error loading world", LogSource.SERVER);
@@ -959,6 +1072,7 @@ public class WorldManager {
 	public void rebuildNextChunk() {
 		ArrayList<Chunk> activeChunks = new ArrayList<Chunk>(this.activeChunks.values());
 		if(activeChunks.size() > 0){
+			if(currentRebuild >= activeChunks.size()) currentRebuild = 0;
 			Chunk c = activeChunks.get(currentRebuild);
 			while(!c.isVisible()){
 				currentRebuild++;
@@ -996,30 +1110,32 @@ public class WorldManager {
 		return getEntityManager().getEntity(id);
 	}
 
-	public void updateChunks(PacketSendChunks p, boolean initial){
+	public void updateChunks(PacketSendChunks psc){
+		final PacketSendChunks p = psc;
+		final WorldManager wm = this;
 		for(int i = 0; i < p.pos.length; i++){
-			Chunk c = getChunk(p.pos[i]);
-			c.updateTiles(p,i);
-			if(initial)
-				chunksLeftToDownload--;
-		}
-		if(initial){
-			centralManager.setSplashText(GLCraft.getGLCraft().isLocalServerRunning() ? "Loading World..." : "Connecting to Server...", "Downloading Chunks...", (int)(((float)(-chunksLeftToDownload+1000)/1000f)*100));
-			if(chunksLeftToDownload <= 0){
-				this.doneGenerating = true;
-				this.actionQueue.add(new Callable<Void>(){
-					@Override
-					public Void call() throws Exception{
-						GLogger.log("Done Receiving Chunks", LogSource.CLIENT);
-						reSunlight();
-						getPlayer().shouldUpdate = true;
-						sendPacket(new PacketReady());
-						centralManager.finishSplashText();
-						return null;
+			final int j = i;
+			queueAction(new Callable<Void>() {
+				@Override
+				public Void call() throws Exception {
+					Chunk c = getChunk(p.pos[j]);
+					if(c == null){
+						c = new Chunk(shader, waterShader, p.pos[j].toVector3f(), wm);
+						activeChunks.put(p.pos[j], c);
 					}
-				});
-			}
+					c.updateTiles(p,j);
+					if(c == getChunk(getPlayer().getPos())) getPlayer().shouldUpdate = true;
+					return null;
+				}
+			});
 		}
+		queueAction(new Callable<Void>() {
+			@Override
+			public Void call() throws Exception {
+				reSunlight(new Vector2i(p.pos[0].x, p.pos[0].z));
+				return null;
+			}
+		});
 	}
 
 	public void setWorldTime(long worldTime) {
