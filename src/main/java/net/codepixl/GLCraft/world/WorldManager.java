@@ -38,6 +38,7 @@ import java.io.IOException;
 import java.util.*;
 import java.util.Map.Entry;
 import java.util.concurrent.Callable;
+import java.util.concurrent.ConcurrentLinkedQueue;
 
 import static org.lwjgl.opengl.GL11.glClearColor;
 
@@ -56,11 +57,11 @@ public class WorldManager {
 	public Save currentSave;
 	private long worldTime;
 	private GameTime gameTime = new GameTime(0);
-	public Queue<Light> lightQueue = new LinkedList<Light>();
-	public Queue<Light> sunlightQueue = new LinkedList<Light>();
-	public Queue<LightRemoval> lightRemovalQueue = new LinkedList<LightRemoval>();
+	public Queue<Light> lightQueue = new ConcurrentLinkedQueue<Light>();
+	public Queue<Light> sunlightQueue = new ConcurrentLinkedQueue<Light>();
+	public Queue<LightRemoval> lightRemovalQueue = new ConcurrentLinkedQueue<LightRemoval>();
 	public ArrayList<Chunk> lightRebuildQueue = new ArrayList<Chunk>();
-	public Queue<LightRemoval> sunlightRemovalQueue = new LinkedList<LightRemoval>();
+	public Queue<LightRemoval> sunlightRemovalQueue = new ConcurrentLinkedQueue<LightRemoval>();
 	private int currentRebuild = 0;
 	public boolean isServer;
 	ArrayList<Chunk> toRender = new ArrayList<Chunk>();
@@ -73,6 +74,8 @@ public class WorldManager {
 	public WeatherState previousWeather = new WeatherState(WeatherType.CLEAR, this);
 	public WeatherState currentWeather = new WeatherState(WeatherType.CLEAR, this);
 	public float weatherTransitionCountdown = 0.0f;
+	private ArrayList<Vector2i> chunkRequests = new ArrayList<Vector2i>();
+	private boolean queueRelight = false;
 	
 	public WorldManager(CentralManager w, boolean isServer){
 		this.centralManager = w;
@@ -104,7 +107,7 @@ public class WorldManager {
 	}
 	
 	public void createBlankWorld(){
-		for(int x = 0; x < Constants.worldLengthChunks; x++){
+		/*for(int x = 0; x < Constants.worldLengthChunks; x++){
 			for(int y = 0; y < Constants.worldLengthChunks; y++){
 				for(int z = 0; z < Constants.worldLengthChunks; z++){
 					Chunk c = new Chunk(shader, waterShader, new Vector3f(x * Constants.CHUNKSIZE, y * Constants.CHUNKSIZE, z * Constants.CHUNKSIZE), this);
@@ -112,7 +115,7 @@ public class WorldManager {
 					//saveChunk(activeChunks.get(activeChunks.size() - 1));
 				}
 			}
-		}
+		}*/
 		this.doneGenerating = true;
 	}
 	
@@ -134,7 +137,6 @@ public class WorldManager {
 					currentChunk++;
 					//centralManager.renderSplashText("Terraforming...", progress+"%", progress);
 					Chunk c = new Chunk(shader, waterShader, 1, x * Constants.CHUNKSIZE, y * Constants.CHUNKSIZE, z * Constants.CHUNKSIZE, this);
-					activeChunks.put(new Vector3i(c.getPos()), c);
 					//saveChunk(activeChunks.get(activeChunks.size() - 1));
 				}
 			}
@@ -217,6 +219,9 @@ public class WorldManager {
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
+
+		if(!isServer && queueRelight)
+			new Thread(() -> relightMain()).start();
 		
 		DebugTimer.startTimer("entity_update");
 		entityManager.update();
@@ -254,19 +259,22 @@ public class WorldManager {
 		if(this.isServer){
 			if(!centralManager.getServer().chunkQueue.isEmpty()) {
 				PacketRequestChunks p = centralManager.getServer().chunkQueue.poll();
-				Vector2i pos = p.pos;
-				ArrayList<Chunk> chunks = new ArrayList<Chunk>();
-				Chunk c;
-				boolean failed = false;
-				for(int y = 0; y < Constants.worldLengthChunks && !failed; y++){
-					chunks.add(getChunk(new Vector3i(pos.x,y*16,pos.y)));
-					if(chunks.get(chunks.size()-1) == null)
-						failed = true;
+				//Shouldn't need this if statement, but apparently I do.
+				if(p != null) {
+					Vector2i pos = p.indivPos;
+					ArrayList<Chunk> chunks = new ArrayList<Chunk>();
+					Chunk c;
+					boolean failed = false;
+					for (int y = 0; y < Constants.worldLengthChunks && !failed; y++) {
+						chunks.add(getChunk(new Vector3i(pos.x, y * 16, pos.y)));
+						if (chunks.get(chunks.size() - 1) == null)
+							failed = true;
+					}
+					if (failed)
+						centralManager.getServer().chunkQueue.add(p);
+					else
+						sendPacket(new PacketSendChunks(chunks), p.client.player);
 				}
-				if(failed)
-					centralManager.getServer().chunkQueue.add(p);
-				else
-					sendPacket(new PacketSendChunks(chunks), p.client.player);
 			}
 		}
 
@@ -305,6 +313,12 @@ public class WorldManager {
 			if(!playerChunks.contains(c))
 				if(!createOrLoadChunks(c)) GLogger.logerr("Chunks at "+c+" were tried to be loaded/created but it is not a valid chunk pos.", LogSource.SERVER);
 
+		if(!isServer)
+			if(chunkRequests.size() > 0){
+				sendPacket(new PacketRequestChunks(chunkRequests));
+				chunkRequests.clear();
+			}
+
 		playerChunks = (ArrayList<Vector2i>) playerChunksNew.clone();
 	}
 
@@ -326,17 +340,19 @@ public class WorldManager {
 		//GLogger.log(pos);
 		//GLogger.log("cchunks "+pos);
 		if(pos.x % 16 == 0 && pos.y % 16 == 0 && pos.x >= 0 && pos.y >= 0) {
-			if(isServer) {
-				for (int y = 0; y < Constants.worldLengthChunks; y++) {
-					v = new Vector3i(pos.x, y * 16, pos.y);
+			for (int y = 0; y < Constants.worldLengthChunks; y++) {
+				v = new Vector3i(pos.x, y * 16, pos.y);
+				if (isServer) {
 					if (!activeChunks.containsKey(v)) {
 						c = new Chunk(shader, waterShader, 1, new Vector3f(pos.x, y * 16, pos.y), this);
+						c.populateChunk();
 						activeChunks.put(new Vector3i(pos.x, y * 16, pos.y), c);
 					}//else chunk is already loaded
-				}
-			}else {
-				sendPacket(new PacketRequestChunks(pos));
+				}else
+					activeChunks.put(v, new Chunk(shader, waterShader, new Vector3f(pos.x, y * 16, pos.y), this));
 			}
+			if(!isServer)
+				chunkRequests.add(pos);
 		}
 		else
 			return false;
@@ -520,12 +536,14 @@ public class WorldManager {
 	}
 	
 	public void reSunlight(Vector2i pos) {
-		for(int x = pos.x; x < pos.x+Constants.CHUNKSIZE; x++)
-			for(int z = pos.y; z < pos.y+Constants.CHUNKSIZE; z++){
-				sunlightQueue.add(new Light(new Vector3i(x,Constants.worldLength-1,z)));
-				setSunlight(x,Constants.worldLength-1,z,15,false);
-			}
-		relight();
+		new Thread(()->{
+			for(int x = pos.x; x < pos.x+Constants.CHUNKSIZE; x++)
+				for(int z = pos.y; z < pos.y+Constants.CHUNKSIZE; z++){
+					sunlightQueue.add(new Light(new Vector3i(x,Constants.worldLength-1,z)));
+					setSunlight(x,Constants.worldLength-1,z,15,false);
+				}
+			relight();
+		}).start();
 	}
 
 	public ArrayList<AABB> BlockAABBForEntity(EntitySolid entitySolid){
@@ -879,74 +897,79 @@ public class WorldManager {
 	public Chunk getChunk(Vector3f pos) {
 		return getChunk(new Vector3i(pos));
 	}
-	
+
 	public void relight(){
+		queueRelight = true;
+	}
+
+	private synchronized void relightMain(){
+		queueRelight = false;
 		if(!this.isServer){
 			lightRebuildQueue.clear();
-			while(!lightRemovalQueue.isEmpty()){
+			while (!lightRemovalQueue.isEmpty()) {
 				LightRemoval next = lightRemovalQueue.poll();
 				Vector3i npos = next.pos;
-				Vector3i pos = new Vector3i(npos.x+1, npos.y, npos.z);
-				evalLightRemoval(npos,pos,next);
-				pos = new Vector3i(npos.x-1, npos.y, npos.z);
-				evalLightRemoval(npos,pos,next);
-				pos = new Vector3i(npos.x, npos.y+1, npos.z);
-				evalLightRemoval(npos,pos,next);
-				pos = new Vector3i(npos.x, npos.y-1, npos.z);
-				evalLightRemoval(npos,pos,next);
-				pos = new Vector3i(npos.x, npos.y, npos.z+1);
-				evalLightRemoval(npos,pos,next);
-				pos = new Vector3i(npos.x, npos.y, npos.z-1);
-				evalLightRemoval(npos,pos,next);
+				Vector3i pos = new Vector3i(npos.x + 1, npos.y, npos.z);
+				evalLightRemoval(npos, pos, next);
+				pos = new Vector3i(npos.x - 1, npos.y, npos.z);
+				evalLightRemoval(npos, pos, next);
+				pos = new Vector3i(npos.x, npos.y + 1, npos.z);
+				evalLightRemoval(npos, pos, next);
+				pos = new Vector3i(npos.x, npos.y - 1, npos.z);
+				evalLightRemoval(npos, pos, next);
+				pos = new Vector3i(npos.x, npos.y, npos.z + 1);
+				evalLightRemoval(npos, pos, next);
+				pos = new Vector3i(npos.x, npos.y, npos.z - 1);
+				evalLightRemoval(npos, pos, next);
 			}
-			while(!lightQueue.isEmpty()){
+			while (!lightQueue.isEmpty()) {
 				Light nextl = lightQueue.poll();
 				Vector3i next = nextl.pos;
-				Vector3i pos = new Vector3i(next.x+1, next.y, next.z);
-				evalLight(nextl,pos);
-				pos = new Vector3i(next.x-1, next.y, next.z);
-				evalLight(nextl,pos);
-				pos = new Vector3i(next.x, next.y+1, next.z);
-				evalLight(nextl,pos);
-				pos = new Vector3i(next.x, next.y-1, next.z);
-				evalLight(nextl,pos);
-				pos = new Vector3i(next.x, next.y, next.z+1);
-				evalLight(nextl,pos);
-				pos = new Vector3i(next.x, next.y, next.z-1);
-				evalLight(nextl,pos);
+				Vector3i pos = new Vector3i(next.x + 1, next.y, next.z);
+				evalLight(nextl, pos);
+				pos = new Vector3i(next.x - 1, next.y, next.z);
+				evalLight(nextl, pos);
+				pos = new Vector3i(next.x, next.y + 1, next.z);
+				evalLight(nextl, pos);
+				pos = new Vector3i(next.x, next.y - 1, next.z);
+				evalLight(nextl, pos);
+				pos = new Vector3i(next.x, next.y, next.z + 1);
+				evalLight(nextl, pos);
+				pos = new Vector3i(next.x, next.y, next.z - 1);
+				evalLight(nextl, pos);
 			}
-			while(!sunlightRemovalQueue.isEmpty()){
+			while (!sunlightRemovalQueue.isEmpty()) {
 				LightRemoval next = sunlightRemovalQueue.poll();
 				Vector3i npos = next.pos;
 				this.setSunlight(npos.x, npos.y, npos.z, 0, false);
-				Vector3i pos = new Vector3i(npos.x+1, npos.y, npos.z);
-				evalSunlightRemoval(npos,pos,next,false);
-				pos = new Vector3i(npos.x-1, npos.y, npos.z);
-				evalSunlightRemoval(npos,pos,next,false);
-				pos = new Vector3i(npos.x, npos.y+1, npos.z);
-				evalSunlightRemoval(npos,pos,next,false);
-				pos = new Vector3i(npos.x, npos.y-1, npos.z);
-				evalSunlightRemoval(npos,pos,next,true);
-				pos = new Vector3i(npos.x, npos.y, npos.z+1);
-				evalSunlightRemoval(npos,pos,next,false);
-				pos = new Vector3i(npos.x, npos.y, npos.z-1);
-				evalSunlightRemoval(npos,pos,next,false);
+				Vector3i pos = new Vector3i(npos.x + 1, npos.y, npos.z);
+				evalSunlightRemoval(npos, pos, next, false);
+				pos = new Vector3i(npos.x - 1, npos.y, npos.z);
+				evalSunlightRemoval(npos, pos, next, false);
+				pos = new Vector3i(npos.x, npos.y + 1, npos.z);
+				evalSunlightRemoval(npos, pos, next, false);
+				pos = new Vector3i(npos.x, npos.y - 1, npos.z);
+				evalSunlightRemoval(npos, pos, next, true);
+				pos = new Vector3i(npos.x, npos.y, npos.z + 1);
+				evalSunlightRemoval(npos, pos, next, false);
+				pos = new Vector3i(npos.x, npos.y, npos.z - 1);
+				evalSunlightRemoval(npos, pos, next, false);
 			}
-			while(!sunlightQueue.isEmpty()){
+			while (!sunlightQueue.isEmpty()) {
 				Light nextl = sunlightQueue.poll();
 				Vector3i next = nextl.pos;
-				Vector3i pos = new Vector3i(next.x+1, next.y, next.z);
-				evalSunlight(nextl,pos,false);
-				pos = new Vector3i(next.x-1, next.y, next.z);
-				evalSunlight(nextl,pos,false);
-				pos = new Vector3i(next.x, next.y+1, next.z);
-				evalSunlight(nextl,pos,false);
-				pos = new Vector3i(next.x, next.y-1, next.z);
-				evalSunlight(nextl,pos,true);
-				pos = new Vector3i(next.x, next.y, next.z+1);
-				evalSunlight(nextl,pos,false);
-				pos = new Vector3i(next.x, next.y, next.z-1);
-				evalSunlight(nextl,pos,false);
+				Vector3i pos = new Vector3i(next.x + 1, next.y, next.z);
+				evalSunlight(nextl, pos, false);
+				pos = new Vector3i(next.x - 1, next.y, next.z);
+				evalSunlight(nextl, pos, false);
+				pos = new Vector3i(next.x, next.y + 1, next.z);
+				evalSunlight(nextl, pos, false);
+				pos = new Vector3i(next.x, next.y - 1, next.z);
+				evalSunlight(nextl, pos, true);
+				pos = new Vector3i(next.x, next.y, next.z + 1);
+				evalSunlight(nextl, pos, false);
+				pos = new Vector3i(next.x, next.y, next.z - 1);
+				evalSunlight(nextl, pos, false);
 			}
 			for(Chunk c : lightRebuildQueue){
 				c.rebuild();
@@ -1113,29 +1136,33 @@ public class WorldManager {
 	public void updateChunks(PacketSendChunks psc){
 		final PacketSendChunks p = psc;
 		final WorldManager wm = this;
-		for(int i = 0; i < p.pos.length; i++){
+		boolean failed = false;
+		for(int i = 0; i < p.pos.length && !failed; i++){
 			final int j = i;
+			final Chunk c = getChunk(p.pos[j]);
+			if(c == null){
+				//c = new Chunk(shader, waterShader, p.pos[j].toVector3f(), wm);
+				//activeChunks.put(p.pos[j], c);
+				GLogger.log("[WARN] A chunk at "+p.pos[j]+" was attempted to be loaded from a packet but did not exist.");
+				failed = true;
+			}else
+				queueAction(new Callable<Void>() {
+					@Override
+					public Void call() throws Exception {
+						c.updateTiles(p,j);
+						if(c == getChunk(getPlayer().getPos())) getPlayer().shouldUpdate = true;
+						return null;
+					}
+				});
+		}
+		if(!failed)
 			queueAction(new Callable<Void>() {
 				@Override
 				public Void call() throws Exception {
-					Chunk c = getChunk(p.pos[j]);
-					if(c == null){
-						c = new Chunk(shader, waterShader, p.pos[j].toVector3f(), wm);
-						activeChunks.put(p.pos[j], c);
-					}
-					c.updateTiles(p,j);
-					if(c == getChunk(getPlayer().getPos())) getPlayer().shouldUpdate = true;
+					reSunlight(new Vector2i(p.pos[0].x, p.pos[0].z));
 					return null;
 				}
 			});
-		}
-		queueAction(new Callable<Void>() {
-			@Override
-			public Void call() throws Exception {
-				reSunlight(new Vector2i(p.pos[0].x, p.pos[0].z));
-				return null;
-			}
-		});
 	}
 
 	public void setWorldTime(long worldTime) {

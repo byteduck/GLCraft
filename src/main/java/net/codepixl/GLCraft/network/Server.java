@@ -238,8 +238,9 @@ public class Server{
 				sendToAllClients(new PacketPlayerLeave(c.player.getID()));
 				sendToAllClients(new PacketChat(ChatFormat.YELLOW+c.player.getName()+" left the game."));
 			}else if(op instanceof PacketRequestChunks){
-				((PacketRequestChunks) op).client = c;
-				chunkQueue.add((PacketRequestChunks) op);
+				PacketRequestChunks p = (PacketRequestChunks)op;
+				for(Vector2i v : p.pos)
+					chunkQueue.add(new PacketRequestChunks(c, v));
 			}else if(op instanceof PacketPing){
 				c.setPingTime(System.currentTimeMillis());
 				c.writePacket(new PacketPing(true));

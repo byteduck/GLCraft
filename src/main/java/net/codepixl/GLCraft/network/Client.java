@@ -31,7 +31,7 @@ public class Client{
 	private volatile boolean isClosed = false;
 	//private Vector2i currentRequest = new Vector2i(0,0);
 	//private boolean requestingChunks = true;
-	public long lastPingTime = 0, pingCountdown = 500;
+	public long lastPingTime = 0, pingCountdown = 1000;
 	
 	public Client(WorldManager w, int port) throws IOException{
 		if(!commonInit(w,port)){throw new IOException("Error binding to port");}
