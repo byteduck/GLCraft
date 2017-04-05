@@ -137,6 +137,7 @@ public class WorldManager {
 					currentChunk++;
 					//centralManager.renderSplashText("Terraforming...", progress+"%", progress);
 					Chunk c = new Chunk(shader, waterShader, 1, x * Constants.CHUNKSIZE, y * Constants.CHUNKSIZE, z * Constants.CHUNKSIZE, this);
+					activeChunks.put(new Vector3i(c.getPos()), c);
 					//saveChunk(activeChunks.get(activeChunks.size() - 1));
 				}
 			}
