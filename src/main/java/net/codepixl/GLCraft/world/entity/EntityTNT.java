@@ -1,21 +1,29 @@
 package net.codepixl.GLCraft.world.entity;
 
+import static org.lwjgl.opengl.GL11.GL_ADD;
+import static org.lwjgl.opengl.GL11.GL_MODULATE;
+import static org.lwjgl.opengl.GL11.GL_QUADS;
+import static org.lwjgl.opengl.GL11.GL_TEXTURE_ENV;
+import static org.lwjgl.opengl.GL11.GL_TEXTURE_ENV_MODE;
+import static org.lwjgl.opengl.GL11.glBegin;
+import static org.lwjgl.opengl.GL11.glEnd;
+import static org.lwjgl.opengl.GL11.glTexEnvi;
+
 import com.evilco.mc.nbt.error.TagNotFoundException;
 import com.evilco.mc.nbt.error.UnexpectedTagTypeException;
 import com.evilco.mc.nbt.tag.TagCompound;
-import net.codepixl.GLCraft.render.Shape;
-import net.codepixl.GLCraft.util.AABB;
-import net.codepixl.GLCraft.util.Constants;
-import net.codepixl.GLCraft.util.MathUtils;
-import net.codepixl.GLCraft.world.Chunk;
-import net.codepixl.GLCraft.world.WorldManager;
-import net.codepixl.GLCraft.world.tile.Tile;
-import org.lwjgl.util.vector.Vector3f;
 
 import java.util.ArrayList;
 import java.util.Iterator;
 
-import static org.lwjgl.opengl.GL11.*;
+import org.lwjgl.util.vector.Vector3f;
+
+import net.codepixl.GLCraft.render.Shape;
+import net.codepixl.GLCraft.util.AABB;
+import net.codepixl.GLCraft.util.Constants;
+import net.codepixl.GLCraft.world.Chunk;
+import net.codepixl.GLCraft.world.WorldManager;
+import net.codepixl.GLCraft.world.tile.Tile;
 
 public class EntityTNT extends EntitySolid{
 
@@ -30,12 +38,17 @@ public class EntityTNT extends EntitySolid{
 	
 	@Override
 	public void render(){
+		// UNUSED
+		
+		/*
 		float col = 0f;
 		if(timeAlive % 1000 <= 500){
 			col = MathUtils.easeInOutQuad((float)timeAlive/1000f, 0f, 0.3f, 0.5f);
 		}else{
 			col = MathUtils.easeInOutQuad((float)timeAlive/1000f, 0.3f, -0.3f, 0.5f);
 		}
+		*/
+		
 		float size = 1f;
 		float offset = 0f;
 		if(this.timeAlive > 3500f){
@@ -76,7 +89,7 @@ public class EntityTNT extends EntitySolid{
 							float d6 = this.getY();
 							float d8 = this.getZ();
 
-							for (float f1 = 0.3F; f > 0.0F; f -= 0.22500001F) {
+							for (; f > 0.0F; f -= 0.22500001F) {
 								Vector3f blockpos = new Vector3f(d4, d6, d8);
 								worldManager.setTileAtPos(blockpos, Tile.Air.getId(), false);
 								if (!affectedChunks.contains(worldManager.getChunk(blockpos))) {

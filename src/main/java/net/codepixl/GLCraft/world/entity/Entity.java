@@ -19,7 +19,7 @@ import net.codepixl.GLCraft.world.tile.TileWater;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.util.vector.Vector3f;
 
-public class Entity implements GameObj{
+public class Entity implements GameObj {
 	protected Vector3f pos, rot;
 	private Vector3f vel;
 	public Vector3f lpos = new Vector3f(), lrot = new Vector3f(), lvel = new Vector3f();

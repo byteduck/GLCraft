@@ -4,7 +4,9 @@ import net.codepixl.GLCraft.world.entity.mob.EntityPlayer;
 import net.codepixl.GLCraft.world.item.ItemStack;
 
 public class PacketPlayerAction extends Packet {
-	
+
+	private static final long serialVersionUID = -2799466501973023157L;
+
 	public enum Type{
 		DROPHELDITEM, DROPOTHERITEM, SELECTSLOT;
 	}

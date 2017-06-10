@@ -112,6 +112,7 @@ public class EntitySolid extends Entity{
 		return false;
 	}
 	
+	@SuppressWarnings("unused")
 	private boolean testHitHead(Vector3f pos){
 		AABB headAABB = new AABB(this.aabb.getSize().x-0.05f,0,this.aabb.getSize().z-0.05f);
 		headAABB.update(pos);

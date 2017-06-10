@@ -4,7 +4,10 @@ import net.codepixl.GLCraft.world.WorldManager;
 import net.codepixl.GLCraft.world.entity.Entity;
 import net.codepixl.GLCraft.world.entity.tileentity.TileEntityFurnace;
 
-public class PacketFurnace extends Packet{
+public class PacketFurnace extends Packet {
+
+	private static final long serialVersionUID = 8671414568566918249L;
+	
 	public float progress, fuelTime;
 	public boolean cooking;
 	public int entityID, progressPercent, fuelPercent;

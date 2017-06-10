@@ -1,19 +1,19 @@
 package net.codepixl.GLCraft.GUI.Elements;
 
 import com.nishu.utils.Color4f;
-import net.codepixl.GLCraft.GUI.GUIManager;
+
+import java.awt.image.BufferedImage;
+
+import org.lwjgl.opengl.GL11;
+import org.newdawn.slick.opengl.TextureImpl;
+
 import net.codepixl.GLCraft.render.Shape;
 import net.codepixl.GLCraft.render.TextureManager;
 import net.codepixl.GLCraft.render.util.Spritesheet;
 import net.codepixl.GLCraft.render.util.Texture;
 import net.codepixl.GLCraft.util.Constants;
-import net.codepixl.GLCraft.util.logging.GLogger;
-import org.lwjgl.opengl.GL11;
-import org.newdawn.slick.opengl.TextureImpl;
 
-import java.awt.image.BufferedImage;
-
-public class GUITexture extends GUIElement{
+public class GUITexture extends GUIElement {
 	private String texture;
 	private Texture textureImage;
 	private int size;

@@ -7,7 +7,10 @@ import net.codepixl.GLCraft.world.item.Item;
 import net.codepixl.GLCraft.world.item.ItemStack;
 import net.codepixl.GLCraft.world.tile.Tile;
 
-public class PacketSetInventory extends Packet{
+public class PacketSetInventory extends Packet {
+
+	private static final long serialVersionUID = -2704599062985157219L;
+	
 	public byte[] invid;
 	public byte[] invmeta;
 	public int[] invcount;

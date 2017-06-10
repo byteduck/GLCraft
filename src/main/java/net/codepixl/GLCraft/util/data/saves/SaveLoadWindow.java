@@ -11,6 +11,9 @@ import java.io.File;
 import java.util.ArrayList;
 
 public class SaveLoadWindow extends JFrame{
+
+	private static final long serialVersionUID = -5516089793243579038L;
+	
 	WorldManager worldManager;
 	volatile String worldName;
 	

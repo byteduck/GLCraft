@@ -18,6 +18,9 @@ import java.util.Iterator;
 import java.util.zip.ZipFile;
 
 public class TexturePackManagerWindow extends JFrame {
+
+	private static final long serialVersionUID = 4365566519505917498L;
+
 	BufferedImage ogIcon;
 
 	JLabel lblPackName;

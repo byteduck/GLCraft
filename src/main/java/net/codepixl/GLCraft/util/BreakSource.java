@@ -8,9 +8,13 @@ import net.codepixl.GLCraft.world.entity.mob.Mob;
 import java.io.Serializable;
 
 public class BreakSource implements Serializable{
+
+	private static final long serialVersionUID = 4212247529285425469L;
+
 	public static enum Type{
 		PLAYER, MOB, ENVIRONMENT;
-	};
+	}
+	
 	public Type type;
 	public int entityID;
 	public boolean sendPacket = true;

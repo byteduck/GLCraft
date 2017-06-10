@@ -1,14 +1,12 @@
 package net.codepixl.GLCraft.sound;
 
-import net.codepixl.GLCraft.util.logging.GLogger;
 import org.lwjgl.util.vector.Vector3f;
+
 import paulscode.sound.SoundSystem;
 import paulscode.sound.SoundSystemConfig;
 import paulscode.sound.SoundSystemException;
 import paulscode.sound.codecs.CodecWav;
 import paulscode.sound.libraries.LibraryLWJGLOpenAL;
-
-import java.net.URL;
 
 public class SoundManager {
 	private static SoundManager mainManager;

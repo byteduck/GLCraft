@@ -1,15 +1,6 @@
 package net.codepixl.GLCraft.GUI;
 
-import net.codepixl.GLCraft.GUI.Elements.GUIScrollBox;
-import net.codepixl.GLCraft.GUI.Elements.GUITexture;
-import net.codepixl.GLCraft.GUI.Elements.GUITexturepack;
-import net.codepixl.GLCraft.render.TextureManager;
-import net.codepixl.GLCraft.render.texturepack.TexturePackManagerWindow;
-import net.codepixl.GLCraft.render.util.Tesselator;
-import net.codepixl.GLCraft.util.Constants;
-
-import javax.imageio.ImageIO;
-import java.awt.*;
+import java.awt.Image;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
@@ -17,6 +8,15 @@ import java.io.InputStream;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.zip.ZipFile;
+
+import javax.imageio.ImageIO;
+
+import net.codepixl.GLCraft.GUI.Elements.GUIScrollBox;
+import net.codepixl.GLCraft.GUI.Elements.GUITexturepack;
+import net.codepixl.GLCraft.render.TextureManager;
+import net.codepixl.GLCraft.render.texturepack.TexturePackManagerWindow;
+import net.codepixl.GLCraft.render.util.Tesselator;
+import net.codepixl.GLCraft.util.Constants;
 
 /**
  * Created by aaron on 2/19/2017.

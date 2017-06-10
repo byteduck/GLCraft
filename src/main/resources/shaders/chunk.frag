@@ -1,6 +1,8 @@
 varying vec4 color;
 varying vec2 vTexCoord;
 
+varying float distToCamera;
+
 uniform sampler2D u_texture;
 uniform int lightingEnabled;
 uniform float time;

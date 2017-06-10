@@ -6,6 +6,9 @@ import java.io.Serializable;
 import java.util.concurrent.ThreadLocalRandom;
 
 public class WeatherState implements Serializable {
+
+	private static final long serialVersionUID = 6600114142770595782L;
+	
 	public long weatherLength; //Time in milliseconds of the length of this weather state
 	public long startTime; //currentTimeMillis that this weather state started at
 	public WeatherType type;

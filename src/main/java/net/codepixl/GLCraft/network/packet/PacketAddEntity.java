@@ -12,7 +12,10 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 
-public class PacketAddEntity extends Packet{
+public class PacketAddEntity extends Packet {
+
+	private static final long serialVersionUID = -6287174508037483580L;
+	
 	public byte[] entityData;
 	public int entityID;
 	public PacketAddEntity(Entity e){

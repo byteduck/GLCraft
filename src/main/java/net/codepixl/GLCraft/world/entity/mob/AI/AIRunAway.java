@@ -8,9 +8,9 @@ import java.util.List;
 
 public class AIRunAway extends AIPathfindAway{
 
-	private Class<Entity> follow;
+	private Class<? extends Entity> follow;
 	
-	public AIRunAway(Mob m, Class type) {
+	public AIRunAway(Mob m, Class<? extends Entity> type) {
 		super(m);
 		this.follow = type;
 	}

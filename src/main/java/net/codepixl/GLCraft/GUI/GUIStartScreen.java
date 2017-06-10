@@ -22,7 +22,6 @@ public class GUIStartScreen extends GUIScreen{
 	public void makeElements(){
 		int MIDDLE = Constants.getWidth()/2;
 		int MIDDLEY = (int) (Constants.getHeight()*0.7);
-		int BUGY = (int) (Constants.getHeight() * 0.8);
 		int BUTTONWIDTH = Constants.getWidth()/2;
 		int BBUTTONWIDTH = Constants.getWidth()/4-5;
 		setDrawStoneBackground(true);

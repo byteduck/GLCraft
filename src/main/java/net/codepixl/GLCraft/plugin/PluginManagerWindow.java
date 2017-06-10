@@ -8,7 +8,10 @@ import java.awt.*;
 import java.io.File;
 import java.util.Iterator;
 
-public class PluginManagerWindow extends JFrame{
+public class PluginManagerWindow extends JFrame {
+
+	private static final long serialVersionUID = -4820144651716513491L;
+	
 	DefaultMutableTreeNode top;
 	PluginManager p;
 	public PluginManagerWindow(PluginManager p) {

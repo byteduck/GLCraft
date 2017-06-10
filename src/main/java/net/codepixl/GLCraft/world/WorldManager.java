@@ -94,7 +94,7 @@ public class WorldManager {
 		shader = new ShaderProgram(temp.getvShader(), temp.getfShader());
 		temp = new Shader("/shaders/clouds.vert","/shaders/clouds.frag");
 		cloudShader = new ShaderProgram(temp.getvShader(), temp.getfShader());
-		temp = new Shader("/shaders/water.vert","/shaders/water.frag");
+		temp = new Shader("/shaders/water.vert", "/shaders/water.frag");
 		waterShader = new ShaderProgram(temp.getvShader(), temp.getfShader());
 	}
 	
@@ -264,7 +264,7 @@ public class WorldManager {
 				if(p != null) {
 					Vector2i pos = p.indivPos;
 					ArrayList<Chunk> chunks = new ArrayList<Chunk>();
-					Chunk c;
+					// Chunk c;
 					boolean failed = false;
 					for (int y = 0; y < Constants.worldLengthChunks && !failed; y++) {
 						chunks.add(getChunk(new Vector3i(pos.x, y * 16, pos.y)));
@@ -284,6 +284,7 @@ public class WorldManager {
 		if(weatherTransitionCountdown > 0) weatherTransitionCountdown -= Time.getDelta(); else weatherTransitionCountdown = 0;
 	}
 
+	@SuppressWarnings("unchecked")
 	private void loadUnload(){
 		playerChunksNew.clear();
 		Vector2i chunkPos;
@@ -398,7 +399,7 @@ public class WorldManager {
 	 */
 	public List<Vector2i> getChunkPosInRadiusOfPlayer(EntityPlayer player, int chunkRadius){
 		int rad = chunkRadius*Constants.CHUNKSIZE, px = (int)player.getX(), pz = (int)player.getZ();
-		ArrayList ret = new ArrayList<Vector2i>();
+		ArrayList<Vector2i> ret = new ArrayList<Vector2i>();
 		Vector2i vec = new Vector2i(0,0);
 		for(int x = px-rad; x < px+rad; x+=16)
 			for(int z = pz-rad; z < pz+rad; z+=16)
@@ -417,7 +418,7 @@ public class WorldManager {
 			DebugTimer.startTimer("chunk_render");
 			Spritesheet.atlas.bind();
 			getEntityManager().getPlayer().applyTranslations();
-			Vector3f pos = getEntityManager().getPlayer().getPos();
+			// Vector3f pos = getEntityManager().getPlayer().getPos();
 			//if(getTileAtPos((int)pos.x,(int)pos.y+2,(int)pos.z) == 0 || getTileAtPos((int)pos.x,(int)pos.y+2,(int)pos.z) == -1 || getTileAtPos((int)pos.x,(int)pos.y+2,(int)pos.z) == 9 || getTileAtPos((int)pos.x,(int)pos.y+2,(int)pos.z) == 4){
 				Iterator<Chunk> i = activeChunks.values().iterator();
 				while(i.hasNext()){
@@ -479,7 +480,7 @@ public class WorldManager {
 		@SuppressWarnings("unchecked")
 		ArrayList<Chunk> activeChunks = (ArrayList<Chunk>) new ArrayList<Chunk>(this.activeChunks.values()).clone();
 		Iterator<Chunk> i = activeChunks.iterator();
-		int index = 0;
+		// int index = 0;
 		File f = new File(save.getDirectory(), "region");
 		f.mkdirs();
 		HashMap<Vector2i,TagCompound> regions = new HashMap<Vector2i,TagCompound>();
@@ -490,7 +491,7 @@ public class WorldManager {
 				regions.put(reg, new TagCompound(reg.toString()));
 			}
 			c.save(regions.get(reg));
-			index++;
+			//index++;
 		}
 		Iterator<Entry<Vector2i, TagCompound>> it = regions.entrySet().iterator();
 	    while (it.hasNext()) {
@@ -1136,7 +1137,7 @@ public class WorldManager {
 
 	public void updateChunks(PacketSendChunks psc){
 		final PacketSendChunks p = psc;
-		final WorldManager wm = this;
+		// final WorldManager wm = this;
 		boolean failed = false;
 		for(int i = 0; i < p.pos.length && !failed; i++){
 			final int j = i;

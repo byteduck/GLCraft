@@ -1,17 +1,17 @@
 package net.codepixl.GLCraft.world.entity.mob.AI;
 
+import java.util.List;
+
 import net.codepixl.GLCraft.world.entity.Entity;
 import net.codepixl.GLCraft.world.entity.mob.DamageSource;
 import net.codepixl.GLCraft.world.entity.mob.Mob;
 
-import java.util.List;
+public class AIHurtNearest extends AI {
 
-public class AIHurtNearest extends AI{
-
-	private Class hurt;
+	private Class<? extends Entity> hurt;
 	private float largSiz;
 	
-	public AIHurtNearest(Mob m, Class hurt) {
+	public AIHurtNearest(Mob m, Class<? extends Entity> hurt) {
 		super(m);
 		this.hurt = hurt;
 		largSiz = m.getAABB().getSize().x;

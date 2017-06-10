@@ -1,17 +1,17 @@
 package net.codepixl.GLCraft.render;
 
+import static org.lwjgl.opengl.GL11.glColor4f;
+import static org.lwjgl.opengl.GL11.glTexCoord2f;
+import static org.lwjgl.opengl.GL11.glVertex2f;
+import static org.lwjgl.opengl.GL11.glVertex3f;
+
 import com.nishu.utils.Color4f;
+
+import org.lwjgl.opengl.GL11;
+
 import net.codepixl.GLCraft.render.util.Spritesheet;
-import net.codepixl.GLCraft.render.util.Texture;
 import net.codepixl.GLCraft.util.LogSource;
 import net.codepixl.GLCraft.util.logging.GLogger;
-import org.lwjgl.opengl.GL11;
-import org.lwjgl.util.vector.Vector3f;
-
-import static net.codepixl.GLCraft.GUI.Inventory.Elements.GUISlot.size;
-import static org.lwjgl.opengl.GL11.*;
-
-;
 
 public class Shape {
 	
@@ -426,29 +426,6 @@ public class Shape {
 		glColor4f(1, 1, 1, 1);
 	}
 
-	private static Color4f getColor(Vector3f pos) {
-		/**
-		 * GLCraft.getGLCraft().getWorldManager().s.addCurrentTile(1); int progress =
-		 * (int) (GLCraft.getGLCraft().getWorldManager().s.currentTilePercentage() *
-		 * 0.33 + 66);
-		 * GLCraft.getGLCraft().getWorldManager().s.getSplash().setProgress(progress,
-		 * "Lighting chunks "+progress+"%"); float minDist = 7; Color4f color =
-		 * new Color4f(0.1f,0.1f,0.1f,1.0f); for(int i = 0; i < lights.size();
-		 * i++){ Vector3f lPos = lights.get(i); float dist =
-		 * MathUtils.distance(lPos, pos); if(dist <= 7 && dist < minDist || dist
-		 * == 0){ float pdist = (7-dist)/7; minDist = dist; color =
-		 * MathUtils.mult(new Color4f(1.0f,1.0f,1.0f,1.0f), new
-		 * Color4f(pdist,pdist,pdist,1.0f)); } } return color;
-		 **/
-		/**
-		 * float light =
-		 * (float)GLCraft.getGLCraft().getWorldManager().getLight((int)pos.x,
-		 * (int)pos.y, (int)pos.z, false)/(float)7; if(light < 0.2f) light =
-		 * 0.2f; return new Color4f(light,light,light,1.0f);
-		 **/
-		return new Color4f(1f, 1f, 1f, 1f);
-	}
-
 	public static void createSquare(float x, float y, Color4f color, float[] texCoords, float size) {
 		glColor4f(color.r, color.g, color.b, color.a);
 		glTexCoord2f(texCoords[0], texCoords[1]);
@@ -538,12 +515,7 @@ public class Shape {
 				double lng = 2 * Math.PI * (double) (j - 1) / longs;
 				double x  = Math.cos(lng);
 				double y  = Math.sin(lng);
-
-				double s1, s2, t;
-				s1        = ((double) i) / halfLats;
-				s2        = ((double) i + 1) / halfLats;
-				t         = ((double) j) / longs;
-
+				
 				GL11.glNormal3d(x * zr0, y * zr0, z0);
 				GL11.glVertex3d(x * zr0, y * zr0, z0);
 

@@ -1,12 +1,11 @@
 package net.codepixl.GLCraft.util.logging;
 
-import net.codepixl.GLCraft.util.LogSource;
-
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.PrintStream;
-import java.util.Arrays;
+
+import net.codepixl.GLCraft.util.LogSource;
 
 public class GLogger {
 	private static PrintStream out, err;

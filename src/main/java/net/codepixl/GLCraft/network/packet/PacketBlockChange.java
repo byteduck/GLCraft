@@ -4,6 +4,8 @@ import net.codepixl.GLCraft.util.BreakSource;
 
 public class PacketBlockChange extends Packet{
 
+	private static final long serialVersionUID = 3281692475818864594L;
+	
 	public BreakSource source;
 	public int x,y,z;
 	public byte id,meta;
