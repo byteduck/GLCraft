@@ -2,7 +2,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>net.codepixl</groupId>
   <artifactId>glcraft</artifactId>
-  <version>MAVEN_BUILD</version>
+  <version>1.0.0_MVN</version>
   
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
