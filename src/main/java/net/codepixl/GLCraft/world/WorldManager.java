@@ -94,9 +94,8 @@ public class WorldManager {
 		shader = new ShaderProgram(temp.getvShader(), temp.getfShader());
 		temp = new Shader("/shaders/clouds.vert","/shaders/clouds.frag");
 		cloudShader = new ShaderProgram(temp.getvShader(), temp.getfShader());
-		// Non existant?
-		// temp = new Shader("/shaders/water.vert","/shaders/water.frag");
-		// waterShader = new ShaderProgram(temp.getvShader(), temp.getfShader());
+		temp = new Shader("/shaders/water.vert", "/shaders/water.frag");
+		waterShader = new ShaderProgram(temp.getvShader(), temp.getfShader());
 	}
 	
 	private void init(){
