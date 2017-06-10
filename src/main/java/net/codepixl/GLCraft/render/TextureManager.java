@@ -27,7 +27,7 @@ public class TextureManager {
 	public static final String ITEMS = "textures/items/";
 	public static final String GUIS = "textures/gui/";
 	public static final String MISC = "textures/misc/";
-	private static String currentBoundTexture = "";
+	protected static String currentBoundTexture = "";
 	private static boolean madeAtlas = false;
 	private static BufferedImage noimg;
 	public static String currentTexturepack = "[[none]]";
@@ -297,7 +297,7 @@ public class TextureManager {
 			BufferedImage image;
 			LoadedPlugin p = GLCraft.getGLCraft().getPluginManager().getLoadedPlugin(next.plugin);
 			try {
-				if(!GLCraft.getGLCraft().isDevEnvironment){
+				if(!GLCraft.isDevEnvironment){
 					image = ImageIO.read(p.loader.getResourceAsStream(next.loc));
 				}else{
 					image = ImageIO.read(new File("res",next.loc));

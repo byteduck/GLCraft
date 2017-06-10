@@ -6,6 +6,8 @@ import net.codepixl.GLCraft.plugin.LoadedPlugin;
 import java.util.Collection;
 
 public class PacketPlayerLogin extends Packet{
+
+	private static final long serialVersionUID = -1269329878053570956L;
 	
 	public byte protocolVersion = 0x0;
 	public String name;

@@ -1,6 +1,13 @@
 package net.codepixl.GLCraft.world.entity.mob;
 
 import com.nishu.utils.Color4f;
+
+import java.util.Iterator;
+
+import org.lwjgl.opengl.GL11;
+import org.lwjgl.util.vector.Vector3f;
+import org.newdawn.slick.opengl.TextureImpl;
+
 import net.codepixl.GLCraft.network.packet.PacketChat;
 import net.codepixl.GLCraft.network.packet.PacketPlayerAction;
 import net.codepixl.GLCraft.network.packet.PacketRespawn;
@@ -10,20 +17,12 @@ import net.codepixl.GLCraft.render.util.Spritesheet;
 import net.codepixl.GLCraft.render.util.Tesselator;
 import net.codepixl.GLCraft.util.Constants;
 import net.codepixl.GLCraft.util.MathUtils;
-import net.codepixl.GLCraft.util.Vector2i;
-import net.codepixl.GLCraft.world.Chunk;
 import net.codepixl.GLCraft.world.WorldManager;
 import net.codepixl.GLCraft.world.entity.Entity;
 import net.codepixl.GLCraft.world.entity.EntityItem;
 import net.codepixl.GLCraft.world.item.Item;
 import net.codepixl.GLCraft.world.item.ItemStack;
 import net.codepixl.GLCraft.world.tile.Tile;
-import org.lwjgl.opengl.GL11;
-import org.lwjgl.util.vector.Vector3f;
-import org.newdawn.slick.opengl.TextureImpl;
-
-import java.util.ArrayList;
-import java.util.Iterator;
 
 public class EntityPlayerMP extends EntityPlayer{
 

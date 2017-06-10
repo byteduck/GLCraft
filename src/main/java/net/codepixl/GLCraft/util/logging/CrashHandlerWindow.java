@@ -13,6 +13,9 @@ import java.net.URISyntaxException;
 import java.nio.file.Files;
 
 public class CrashHandlerWindow extends JFrame{
+
+	private static final long serialVersionUID = 3016443798486128006L;
+
 	public CrashHandlerWindow(Thread t, Throwable e) {
 		setIconImage(Toolkit.getDefaultToolkit().getImage(CrashHandlerWindow.class.getResource("/textures/icons/icon32.png")));
 		setTitle("GLCraft Crash");

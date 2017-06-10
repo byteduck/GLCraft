@@ -14,7 +14,7 @@ import java.util.List;
 public class NBTUtil {
 	public static Entity readEntity(TagCompound t, WorldManager w) throws UnexpectedTagTypeException, TagNotFoundException, NoSuchMethodException, SecurityException, IllegalAccessException, IllegalArgumentException, InvocationTargetException{
 		if(t.getString("type") != null){
-			Class c = w.getEntityManager().getRegisteredEntity(t.getString("type"));
+			Class<? extends Entity> c = w.getEntityManager().getRegisteredEntity(t.getString("type"));
 			Method m = c.getMethod("fromNBT", TagCompound.class, WorldManager.class);
 			return (Entity) m.invoke(null, t, w);
 			/*switch(t.getString("type")){

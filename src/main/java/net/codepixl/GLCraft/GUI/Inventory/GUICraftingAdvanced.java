@@ -133,7 +133,7 @@ public class GUICraftingAdvanced extends GUIInventoryScreen{
 		slot9.itemstack = new ItemStack();
 	}
 	
-	private GUISlot getHoveredSlot(){
+	protected GUISlot getHoveredSlot(){
 		if(slot1.hover) return slot1;
 		if(slot2.hover) return slot2;
 		if(slot3.hover) return slot3;

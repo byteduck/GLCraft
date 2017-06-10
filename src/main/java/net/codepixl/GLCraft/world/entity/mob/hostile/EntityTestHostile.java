@@ -13,6 +13,7 @@ import org.lwjgl.util.vector.Vector3f;
 
 public class EntityTestHostile extends Hostile{
 
+	@SuppressWarnings({"unused"})
 	private Vector3f lastpos;
 
 	public EntityTestHostile(Vector3f pos, WorldManager w) {

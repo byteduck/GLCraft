@@ -13,7 +13,6 @@ import net.codepixl.GLCraft.util.BreakSource;
 import net.codepixl.GLCraft.util.Constants;
 import net.codepixl.GLCraft.util.Vector2i;
 import net.codepixl.GLCraft.util.Vector3i;
-import net.codepixl.GLCraft.util.logging.GLogger;
 import net.codepixl.GLCraft.world.WorldManager.Light;
 import net.codepixl.GLCraft.world.WorldManager.LightRemoval;
 import net.codepixl.GLCraft.world.tile.Tile;
@@ -31,8 +30,8 @@ import java.util.Iterator;
 
 import static org.lwjgl.opengl.GL11.*;
 
-
 public class Chunk {
+	
 	private WorldManager worldManager;
 	private Vector3f pos;
 	private volatile byte [][][] tiles;
@@ -45,8 +44,13 @@ public class Chunk {
 	private int sizeZ;
 	int type;
 	private boolean isActive;
+	
+	// UNUSED
+	/*
 	private int randomUpdateTick = 0;
 	private int randomUpdateInterval;
+	*/
+	
 	private boolean needsRebuild = false;
 	private ArrayList<Vector3f> tickTiles = new ArrayList<Vector3f>();
 	private ArrayList<Vector3f> tempTickTiles = new ArrayList<Vector3f>();
@@ -107,7 +111,7 @@ public class Chunk {
 				for(int z = 0; z < sizeZ; z++){
 					int posZ = (int)pos.z+z;
 					int posX = (int)pos.x+x;
-					float noise = ((float) worldManager.elevationNoise.eval((double)posX/50d, (double)posZ/50d) + 1f)*(float)Constants.CHUNKSIZE+50;
+					float noise = ((float) WorldManager.elevationNoise.eval((double)posX/50d, (double)posZ/50d) + 1f)*(float)Constants.CHUNKSIZE+50;
 					//float elevation = (float) worldManager.elevationNoise.eval((double)posX/400d, (double)posZ/400d);
 					//float roughness = (float) worldManager.roughnessNoise.eval((double)posX/300d, (double)posZ/300d);
 					//float detail = (float) worldManager.detailNoise.eval((double)posX/75d, (double)posZ/75d);
@@ -381,9 +385,7 @@ public class Chunk {
 		}
 	}
 	
-	
-	
-	private boolean inBounds(int x, int y, int z){
+	protected boolean inBounds(int x, int y, int z){
 		return x < Constants.CHUNKSIZE && x >= 0 && y < Constants.CHUNKSIZE && y >= 0 && z < Constants.CHUNKSIZE && z >= 0;
 	}
 	

@@ -2,7 +2,9 @@ package net.codepixl.GLCraft.network.packet;
 
 import net.codepixl.GLCraft.world.WorldManager;
 
-public class PacketMessage extends Packet{
+public class PacketMessage extends Packet {
+
+	private static final long serialVersionUID = -6535979937354825633L;
 	
 	public static final transient int BYTES = 0;
 	public static final transient int STRING = 1;

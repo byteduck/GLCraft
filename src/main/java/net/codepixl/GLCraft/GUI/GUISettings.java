@@ -4,7 +4,6 @@ import net.codepixl.GLCraft.GLCraft;
 import net.codepixl.GLCraft.GUI.Elements.GUIButton;
 import net.codepixl.GLCraft.GUI.Elements.GUISlider;
 import net.codepixl.GLCraft.GUI.Elements.GUITextBox;
-import net.codepixl.GLCraft.render.texturepack.TexturePackManagerWindow;
 import net.codepixl.GLCraft.util.Constants;
 import net.codepixl.GLCraft.util.SettingsManager;
 

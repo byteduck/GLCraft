@@ -7,6 +7,8 @@ import java.util.Collection;
 import java.util.Iterator;
 
 public class PacketSendChunks extends Packet{
+
+	private static final long serialVersionUID = 2853738811172054322L;
 	
 	public byte[][][][] tiles;
 	public byte[][][][] meta;

@@ -2,7 +2,10 @@ package net.codepixl.GLCraft.util;
 
 import java.io.Serializable;
 
-public class Vector2i implements Serializable{
+public class Vector2i implements Serializable {
+
+	private static final long serialVersionUID = -6585654015596481048L;
+	
 	public int x,y;
 	public Vector2i(int x, int y){
 		this.x = x;

@@ -14,15 +14,13 @@ import java.util.HashMap;
 import java.util.Map.Entry;
 
 public class CommandManager {
-	
-	
+
 	public final CentralManager centralManager;
 	public final WorldManager worldManager;
 	private HashMap<String,Command> commands = new HashMap<String,Command>();;
 	private HashMap<String,CommandExecutor> commandQueue = new HashMap<String,CommandExecutor>();
 	private BufferedReader stdin = new BufferedReader(new InputStreamReader(System.in));
-	
-	
+
 	public CommandManager(CentralManager c){
 		if(c.isServer){
 			centralManager = c;
@@ -65,6 +63,9 @@ public class CommandManager {
 	}
 	
 	public static class DuplicateCommandException extends RuntimeException{
+	
+		private static final long serialVersionUID = 7199462214615550401L;
+		
 		public DuplicateCommandException(Command c){
 			super("Command '"+c.getName()+"' already exists!");
 		}

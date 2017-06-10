@@ -20,21 +20,17 @@ import net.codepixl.GLCraft.render.util.Tesselator;
 import net.codepixl.GLCraft.sound.SoundManager;
 import net.codepixl.GLCraft.util.Constants;
 import net.codepixl.GLCraft.util.DebugTimer;
-import net.codepixl.GLCraft.util.LogSource;
 import net.codepixl.GLCraft.util.Vector3i;
 import net.codepixl.GLCraft.util.command.CommandManager;
 import net.codepixl.GLCraft.util.data.saves.Save;
 import net.codepixl.GLCraft.util.data.saves.SaveManager;
 import net.codepixl.GLCraft.util.logging.CrashHandler;
-import net.codepixl.GLCraft.util.logging.GLogger;
 import net.codepixl.GLCraft.world.crafting.CraftingManager;
 import net.codepixl.GLCraft.world.crafting.Recipe.InvalidRecipeException;
 import net.codepixl.GLCraft.world.entity.EntityManager;
 import net.codepixl.GLCraft.world.entity.mob.AI.pathfinding.Pathfinder;
 import net.codepixl.GLCraft.world.entity.mob.EntityPlayer;
 import net.codepixl.GLCraft.world.entity.mob.EntityPlayerMP;
-import net.codepixl.GLCraft.world.entity.mob.animal.EntityTestAnimal;
-import net.codepixl.GLCraft.world.entity.mob.hostile.EntityTestHostile;
 import net.codepixl.GLCraft.world.tile.Tile;
 import org.lwjgl.BufferUtils;
 import org.lwjgl.input.Keyboard;
@@ -70,7 +66,10 @@ public class CentralManager extends Screen{
 	TrueTypeFont font;
 	private WorldManager worldManager;
 	private int currentBlock;
+	
+	@SuppressWarnings("unused")
 	private PipedInputStream actionsToDo = new PipedInputStream();
+	
 	public GUIManager guiManager;
 	private SoundManager soundManager;
 	private double messageTime = 0;
@@ -468,7 +467,7 @@ public class CentralManager extends Screen{
 	}
 
 	@Deprecated
-	private void renderInventory() {
+	protected void renderInventory() {
 		glLoadIdentity();
 		render2D();
 		float SIZE = (float)Constants.getWidth()/18f;
@@ -631,7 +630,7 @@ public class CentralManager extends Screen{
 		glEnable(GL_DEPTH_TEST);
 	}
 	
-	private void setupLighting(){
+	protected void setupLighting(){
 		glShadeModel(GL_SMOOTH);
 		ByteBuffer f = ByteBuffer.allocateDirect(16);
 	    glEnable(GL_DEPTH_TEST);

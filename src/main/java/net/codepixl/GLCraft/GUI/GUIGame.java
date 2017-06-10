@@ -17,7 +17,7 @@ import java.util.Iterator;
 
 import static org.lwjgl.opengl.GL11.*;
 
-public class GUIGame extends GUIScreen{
+public class GUIGame extends GUIScreen {
 	
 	private WorldManager worldManager;
 	private EntityPlayer player;
@@ -45,7 +45,6 @@ public class GUIGame extends GUIScreen{
 		BUBBLESPACING = HEARTSPACING;
 		slots = new GUISlot[9];
 		for(int j = 0; j < 9; j++){
-			float i = j;
 			float x = (Constants.getWidth()/2)+((j-4.5f)*(SIZE+SPACING));
 			slots[j] = new GUISlot((int)x+(int)GUISlot.size/2,(int)(Constants.getHeight()-(SIZE/2f)),player);
 		}

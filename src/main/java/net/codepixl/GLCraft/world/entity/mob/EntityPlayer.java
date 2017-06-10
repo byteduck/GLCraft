@@ -196,7 +196,10 @@ public class EntityPlayer extends Mob implements CommandExecutor{
 		boolean keyLeft = Keyboard.isKeyDown(Keyboard.KEY_A);
 		boolean keyRight = Keyboard.isKeyDown(Keyboard.KEY_D);
 		boolean space = Keyboard.isKeyDown(Keyboard.KEY_SPACE);
-		boolean shift = Keyboard.isKeyDown(Keyboard.KEY_LSHIFT);
+		
+		// UNUSED
+		// boolean shift = Keyboard.isKeyDown(Keyboard.KEY_LSHIFT);
+		
 		boolean ctrl = Keyboard.isKeyDown(Keyboard.KEY_LCONTROL);
 		boolean q = Keyboard.isKeyDown(Keyboard.KEY_Q);
 		if(q && !qPressed && !getInventory()[selectedSlot].isNull()) {

@@ -3,6 +3,9 @@ package net.codepixl.GLCraft.network.packet;
 import net.codepixl.GLCraft.world.entity.mob.EntityPlayer;
 
 public class PacketPlayerPos extends Packet{
+
+	private static final long serialVersionUID = 6287821484965972674L;
+	
 	public float[] pos;
 	public float[] rot;
 	public float[] vel;

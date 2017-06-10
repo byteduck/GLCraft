@@ -2,7 +2,7 @@ package net.codepixl.GLCraft.render.util;
 
 import java.awt.image.BufferedImage;
 
-public class Spritesheet{
+public class Spritesheet {
 	private Texture texture;
 	private String path;
 	private BufferedImage image;
@@ -47,7 +47,7 @@ public class Spritesheet{
 	}
 	
 	public void unbind(){
-		texture.unbind();
+		Texture.unbind();
 	}
 	
 	public void delete(){

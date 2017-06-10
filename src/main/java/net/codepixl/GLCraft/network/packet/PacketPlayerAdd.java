@@ -2,7 +2,9 @@ package net.codepixl.GLCraft.network.packet;
 
 import org.lwjgl.util.vector.Vector3f;
 
-public class PacketPlayerAdd extends Packet{
+public class PacketPlayerAdd extends Packet {
+
+	private static final long serialVersionUID = 3259174108375172081L;
 	
 	public int entityID;
 	public String name;

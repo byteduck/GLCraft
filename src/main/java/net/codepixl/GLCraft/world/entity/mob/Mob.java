@@ -35,7 +35,7 @@ public class Mob extends EntitySolid implements GameObj{
 	public float Vy = 0;
 	public float Vz = 0;
 	protected float speed;
-	private HashMap<Class, AI> behaviors = new HashMap<Class, AI>();
+	private HashMap<Class<?>, AI> behaviors = new HashMap<>();
 	private boolean aiBusy = false;
 	private DamageSource lastDamageSource = DamageSource.ENVIRONMENT;
 	
@@ -82,7 +82,8 @@ public class Mob extends EntitySolid implements GameObj{
 	
 	@Override
 	public void move(float x, float y, float z){
-		boolean posVelY = this.getVel().y > 0;
+		// UNUSED
+		// boolean posVelY = this.getVel().y > 0;
 		if(!isInWater()){
 			if(moveMain(x,0,0)){ lastCollideX = System.currentTimeMillis(); this.getVel().x = 0;}
 			if(moveMain(0,y,0)){ lastCollideY = System.currentTimeMillis(); this.getVel().y = 0;}
@@ -108,7 +109,7 @@ public class Mob extends EntitySolid implements GameObj{
 		return behaviors.remove(behavior.getClass(), behavior);
 	}
 	
-	public AI getAI(Class ai){
+	public AI getAI(Class<?> ai){
 		return behaviors.get(ai);
 	}
 	

@@ -33,7 +33,8 @@ import static org.lwjgl.opengl.GL11.*;
 
 public class EntityManager implements GameObj{
 	
-	private static HashMap<String, Class> registeredEntities = new HashMap<String, Class>();
+	private static HashMap<String, Class<? extends Entity>> registeredEntities = new HashMap<>();
+	
 	private HashMap<Integer, Entity> entities;
 	private ArrayList<Entity> toAdd;
 	private ArrayList<Entity> toRemove;
@@ -72,7 +73,7 @@ public class EntityManager implements GameObj{
 		registerEntity("EntityPlayerMP", EntityPlayerMP.class);
 	}
 	
-	public static void registerEntity(String name, Class entity){
+	public static void registerEntity(String name, Class<? extends Entity> entity){
 		if(Entity.class.isAssignableFrom(entity)){
 			registeredEntities.put(name, entity);
 		}else{
@@ -223,7 +224,7 @@ public class EntityManager implements GameObj{
 	    return list;
 	}
 	
-	public List<Entity> getEntitiesInRadiusOfEntityOfType(Entity e, Class type, float rad){
+	public List<Entity> getEntitiesInRadiusOfEntityOfType(Entity e, Class<? extends Entity> type, float rad){
 		ArrayList<Entity> list = new ArrayList<Entity>();
 		Iterator<Entry<Integer,Entity>> it = this.entities.entrySet().iterator();
 		iterating = true;
@@ -300,7 +301,7 @@ public class EntityManager implements GameObj{
 		return ret;
 	}
 
-	public Class getRegisteredEntity(String name) {
+	public Class<? extends Entity> getRegisteredEntity(String name) {
 		return registeredEntities.get(name);
 	}
 
@@ -316,15 +317,17 @@ public class EntityManager implements GameObj{
 		return this.entities.remove(entityID) != null;
 	}
 
-	public List<Entity> getEntities(Class type) {
-		Iterator<Entry<Integer,Entity>> it = this.entities.entrySet().iterator();
+	public List<Entity> getEntities(Class<? extends Entity> type) {
+		Iterator<Entry<Integer, Entity>> it = this.entities.entrySet().iterator();
 		ArrayList<Entity> ret = new ArrayList<Entity>();
+		
 		while(it.hasNext()){
 			Entity e = it.next().getValue();
 			if(type.isInstance(e)){
 				ret.add(e);
 			}
 		}
+		
 		return ret;
 	}
 

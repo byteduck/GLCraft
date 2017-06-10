@@ -141,16 +141,13 @@ public class GUISinglePlayer extends GUIScreen{
 		scrollBox.clearItems();
 		try {
 			Save[] saves = SaveManager.getSaves();
-			int i = 0;
 			for(Save save : saves){
 				GUISave s = new GUISave(save, this);
 				s.x = 10;
 				s.width = Constants.getWidth()-240;
 				scrollBox.addItem(s);
-				i++;
 			}
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}

@@ -1,23 +1,53 @@
 package net.codepixl.GLCraft.network;
 
 import com.nishu.utils.Time;
+
+import java.io.IOException;
+import java.net.DatagramPacket;
+import java.net.DatagramSocket;
+import java.net.InetAddress;
+import java.net.SocketException;
+import java.net.SocketTimeoutException;
+
+import org.lwjgl.util.vector.Vector3f;
+
 import net.codepixl.GLCraft.GLCraft;
 import net.codepixl.GLCraft.GUI.GUIManager;
-import net.codepixl.GLCraft.network.packet.*;
+import net.codepixl.GLCraft.network.packet.Packet;
+import net.codepixl.GLCraft.network.packet.PacketAddEntity;
+import net.codepixl.GLCraft.network.packet.PacketBlockChange;
+import net.codepixl.GLCraft.network.packet.PacketChat;
+import net.codepixl.GLCraft.network.packet.PacketContainer;
+import net.codepixl.GLCraft.network.packet.PacketFurnace;
+import net.codepixl.GLCraft.network.packet.PacketHealth;
+import net.codepixl.GLCraft.network.packet.PacketKick;
+import net.codepixl.GLCraft.network.packet.PacketMessage;
+import net.codepixl.GLCraft.network.packet.PacketMultiPacket;
+import net.codepixl.GLCraft.network.packet.PacketPing;
+import net.codepixl.GLCraft.network.packet.PacketPlayerAdd;
+import net.codepixl.GLCraft.network.packet.PacketPlayerLeave;
+import net.codepixl.GLCraft.network.packet.PacketPlayerLogin;
+import net.codepixl.GLCraft.network.packet.PacketPlayerLoginResponse;
+import net.codepixl.GLCraft.network.packet.PacketPlayerPos;
+import net.codepixl.GLCraft.network.packet.PacketReady;
+import net.codepixl.GLCraft.network.packet.PacketRemoveEntity;
+import net.codepixl.GLCraft.network.packet.PacketRespawn;
+import net.codepixl.GLCraft.network.packet.PacketSendChunks;
+import net.codepixl.GLCraft.network.packet.PacketServerClose;
+import net.codepixl.GLCraft.network.packet.PacketSetInventory;
+import net.codepixl.GLCraft.network.packet.PacketUpdateEntity;
+import net.codepixl.GLCraft.network.packet.PacketUtil;
+import net.codepixl.GLCraft.network.packet.PacketWeather;
+import net.codepixl.GLCraft.network.packet.PacketWorldTime;
 import net.codepixl.GLCraft.util.Constants;
 import net.codepixl.GLCraft.util.LogSource;
-import net.codepixl.GLCraft.util.Vector2i;
 import net.codepixl.GLCraft.util.logging.GLogger;
 import net.codepixl.GLCraft.world.WorldManager;
 import net.codepixl.GLCraft.world.entity.Entity;
 import net.codepixl.GLCraft.world.entity.mob.EntityPlayerMP;
 import net.codepixl.GLCraft.world.entity.mob.Mob;
-import org.lwjgl.util.vector.Vector3f;
 
-import java.io.IOException;
-import java.net.*;
-
-public class Client{
+public class Client {
 	
 	public static int DEFAULT_CLIENT_PORT = 54566;
 	
@@ -94,7 +124,6 @@ public class Client{
 					worldManager.setMetaAtPos(p.x, p.y, p.z, p.meta, false, true);
 				}
 			}else if(op instanceof PacketAddEntity){
-				PacketAddEntity p = (PacketAddEntity) op;
 				Entity e = ((PacketAddEntity) op).getEntity(worldManager);
 				if(e != null){
 					worldManager.spawnEntity(e);

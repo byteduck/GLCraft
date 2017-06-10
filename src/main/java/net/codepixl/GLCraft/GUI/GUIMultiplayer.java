@@ -104,6 +104,8 @@ public class GUIMultiplayer extends GUIScreen{
 	protected class Server{
 		private InetAddress addr;
 		private int port;
+		
+		@SuppressWarnings("unused")
 		private String msg;
 
 		private Server(InetAddress addr, int port, String msg){

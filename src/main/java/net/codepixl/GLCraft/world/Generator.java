@@ -11,6 +11,7 @@ public class Generator implements Runnable{
 	
 	private boolean done = false;
 	private ArrayList<GenChunk> activeChunks;
+	@SuppressWarnings("unused")
 	private WorldManager w;
 	float[][] noise;
 	

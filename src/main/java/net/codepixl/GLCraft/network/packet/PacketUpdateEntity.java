@@ -12,8 +12,10 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 
-public class PacketUpdateEntity extends Packet{
-	
+public class PacketUpdateEntity extends Packet {
+
+	private static final long serialVersionUID = -4110929033411560063L;
+
 	public enum Type{
 		UPDATENBT, POSITION;
 	}
@@ -61,6 +63,6 @@ public class PacketUpdateEntity extends Packet{
 		NbtInputStream in = new NbtInputStream(bis);
 		TagCompound t = (TagCompound) in.readTag();
 		in.close();
-		return NBTUtil.readEntity((TagCompound)in.readTag(), w);
+		return NBTUtil.readEntity(t, w);
 	}
 }

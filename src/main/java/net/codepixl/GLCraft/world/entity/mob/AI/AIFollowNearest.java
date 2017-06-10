@@ -9,10 +9,10 @@ import java.util.List;
 
 public class AIFollowNearest extends AIPathfind{
 	
-	private Class<Entity> follow;
+	private Class<? extends Entity> follow;
 	private double repathTime = 0;
 	
-	public AIFollowNearest(Mob m, Class type) {
+	public AIFollowNearest(Mob m, Class<? extends Entity> type) {
 		super(m);
 		this.follow = type;
 	}

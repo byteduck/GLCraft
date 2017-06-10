@@ -4,7 +4,10 @@ import org.lwjgl.util.vector.Vector3f;
 
 import java.io.Serializable;
 
-public class Vector3i implements Serializable{
+public class Vector3i implements Serializable {
+
+	private static final long serialVersionUID = -2579387587275489333L;
+	
 	public int x,y,z;
 	private Vector3f v3f = new Vector3f();
 	public Vector3i(int x, int y, int z){

@@ -1,16 +1,19 @@
 package net.codepixl.GLCraft.render.util;
 
-import net.codepixl.GLCraft.util.Constants;
-import net.codepixl.GLCraft.util.FormattedString;
-import net.codepixl.GLCraft.util.FormattedStringSet;
-import net.codepixl.GLCraft.util.logging.GLogger;
+import static org.lwjgl.opengl.GL11.GL_LINE_LOOP;
+import static org.lwjgl.opengl.GL11.glBegin;
+import static org.lwjgl.opengl.GL11.glEnd;
+import static org.lwjgl.opengl.GL11.glVertex2f;
+
+import java.awt.Font;
+
 import org.lwjgl.opengl.GL11;
 import org.newdawn.slick.Color;
 import org.newdawn.slick.TrueTypeFont;
 
-import java.awt.*;
-
-import static org.lwjgl.opengl.GL11.*;
+import net.codepixl.GLCraft.util.Constants;
+import net.codepixl.GLCraft.util.FormattedString;
+import net.codepixl.GLCraft.util.FormattedStringSet;
 
 public class Tesselator{
 	private static TrueTypeFont FONT;

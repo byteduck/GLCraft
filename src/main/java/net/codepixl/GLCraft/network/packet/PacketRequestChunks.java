@@ -6,6 +6,9 @@ import net.codepixl.GLCraft.util.Vector2i;
 import java.util.List;
 
 public class PacketRequestChunks extends Packet{
+
+	private static final long serialVersionUID = -6085796777757386251L;
+	
 	public Vector2i[] pos;
 	public transient Server.ServerClient client;
 	public transient Vector2i indivPos;

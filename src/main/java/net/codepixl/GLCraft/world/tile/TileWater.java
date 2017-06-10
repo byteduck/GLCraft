@@ -1,17 +1,18 @@
 package net.codepixl.GLCraft.world.tile;
 
 import com.nishu.utils.Color4f;
+
+import org.lwjgl.opengl.GL11;
+import org.lwjgl.util.vector.Vector3f;
+
 import net.codepixl.GLCraft.render.RenderType;
-import net.codepixl.GLCraft.render.util.Spritesheet;
 import net.codepixl.GLCraft.util.AABB;
 import net.codepixl.GLCraft.util.EnumFacing;
 import net.codepixl.GLCraft.world.Chunk;
 import net.codepixl.GLCraft.world.WorldManager;
 import net.codepixl.GLCraft.world.tile.material.Material;
-import org.lwjgl.opengl.GL11;
-import org.lwjgl.util.vector.Vector3f;
 
-public class TileWater extends Tile{
+public class TileWater extends Tile {
 
 	@Override
 	public String getName() {
@@ -39,8 +40,10 @@ public class TileWater extends Tile{
 	}
 	
 	@Override
-	public void customRender(float x, float y, float z, Color4f[] col, WorldManager w, Chunk c){
-		float size = getHeight(w.getMetaAtPos(x,y,z));
+	public void customRender(float x, float y, float z, Color4f[] col, WorldManager w, Chunk c) {
+		// UNUSED
+		// float size = getHeight(w.getMetaAtPos(x,y,z));
+		
 		//GL11.glPushMatrix();
 		//GL11.glTranslatef(x, y, z); not using translatef because that causes the shader to work improperly
 		/*
