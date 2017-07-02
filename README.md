@@ -1,3 +1,6 @@
+# IMPORTANT
+I am not working on GLCraft anymore. If you would like to work on it, feel free to fork it!
+
 # GLCraft ![](https://raw.githubusercontent.com/Codepixl/GLCraft/master/src/main/resources/textures/icons/icon32.png)
 Just testing my skills to see if I can make a voxel game. I'm not planning to do anything with it.
 
