@@ -4,7 +4,6 @@ import com.evilco.mc.nbt.error.TagNotFoundException;
 import com.evilco.mc.nbt.stream.NbtInputStream;
 import com.evilco.mc.nbt.stream.NbtOutputStream;
 import com.evilco.mc.nbt.tag.*;
-import com.sun.xml.internal.ws.encoding.soap.DeserializationException;
 import net.codepixl.GLCraft.GLCraft;
 import net.codepixl.GLCraft.GUI.GUIManager;
 import net.codepixl.GLCraft.GUI.GUIServerError;
@@ -348,7 +347,7 @@ public class SaveManager {
 				try{
 					worldTime = tag.getLong("worldTime");
 					weatherState = (WeatherState) SerializationUtils.deserialize(tag.getByteArray("weatherState"));
-				}catch(TagNotFoundException | NullPointerException | ClassCastException | DeserializationException e){
+				}catch(TagNotFoundException | NullPointerException | ClassCastException e){
 					
 				}
 				inputStream.close();
@@ -399,7 +398,7 @@ public class SaveManager {
 			try{
 				worldTime = tag.getLong("worldTime");
 				weatherState = (WeatherState) SerializationUtils.deserialize(tag.getByteArray("weatherState"));
-			}catch(TagNotFoundException | NullPointerException | ClassCastException | DeserializationException e){
+			}catch(TagNotFoundException | NullPointerException | ClassCastException e){
 				
 			}
 			inputStream.close();

@@ -10,6 +10,7 @@ public class Spritesheet{
 	
 	public static Spritesheet atlas;
 	public static Spritesheet rain = new Spritesheet("textures/environment/rain.png");
+	public static Spritesheet snow = new Spritesheet("textures/environment/snow.png");
 	public static Spritesheet logo = new Spritesheet("textures/icons/logos.png");
 	
 	public Spritesheet(String path){

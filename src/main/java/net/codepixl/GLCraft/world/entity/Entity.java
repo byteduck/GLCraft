@@ -166,6 +166,7 @@ public class Entity implements GameObj{
 
 	@Override
 	public void update(){
+		this.timeAlive += (Time.getDelta()*1000f);;
 		if(this.needsDataUpdate && !(this instanceof EntityPlayer)){
 			worldManager.sendPacket(new PacketUpdateEntity(this,PacketUpdateEntity.Type.UPDATENBT));
 			this.needsDataUpdate = false;
@@ -209,7 +210,7 @@ public class Entity implements GameObj{
 	
 	public void clientUpdate(){
 		this.light = worldManager.getLightIntensity((int)this.pos.x, (int)this.pos.y, (int)this.pos.z);
-		timeAlive+=(Time.getDelta()*1000f);
+		timeAlive += (Time.getDelta()*1000f);
 		MathUtils.modulus(this.rot, 360f);
 	}
 

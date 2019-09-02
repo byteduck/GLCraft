@@ -1124,8 +1124,8 @@ public class WorldManager {
 		return MathUtils.pointAlongValues(previousWeather.type.cloudDarkness,currentWeather.type.cloudDarkness, (-weatherTransitionCountdown+10)/10f);
 	}
 
-	public float getRainOpacity(){
-		return MathUtils.pointAlongValues(previousWeather.type.rainOpacity,currentWeather.type.rainOpacity, (-weatherTransitionCountdown+10)/10f);
+	public float getPrecipitationOpacity(){
+		return MathUtils.pointAlongValues(previousWeather.type.precipitationOpacity,currentWeather.type.precipitationOpacity, (-weatherTransitionCountdown+10)/10f);
 	}
 
 	public float getWaveSpeed(){

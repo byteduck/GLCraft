@@ -70,6 +70,7 @@ public class EntityManager implements GameObj{
 		registerEntity("EntityFallingBlock", EntityFallingBlock.class);
 		registerEntity("TileEntityFurnace", TileEntityFurnace.class);
 		registerEntity("EntityPlayerMP", EntityPlayerMP.class);
+		registerEntity("EntityTNT", EntityTNT.class);
 	}
 	
 	public static void registerEntity(String name, Class entity){

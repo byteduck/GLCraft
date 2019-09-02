@@ -20,21 +20,18 @@ import net.codepixl.GLCraft.render.util.Tesselator;
 import net.codepixl.GLCraft.sound.SoundManager;
 import net.codepixl.GLCraft.util.Constants;
 import net.codepixl.GLCraft.util.DebugTimer;
-import net.codepixl.GLCraft.util.LogSource;
+import net.codepixl.GLCraft.util.MathUtils;
 import net.codepixl.GLCraft.util.Vector3i;
 import net.codepixl.GLCraft.util.command.CommandManager;
 import net.codepixl.GLCraft.util.data.saves.Save;
 import net.codepixl.GLCraft.util.data.saves.SaveManager;
 import net.codepixl.GLCraft.util.logging.CrashHandler;
-import net.codepixl.GLCraft.util.logging.GLogger;
 import net.codepixl.GLCraft.world.crafting.CraftingManager;
 import net.codepixl.GLCraft.world.crafting.Recipe.InvalidRecipeException;
 import net.codepixl.GLCraft.world.entity.EntityManager;
 import net.codepixl.GLCraft.world.entity.mob.AI.pathfinding.Pathfinder;
 import net.codepixl.GLCraft.world.entity.mob.EntityPlayer;
 import net.codepixl.GLCraft.world.entity.mob.EntityPlayerMP;
-import net.codepixl.GLCraft.world.entity.mob.animal.EntityTestAnimal;
-import net.codepixl.GLCraft.world.entity.mob.hostile.EntityTestHostile;
 import net.codepixl.GLCraft.world.tile.Tile;
 import org.lwjgl.BufferUtils;
 import org.lwjgl.input.Keyboard;
@@ -79,6 +76,8 @@ public class CentralManager extends Screen{
 	private Server server;
 	private Client client;
 	public CommandManager commandManager;
+	private Spritesheet currentWeatherSpritesheet;
+	private float currentRainSpeed;
 	
 	private Pathfinder pathfinder;
 	private Vector3i pathfindPos = new Vector3i(0,0,0);
@@ -409,15 +408,18 @@ public class CentralManager extends Screen{
 		worldManager.cloudShader.release();
 		GL11.glPopMatrix();
 
-		if(worldManager.getPlayer().canBreathe() && worldManager.getRainOpacity() > 0) renderRain();
+		if(worldManager.getPlayer().canBreathe() && worldManager.getPrecipitationOpacity() > 0) renderWeather();
 		
 		//Spritesheet.atlas.bind();
 		//Shape.currentSpritesheet = Spritesheet.atlas;
 	}
 
-	private void renderRain(){
+	private void renderWeather(){
 		EntityPlayer p = worldManager.getPlayer();
-		Spritesheet.rain.bind();
+		if(worldManager.currentWeather.type.precipitationSpritesheet != null)
+			currentWeatherSpritesheet = worldManager.currentWeather.type.precipitationSpritesheet;
+		if(currentWeatherSpritesheet != null)
+			currentWeatherSpritesheet.bind();
 		glPushMatrix();
 		glEnable (GL_BLEND);
 		glCullFace(GL_BACK);
@@ -428,17 +430,17 @@ public class CentralManager extends Screen{
 		c.setDrawStyle(GLU_FILL);
 		c.setTextureFlag(true);
 		c.setNormals(GLU_SMOOTH);
-		GL11.glColor4f(light, light, light, worldManager.getRainOpacity());
+		GL11.glColor4f(light, light, light, worldManager.getPrecipitationOpacity());
 		for(int x = 10; x >= 0; x--){
 			for(int z = 10; z >= 0; z--){
 				if(!(x ==0 && z == 0)) {
-					drawRainColumn(x, z, p, c);
-					drawRainColumn(-x, z, p, c);
-					drawRainColumn(-x, -z, p, c);
-					drawRainColumn(x, -z, p, c);
+					drawPrecipitationColumn(x, z, p, c);
+					drawPrecipitationColumn(-x, z, p, c);
+					drawPrecipitationColumn(-x, -z, p, c);
+					drawPrecipitationColumn(x, -z, p, c);
 				}else{
 					glCullFace(GL_FRONT);
-					drawRainColumn(x, z-0.05f, p, c);
+					drawPrecipitationColumn(x, z-0.05f, p, c);
 					glCullFace(GL_BACK);
 				}
 			}
@@ -447,11 +449,13 @@ public class CentralManager extends Screen{
 		Spritesheet.atlas.bind();
 	}
 
-	private void drawRainColumn(float x, float z, EntityPlayer p, Cylinder c){
+	private void drawPrecipitationColumn(float x, float z, EntityPlayer p, Cylinder c){
 		int y = 0;
 		while(!worldManager.openToSky(new Vector3f(p.getX()+x, y, p.getZ()+z))) y++;
 		glMatrixMode(GL_TEXTURE);
-		glTranslatef(0, GLCraft.getTime() % 1 + z / 7f, 0);
+		if(worldManager.currentWeather.type.rainSpeed != 0)
+			currentRainSpeed = worldManager.currentWeather.type.rainSpeed;
+		glTranslatef(0, ((GLCraft.getTime()  * currentRainSpeed) % 1 + z / 7f), 0);
 		glScalef(4, 13, 1);
 		glMatrixMode(GL_MODELVIEW);
 		glTranslatef(x,y,z);

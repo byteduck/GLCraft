@@ -28,7 +28,7 @@ import org.lwjgl.util.vector.Vector3f;
 
 import static org.lwjgl.opengl.GL11.*;
 
-public class EntityPlayer extends Mob implements CommandExecutor{
+public class EntityPlayer extends Mob implements CommandExecutor {
 	
 	private float breakCooldown, buildCooldown, breakProgress, walkAccel;
 	public byte currentTile;
@@ -222,9 +222,7 @@ public class EntityPlayer extends Mob implements CommandExecutor{
 			Pmove(speed * delay * (float) Time.getDelta(), 0, 0);
 		}
 		if(!keyRight && !keyLeft && !keyUp && !keyDown){
-			walkAccel = MathUtils.towardsZero(walkAccel, (float)Time.getDelta()*3f);
-		}else{
-			walkAccel = MathUtils.towardsValue(walkAccel, (float)Time.getDelta()*3f, 1);
+			walkAccel = 0;
 		}
 		if(space) {
 			this.jump();
@@ -262,6 +260,7 @@ public class EntityPlayer extends Mob implements CommandExecutor{
 	}
 	
 	public void Pmove(float x, float y, float z){
+		walkAccel = Math.min(walkAccel + (float)Time.getDelta()*5f, 1f);
 		float toZ = walkAccel * (float) ((x * (float) Math.cos(Math.toRadians(getRot().y - 90)) + z * Math.cos(Math.toRadians(getRot().y))));
 		float toX = walkAccel * (float) (-(x * (float) Math.sin(Math.toRadians(getRot().y - 90)) + z * Math.sin(Math.toRadians(getRot().y))));
 		float toY = 0;
