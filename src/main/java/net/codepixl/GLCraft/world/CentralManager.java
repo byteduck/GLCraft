@@ -423,7 +423,7 @@ public class CentralManager extends Screen{
 		glPushMatrix();
 		glEnable (GL_BLEND);
 		glCullFace(GL_BACK);
-		glBlendFunc (GL_SRC_ALPHA,GL_ONE_MINUS_SRC_ALPHA);
+		glBlendFunc (GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 		Cylinder c = new Cylinder();
 		float light = worldManager.getSkyLightIntensity()*2;
 		GL11.glTranslatef((int)p.getX()+0.5f, 0, (int)p.getZ()+0.55f);
@@ -622,6 +622,8 @@ public class CentralManager extends Screen{
 		glLoadIdentity();
 		glDisable(GL_DEPTH_TEST);
 		glDisable(GL_LIGHTING);
+		glEnable(GL_BLEND);
+		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 	}
 	
 	public void render3D(){

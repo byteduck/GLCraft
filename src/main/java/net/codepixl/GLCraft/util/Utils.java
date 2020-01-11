@@ -41,10 +41,10 @@ public class Utils {
 		if(name.equalsIgnoreCase("void") || name.equalsIgnoreCase("air"))
 			return new ItemStack();
 		for(Tile t : Tile.tileMap.values())
-			if(t.getName().equalsIgnoreCase(name))
+			if(t.getTextureName().equalsIgnoreCase(name))
 				return new ItemStack(t);
 		for(Item i : Item.itemMap.values())
-			if(i.getName().equalsIgnoreCase(name))
+			if(i.getTextureName().equalsIgnoreCase(name))
 				return new ItemStack(i);
 		return new ItemStack();
 	}

@@ -472,13 +472,13 @@ public class Chunk {
 							Color4f[] col;
 							if(!t.isTransparent()){
 								float[] light = new float[]{
-										getLightIntensity(x,y-1,z),
-										getLightIntensity(x,y+1,z),
-										getLightIntensity(x,y,z-1),
-										getLightIntensity(x,y,z+1),
-										getLightIntensity(x+1,y,z),
-										getLightIntensity(x-1,y,z)
-									};
+									getLightIntensity(x,y-1,z),
+									getLightIntensity(x,y+1,z),
+									getLightIntensity(x,y,z-1) * 0.9f,
+									getLightIntensity(x,y,z+1) * 0.9f,
+									getLightIntensity(x+1,y,z) * 0.9f,
+									getLightIntensity(x-1,y,z) * 0.9f
+								};
 								col = new Color4f[]{
 									new Color4f(t.getColor().r*light[0],t.getColor().g*light[0],t.getColor().b*light[0],t.getColor().a),
 									new Color4f(t.getColor().r*light[1],t.getColor().g*light[1],t.getColor().b*light[1],t.getColor().a),
@@ -554,9 +554,17 @@ public class Chunk {
 	}
 	
 	private float getLightIntensity(int x, int y, int z){
-		Vector3i pos = new Vector3i(x+(int)this.pos.x,y+(int)this.pos.y,z+(int)this.pos.z);
-		float ret = ((float)worldManager.getBlockLight(pos.x, pos.y, pos.z)+(float)worldManager.getSunlight(pos.x, pos.y, pos.z)*worldManager.getSkyLightIntensity())/15f;
-		if(ret > 1)
+		int blockLight = 0, sunLight = 0;
+		if(x > 0 && x < sizeX && y > 0 && y < sizeY && z > 0 && z < sizeZ) {
+			blockLight = getBlockLightChunkCoords(x, y, z);
+			sunLight = getSunlightChunkCoords(x, y, z);
+		} else {
+			Vector3i pos = new Vector3i(x + (int) this.pos.x, y + (int) this.pos.y, z + (int) this.pos.z);
+			blockLight = worldManager.getBlockLight(pos.x, pos.y, pos.z);
+			sunLight = worldManager.getSunlight(pos.x, pos.y, pos.z);
+		}
+		float ret = ((float) blockLight + (float) sunLight * worldManager.getSkyLightIntensity()) / 15f;
+		if (ret > 1)
 			ret = 1;
 		return ret;
 	}
@@ -798,6 +806,11 @@ public class Chunk {
 	    return (light[x-(int)this.pos.x][y-(int)this.pos.y][z-(int)this.pos.z] >> 4) & 0xF;
 	}
 
+	// Get block light but with chunk coords
+	private int getSunlightChunkCoords(int x, int y, int z) {
+		return (light[x][y][z] >> 4) & 0xF;
+	}
+
 	// Set the bits XXXX0000
 	public void setSunlight(int x, int y, int z, int val, boolean relight) {
 		light[x-(int)this.pos.x][y-(int)this.pos.y][z-(int)this.pos.z] = (byte) ((light[x-(int)this.pos.x][y-(int)this.pos.y][z-(int)this.pos.z] & 0xF) | (val << 4));
@@ -806,6 +819,11 @@ public class Chunk {
 	// Get the bits 0000XXXX
 	public int getBlockLight(int x, int y, int z) {
 	    return light[x-(int)this.pos.x][y-(int)this.pos.y][z-(int)this.pos.z] & 0xF;
+	}
+
+	// Get block light but with chunk coords
+	private int getBlockLightChunkCoords(int x, int y, int z) {
+		return light[x][y][z] & 0xF;
 	}
 	
 	// Set the bits 0000XXXX
@@ -844,6 +862,12 @@ public class Chunk {
 						this.setBlockLight(x+(int)getPos().x,y+(int)getPos().y,z+(int)getPos().z, t.getLightLevel(meta[x][y][z]), true);
 				}
 		this.rebuild();
+	}
+
+	public boolean tileIsInChunk(int x, int y, int z) {
+		return  x - this.pos.x > 0 && x - this.pos.x < sizeX &&
+				y - this.pos.y > 0 && y - this.pos.y < sizeY &&
+				z - this.pos.z > 0 && z - this.pos.z < sizeZ;
 	}
 
 	public byte[][][] getLight() {

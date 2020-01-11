@@ -1,8 +1,6 @@
 # IMPORTANT
-I am not working on GLCraft anymore. If you would like to work on it, feel free to fork it!
+I am not working on GLCraft actively anymore. (You may still see changes from time to time). If you would like to work on it, feel free to fork it!
 On the infdev branch, you can see the plethora of code changes I made to attempt to add infinite worlds. However, this codebase is so bad that I gave up on it about a year ago and never came back to it. So, I've reverted the master branch to before the infinite world.
-
-The project will still be worked on periodically [here](https://github.com/spike11302000/GLCraft)!
 
 # GLCraft ![](https://raw.githubusercontent.com/Codepixl/GLCraft/master/src/main/resources/textures/icons/icon32.png)
 Just testing my skills to see if I can make a voxel game. I'm not planning to do anything with it.
@@ -15,6 +13,11 @@ Gource: https://youtu.be/lSscChmX2JI made by Spike11302000
 * Minecraft Textures: [Download](http://codepixl.net/GLCraft/Minecraft.zip)
 
 Take a look at the wiki to see how you can make your own plugins for GLCraft.
+
+# Launching
+Make sure to use `-XX:MaxHeapFreeRatio=50 -XX:MinHeapFreeRatio=10` JVM arguments for the best memory usage if you actually care. GLCraft uses a ton of memory when generating / loading a world, and the JVM will keep most of the memory to itself when it's done being loaded. As a result, only like 10% of the heap ends up being used once the world is loaded. So, these arguments make sure the JVM downsizes the heap more aggressively. I *could* optimize the memory usage, but it's an old project and I don't see a reason to.
+
+If you don't use those arguments, you'll end up seeing  usage in the 1-2GB range. With them, it's less than a GB.
 
 # Todo
 
