@@ -19,7 +19,7 @@ import net.codepixl.GLCraft.world.tile.TileWater;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.util.vector.Vector3f;
 
-public class Entity implements GameObj{
+public class Entity implements GameObj {
 	protected Vector3f pos, rot;
 	private Vector3f vel;
 	public Vector3f lpos = new Vector3f(), lrot = new Vector3f(), lvel = new Vector3f();
@@ -47,11 +47,12 @@ public class Entity implements GameObj{
 		this.id = worldManager.getEntityManager().getNewId();
 		this.worldManager = worldManager;
 	}
-	
+
+	//Method used by spawn command. Must be implemented for spawn command to work.
 	public Entity(Vector3f pos, Vector3f rot, Vector3f vel, WorldManager worldManager){
-		this.pos = pos;
-		this.rot = rot;
-		this.setVelocity(vel);
+		this.pos = new Vector3f(pos);
+		this.rot = new Vector3f(rot);
+		this.setVelocity(new Vector3f(vel));
 		this.id = worldManager.getEntityManager().getNewId();
 		this.worldManager = worldManager;
 	}
@@ -145,7 +146,7 @@ public class Entity implements GameObj{
 		velList.addTag(new TagFloat("",this.getVel().y));
 		velList.addTag(new TagFloat("",this.getVel().z));
 		TagLong timeTag = new TagLong("TimeAlive",timeAlive);
-		TagString typeTag = new TagString("type",this.getClass().getSimpleName());
+		TagString typeTag = new TagString("type", this.getClass().getSimpleName());
 		t.setTag(posList);
 		t.setTag(rotList);
 		t.setTag(velList);

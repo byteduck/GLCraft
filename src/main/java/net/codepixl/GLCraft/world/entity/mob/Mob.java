@@ -21,7 +21,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 
-public class Mob extends EntitySolid implements GameObj{
+public class Mob extends EntitySolid implements GameObj {
 	
 	private ItemStack[] inventory;
 	public float health, hurtTimer, eyeLevel, airLevel, lHealth, lAirLevel;
@@ -48,7 +48,7 @@ public class Mob extends EntitySolid implements GameObj{
 	}
 
 	public Mob(Vector3f pos, WorldManager w){
-		super(pos,new Vector3f(0,0,0),new Vector3f(0,0,0),w);
+		super(pos, new Vector3f(0,0,0), new Vector3f(0,0,0),w);
 		this.setInventory(new ItemStack[getInventorySize()]);
 		for(int i = 0; i < getInventorySize(); i++){
 			getInventory()[i] = new ItemStack();

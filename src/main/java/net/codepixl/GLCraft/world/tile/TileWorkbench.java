@@ -6,7 +6,7 @@ import net.codepixl.GLCraft.world.WorldManager;
 import net.codepixl.GLCraft.world.entity.mob.EntityPlayer;
 import net.codepixl.GLCraft.world.tile.material.Material;
 
-public class TileWorkbench extends Tile{
+public class TileWorkbench extends Tile {
 	
 	@Override
 	public String getName() {

@@ -143,7 +143,7 @@ public class EntityPlayer extends Mob implements CommandExecutor {
 		if(Mouse.isGrabbed()) {
 			float dx = Mouse.getDX() * speed * 0.16f;
 			float dy = Mouse.getDY() * speed * 0.16f;
-			int dWheel = Mouse.getDWheel();
+			int dWheel = -Mouse.getDWheel();
 			if(Mouse.hasWheel()) {
 				for(int i = 0; i < dWheel / 120; i++){
 					this.selectedSlot += 1;

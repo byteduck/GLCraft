@@ -15,12 +15,13 @@ import net.codepixl.GLCraft.world.tile.material.Material;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.util.vector.Vector3f;
 
-public class TileDoor extends Tile{
-	
-	public TileDoor(){
+public class TileDoor extends Tile {
+
+	public TileDoor() {
 		super();
 		TextureManager.addTexture("tiles.door_top", TextureManager.TILES+"door_top.png");
 		TextureManager.addTexture("tiles.door_bottom", TextureManager.TILES+"door_bottom.png");
+		TextureManager.addTexture("tiles.door_side", TextureManager.TILES+"door_side.png");
 	}
 	
 	@Override
@@ -66,10 +67,11 @@ public class TileDoor extends Tile{
 			ma-=2;
 		}
 		w.setMetaAtPos(x, y, z, m, true);
-		if(m2 == 0)
-			w.setMetaAtPos(x, y+1, z, ma, true);
-		else
-			w.setMetaAtPos(x, y-1, z, ma, true);
+		if(m2 == 0) {
+			w.setMetaAtPos(x, y + 1, z, ma, true);
+		} else {
+			w.setMetaAtPos(x, y - 1, z, ma, true);
+		}
 		return true;
 	}
 	
@@ -117,29 +119,31 @@ public class TileDoor extends Tile{
 	public void customRender(float x, float y, float z, Color4f[] col, WorldManager w, Chunk c){
 		byte meta = (byte) w.getMetaAtPos(x,y,z);
 		/*
-		 * bottom - first top - second front - third back - fourth left -
-		 * fifth right - sixth
+		 * bottom - first / top - second / front - third / back - fourth / left -
+		 * fifth / right - sixth
 		 */
-		float[] texCoordsA = meta%2 == 0 ? TextureManager.texture("tiles.door_bottom") : TextureManager.texture("tiles.door_top");
 		float[] texCoords;
+		float[] mainCoords = meta % 2 == 0 ? TextureManager.texture("tiles.door_bottom") : TextureManager.texture("tiles.door_top");
+		float[] sideCoords = TextureManager.texture("tiles.door_side");
+
 		if(meta < 2){
 			texCoords = new float[]{
-				Tile.Wood.getTexCoords((byte) 0)[0], Tile.Wood.getTexCoords((byte) 0)[1],
-				Tile.Wood.getTexCoords((byte) 0)[0], Tile.Wood.getTexCoords((byte) 0)[1],
-				Tile.Wood.getTexCoords((byte) 0)[0], Tile.Wood.getTexCoords((byte) 0)[1],
-				Tile.Wood.getTexCoords((byte) 0)[0], Tile.Wood.getTexCoords((byte) 0)[1],
-				texCoordsA[0], texCoordsA[1],
-				texCoordsA[0], texCoordsA[1]
+				sideCoords[0], sideCoords[1], sideCoords[2], sideCoords[3],
+				sideCoords[0], sideCoords[1], sideCoords[2], sideCoords[3],
+				sideCoords[0], sideCoords[1], sideCoords[2], sideCoords[3],
+				sideCoords[0], sideCoords[1], sideCoords[2], sideCoords[3],
+				mainCoords[0], mainCoords[1], mainCoords[2], mainCoords[3],
+				mainCoords[0], mainCoords[1], mainCoords[2], mainCoords[3]
 			};
 		}else{
 			texCoords = new float[]{
-					Tile.Wood.getTexCoords((byte) 0)[0], Tile.Wood.getTexCoords((byte) 0)[1],
-					Tile.Wood.getTexCoords((byte) 0)[0], Tile.Wood.getTexCoords((byte) 0)[1],
-					texCoordsA[0], texCoordsA[1],
-					texCoordsA[0], texCoordsA[1],
-					Tile.Wood.getTexCoords((byte) 0)[0], Tile.Wood.getTexCoords((byte) 0)[1],
-					Tile.Wood.getTexCoords((byte) 0)[0], Tile.Wood.getTexCoords((byte) 0)[1]
-				};
+				sideCoords[0], sideCoords[1], sideCoords[2], sideCoords[3],
+				sideCoords[0], sideCoords[1], sideCoords[2], sideCoords[3],
+				mainCoords[0], mainCoords[1], mainCoords[2], mainCoords[3],
+				mainCoords[0], mainCoords[1], mainCoords[2], mainCoords[3],
+				sideCoords[0], sideCoords[1], sideCoords[2], sideCoords[3],
+				sideCoords[0], sideCoords[1], sideCoords[2], sideCoords[3]
+			};
 		}
 		GL11.glBegin(GL11.GL_QUADS);
 		if(meta < 2)

@@ -5,7 +5,7 @@ import net.codepixl.GLCraft.world.CentralManager;
 import net.codepixl.GLCraft.world.entity.mob.EntityPlayerMP;
 import net.codepixl.GLCraft.world.item.ItemStack;
 
-public class CommandGive implements Command{
+public class CommandGive implements Command {
 
 	@Override
 	public String getName() {

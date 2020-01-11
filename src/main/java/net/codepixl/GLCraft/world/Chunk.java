@@ -638,49 +638,7 @@ public class Chunk {
 		if(inBounds){
 			meta[x][y][z] = met;
 			if(rebuild){
-				/**worldManager.getChunkAtCoords(MathUtils.coordsToChunkPos((int)ax-7, (int)ay, (int)az)).queueLight();
-				worldManager.getChunkAtCoords(MathUtils.coordsToChunkPos((int)ax+7, (int)ay, (int)az)).queueLight();
-				worldManager.getChunkAtCoords(MathUtils.coordsToChunkPos((int)ax, (int)ay-7, (int)az)).queueLight();
-				worldManager.getChunkAtCoords(MathUtils.coordsToChunkPos((int)ax, (int)ay+7, (int)az)).queueLight();
-				worldManager.getChunkAtCoords(MathUtils.coordsToChunkPos((int)ax, (int)ay, (int)az-7)).queueLight();
-				worldManager.getChunkAtCoords(MathUtils.coordsToChunkPos((int)ax, (int)ay, (int)az+7)).queueLight();
-				worldManager.getChunkAtCoords(MathUtils.coordsToChunkPos((int)ax+7, (int)ay, (int)az+7)).queueLight();
-				worldManager.getChunkAtCoords(MathUtils.coordsToChunkPos((int)ax-7, (int)ay, (int)az+7)).queueLight();
-				worldManager.getChunkAtCoords(MathUtils.coordsToChunkPos((int)ax+7, (int)ay, (int)az-7)).queueLight();
-				worldManager.getChunkAtCoords(MathUtils.coordsToChunkPos((int)ax-7, (int)ay, (int)az-7)).queueLight();
-				worldManager.getChunkAtCoords(MathUtils.coordsToChunkPos((int)ax, (int)ay+7, (int)az+7)).queueLight();
-				worldManager.getChunkAtCoords(MathUtils.coordsToChunkPos((int)ax, (int)ay-7, (int)az+7)).queueLight();
-				worldManager.getChunkAtCoords(MathUtils.coordsToChunkPos((int)ax, (int)ay+7, (int)az-7)).queueLight();
-				worldManager.getChunkAtCoords(MathUtils.coordsToChunkPos((int)ax, (int)ay-7, (int)az-7)).queueLight();
-				worldManager.getChunkAtCoords(MathUtils.coordsToChunkPos((int)ax+7, (int)ay+7, (int)az)).queueLight();
-				worldManager.getChunkAtCoords(MathUtils.coordsToChunkPos((int)ax-7, (int)ay+7, (int)az)).queueLight();
-				worldManager.getChunkAtCoords(MathUtils.coordsToChunkPos((int)ax+7, (int)ay-7, (int)az)).queueLight();
-				worldManager.getChunkAtCoords(MathUtils.coordsToChunkPos((int)ax-7, (int)ay-7, (int)az)).queueLight();**/
-				HashSet<Chunk> toRebuild = new HashSet<Chunk>();
-				if(x == 0){
-					toRebuild.add(worldManager.getChunk(new Vector3f(pos.x-16,pos.y,pos.z)));
-				}
-				if(y == 0){
-					toRebuild.add(worldManager.getChunk(new Vector3f(pos.x,pos.y-16,pos.z)));
-				}
-				if(z == 0){
-					toRebuild.add(worldManager.getChunk(new Vector3f(pos.x,pos.y,pos.z-16)));
-				}
-				if(x == Constants.CHUNKSIZE-1){
-					toRebuild.add( worldManager.getChunk(new Vector3f(pos.x+16,pos.y,pos.z)));
-				}
-				if(y == Constants.CHUNKSIZE-1){
-					toRebuild.add(worldManager.getChunk(new Vector3f(pos.x,pos.y+16,pos.z)));
-				}
-				if(z == Constants.CHUNKSIZE-1){
-					toRebuild.add(worldManager.getChunk(new Vector3f(pos.x,pos.y,pos.z+16)));
-				}
-				Iterator<Chunk> i = toRebuild.iterator();
-				while(i.hasNext()){
-					Chunk c = i.next();
-					if(c != null)
-						c.rebuild();
-				}
+				rebuild();
 			}
 		}
 	}

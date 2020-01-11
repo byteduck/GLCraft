@@ -12,23 +12,12 @@ import org.lwjgl.util.vector.Vector3f;
 import java.util.Iterator;
 
 public class EntitySolid extends Entity{
-	
 	public AABB aabb;
 	public boolean onGround = false;
 	public Vector3f collideVec = new Vector3f();
-	
-	public EntitySolid(float x, float y, float z, WorldManager worldManager){
-		super(x,y,z,worldManager);
-		this.setAABB(this.getDefaultAABB());
-	}
-	
-	public EntitySolid(float x, float y, float z, float rx, float ry, float rz, WorldManager worldManager){
-		super(x,y,z,rx,ry,rz,worldManager);
-		this.setAABB(this.getDefaultAABB());
-	}
-	
-	public EntitySolid(Vector3f pos, Vector3f rot, Vector3f vel, WorldManager worldManager){
-		super(pos,rot,vel,worldManager);
+
+	public EntitySolid(Vector3f pos, Vector3f rot, Vector3f vel, WorldManager worldManager) {
+		super(pos, rot, vel, worldManager);
 		this.setAABB(this.getDefaultAABB());
 	}
 	

@@ -17,25 +17,24 @@ import org.lwjgl.util.vector.Vector3f;
 
 import java.util.Iterator;
 
-public class EntityItem extends EntitySolid{
+public class EntityItem extends EntitySolid {
 	private ItemStack itemstack;
 	private float yPos, yRot;
 	private final float size = 0.3f;
 	
 	public EntityItem(ItemStack s, float x, float y, float z, WorldManager worldManager) {
-		super(x,y,z, worldManager);
+		super(new Vector3f(x,y,z), new Vector3f(), new Vector3f(), worldManager);
 		itemstack = s;
-		yPos = 0;
 	}
 	
 	public EntityItem(ItemStack s, Vector3f pos, WorldManager worldManager) {
-		super(pos.x,pos.y,pos.z,worldManager);
+		super(pos, new Vector3f(), new Vector3f(), worldManager);
 		itemstack = s;
 		yPos = 0;
 	}
 	
 	public EntityItem(Vector3f pos, Vector3f rot, Vector3f vel, TagCompound t, WorldManager w) throws UnexpectedTagTypeException, TagNotFoundException{
-		super(pos.x,pos.y,pos.z,w);
+		super(pos, new Vector3f(), new Vector3f(), w);
 		this.rot = rot;
 		this.setVel(vel);
 		yPos = 0;
@@ -129,12 +128,16 @@ public class EntityItem extends EntitySolid{
 		if(this.getCount() <= 0 || this.timeAlive > 300000 || this.itemstack.isNull()){
 			this.setDead(true);
 		}
-		Iterator<Entity> i = worldManager.getEntityManager().getEntitiesInRadiusOfEntityOfType(this, EntityItem.class, 0.75f).iterator();
+		Iterator<Entity> i = worldManager.getEntityManager().getEntitiesInRadiusOfEntityOfType(this, EntityItem.class, 1.1f).iterator();
 		while(i.hasNext()){
 			EntityItem e = (EntityItem)i.next();
-			if(e.itemstack.count+this.itemstack.count <= this.itemstack.getMaxStackSize() && e.itemstack.compatible(this.itemstack) && e.timeAlive <= this.timeAlive){
+			if(
+				e.itemstack.count + this.itemstack.count <= this.itemstack.getMaxStackSize() &&
+				e.itemstack.compatible(this.itemstack) &&
+				e.timeAlive >= this.timeAlive
+			){
 				e.setDead(true);
-				this.itemstack.count+=e.itemstack.count;
+				this.itemstack.count += e.itemstack.count;
 			}
 		}
 		if(!Tile.getTile((byte)worldManager.getTileAtPos(this.getPos())).canPassThrough()){

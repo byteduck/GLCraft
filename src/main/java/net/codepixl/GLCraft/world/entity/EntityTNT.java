@@ -17,15 +17,15 @@ import java.util.Iterator;
 
 import static org.lwjgl.opengl.GL11.*;
 
-public class EntityTNT extends EntitySolid{
+public class EntityTNT extends EntitySolid {
 
-	public EntityTNT(int x, int y, int z, WorldManager worldManager) {
-		super(x+0.5f, y, z+0.5f, worldManager);
+	public EntityTNT(Vector3f pos, Vector3f rot, Vector3f vel, WorldManager worldManager) {
+		super(pos, rot, vel, worldManager);
 	}
-	
+
 	public static Entity fromNBT(TagCompound t, WorldManager w) throws UnexpectedTagTypeException, TagNotFoundException{
 		Vector3f pos = NBTUtil.vecFromList("Pos",t);
-		return new EntityTNT((int)pos.x, (int)pos.y, (int)pos.z, w);
+		return new EntityTNT(pos, new Vector3f(), new Vector3f(), w);
 	}
 	
 	@Override
@@ -75,7 +75,7 @@ public class EntityTNT extends EntitySolid{
 							float d6 = this.getY();
 							float d8 = this.getZ();
 
-							for (float f1 = 0.3F; f > 0.0F; f -= 0.22500001F) {
+							for (; f > 0.0F; f -= 0.4f) {
 								Vector3f blockpos = new Vector3f(d4, d6, d8);
 								worldManager.setTileAtPos(blockpos, Tile.Air.getId(), true);
 								d4 += d0 * 0.30000001192092896D;

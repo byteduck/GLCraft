@@ -12,7 +12,7 @@ import net.codepixl.GLCraft.world.tile.Tile;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.util.vector.Vector3f;
 
-public class EntityFallingBlock extends EntitySolid{
+public class EntityFallingBlock extends EntitySolid {
 	
 	private Tile tile = Tile.Sand;
 	boolean doneFalling = false;
@@ -26,7 +26,7 @@ public class EntityFallingBlock extends EntitySolid{
 	}
 	
 	public EntityFallingBlock(float x, float y, float z, WorldManager worldManager) {
-		super(x+0.5f, y, z+0.5f, worldManager);
+		super(new Vector3f(x + 0.5f, y, z + 0.5f), new Vector3f(), new Vector3f(), worldManager);
 	}
 	
 	@Override

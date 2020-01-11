@@ -238,13 +238,13 @@ public class Shape {
 
 				// right face
 				glColor4f(color[5].r, color[5].g, color[5].b, color[5].a);
-				glTexCoord2f(texCoords[0], texCoords[1]);
-				glVertex3f(x, y, z + sizeZ);
-				glTexCoord2f(texCoords[2], texCoords[1]);
-				glVertex3f(x, y, z);
 				glTexCoord2f(texCoords[2], texCoords[3]);
-				glVertex3f(x, y + sizeY, z);
+				glVertex3f(x, y, z + sizeZ);
 				glTexCoord2f(texCoords[0], texCoords[3]);
+				glVertex3f(x, y, z);
+				glTexCoord2f(texCoords[0], texCoords[1]);
+				glVertex3f(x, y + sizeY, z);
+				glTexCoord2f(texCoords[2], texCoords[1]);
 				glVertex3f(x, y + sizeY, z + sizeZ);
 			} else if (texCoords.length > 4) {
 				/*

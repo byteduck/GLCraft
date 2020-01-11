@@ -325,7 +325,7 @@ public class TextureManager {
 			}
 			return coords;
 		}else{
-			return atlasCoords.get("tiles."+t.getTextureName().toLowerCase());
+			return atlasCoords.get("tiles." + t.getTextureName().toLowerCase());
 		}
 	}
 	public static float[] tile(Tile t, byte meta) {
@@ -333,14 +333,14 @@ public class TextureManager {
 			float[] coords = new float[24];
 			for(int i = 0; i < 6; i++){
 				int index = i*4;
-				coords[index] = atlasCoords.get("tiles."+t.getMultiTextureNames(meta)[i].toLowerCase())[0];
-				coords[index+1] = atlasCoords.get("tiles."+t.getMultiTextureNames(meta)[i].toLowerCase())[1];
-				coords[index+2] = atlasCoords.get("tiles."+t.getMultiTextureNames(meta)[i].toLowerCase())[2];
-				coords[index+3] = atlasCoords.get("tiles."+t.getMultiTextureNames(meta)[i].toLowerCase())[3];
+				coords[index] = atlasCoords.get("tiles." + t.getMultiTextureNames(meta)[i].toLowerCase())[0];
+				coords[index+1] = atlasCoords.get("tiles." + t.getMultiTextureNames(meta)[i].toLowerCase())[1];
+				coords[index+2] = atlasCoords.get("tiles." + t.getMultiTextureNames(meta)[i].toLowerCase())[2];
+				coords[index+3] = atlasCoords.get("tiles." + t.getMultiTextureNames(meta)[i].toLowerCase())[3];
 			}
 			return coords;
 		}else{
-			return atlasCoords.get("tiles."+t.getTextureName(meta).toLowerCase());
+			return atlasCoords.get("tiles." + t.getTextureName(meta).toLowerCase());
 		}
 	}
 	public static float[] texture(String s){

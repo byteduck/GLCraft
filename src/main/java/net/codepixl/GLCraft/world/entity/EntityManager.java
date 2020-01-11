@@ -26,6 +26,7 @@ import javax.swing.*;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.lang.reflect.Field;
 import java.util.*;
 import java.util.Map.Entry;
 
@@ -33,7 +34,7 @@ import static org.lwjgl.opengl.GL11.*;
 
 public class EntityManager implements GameObj{
 	
-	private static HashMap<String, Class> registeredEntities = new HashMap<String, Class>();
+	private static HashMap<String, Class<? extends Entity>> registeredEntities = new HashMap<>();
 	private HashMap<Integer, Entity> entities;
 	private ArrayList<Entity> toAdd;
 	private ArrayList<Entity> toRemove;
@@ -44,7 +45,7 @@ public class EntityManager implements GameObj{
 	public boolean isServer;
 	
 	private int mobRenderID;
-	
+
 	public EntityManager(WorldManager w, boolean isServer){
 		this.w = w;
 		this.isServer = isServer;
@@ -73,10 +74,10 @@ public class EntityManager implements GameObj{
 		registerEntity("EntityTNT", EntityTNT.class);
 	}
 	
-	public static void registerEntity(String name, Class entity){
+	public static void registerEntity(String name, Class<? extends Entity> entity){
 		if(Entity.class.isAssignableFrom(entity)){
 			registeredEntities.put(name, entity);
-		}else{
+		} else {
 			System.err.println("ERROR REGISTERING ENTITY "+entity.getName()+": NOT AN ENTITY");
 		}
 	}
@@ -301,7 +302,7 @@ public class EntityManager implements GameObj{
 		return ret;
 	}
 
-	public Class getRegisteredEntity(String name) {
+	public static Class<? extends Entity> getRegisteredEntity(String name) {
 		return registeredEntities.get(name);
 	}
 

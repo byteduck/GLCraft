@@ -6,7 +6,7 @@ import net.codepixl.GLCraft.world.entity.particle.Particle;
 import net.codepixl.GLCraft.world.tile.material.Material;
 import org.lwjgl.util.vector.Vector3f;
 
-public class TileParticleProjector extends Tile{
+public class TileParticleProjector extends Tile {
 	private Particle particle;
 	public TileParticleProjector(){
 		super();
@@ -29,8 +29,8 @@ public class TileParticleProjector extends Tile{
 	
 	@Override
 	public void tick(int x, int y, int z, WorldManager worldManager){
-			this.particle = new Particle(new Vector3f(x+.5f,y+.5f,z+.5f), new Vector3f(Constants.randFloat(-0.1f, 0.1f),Constants.randFloat(0, 1),Constants.randFloat(-0.1f, 0.1f)), worldManager);
-			particle.setTexCoords(Tile.Tnt.getTexCoords());
+			this.particle = new Particle(new Vector3f(x+.5f,y+1.5f,z+.5f), new Vector3f(Constants.randFloat(-0.5f, 0.5f),Constants.randFloat(0, 0.5f),Constants.randFloat(-0.5f, 0.5f)), worldManager);
+			particle.setTexName("tiles." + Tile.Fire.getIconName());
 			worldManager.entityManager.add(this.particle);
 	}
 	@Override

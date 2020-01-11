@@ -44,6 +44,7 @@ public class CommandManager {
 		addCommand(new CommandOp());
 		addCommand(new CommandTp());
 		addCommand(new CommandWeather());
+		addCommand(new CommandSpawn());
 	}
 	
 	public void addCommand(Command c){

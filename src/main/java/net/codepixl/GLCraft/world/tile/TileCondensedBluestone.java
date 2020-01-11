@@ -5,7 +5,7 @@ import net.codepixl.GLCraft.world.WorldManager;
 import net.codepixl.GLCraft.world.item.ItemStack;
 import net.codepixl.GLCraft.world.tile.material.Material;
 
-public class TileCondensedBluestone extends Tile{
+public class TileCondensedBluestone extends Tile {
 	
 	@Override
 	public String getName() {

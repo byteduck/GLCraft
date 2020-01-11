@@ -22,7 +22,6 @@ import org.lwjgl.util.vector.Vector3f;
 import java.util.HashMap;
 
 public class Tile {
-
 	public static HashMap<Byte, Tile> tileMap = new HashMap<Byte, Tile>();
 	public static HashMap<Tile, TickHelper> tickMap = new HashMap<Tile, TickHelper>();
 	private static byte currentTile = (byte)0xFF;
