@@ -2,15 +2,8 @@
 I am not working on GLCraft actively anymore. (You may still see changes from time to time). If you would like to work on it, feel free to fork it!
 On the infdev branch, you can see the plethora of code changes I made to attempt to add infinite worlds. However, this codebase is so bad that I gave up on it about a year ago and never came back to it. So, I've reverted the master branch to before the infinite world.
 
-# GLCraft ![](https://raw.githubusercontent.com/Codepixl/GLCraft/master/src/main/resources/textures/icons/icon32.png)
+# GLCraft ![](https://raw.githubusercontent.com/byteduck/GLCraft/master/src/main/resources/textures/icons/icon32.png)
 Just testing my skills to see if I can make a voxel game. I'm not planning to do anything with it.
-
-Main website here: http://www.codepixl.net/GLCraft
-
-Gource: https://youtu.be/lSscChmX2JI made by Spike11302000
-
-*Texturepacks:*
-* Minecraft Textures: [Download](http://codepixl.net/GLCraft/Minecraft.zip)
 
 Take a look at the wiki to see how you can make your own plugins for GLCraft.
 
@@ -53,7 +46,7 @@ Italic means half completed.
 
 # License
     GLCraft - A simple voxel game using LWJGL.
-    Copyright (C) 2016 Aaron Sonin
+    Copyright (C) 2015-2020 Byteduck
     
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
